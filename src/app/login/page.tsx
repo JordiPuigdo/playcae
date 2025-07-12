@@ -62,6 +62,12 @@ export default function LoginPage() {
               className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubmit(e as any);
+                }
+              }}
               required
               placeholder="ejemplo@correo.com"
             />

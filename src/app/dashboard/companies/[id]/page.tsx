@@ -1,24 +1,32 @@
-'use client';
+"use client";
 
-import { CompanyDetailHeader } from '@/components/CompanyDetailHeader';
-import { CompanyObservations } from '@/components/CompanyObservations';
-import { DocumentsTable } from '@/components/DocumentTable';
-import { StatusBadge } from '@/components/StatusBadge';
-import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs';
-import { WorkersTable } from '@/components/WorkersTable';
-import { useCompanies } from '@/hooks/useCompanies';
-import { useDocuments } from '@/hooks/useDocuments';
-import { useWorkers } from '@/hooks/useWorkers';
-import { Building2, FileText, Mail, MessageSquare, Phone, User, Users } from 'lucide-react';
-import { useParams } from 'next/navigation';
+import { CompanyDetailHeader } from "@/components/CompanyDetailHeader";
+import { CompanyObservations } from "@/components/CompanyObservations";
+import { DocumentsTable } from "@/components/DocumentTable";
+import { StatusBadge } from "@/components/StatusBadge";
+import { Button } from "@/components/ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { WorkersTable } from "@/components/WorkersTable";
+import { useCompanies } from "@/hooks/useCompanies";
+import { useDocuments } from "@/hooks/useDocuments";
+import { useWorkers } from "@/hooks/useWorkers";
+import {
+  Building2,
+  FileText,
+  Mail,
+  MessageSquare,
+  Phone,
+  User,
+  Users,
+} from "lucide-react";
+import { useParams } from "next/navigation";
 
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { companies } = useCompanies();
 
-  const { documents, observations } = useDocuments(id || '');
+  const { documents, observations } = useDocuments(id || "");
 
   const company = companies.find((c) => c.id === id);
   const { workers } = useWorkers(company?.id);
@@ -28,7 +36,9 @@ const CompanyDetailPage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <h2 className="text-xl font-semibold mb-2">Empresa no encontrada</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              Empresa no encontrada
+            </h2>
             <p className="text-muted-foreground mb-4">
               La empresa que buscas no existe o no tienes permisos para verla.
             </p>
@@ -42,7 +52,7 @@ const CompanyDetailPage = () => {
   return (
     <div>
       {/* Header */}
-      <CompanyDetailHeader companyName={company?.name || ''} />
+      <CompanyDetailHeader companyName={company?.name || ""} />
       <div className="container mx-auto px-4 py-8 space-y-8">
         {/* Company Info */}
         <Card className="bg-white">
@@ -97,7 +107,9 @@ const CompanyDetailPage = () => {
               )}
 
               <div className="space-y-2">
-                <div className="text-sm font-medium text-muted-foreground">Estado</div>
+                <div className="text-sm font-medium text-muted-foreground">
+                  Estado
+                </div>
                 <StatusBadge status={company.status} />
               </div>
             </div>
@@ -109,13 +121,16 @@ const CompanyDetailPage = () => {
           <TabsList className="grid w-full grid-cols-3 bg-gray-200">
             <TabsTrigger value="workers" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Trabajadores ({workers.length})
+              Documentos Trabajadores ({workers.length})
             </TabsTrigger>
             <TabsTrigger value="documents" className="flex items-center gap-2">
               <FileText className="h-4 w-4" />
-              Documentos
+              Documentos Empresa
             </TabsTrigger>
-            <TabsTrigger value="observations" className="flex items-center gap-2">
+            <TabsTrigger
+              value="observations"
+              className="flex items-center gap-2"
+            >
               <MessageSquare className="h-4 w-4" />
               Observaciones
             </TabsTrigger>
