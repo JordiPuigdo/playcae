@@ -1,5 +1,5 @@
-import { Worker } from '@/types/worker';
 import { Badge } from './ui/Badge';
+import { Worker } from '@/types/worker';
 
 interface WorkerStatusBadgeProps {
   status: Worker['status'];

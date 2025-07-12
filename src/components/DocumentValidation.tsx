@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/Textarea';
+import { Textarea } from '@/components/ui/TextArea';
 import {
   Dialog,
   DialogContent,
