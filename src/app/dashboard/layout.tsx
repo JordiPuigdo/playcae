@@ -1,14 +1,23 @@
-'use client';
+"use client";
 
-import Header from '@/components/ui/Header';
-import Sidebar from '@/components/ui/SideBar';
-import { useAuth } from '@/hooks/useAuth';
+import SupportChat from "@/components/SupportChat";
+import Header from "@/components/ui/Header";
+import Sidebar from "@/components/ui/SideBar";
+import { useAuth } from "@/hooks/useAuth";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const isAuthenticated = useAuth();
 
   if (isAuthenticated === null) {
-    return <div className="flex items-center justify-center h-screen">Cargando...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        Cargando...
+      </div>
+    );
   }
 
   if (!isAuthenticated) {
@@ -20,6 +29,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <div className="flex flex-col flex-1">
         <Header />
         <main className="flex-1 p-6">{children}</main>
+        {isAuthenticated && <SupportChat />}
       </div>
     </div>
   );
