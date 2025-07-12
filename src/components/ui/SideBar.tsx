@@ -1,6 +1,7 @@
 import { usePermissions } from "@/hooks/usePermissions";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const links = [
   { href: "/dashboard", label: "Panel de control" },
@@ -23,9 +24,13 @@ export default function Sidebar() {
 
   return (
     <aside className="sticky top-0 h-screen w-64 bg-brandNeutralDark text-brandNeutralLight p-6 flex flex-col">
-      <h2 className="text-2xl font-semibold  mb-8 select-none">
-        Plataforma CAE
-      </h2>
+      <Image
+        src="/assets/playcae2.png"
+        alt="Logo Play CAE"
+        width={150}
+        height={40}
+        className="mb-8 select-none pt-4"
+      />
       <nav className="flex flex-col space-y-3 flex-grow">
         {links.map(({ href, label }) => {
           const active = isActive(href);

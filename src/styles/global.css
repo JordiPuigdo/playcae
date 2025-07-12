@@ -28,33 +28,36 @@ body {
 }
 
 :root {
-  --success: 142 76% 36%;
-  --warning: 43 96% 56%;      /* Amarillo/Naranja */
-  --pending: 219 85% 55%;     /* Azul claro para 'Pendiente' */
+    /* Brand Core */
+  --primary: 217 43% 27%;           /* Deep Blue */
+  --primary-foreground: 0 0% 98%;   /* Near White */
 
-  --accent: 214 32% 91%;
-  --accent-foreground: 220 13% 18%;
+  --secondary: 28 84% 49%;          /* Burnt Orange */
+  --secondary-foreground: 0 0% 100%;
+
+  /* Neutrals */
+  --background: 0 0% 100%;          /* White */
+  --foreground: 221 13% 35%;        /* Slate Gray Text */
+  --neutral-light: 210 36% 95%;     /* Light Gray */
+
+  /* States */
+  --success: 177 57% 47%;           /* Muted Teal */
+  --destructive: 0 74% 58%;         /* Soft Red */
+  --warning: 28 84% 49%;            /* Burnt Orange (shared) */
+  --pending: 217 91% 60%;           /* Brighter Blue for status */
+
+  /* UI Elements */
+  --accent: 210 36% 95%;            /* Same as light gray */
+  --accent-foreground: 221 13% 35%;
   
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
-  --ring: 210 100% 35%;
-  
-  --muted: 214 32% 91%;
-  --muted-foreground: 220 9% 46%;
-  
+  --muted: 210 36% 95%;
+  --muted-foreground: 221 10% 45%;
+
+  --border: 210 36% 85%;
+  --input: 210 36% 92%;
+  --ring: 217 43% 27%;              /* Match primary */
+
   --radius: 0.5rem;
-  
-  --foreground: 250 13% 18%;
-  --background: 0 0% 100%;
-  
-  --secondary: 214 32% 91%;
-  --secondary-foreground: 220 13% 18%;
-
-  --primary: 210 100% 35%;
-  --primary-foreground: 0 0% 98%;
-
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 210 40% 98%;
 
 }
 
