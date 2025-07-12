@@ -1,0 +1,102 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  @apply font-sans;
+}
+
+:root {
+  --success: 142 76% 36%;
+  --warning: 43 96% 56%;      /* Amarillo/Naranja */
+  --pending: 219 85% 55%;     /* Azul claro para 'Pendiente' */
+
+  --accent: 214 32% 91%;
+  --accent-foreground: 220 13% 18%;
+  
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 210 100% 35%;
+  
+  --muted: 214 32% 91%;
+  --muted-foreground: 220 9% 46%;
+  
+  --radius: 0.5rem;
+  
+  --foreground: 250 13% 18%;
+  --background: 0 0% 100%;
+  
+  --secondary: 214 32% 91%;
+  --secondary-foreground: 220 13% 18%;
+
+  --primary: 210 100% 35%;
+  --primary-foreground: 0 0% 98%;
+
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 210 40% 98%;
+
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
