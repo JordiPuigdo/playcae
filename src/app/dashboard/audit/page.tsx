@@ -1,18 +1,19 @@
-'use client';
+"use client";
 
-import { Badge } from '@/components/ui/Badge';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { ScrollArea } from '@/components/ui/Scroll-Area';
-import { Separator } from '@radix-ui/react-select';
-import { Bot, Loader2, Send, User } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Input } from "@/components/ui/Input";
+import { ScrollArea } from "@/components/ui/Scroll-Area";
+import { useAvailableHeight } from "@/hooks/useResponsive";
+import { Separator } from "@radix-ui/react-select";
+import { Bot, Loader2, Send, User } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 interface Message {
   id: string;
   content: string;
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   timestamp: Date;
   isStreaming?: boolean;
 }
@@ -25,24 +26,26 @@ interface ChatSession {
 }
 
 const documentCategories = [
-  { id: 'company-docs', name: 'Documentos de Empresa', count: 23 },
-  { id: 'worker-docs', name: 'Documentos de Trabajadores', count: 156 },
-  { id: 'safety-docs', name: 'Documentos de Seguridad', count: 45 },
-  { id: 'compliance', name: 'Cumplimiento Legal', count: 12 },
+  { id: "company-docs", name: "Documentos de Empresa", count: 23 },
+  { id: "worker-docs", name: "Documentos de Trabajadores", count: 156 },
+  { id: "safety-docs", name: "Documentos de Seguridad", count: 45 },
+  { id: "compliance", name: "Cumplimiento Legal", count: 12 },
 ];
 
 const AuditPage = () => {
+  const availableHeight = useAvailableHeight(120);
+
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [currentSession, setCurrentSession] = useState<string>('new-chat');
+  const [currentSession, setCurrentSession] = useState<string>("new-chat");
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
-  const [streamingMessage, setStreamingMessage] = useState<string>('');
+  const [streamingMessage, setStreamingMessage] = useState<string>("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -51,14 +54,14 @@ const AuditPage = () => {
 
   const simulateAIStreaming = async (userMessage: string) => {
     const responses = [
-      'Entiendo tu consulta sobre el sistema CAE. ',
-      'Basándome en la información disponible, ',
-      'puedo ayudarte con la gestión de documentos y trabajadores. ',
-      '¿Hay algún aspecto específico que te gustaría explorar más a fondo?',
+      "Entiendo tu consulta sobre el sistema CAE. ",
+      "Basándome en la información disponible, ",
+      "puedo ayudarte con la gestión de documentos y trabajadores. ",
+      "¿Hay algún aspecto específico que te gustaría explorar más a fondo?",
     ];
     console.log(userMessage);
 
-    let fullResponse = '';
+    let fullResponse = "";
 
     for (const chunk of responses) {
       await new Promise((resolve) => setTimeout(resolve, 150));
@@ -75,14 +78,14 @@ const AuditPage = () => {
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue.trim(),
-      role: 'user',
+      role: "user",
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInputValue('');
+    setInputValue("");
     setIsLoading(true);
-    setStreamingMessage('');
+    setStreamingMessage("");
 
     try {
       const aiResponse = await simulateAIStreaming(userMessage.content);
@@ -90,21 +93,21 @@ const AuditPage = () => {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: aiResponse,
-        role: 'assistant',
+        role: "assistant",
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, assistantMessage]);
-      setStreamingMessage('');
+      setStreamingMessage("");
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error("Error sending message:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
@@ -114,14 +117,15 @@ const AuditPage = () => {
     if (messages.length > 0) {
       const newSession: ChatSession = {
         id: Date.now().toString(),
-        title: messages[0]?.content.slice(0, 30) + '...' || 'Nueva conversación',
+        title:
+          messages[0]?.content.slice(0, 30) + "..." || "Nueva conversación",
         messages: [...messages],
         lastActivity: new Date(),
       };
       setChatSessions((prev) => [newSession, ...prev]);
     }
     setMessages([]);
-    setCurrentSession('new-chat');
+    setCurrentSession("new-chat");
   };
 
   const loadChatSession = (session: ChatSession) => {
@@ -130,12 +134,19 @@ const AuditPage = () => {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div
+      className="flex flex-1 bg-background"
+      style={{ height: availableHeight }}
+    >
       {/* Sidebar */}
       <div className="w-80 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
           <h2 className="text-lg font-semibold mb-4">Asistente IA CAE</h2>
-          <Button onClick={startNewChat} className="w-full mb-4" variant="outline">
+          <Button
+            onClick={startNewChat}
+            className="w-full mb-4"
+            variant="outline"
+          >
             Nueva Conversación
           </Button>
         </div>
@@ -177,11 +188,13 @@ const AuditPage = () => {
                     <Card
                       key={session.id}
                       className={`p-3 hover:bg-muted/50 cursor-pointer transition-colors ${
-                        currentSession === session.id ? 'bg-muted' : ''
+                        currentSession === session.id ? "bg-muted" : ""
                       }`}
                       onClick={() => loadChatSession(session)}
                     >
-                      <div className="text-sm font-medium truncate">{session.title}</div>
+                      <div className="text-sm font-medium truncate">
+                        {session.title}
+                      </div>
                       <div className="text-xs text-muted-foreground mt-1">
                         {session.lastActivity.toLocaleDateString()}
                       </div>
@@ -210,10 +223,12 @@ const AuditPage = () => {
             {messages.length === 0 && !streamingMessage && (
               <div className="text-center py-12">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <h3 className="text-lg font-medium mb-2">¡Hola! Soy tu asistente IA</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  ¡Hola! Soy tu asistente IA
+                </h3>
                 <p className="text-muted-foreground">
-                  Puedo ayudarte con información sobre empresas, trabajadores, documentos y
-                  cumplimiento legal. ¿En qué puedo asistirte hoy?
+                  Puedo ayudarte con información sobre empresas, trabajadores,
+                  documentos y cumplimiento legal. ¿En qué puedo asistirte hoy?
                 </p>
               </div>
             )}
@@ -222,10 +237,10 @@ const AuditPage = () => {
               <div
                 key={message.id}
                 className={`flex items-start gap-3 ${
-                  message.role === 'user' ? 'justify-end' : 'justify-start'
+                  message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                {message.role === 'assistant' && (
+                {message.role === "assistant" && (
                   <div className="flex-shrink-0 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
                     <Bot className="h-4 w-4 text-primary-foreground" />
                   </div>
@@ -233,16 +248,20 @@ const AuditPage = () => {
 
                 <Card
                   className={`max-w-[70%] p-4 ${
-                    message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-card'
+                    message.role === "user"
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-card"
                   }`}
                 >
-                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {message.content}
+                  </p>
                   <div className={`text-xs mt-2 opacity-70`}>
                     {message.timestamp.toLocaleTimeString()}
                   </div>
                 </Card>
 
-                {message.role === 'user' && (
+                {message.role === "user" && (
                   <div className="flex-shrink-0 w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
                     <User className="h-4 w-4 text-secondary-foreground" />
                   </div>
@@ -257,7 +276,9 @@ const AuditPage = () => {
                   <Bot className="h-4 w-4 text-primary-foreground" />
                 </div>
                 <Card className="max-w-[70%] p-4 bg-card">
-                  <p className="text-sm whitespace-pre-wrap">{streamingMessage}</p>
+                  <p className="text-sm whitespace-pre-wrap">
+                    {streamingMessage}
+                  </p>
                   <div className="flex items-center gap-1 mt-2">
                     <Loader2 className="h-3 w-3 animate-spin" />
                     <span className="text-xs opacity-70">Escribiendo...</span>

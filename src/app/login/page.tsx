@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useLogin } from '@/hooks/useLogin';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useLogin } from "@/hooks/useLogin";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const { login, user } = useLogin();
 
@@ -16,29 +16,31 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      setError('Por favor completa todos los campos');
+      setError("Por favor completa todos los campos");
       return;
     }
 
     const success = await login(email, password);
 
     if (success) {
-      setError('');
+      setError("");
 
-      if (user?.role === 'admin') {
-        router.push('/dashboard');
-      } else if (user?.role === 'subcontractor') {
-        router.push('/dashboard/companies/1');
+      if (user?.role === "admin") {
+        router.push("/dashboard");
+      } else if (user?.role === "subcontractor") {
+        router.push("/dashboard/companies/1");
       }
     } else {
-      setError('Credenciales incorrectas');
+      setError("Credenciales incorrectas");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <main className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
-        <h1 className="text-3xl font-semibold mb-8 text-center text-gray-900">Iniciar sesión</h1>
+        <h1 className="text-3xl font-semibold mb-8 text-center text-gray-900">
+          Iniciar sesión
+        </h1>
 
         {error && (
           <p className="mb-6 text-center text-red-600 bg-red-100 border border-red-300 rounded-md py-2 px-4">
@@ -48,7 +50,10 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Email
             </label>
             <input
@@ -63,7 +68,10 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block mb-2 font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block mb-2 font-medium text-gray-700"
+            >
               Contraseña
             </label>
             <input
@@ -72,6 +80,12 @@ export default function LoginPage() {
               className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleSubmit(e as any);
+                }
+              }}
               required
               placeholder="********"
             />
