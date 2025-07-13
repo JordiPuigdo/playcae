@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog";
 import { Maximize, Minimize, CheckCircle, XCircle } from "lucide-react";
-import { useAvailableHeight } from "@/hooks/useResponsive";
+import Image from "next/image";
 
 const AccessControl = () => {
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -79,18 +79,27 @@ const AccessControl = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-md space-y-8 text-center">
+        <div className="flex flex-col w-full max-w-md space-y-8 text-center items-center">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-foreground">
               Control de Acceso
             </h1>
+            <div className="flex w-full items-center">
+              <Image
+                src="/assets/girbau.png"
+                alt="Logo Play CAE"
+                width={400}
+                height={150}
+                className="flex items-center justify-center"
+              />
+            </div>
             <p className="text-xl text-muted-foreground">
               Introduce tu DNI para acceder
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-6 w-full">
+            <div className="flex space-y-2 w-full">
               <Input
                 type="text"
                 placeholder="DNI"
