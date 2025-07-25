@@ -1,7 +1,20 @@
-import { UserRole } from './document';
+import { BaseEntity } from "./baseEntity";
 
-export interface User {
-  id: string;
-  userRole: UserRole;
-  token: string;
+export interface UserLoginResponse extends User {
+  refreshTokenExpiryTime: string;
+  companyId: string;
+  isNew: boolean;
+  token?: string;
+  userId: string;
+}
+
+export interface User extends BaseEntity {
+  userName: string;
+  role: UserRole;
+}
+
+export enum UserRole {
+  SuperAdmin,
+  Admin,
+  Company,
 }

@@ -1,26 +1,33 @@
-'use client';
+"use client";
 
-import { CompanyFilters } from '@/components/CompanyFilters';
-import { CompanyForm } from '@/components/CompanyForm';
-import { CompanyTable } from '@/components/CompanyTable';
-import { Button } from '@/components/ui/Button';
-import { DialogHeader } from '@/components/ui/Dialog';
-import { useCompanies } from '@/hooks/useCompanies';
-import { Company, CompanyFormData } from '@/types/company';
-import { Dialog, DialogContent, DialogTitle } from '@radix-ui/react-dialog';
-import { Building2, Plus } from 'lucide-react';
-import { useState } from 'react';
+import { CompanyFilters } from "@/components/CompanyFilters";
+import { CompanyForm } from "@/components/CompanyForm";
+import { CompanyTable } from "@/components/CompanyTable";
+import Loader from "@/components/Loader";
+import { Button } from "@/components/ui/Button";
+import { DialogHeader } from "@/components/ui/Dialog";
+import { useToast } from "@/hooks/use-Toast";
+import { useCompanies } from "@/hooks/useCompanies";
+import { Company, CompanyFormData } from "@/types/company";
+import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+import { Building2, Plus } from "lucide-react";
+import { useState } from "react";
 
 const CompaniesManagement = () => {
   const { createCompany, updateCompany, filteredCompanies } = useCompanies();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<Company['status'] | 'Todos'>('Todos');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<Company["status"] | "Todos">(
+    "Todos"
+  );
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   const filteredResults = filteredCompanies(searchTerm, statusFilter);
 
-  const handleFilter = (filters: { search: string; status: Company['status'] | 'Todos' }) => {
+  const handleFilter = (filters: {
+    search: string;
+    status: Company["status"] | "Todos";
+  }) => {
     setSearchTerm(filters.search);
     setStatusFilter(filters.status);
   };
@@ -29,14 +36,16 @@ const CompaniesManagement = () => {
     setIsFormOpen(true);
   };
 
-  const handleFormSubmit = (data: CompanyFormData) => {
-    if (editingCompany) {
+  const handleFormSubmit = async (data: CompanyFormData) => {
+    setIsLoading(true);
+    if (editingCompany && editingCompany.id) {
       updateCompany(editingCompany.id, data);
     } else {
-      createCompany(data);
+      await createCompany(data);
     }
     setIsFormOpen(false);
     setEditingCompany(null);
+    setIsLoading(false);
   };
 
   const handleCloseForm = () => {
@@ -47,6 +56,7 @@ const CompaniesManagement = () => {
   return (
     <div>
       <div className="border-b bg-card">
+        {isLoading && <Loader text="Creando empresa..." />}
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="h-6 w-px bg-border" />
@@ -58,7 +68,7 @@ const CompaniesManagement = () => {
               <Button
                 onClick={() => setIsFormOpen(true)}
                 className="flex items-center"
-                variant={'submit'}
+                variant={"submit"}
               >
                 <Plus className="h-4 w-4" />
                 Nueva Empresa
@@ -79,14 +89,16 @@ const CompaniesManagement = () => {
         <Dialog open={isFormOpen} onOpenChange={handleCloseForm}>
           <DialogContent className="max-w-2xl bg-white">
             <DialogHeader>
-              <DialogTitle>{editingCompany ? 'Editar Empresa' : 'Nueva Empresa'}</DialogTitle>
+              <DialogTitle>
+                {editingCompany ? "Editar Empresa" : "Nueva Empresa"}
+              </DialogTitle>
             </DialogHeader>
             <CompanyForm
               isOpen={isFormOpen}
               onClose={handleCloseForm}
               onSubmit={handleFormSubmit}
               company={editingCompany || undefined}
-              mode={editingCompany ? 'edit' : 'create'}
+              mode={editingCompany ? "edit" : "create"}
             />
           </DialogContent>
         </Dialog>

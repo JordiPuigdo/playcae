@@ -1,9 +1,16 @@
-import { Users, Eye, AlertTriangle } from 'lucide-react';
-import { Worker } from '@/types/worker';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
-import { Button } from './ui/Button';
-import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/Table';
-import { WorkerStatusBadge } from './WorkerStatusBadge';
+import { Users, Eye, AlertTriangle } from "lucide-react";
+import { Worker } from "@/types/worker";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { Button } from "./ui/Button";
+import {
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+} from "./ui/Table";
+import { WorkerStatusBadge } from "./WorkerStatusBadge";
 
 interface AuthorizedPersonnelTableProps {
   workers: Array<
@@ -20,13 +27,15 @@ export const AuthorizedPersonnelTable = ({
   onViewWorker,
 }: AuthorizedPersonnelTableProps) => {
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES');
+    return new Date(dateString).toLocaleDateString("es-ES");
   };
 
   const isExpiringSoon = (expiryDateString: string) => {
-    if (expiryDateString === '-') return false;
+    if (expiryDateString === "-") return false;
 
-    const expiryDate = new Date(expiryDateString.split('/').reverse().join('-'));
+    const expiryDate = new Date(
+      expiryDateString.split("/").reverse().join("-")
+    );
     const today = new Date();
     const diffTime = expiryDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -35,9 +44,11 @@ export const AuthorizedPersonnelTable = ({
   };
 
   const isExpired = (expiryDateString: string) => {
-    if (expiryDateString === '-') return false;
+    if (expiryDateString === "-") return false;
 
-    const expiryDate = new Date(expiryDateString.split('/').reverse().join('-'));
+    const expiryDate = new Date(
+      expiryDateString.split("/").reverse().join("-")
+    );
     const today = new Date();
 
     return expiryDate < today;
@@ -69,7 +80,10 @@ export const AuthorizedPersonnelTable = ({
             <TableBody>
               {workers.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <TableCell
+                    colSpan={8}
+                    className="text-center py-8 text-muted-foreground"
+                  >
                     No se encontraron trabajadores con los filtros aplicados
                   </TableCell>
                 </TableRow>
@@ -79,14 +93,19 @@ export const AuthorizedPersonnelTable = ({
                     <TableCell className="font-medium">
                       {worker.firstName} {worker.lastName}
                     </TableCell>
-                    <TableCell className="font-mono text-sm">{worker.dni}</TableCell>
+                    <TableCell className="font-mono text-sm">
+                      {worker.cardId}
+                    </TableCell>
                     <TableCell>
-                      <div className="max-w-32 truncate" title={worker.companyName}>
+                      <div
+                        className="max-w-32 truncate"
+                        title={worker.companyName}
+                      >
                         {worker.companyName}
                       </div>
                     </TableCell>
-                    <TableCell>{worker.position || '-'}</TableCell>
-                    <TableCell>{formatDate(worker.registrationDate)}</TableCell>
+                    <TableCell>{worker.position || "-"}</TableCell>
+                    <TableCell>{formatDate(worker.creationDate!)}</TableCell>
                     <TableCell>
                       <WorkerStatusBadge status={worker.status} />
                     </TableCell>
@@ -110,7 +129,7 @@ export const AuthorizedPersonnelTable = ({
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onViewWorker(worker.id)}
+                        onClick={() => onViewWorker(worker.id!)}
                         className="gap-2"
                       >
                         <Eye className="h-3 w-3" />

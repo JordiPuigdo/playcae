@@ -3,35 +3,71 @@
 import { CompanyDetailHeader } from "@/components/CompanyDetailHeader";
 import { CompanyObservations } from "@/components/CompanyObservations";
 import { DocumentsTable } from "@/components/DocumentTable";
-import { StatusBadge } from "@/components/StatusBadge";
+import { EditableCompanyInfo } from "@/components/EditableCompanyInfo";
+import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { WorkersTable } from "@/components/WorkersTable";
+import { useToast } from "@/hooks/use-Toast";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
-import {
-  Building2,
-  FileText,
-  Mail,
-  MessageSquare,
-  Phone,
-  User,
-  Users,
-} from "lucide-react";
+import { Company, CompanyFormData } from "@/types/company";
+import { UserRole } from "@/types/user";
+import { WorkerFormData } from "@/types/worker";
+import { FileText, MessageSquare, Users } from "lucide-react";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { companies } = useCompanies();
-
+  const { getCompanyById, updateCompany } = useCompanies();
+  const { createWorker, updateWorker, getWorkersByCompanyId, workers } =
+    useWorkers(id);
   const { documents, observations } = useDocuments(id || "");
+  const [company, setCompany] = useState<Company | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
-  const company = companies.find((c) => c.id === id);
-  const { workers } = useWorkers(company?.id);
+  const fetchCompany = async (id: string) => {
+    const response = await getCompanyById(id);
+    if (!response) {
+      return;
+    }
+    await getWorkersByCompanyId(id);
+    setCompany(response);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  };
 
-  if (!company) {
+  const handleUpdateCompany = async (id: string, data: CompanyFormData) => {
+    setIsLoading(true);
+    await updateCompany(id, data);
+    await fetchCompany(id);
+    setIsLoading(false);
+  };
+
+  const handleCreateWorker = async (data: WorkerFormData) => {
+    setIsLoading(true);
+    await createWorker(data);
+    await fetchCompany(id);
+    toast({
+      title: "Trabajador creado correctamente",
+      description:
+        "El trabajador se ha registrado correctamente y se ha agregado a la empresa.",
+      variant: "default",
+    });
+
+    setIsLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCompany(id);
+  }, [id]);
+
+  if (!company && !isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="w-full max-w-md">
@@ -48,124 +84,75 @@ const CompanyDetailPage = () => {
       </div>
     );
   }
+  if (company)
+    return (
+      <div>
+        <CompanyDetailHeader companyName={company?.name || ""} />
+        {isLoading && <Loader text="Cargando información..." />}
+        <div className="container mx-auto px-4 py-8 space-y-8">
+          <EditableCompanyInfo
+            company={company}
+            onUpdate={handleUpdateCompany}
+            userRole={UserRole.Admin}
+          />
+        </div>
+        <div className="container mx-auto px-4 py-8 space-y-8">
+          <Tabs defaultValue="workers" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-3 bg-gray-200">
+              <TabsTrigger value="workers" className="flex items-center gap-2">
+                <Users className="h-4 w-4" />
+                Documentos Trabajadores ({workers.length})
+              </TabsTrigger>
+              <TabsTrigger
+                value="documents"
+                className="flex items-center gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                Documentos Empresa
+              </TabsTrigger>
+              <TabsTrigger
+                value="observations"
+                className="flex items-center gap-2"
+              >
+                <MessageSquare className="h-4 w-4" />
+                Observaciones
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="workers" className="space-y-6">
+              <WorkersTable
+                onCreateWorker={(e) => {
+                  handleCreateWorker(e);
+                }}
+                onUpdateWorker={(workerId, workerData) => {
+                  updateWorker(workerId, workerData);
+                }}
+                onDeleteWorker={() => {}}
+                userRole={UserRole.Admin}
+                onUploadDocument={() => {}}
+                onValidateDocument={() => {}}
+                workers={workers}
+              />
+            </TabsContent>
+            <TabsContent value="documents" className="space-y-6">
+              <DocumentsTable
+                documents={documents}
+                userRole={UserRole.Admin}
+                onUpload={() => {}}
+                onValidate={() => {}}
+              />
+            </TabsContent>
 
-  return (
-    <div>
-      {/* Header */}
-      <CompanyDetailHeader companyName={company?.name || ""} />
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* Company Info */}
-        <Card className="bg-white">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5" />
-              Información de la Empresa
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Building2 className="h-4 w-4" />
-                  Nombre
-                </div>
-                <div className="font-semibold">{company.name}</div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <FileText className="h-4 w-4" />
-                  CIF
-                </div>
-                <div className="font-mono text-sm">{company.cif}</div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <User className="h-4 w-4" />
-                  Contacto
-                </div>
-                <div>{company.contactPerson}</div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                  <Mail className="h-4 w-4" />
-                  Email
-                </div>
-                <div className="text-sm">{company.email}</div>
-              </div>
-
-              {company.phone && (
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <Phone className="h-4 w-4" />
-                    Teléfono
-                  </div>
-                  <div className="text-sm">{company.phone}</div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <div className="text-sm font-medium text-muted-foreground">
-                  Estado
-                </div>
-                <StatusBadge status={company.status} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            <TabsContent value="observations" className="space-y-6">
+              <CompanyObservations
+                observations={observations}
+                userRole={UserRole.Admin}
+                onAddObservation={() => {}}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <Tabs defaultValue="workers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 bg-gray-200">
-            <TabsTrigger value="workers" className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
-              Documentos Trabajadores ({workers.length})
-            </TabsTrigger>
-            <TabsTrigger value="documents" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Documentos Empresa
-            </TabsTrigger>
-            <TabsTrigger
-              value="observations"
-              className="flex items-center gap-2"
-            >
-              <MessageSquare className="h-4 w-4" />
-              Observaciones
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="workers" className="space-y-6">
-            <WorkersTable
-              onCreateWorker={() => {}}
-              onUpdateWorker={() => {}}
-              onDeleteWorker={() => {}}
-              userRole="administrador"
-              onUploadDocument={() => {}}
-              onValidateDocument={() => {}}
-              workers={workers}
-            />
-          </TabsContent>
-          <TabsContent value="documents" className="space-y-6">
-            <DocumentsTable
-              documents={documents}
-              userRole="administrador"
-              onUpload={() => {}}
-              onValidate={() => {}}
-            />
-          </TabsContent>
-
-          <TabsContent value="observations" className="space-y-6">
-            <CompanyObservations
-              observations={observations}
-              userRole="administrador"
-              onAddObservation={() => {}}
-            />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default CompanyDetailPage;

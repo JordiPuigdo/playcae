@@ -1,85 +1,114 @@
-import { useState, useMemo } from 'react';
-import { Company, CompanyFormData } from '@/types/company';
+import { useMemo } from "react";
+import useSWR, { mutate as globalMutate } from "swr";
+import { Company, CompanyFormData } from "@/types/company";
+import { CompanyService } from "@/services/companies.service";
+import { HttpClient } from "@/services/http-client";
+import { ApiError, ApiResponse } from "@/interfaces/api-response";
+import { EntityStatus } from "@/types/document";
+import { useAuthStore } from "./useAuthStore";
 
-// Datos de ejemplo
-const mockCompanies: Company[] = [
-  {
-    id: '1',
-    name: 'Constructora ABC S.L.',
-    cif: 'B12345678',
-    contactPerson: 'María García López',
-    email: 'maria.garcia@constructoraabc.com',
-    phone: '666 123 456',
-    status: 'Apta',
-    createdAt: '2024-01-15T10:00:00Z',
-    updatedAt: '2024-01-20T14:30:00Z',
-  },
-  {
-    id: '2',
-    name: 'Instalaciones Eléctricas DEF',
-    cif: 'A87654321',
-    contactPerson: 'Juan Martínez Ruiz',
-    email: 'juan.martinez@electricasdef.com',
-    phone: '677 987 321',
-    status: 'Pendiente',
-    createdAt: '2024-02-01T09:15:00Z',
-    updatedAt: '2024-02-01T09:15:00Z',
-  },
-  {
-    id: '3',
-    name: 'Mantenimiento Industrial GHI',
-    cif: 'C11223344',
-    contactPerson: 'Ana Fernández Torres',
-    email: 'ana.fernandez@mantghi.com',
-    status: 'No apta',
-    createdAt: '2024-01-28T16:45:00Z',
-    updatedAt: '2024-02-05T11:20:00Z',
-  },
-  {
-    id: '4',
-    name: 'Soldaduras y Metal JKL',
-    cif: 'D55667788',
-    contactPerson: 'Carlos Rodríguez Vega',
-    email: 'carlos.rodriguez@soldadurasjkl.com',
-    phone: '654 111 222',
-    status: 'Apta',
-    createdAt: '2024-02-10T13:30:00Z',
-    updatedAt: '2024-02-12T08:45:00Z',
-  },
-];
+const COMPANIES_KEY = "/api/companies";
 
 export const useCompanies = () => {
-  const [companies, setCompanies] = useState<Company[]>(mockCompanies);
+  const companyService = new CompanyService(new HttpClient());
+  const { user } = useAuthStore();
+  const {
+    data: companies = [],
+    mutate,
+    error: swrError,
+    isValidating,
+  } = useSWR<Company[]>(
+    COMPANIES_KEY,
+    async () => {
+      const response = await companyService.getAll();
+      return response.data;
+    },
+    {
+      revalidateOnFocus: true,
+      revalidateOnReconnect: true,
+      shouldRetryOnError: true,
+      errorRetryInterval: 5000,
+    }
+  );
 
-  const createCompany = (data: CompanyFormData) => {
-    const newCompany: Company = {
-      id: Date.now().toString(),
-      ...data,
-      status: 'Pendiente',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    setCompanies((prev) => [newCompany, ...prev]);
+  const handleError = (err: unknown): ApiError => {
+    const error = err as ApiError;
+    return error;
   };
 
-  const updateCompany = (id: string, data: CompanyFormData) => {
-    setCompanies((prev) =>
-      prev.map((company) =>
-        company.id === id ? { ...company, ...data, updatedAt: new Date().toISOString() } : company
-      )
-    );
+  const getCompanyById = async (id: string): Promise<Company | null> => {
+    try {
+      const response = await companyService.getById(id);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+      return null;
+    }
+  };
+
+  const createCompany = async (data: CompanyFormData): Promise<Company> => {
+    try {
+      const newCompany: Company = {
+        ...data,
+        status: EntityStatus.Pending,
+        userId: user!.userId!,
+      };
+
+      const response = await companyService.create(newCompany);
+      mutate([...companies, response.data]);
+
+      return response.data;
+    } catch (err) {
+      mutate(companies, false);
+      throw handleError(err);
+    }
+  };
+
+  const updateCompany = async (
+    id: string,
+    company: Partial<CompanyFormData>
+  ): Promise<Company> => {
+    try {
+      const response = await companyService.update(id, company);
+      return response.data;
+    } catch (err) {
+      mutate(companies, false);
+      throw handleError(err);
+    }
+  };
+
+  const updateCompanyStatus = async (
+    id: string,
+    status: EntityStatus
+  ): Promise<void> => {
+    try {
+      const optimisticData = companies.map((c) =>
+        c.id === id ? { ...c, status } : c
+      );
+      mutate(optimisticData, false);
+
+      await companyService.updateStatus(id, status);
+
+      mutate();
+    } catch (err) {
+      mutate(companies, false);
+      throw handleError(err);
+    }
+  };
+
+  const refreshCompanies = async () => {
+    await mutate();
   };
 
   const filteredCompanies = useMemo(() => {
-    return (search: string, status: Company['status'] | 'Todos') => {
+    return (search: string, status: Company["status"] | "Todos") => {
       return companies.filter((company) => {
         const matchesSearch =
-          search === '' ||
+          search === "" ||
           company.name.toLowerCase().includes(search.toLowerCase()) ||
-          company.cif.toLowerCase().includes(search.toLowerCase());
+          company.taxId?.toLowerCase().includes(search.toLowerCase());
 
-        const matchesStatus = status === 'Todos' || company.status === status;
+        const matchesStatus = status === "Todos" || company.status === status;
 
         return matchesSearch && matchesStatus;
       });
@@ -88,8 +117,17 @@ export const useCompanies = () => {
 
   return {
     companies,
+    loading: isValidating,
+    error: swrError,
+    getCompanyById,
     createCompany,
     updateCompany,
+    updateCompanyStatus,
     filteredCompanies,
+    refreshCompanies,
   };
+};
+
+export const revalidateCompanies = () => {
+  return globalMutate(COMPANIES_KEY);
 };

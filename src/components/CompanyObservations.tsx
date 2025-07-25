@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/TextArea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { MessageSquare, Plus } from 'lucide-react';
-import { CompanyObservation, UserRole } from '@/types/document';
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/TextArea";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { MessageSquare, Plus } from "lucide-react";
+import { CompanyObservation } from "@/types/document";
+import { UserRole } from "@/types/user";
 
 interface CompanyObservationsProps {
   observations: CompanyObservation[];
@@ -16,10 +17,10 @@ export const CompanyObservations = ({
   userRole,
   onAddObservation,
 }: CompanyObservationsProps) => {
-  const [newObservation, setNewObservation] = useState('');
+  const [newObservation, setNewObservation] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
-  const canAddObservations = userRole === 'tecnico-prl' || userRole === 'administrador';
+  const canAddObservations = true;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,12 +28,12 @@ export const CompanyObservations = ({
     if (!newObservation.trim()) return;
 
     onAddObservation(newObservation);
-    setNewObservation('');
+    setNewObservation("");
     setIsAdding(false);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString('es-ES');
+    return new Date(dateString).toLocaleString("es-ES");
   };
 
   return (
@@ -44,7 +45,12 @@ export const CompanyObservations = ({
             Observaciones de la Empresa
           </CardTitle>
           {canAddObservations && !isAdding && (
-            <Button variant="outline" size="sm" onClick={() => setIsAdding(true)} className="gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsAdding(true)}
+              className="gap-2"
+            >
               <Plus className="h-4 w-4" />
               Añadir
             </Button>
@@ -53,7 +59,10 @@ export const CompanyObservations = ({
       </CardHeader>
       <CardContent className="space-y-4">
         {isAdding && (
-          <form onSubmit={handleSubmit} className="space-y-3 p-4 border rounded-lg bg-muted/30">
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-3 p-4 border rounded-lg bg-muted/30"
+          >
             <Textarea
               value={newObservation}
               onChange={(e) => setNewObservation(e.target.value)}
@@ -67,7 +76,7 @@ export const CompanyObservations = ({
                 size="sm"
                 onClick={() => {
                   setIsAdding(false);
-                  setNewObservation('');
+                  setNewObservation("");
                 }}
               >
                 Cancelar
@@ -86,10 +95,14 @@ export const CompanyObservations = ({
         ) : (
           <div className="space-y-3">
             {observations.map((observation) => (
-              <div key={observation.id} className="p-4 border rounded-lg bg-background">
+              <div
+                key={observation.id}
+                className="p-4 border rounded-lg bg-background"
+              >
                 <div className="text-sm mb-2">{observation.observation}</div>
                 <div className="text-xs text-muted-foreground">
-                  Por {observation.createdBy} el {formatDate(observation.createdAt)}
+                  Por {observation.createdBy} el{" "}
+                  {formatDate(observation.createdAt)}
                 </div>
               </div>
             ))}

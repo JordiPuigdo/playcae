@@ -1,4 +1,4 @@
-import { Document, UserRole } from '@/types/document';
+import { Document } from "@/types/document";
 
 import {
   Table,
@@ -7,13 +7,14 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/Table';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { FileText, AlertTriangle } from 'lucide-react';
-import { DocumentFormData } from '@/types/document';
-import { DocumentStatusBadge } from './DocumentStatusBadge';
-import { DocumentUpload } from './DocumentUpload';
-import { DocumentValidation } from './DocumentValidation';
+} from "@/components/ui/Table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
+import { FileText, AlertTriangle } from "lucide-react";
+import { DocumentFormData } from "@/types/document";
+import { DocumentStatusBadge } from "./DocumentStatusBadge";
+import { DocumentUpload } from "./DocumentUpload";
+import { DocumentValidation } from "./DocumentValidation";
+import { UserRole } from "@/types/user";
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -29,8 +30,8 @@ export const DocumentsTable = ({
   onValidate,
 }: DocumentsTableProps) => {
   const formatDate = (dateString?: string) => {
-    if (!dateString) return '-';
-    return new Date(dateString).toLocaleDateString('es-ES');
+    if (!dateString) return "-";
+    return new Date(dateString).toLocaleDateString("es-ES");
   };
 
   const isExpiringSoon = (expiryDate?: string) => {
@@ -49,8 +50,8 @@ export const DocumentsTable = ({
     return expiry < today;
   };
 
-  const canUpload = userRole === 'empresa' || userRole === 'administrador';
-  const canValidate = userRole === 'tecnico-prl' || userRole === 'administrador';
+  const canUpload = userRole == UserRole.Company;
+  const canValidate = userRole == UserRole.Company;
 
   return (
     <Card className="bg-white">
@@ -76,59 +77,68 @@ export const DocumentsTable = ({
             <TableBody>
               {documents.map((document) => (
                 <TableRow key={document.id}>
-                  <TableCell className="font-medium">{document.name}</TableCell>
+                  <TableCell className="font-medium">
+                    {document.documentType.name}
+                  </TableCell>
                   <TableCell>
-                    {document.fileName ? (
+                    {document.documentType ? (
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{document.fileName}</span>
+                        <span className="text-sm">
+                          {document.documentType.name}
+                        </span>
                       </div>
                     ) : (
-                      <span className="text-sm text-muted-foreground">Sin archivo</span>
+                      <span className="text-sm text-muted-foreground">
+                        Sin archivo
+                      </span>
                     )}
                   </TableCell>
                   <TableCell>{formatDate(document.uploadDate)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {formatDate(document.expiryDate)}
-                      {isExpired(document.expiryDate) && (
+                      {formatDate(document.expirationDate)}
+                      {isExpired(document.expirationDate) && (
                         <span title="Documento caducado">
                           <AlertTriangle className="h-4 w-4 text-destructive" />
                         </span>
                       )}
-                      {isExpiringSoon(document.expiryDate) && !isExpired(document.expiryDate) && (
-                        <span title="Caduca pronto">
-                          <AlertTriangle className="h-4 w-4 text-pending" />
-                        </span>
-                      )}
+                      {/*isExpiringSoon(document.expiryDate) &&
+                        !isExpired(document.expiryDate) && (
+                          <span title="Caduca pronto">
+                            <AlertTriangle className="h-4 w-4 text-pending" />
+                          </span>
+                        )*/}
                     </div>
                   </TableCell>
                   <TableCell>
                     <DocumentStatusBadge status={document.status} />
-                    {document.validatorComment && (
+                    {/*document.validatorComment && (
                       <div className="text-xs text-muted-foreground mt-1">
                         {document.validatorComment}
                       </div>
-                    )}
+                    )*/}
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      {canUpload && (
+                      {/*canUpload && (
                         <DocumentUpload
                           documentName={document.name}
                           hasFile={!!document.fileName}
                           onUpload={(data) => onUpload(document.id, data)}
                         />
-                      )}
-                      {canValidate && document.fileName && document.status === 'Pendiente' && (
-                        <DocumentValidation
-                          documentName={document.name}
-                          canValidate={canValidate}
-                          onValidate={(isValid, comment) =>
-                            onValidate(document.id, isValid, comment)
-                          }
-                        />
-                      )}
+                      )*/}
+                      {/*canValidate &&
+                        document.fileName &&
+                        document.status === "Pendiente" && (
+                          <DocumentValidation
+                            documentName={document.name}
+                            canValidate={canValidate}
+                            onValidate={(isValid, comment) =>
+                              onValidate(document.id, isValid, comment)
+                            }
+                          />
+                        )*/}
                     </div>
                   </TableCell>
                 </TableRow>

@@ -2,12 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 export default function Header() {
   const router = useRouter();
+  const { logout } = useAuthStore();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     router.push("/login");
   };
 

@@ -1,39 +1,53 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { Search, X } from 'lucide-react';
-import { Company } from '@/types/company';
-import { Input } from './ui/Input';
-import { Button } from './ui/Button';
-import { Card, CardContent } from './ui/Card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/Select';
+import { Search, X } from "lucide-react";
+import { Company } from "@/types/company";
+import { Input } from "./ui/Input";
+import { Button } from "./ui/Button";
+import { Card, CardContent } from "./ui/Card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/Select";
+import { EntityStatus } from "@/types/document";
+import {
+  getEntityStatusLabel,
+  getEntityStatusOptions,
+} from "@/app/utils/enum-utils";
 
 interface CompanyFiltersProps {
-  onFilter: (filters: { search: string; status: Company['status'] | 'Todos' }) => void;
+  onFilter: (filters: {
+    search: string;
+    status: Company["status"] | "Todos";
+  }) => void;
 }
 
 export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<Company['status'] | 'Todos'>('Todos');
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState<Company["status"] | "Todos">("Todos");
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
     onFilter({ search: value, status });
   };
 
-  const handleStatusChange = (value: Company['status'] | 'Todos') => {
+  const handleStatusChange = (value: Company["status"] | "Todos") => {
     setStatus(value);
     onFilter({ search, status: value });
   };
 
   const clearFilters = () => {
-    setSearch('');
-    setStatus('Todos');
-    onFilter({ search: '', status: 'Todos' });
+    setSearch("");
+    setStatus("Todos");
+    onFilter({ search: "", status: "Todos" });
   };
 
-  const hasActiveFilters = search !== '' || status !== 'Todos';
+  const hasActiveFilters = search !== "" || status !== "Todos";
 
   return (
     <Card>
@@ -54,23 +68,32 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
 
           <div className="space-y-2 min-w-[200px]">
             <label className="text-sm font-medium">Estado de validación</label>
-            <Select value={status} onValueChange={handleStatusChange}>
+            <Select
+              value={status === "Todos" ? "Todos" : EntityStatus[status]}
+              onValueChange={(value) =>
+                handleStatusChange(
+                  value === "Todos"
+                    ? "Todos"
+                    : EntityStatus[value as keyof typeof EntityStatus]
+                )
+              }
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="bg-white hover:cursor-pointer">
                 <SelectItem className="hover:cursor-pointer" value="Todos">
-                  Todos los estados
+                  {getEntityStatusLabel("Todos")}
                 </SelectItem>
-                <SelectItem className="hover:cursor-pointer" value="Pendiente">
-                  Pendiente
-                </SelectItem>
-                <SelectItem className="hover:cursor-pointer" value="Apta">
-                  Apta
-                </SelectItem>
-                <SelectItem className="hover:cursor-pointer" value="No apta">
-                  No apta
-                </SelectItem>
+                {getEntityStatusOptions().map((option) => (
+                  <SelectItem
+                    key={option.value}
+                    className="hover:cursor-pointer"
+                    value={option.value}
+                  >
+                    {option.label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

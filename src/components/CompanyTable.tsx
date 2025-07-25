@@ -1,10 +1,17 @@
-import { Company } from '@/types/company';
-import { Eye, Edit } from 'lucide-react';
-import { Button } from './ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/Card';
-import { TableHeader, TableRow, TableHead, TableBody, TableCell, Table } from './ui/Table';
-import { StatusBadge } from './StatusBadge';
-import { useRouter } from 'next/navigation';
+import { Company } from "@/types/company";
+import { Eye, Edit } from "lucide-react";
+import { Button } from "./ui/Button";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import {
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+  Table,
+} from "./ui/Table";
+import { StatusBadge } from "./StatusBadge";
+import { useRouter } from "next/navigation";
 
 interface CompanyTableProps {
   companies: Company[];
@@ -47,7 +54,9 @@ export const CompanyTable = ({ companies, onEdit }: CompanyTableProps) => {
               {companies.map((company) => (
                 <TableRow key={company.id} className="hover:bg-muted/50">
                   <TableCell className="font-medium">{company.name}</TableCell>
-                  <TableCell className="font-mono text-sm">{company.cif}</TableCell>
+                  <TableCell className="font-mono text-sm">
+                    {company.taxId}
+                  </TableCell>
                   <TableCell>{company.contactPerson}</TableCell>
                   <TableCell>{company.email}</TableCell>
                   <TableCell>

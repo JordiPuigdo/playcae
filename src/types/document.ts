@@ -1,15 +1,13 @@
-export interface Document {
-  id: string;
-  companyId: string;
-  name: string;
-  type: 'evaluacion-riesgos' | 'plan-prevencion' | 'seguro-responsabilidad' | 'tc2-rnt';
-  fileName?: string;
-  uploadDate?: string;
-  expiryDate?: string;
-  status: 'Pendiente' | 'Validado' | 'Rechazado';
-  validatorComment?: string;
-  validatedBy?: string;
-  validatedAt?: string;
+import { BaseEntity } from "./baseEntity";
+import { DocumentType } from "./worker";
+
+export interface Document extends BaseEntity {
+  documentType: DocumentType;
+  status: EntityStatus;
+  originalName: string;
+  storagePatg: string;
+  expirationDate?: string;
+  uploadDate: string;
 }
 
 export interface DocumentFormData {
@@ -25,4 +23,9 @@ export interface CompanyObservation {
   createdAt: string;
 }
 
-export type UserRole = 'empresa' | 'tecnico-prl' | 'administrador';
+export enum EntityStatus {
+  Pending,
+  Approved,
+  Rejected,
+  Expired,
+}

@@ -1,12 +1,19 @@
-'use client';
+"use client";
 
-import { AuthorizedPersonnelTable } from '@/components/AuthorizedPersonnelTable';
-import { Alert, AlertDescription } from '@/components/ui/Alert';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
-import { useCompanies } from '@/hooks/useCompanies';
-import { useWorkers } from '@/hooks/useWorkers';
+import { AuthorizedPersonnelTable } from "@/components/AuthorizedPersonnelTable";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
+import { useCompanies } from "@/hooks/useCompanies";
+import { useWorkers } from "@/hooks/useWorkers";
+import { EntityStatus } from "@/types/document";
 
-import { AlertTriangle, ChartBarStacked, CheckCircle, Clock, Users } from 'lucide-react';
+import {
+  AlertTriangle,
+  ChartBarStacked,
+  CheckCircle,
+  Clock,
+  Users,
+} from "lucide-react";
 
 export default function DashboardPage() {
   /*const { 
@@ -33,20 +40,28 @@ export default function DashboardPage() {
   const stats = getStats();*/
   const { companies } = useCompanies();
   const total = companies.length;
-  const totalPending = companies.filter((c) => c.status === 'Pendiente').length;
-  const totalApto = companies.filter((c) => c.status === 'Apta').length;
-  const totalNoApto = companies.filter((c) => c.status === 'No apta').length;
+  const totalPending = companies.filter(
+    (c) => c.status === EntityStatus.Pending
+  ).length;
+  const totalApto = companies.filter(
+    (c) => c.status === EntityStatus.Approved
+  ).length;
+  const totalNoApto = companies.filter(
+    (c) => c.status === EntityStatus.Rejected
+  ).length;
   const { workers } = useWorkers(undefined);
 
-  const totalNoAptoWorkers = workers.filter((w) => w.status === 'No apto').length;
+  const totalNoAptoWorkers = workers.filter(
+    (w) => w.status === EntityStatus.Rejected
+  ).length;
   const noAptoWorkers = workers
-    .filter((w) => w.status === 'No apto')
+    .filter((w) => w.status === EntityStatus.Rejected)
     .map((w) => {
       const company = companies.find((c) => c.id === w.companyId);
       return {
         ...w,
-        companyName: company?.name || '',
-        nextExpiryDate: '-',
+        companyName: company?.name || "",
+        nextExpiryDate: "-",
       };
     });
 
@@ -69,12 +84,16 @@ export default function DashboardPage() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Empresas</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Empresas
+              </CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{companies.length}</div>
-              <p className="text-xs text-muted-foreground">Empresas registradas</p>
+              <p className="text-xs text-muted-foreground">
+                Empresas registradas
+              </p>
             </CardContent>
           </Card>
 
@@ -86,7 +105,8 @@ export default function DashboardPage() {
             <CardContent>
               <div className="text-2xl font-bold text-success">{totalApto}</div>
               <p className="text-xs text-muted-foreground">
-                {total > 0 ? Math.round((totalApto / total) * 100) : 0}% del total
+                {total > 0 ? Math.round((totalApto / total) * 100) : 0}% del
+                total
               </p>
             </CardContent>
           </Card>
@@ -97,18 +117,26 @@ export default function DashboardPage() {
               <Clock className="h-4 w-4 text-pending" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-pending">{totalPending}</div>
-              <p className="text-xs text-muted-foreground">Requieren revisión</p>
+              <div className="text-2xl font-bold text-pending">
+                {totalPending}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Requieren revisión
+              </p>
             </CardContent>
           </Card>
 
           <Card className="bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">No Autorizadas</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                No Autorizadas
+              </CardTitle>
               <AlertTriangle className="h-4 w-4 text-destructive" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-destructive">{totalNoApto}</div>
+              <div className="text-2xl font-bold text-destructive">
+                {totalNoApto}
+              </div>
               <p className="text-xs text-muted-foreground">Acceso denegado</p>
             </CardContent>
           </Card>
@@ -121,13 +149,17 @@ export default function DashboardPage() {
             <Alert className="bg-red-200/50">
               <AlertTriangle className="h-4 w-4" />
               <AlertDescription>
-                Hay {totalNoAptoWorkers} trabajador{totalNoAptoWorkers > 1 ? 'es' : ''} sin
-                autorización para acceder a las instalaciones.
+                Hay {totalNoAptoWorkers} trabajador
+                {totalNoAptoWorkers > 1 ? "es" : ""} sin autorización para
+                acceder a las instalaciones.
               </AlertDescription>
             </Alert>
           </div>
           <div className="container mx-auto px-4 py-8 space-y-8">
-            <AuthorizedPersonnelTable workers={noAptoWorkers} onViewWorker={() => {}} />
+            <AuthorizedPersonnelTable
+              workers={noAptoWorkers}
+              onViewWorker={() => {}}
+            />
           </div>
         </>
       )}

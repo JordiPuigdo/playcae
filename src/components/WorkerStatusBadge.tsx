@@ -1,31 +1,32 @@
-import { Badge } from './ui/Badge';
-import { Worker } from '@/types/worker';
+import { EntityStatus } from "@/types/document";
+import { Badge } from "./ui/Badge";
+import { Worker } from "@/types/worker";
 
 interface WorkerStatusBadgeProps {
-  status: Worker['status'];
+  status: Worker["status"];
 }
 
 export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
-  const getStatusConfig = (status: Worker['status']) => {
+  const getStatusConfig = (status: Worker["status"]) => {
     switch (status) {
-      case 'Apto':
+      case EntityStatus.Approved:
         return {
-          variant: 'default' as const,
-          className: 'bg-success text-white hover:bg-success/80',
-          text: 'Apto',
+          variant: "default" as const,
+          className: "bg-success text-white hover:bg-success/80",
+          text: "Apto",
         };
-      case 'No apto':
+      case EntityStatus.Rejected:
         return {
-          variant: 'destructive' as const,
-          className: 'bg-red-500 text-white px-2 py-1 rounded',
-          text: 'No apto',
+          variant: "destructive" as const,
+          className: "bg-red-500 text-white px-2 py-1 rounded",
+          text: "No apto",
         };
-      case 'Pendiente':
+      case EntityStatus.Pending:
       default:
         return {
-          variant: 'secondary' as const,
-          className: 'bg-pending text-white hover:bg-pending/80',
-          text: 'Pendiente',
+          variant: "secondary" as const,
+          className: "bg-pending text-white hover:bg-pending/80",
+          text: "Pendiente",
         };
     }
   };

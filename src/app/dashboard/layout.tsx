@@ -1,26 +1,24 @@
 "use client";
 
+import Loader from "@/components/Loader";
 import SupportChat from "@/components/SupportChat";
 import Header from "@/components/ui/Header";
 import Sidebar from "@/components/ui/SideBar";
-import { useAuth } from "@/hooks/useAuth";
+import { useAuthStore } from "@/hooks/useAuthStore";
+import { Toaster } from "@/components/ui/Toaster";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isAuthenticated = useAuth();
+  const { user } = useAuthStore();
 
-  if (isAuthenticated === null) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        Cargando...
-      </div>
-    );
+  if (user === null) {
+    return <Loader text={""} />;
   }
 
-  if (!isAuthenticated) {
+  if (!user) {
     return null;
   }
   return (
@@ -29,7 +27,8 @@ export default function DashboardLayout({
       <div className="flex flex-col flex-1">
         <Header />
         <main className="flex-1 p-6">{children}</main>
-        {isAuthenticated && <SupportChat />}
+        {user && <SupportChat />}
+        <Toaster />
       </div>
     </div>
   );

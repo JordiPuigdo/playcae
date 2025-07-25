@@ -1,35 +1,42 @@
-export interface Worker {
-  id: string;
+import { BaseEntity } from "./baseEntity";
+import { EntityStatus } from "./document";
+
+export interface Worker extends BaseEntity {
   companyId: string;
   firstName: string;
   lastName: string;
-  dni: string;
+  cardId: string;
   position?: string;
-  registrationDate: string;
-  status: 'Apto' | 'No apto' | 'Pendiente';
-  documents: WorkerDocument[];
+  status: EntityStatus;
+  documents?: WorkerDocument[];
 }
 
 export interface WorkerDocument {
   id: string;
   workerId: string;
-  type: 'dni' | 'formacion-prl' | 'aptitud-medica';
+  documentType: DocumentType;
   name: string;
   fileName?: string;
   uploadDate?: string;
   issueDate?: string;
   expiryDate?: string;
-  status: 'Pendiente' | 'Validado' | 'Rechazado';
+  status: EntityStatus;
   validatorComment?: string;
   validatedBy?: string;
   validatedAt?: string;
 }
 
+export interface DocumentType {
+  code: string;
+  name: string;
+}
+
 export interface WorkerFormData {
   firstName: string;
   lastName: string;
-  dni: string;
+  cardId: string;
   position?: string;
+  companyId: string;
 }
 
 export interface WorkerDocumentFormData {
@@ -37,6 +44,3 @@ export interface WorkerDocumentFormData {
   issueDate?: string;
   expiryDate?: string;
 }
-
-export type WorkerStatus = 'Apto' | 'No apto' | 'Pendiente' | 'Todos';
-export type UserRole = 'empresa' | 'tecnico-prl' | 'administrador';

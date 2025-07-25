@@ -1,16 +1,19 @@
-import { ArrowLeft, FileText } from 'lucide-react';
-import { Button } from './ui/Button';
-import { useRouter } from 'next/navigation';
-import { usePermissions } from '@/hooks/usePermissions';
+import { ArrowLeft, FileText } from "lucide-react";
+import { Button } from "./ui/Button";
+import { useRouter } from "next/navigation";
+import { usePermissions } from "@/hooks/usePermissions";
+import { UserRole } from "@/types/user";
 
 interface CompanyDetailHeaderProps {
   companyName: string;
 }
 
-export const CompanyDetailHeader = ({ companyName }: CompanyDetailHeaderProps) => {
+export const CompanyDetailHeader = ({
+  companyName,
+}: CompanyDetailHeaderProps) => {
   const router = useRouter();
   const { role } = usePermissions();
-  const isAdmin = role === 'admin';
+  const isAdmin = role === UserRole.Admin;
   return (
     <div className="border-b bg-card">
       <div className="container mx-auto px-4 py-6">

@@ -1,31 +1,31 @@
-import { Document } from '@/types/document';
-import { Badge } from './ui/Badge';
+import { EntityStatus } from "@/types/document";
+import { Badge } from "./ui/Badge";
 
 interface DocumentStatusBadgeProps {
-  status: Document['status'];
+  status: EntityStatus;
 }
 
 export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
-  const getStatusConfig = (status: Document['status']) => {
+  const getStatusConfig = (status: EntityStatus) => {
     switch (status) {
-      case 'Validado':
+      case EntityStatus.Approved:
         return {
-          variant: 'default' as const,
-          className: 'bg-success text-white hover:bg-success/80',
-          text: 'Validado',
+          variant: "default" as const,
+          className: "bg-success text-white hover:bg-success/80",
+          text: "Validado",
         };
-      case 'Rechazado':
+      case EntityStatus.Rejected:
         return {
-          variant: 'destructive' as const,
-          className: '',
-          text: 'Rechazado',
+          variant: "destructive" as const,
+          className: "text-white",
+          text: "Rechazado",
         };
-      case 'Pendiente':
+      case EntityStatus.Pending:
       default:
         return {
-          variant: 'secondary' as const,
-          className: 'bg-pending text-white hover:bg-pending/80',
-          text: 'Pendiente',
+          variant: "secondary" as const,
+          className: "bg-pending text-white hover:bg-pending/80",
+          text: "Pendiente",
         };
     }
   };

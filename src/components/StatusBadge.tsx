@@ -1,31 +1,32 @@
-import { Company } from '@/types/company';
-import { Badge } from './ui/Badge';
+import { Company } from "@/types/company";
+import { Badge } from "./ui/Badge";
+import { EntityStatus } from "@/types/document";
 
 interface StatusBadgeProps {
-  status: Company['status'];
+  status: Company["status"];
 }
 
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
-  const getStatusConfig = (status: Company['status']) => {
+  const getStatusConfig = (status: Company["status"]) => {
     switch (status) {
-      case 'Apta':
+      case EntityStatus.Approved:
         return {
-          variant: 'default' as const,
-          className: 'bg-success text-white hover:bg-success/80',
-          text: 'Apta',
+          variant: "default" as const,
+          className: "bg-success text-white hover:bg-success/80",
+          text: "Apta",
         };
-      case 'No apta':
+      case EntityStatus.Rejected:
         return {
-          variant: 'destructive' as const,
-          className: 'bg-red-600 text-white hover:bg-red-700',
-          text: 'No apta',
+          variant: "destructive" as const,
+          className: "bg-red-600 text-white hover:bg-red-700",
+          text: "No apta",
         };
-      case 'Pendiente':
+      case EntityStatus.Pending:
       default:
         return {
-          variant: 'secondary' as const,
-          className: 'bg-pending text-white hover:bg-pending/80',
-          text: 'Pendiente',
+          variant: "secondary" as const,
+          className: "bg-pending text-white hover:bg-pending/80",
+          text: "Pendiente",
         };
     }
   };
