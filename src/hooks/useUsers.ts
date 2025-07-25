@@ -8,7 +8,7 @@ export const useUsers = () => {
     const newUser: User = {
       userName: data.userName,
       role: UserRole.Company,
-      token: undefined,
+      //token: undefined,
     };
     await userService.create(newUser);
   };
