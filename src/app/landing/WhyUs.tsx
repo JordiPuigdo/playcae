@@ -43,7 +43,7 @@ export default function WhyUs() {
             </h3>
             <p className="text-gray-600 mb-4">
               Base de datos legal con seguimiento automático de BOE, DOGC y
-              EUR-Lex :cite[1]:cite[5]
+              EUR-Lex
             </p>
             <div className="flex items-center text-sm text-blue-600">
               <svg
@@ -74,7 +74,7 @@ export default function WhyUs() {
             </h3>
             <p className="text-gray-600 mb-4">
               Documentos encriptados con AES-256 y alojados en centros de datos
-              UE :cite[4]:cite[10]
+              UE
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               <span className="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
@@ -154,7 +154,7 @@ export default function WhyUs() {
               </p>
               <ul className="space-y-3">
                 {[
-                  "ISO/IEC 27001:2022 - Gestión de seguridad de la información :cite[10]",
+                  "ISO/IEC 27001:2022 - Gestión de seguridad de la información",
                   "Reglamento GDPR - Protección de datos UE",
                   "LOPDGDD - Adaptación española al RGPD",
                   "EN 45545 - Seguridad en entornos industriales",
