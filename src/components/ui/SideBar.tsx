@@ -7,8 +7,8 @@ const links = [
   { href: "/dashboard", label: "Panel de control" },
   { href: "/dashboard/companies", label: "Empresas" },
   { href: "/access-control", label: "Control de Acceso" },
-  { href: "/dashboard/audit", label: "Auditoría" },
-  { href: "/dashboard/settings", label: "Configuración" },
+  /*{ href: "/dashboard/audit", label: "Auditoría" },
+  { href: "/dashboard/settings", label: "Configuración" },*/
 ];
 
 export default function Sidebar() {

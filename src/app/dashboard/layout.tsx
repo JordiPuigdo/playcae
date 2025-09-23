@@ -27,7 +27,7 @@ export default function DashboardLayout({
       <div className="flex flex-col flex-1">
         <Header />
         <main className="flex-1 p-6">{children}</main>
-        {user && <SupportChat />}
+        {/*user && <SupportChat />*/}
         <Toaster />
       </div>
     </div>
