@@ -84,7 +84,7 @@ const Hero: React.FC = () => {
 
             <div className="flex flex-col gap-4 sm:flex-row">
               <a
-                href="#demo"
+                href="#contact"
                 className="group inline-flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 font-semibold text-white shadow-lg transition-transform duration-200 hover:from-blue-700 hover:to-cyan-700 hover:scale-[1.02] focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/50"
               >
                 Agenda una demo
@@ -231,10 +231,7 @@ const Hero: React.FC = () => {
                   ))}
                 </div>
 
-                <button
-                  type="button"
-                  className="w-full inline-flex items-center justify-center rounded-lg border border-blue-100 bg-blue-50 py-2 font-medium text-blue-600 transition-colors hover:bg-blue-100 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/40"
-                >
+                <div className="w-full inline-flex items-center justify-center rounded-lg border border-blue-100 bg-blue-50 py-2 font-medium text-blue-600 transition-colors  focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/40">
                   <svg
                     aria-hidden="true"
                     xmlns="http://www.w3.org/2000/svg"
@@ -249,7 +246,7 @@ const Hero: React.FC = () => {
                     />
                   </svg>
                   Añadir más documentos
-                </button>
+                </div>
               </div>
 
               {/* Sello */}

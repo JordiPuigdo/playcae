@@ -147,7 +147,7 @@ export default function ProblemSolutionSection() {
 
         {/* Solución */}
         <div>
-          <div className="relative bg-gradient-to-br from-blue-50 to-cyan-50 p-8 rounded-2xl border border-blue-100 shadow-sm">
+          <div className="relative bg-gradient-to-br from-blue-50 to-cyan-50 p-8 pt-16 md:pt-8 rounded-2xl border border-blue-100 shadow-sm">
             <div className="absolute top-6 right-6">
               <div className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
                 SOLUCIÓN
@@ -175,7 +175,6 @@ export default function ProblemSolutionSection() {
                 Nuestra solución inteligente
               </h4>
             </div>
-
             <div className="space-y-4 mb-8">
               <div className="flex">
                 <div className="flex-shrink-0 mt-1 text-blue-600">

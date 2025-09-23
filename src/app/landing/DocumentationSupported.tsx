@@ -1,6 +1,9 @@
 export default function DocumentationSupported() {
   return (
-    <section className="relative py-16 bg-gradient-to-b from-white to-gray-50 overflow-hidden">
+    <section
+      id="how-it-works"
+      className="relative py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden"
+    >
       {/* Elementos decorativos */}
       <div className="absolute top-20 left-0 w-32 h-32 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
       <div className="absolute bottom-10 right-10 w-48 h-48 bg-green-100 rounded-full opacity-30 blur-3xl"></div>
