@@ -22,7 +22,7 @@ export default function Landing() {
           <nav className="flex items-center space-x-4">
             <a
               href="#how-it-works"
-              className="text-foreground transition-colors hover:text-primary"
+              className="text-black transition-colors hover:text-primary"
             >
               ¿Cómo funciona?
             </a>
