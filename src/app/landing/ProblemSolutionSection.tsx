@@ -1,13 +1,27 @@
+import { motion } from "framer-motion";
+
 export default function ProblemSolutionSection() {
   return (
     <section className="container mx-auto px-4 py-16">
-      <h3 className="text-3xl font-bold text-center text-foreground mb-12">
+      <motion.h3
+        className="text-3xl font-bold text-center text-foreground mb-12"
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
         La validación manual PRL: Un riesgo evitable
-      </h3>
+      </motion.h3>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
         {/* Problemas */}
-        <div className="flex items-start justify-start h-full">
+        <motion.div
+          className="flex items-start justify-start h-full"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           <div className="bg-red-50 p-8 rounded-2xl border border-red-100 shadow-sm">
             <div className="flex items-center mb-6">
               <div className="bg-red-100 p-3 rounded-full mr-4">
@@ -143,10 +157,15 @@ export default function ProblemSolutionSection() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Solución */}
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+        >
           <div className="relative bg-gradient-to-br from-blue-50 to-cyan-50 p-8 pt-16 md:pt-8 rounded-2xl border border-blue-100 shadow-sm">
             <div className="absolute top-6 right-6">
               <div className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
@@ -293,7 +312,7 @@ export default function ProblemSolutionSection() {
               Sin tarjeta de crédito - Resultados en minutos
             </p>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

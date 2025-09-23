@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 type Stat = { value: string; label: string };
 type DocItem = {
@@ -58,7 +59,12 @@ const Hero: React.FC = () => {
         aria-hidden="true"
       />
 
-      <div className="container relative z-10 mx-auto px-4 py-20 md:py-24">
+      <motion.div
+        className="container relative z-10 mx-auto px-4 py-20 md:py-24"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+      >
         <div className="flex flex-col items-center lg:flex-row">
           {/* Texto */}
           <div className="mb-12 w-full lg:mb-0 lg:w-1/2">
@@ -273,7 +279,7 @@ const Hero: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Wave inferior — senefas sin línea azul */}
       <div

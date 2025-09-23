@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 export default function DocumentationSupported() {
   return (
     <section
@@ -9,7 +11,13 @@ export default function DocumentationSupported() {
       <div className="absolute bottom-10 right-10 w-48 h-48 bg-green-100 rounded-full opacity-30 blur-3xl"></div>
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Automatiza la validación PRL en 3 pasos
           </h2>
@@ -17,11 +25,17 @@ export default function DocumentationSupported() {
             Transforma semanas de trabajo manual en minutos con nuestro agente
             IA especializado en normativa PRL y CAE
           </p>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Diagrama visual - Flujo animado */}
-          <div className="relative w-full lg:w-2/5">
+          <motion.div
+            className="relative w-full lg:w-2/5"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <div className="relative h-96 flex flex-col items-center">
               {/* Documento */}
               <div className="bg-white border border-gray-200 rounded-xl shadow-lg w-56 p-3 animate-float">
@@ -70,10 +84,16 @@ export default function DocumentationSupported() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
 
           {/* Pasos del proceso */}
-          <div className="w-full lg:w-3/5">
+          <motion.div
+            className="w-full lg:w-3/5"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
             <div className="space-y-12">
               {/* Paso 1 */}
               <div className="flex">
@@ -264,7 +284,7 @@ export default function DocumentationSupported() {
                 Procesamiento en tiempo real con precisión del 99.2%
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>
