@@ -19,6 +19,14 @@ export class HttpClient {
     return this.handleResponse<T>(response);
   }
 
+  async upload<T>(url: string, formData: FormData): Promise<ApiResponse<T>> {
+    const response = await fetch(`${this.baseUrl}${url}`, {
+      method: "POST",
+      body: formData,
+    });
+    return this.handleResponse<T>(response);
+  }
+
   async put<T = void>(url: string, body: unknown): Promise<ApiResponse<T>> {
     const response = await fetch(`${this.baseUrl}${url}`, {
       method: "PUT",

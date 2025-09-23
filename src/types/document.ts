@@ -5,9 +5,9 @@ export interface Document extends BaseEntity {
   documentType: DocumentType;
   status: EntityStatus;
   originalName: string;
-  storagePatg: string;
+  storagePath: string;
   expirationDate?: string;
-  uploadDate: string;
+  uploadedDate: string;
 }
 
 export interface DocumentFormData {
@@ -28,4 +28,12 @@ export enum EntityStatus {
   Approved,
   Rejected,
   Expired,
+}
+
+export interface UploadDocument {
+  file: File;
+  expiryDate?: string;
+  workerId?: string;
+  companyId: string;
+  documentId: string;
 }

@@ -19,113 +19,53 @@ export default function DocumentationSupported() {
         <div className="flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Diagrama visual - Flujo animado */}
           <div className="relative w-full lg:w-2/5">
-            <div className="relative h-96">
-              {/* Documento entrante */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 animate-float">
-                <div className="bg-white p-4 rounded-xl shadow-lg border border-gray-200 w-48">
-                  <div className="flex items-center mb-2">
-                    <div className="bg-red-100 p-2 rounded-lg">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6 text-red-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                        />
-                      </svg>
-                    </div>
-                    <span className="ml-2 text-sm font-medium">
-                      Documento PRL
-                    </span>
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    Subcontrata_EPIs.pdf
-                  </div>
+            <div className="relative h-96 flex flex-col items-center">
+              {/* Documento */}
+              <div className="bg-white border border-gray-200 rounded-xl shadow-lg w-56 p-3 animate-float">
+                <div className="flex items-center text-sm font-medium text-gray-700">
+                  <svg
+                    className="h-5 w-5 text-red-500 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5h5.586l5.414 5.414V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  Subcontrata_EPIs.pdf
+                </div>
+                <div className="text-xs text-gray-400 mt-1">
+                  Documento cargado
                 </div>
               </div>
 
-              {/* Procesamiento IA */}
-              <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                <div className="bg-blue-600 text-white p-6 rounded-full w-32 h-32 flex items-center justify-center animate-pulse">
-                  <div className="text-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-10 w-10 mx-auto mb-2"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
-                      />
-                    </svg>
-                    <span className="font-bold">Analizando</span>
-                  </div>
-                </div>
-                <div className="absolute inset-0 rounded-full border-4 border-blue-200 animate-ping opacity-20"></div>
-              </div>
-
-              {/* Resultados */}
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <div className="flex space-x-4">
-                  <div className="bg-white p-4 rounded-xl shadow-lg border border-green-200 w-32">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-green-100 p-1 rounded-full">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-green-500"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <span className="ml-1 text-xs font-medium">Válido</span>
-                    </div>
-                    <div className="text-xs text-gray-500">Formación.pdf</div>
-                  </div>
-
-                  <div className="bg-white p-4 rounded-xl shadow-lg border border-yellow-200 w-32">
-                    <div className="flex items-center mb-2">
-                      <div className="bg-yellow-100 p-1 rounded-full">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-5 w-5 text-yellow-500"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                      <span className="ml-1 text-xs font-medium">Revisar</span>
-                    </div>
-                    <div className="text-xs text-gray-500">EPIs.pdf</div>
-                  </div>
+              {/* IA - caja con loader */}
+              <div className="bg-blue-600 text-white rounded-xl w-48 h-24 flex items-center justify-center mt-8 shadow-lg animate-pulse">
+                <div className="text-center">
+                  <div className="animate-spin h-6 w-6 mx-auto mb-2 border-2 border-white border-t-transparent rounded-full"></div>
+                  <span className="text-sm font-semibold">
+                    Analizando con IA...
+                  </span>
                 </div>
               </div>
 
-              {/* Flechas del proceso */}
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-1 h-40 bg-gray-200 rounded-full"></div>
-              <div className="absolute top-20 left-1/2 transform -translate-x-1/2 w-1 h-40 bg-gradient-to-b from-gray-200 to-blue-600 rounded-full animate-flow"></div>
-              <div className="absolute top-60 left-1/2 transform -translate-x-1/2 w-1 h-40 bg-gray-200 rounded-full"></div>
-              <div className="absolute top-60 left-1/2 transform -translate-x-1/2 w-1 h-40 bg-gradient-to-b from-blue-600 to-gray-200 rounded-full animate-flow-2"></div>
+              {/* Resultado */}
+              <div className="flex space-x-4 mt-8">
+                <div className="bg-white border border-green-200 rounded-lg p-3 w-40 shadow hover:scale-105 transition">
+                  <span className="text-sm font-medium text-green-600">
+                    ✔ Formación.pdf
+                  </span>
+                </div>
+                <div className="bg-white border border-yellow-200 rounded-lg p-3 w-40 shadow hover:scale-105 transition">
+                  <span className="text-sm font-medium text-yellow-600">
+                    ⚠ Revisar EPIs.pdf
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
 

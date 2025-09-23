@@ -1,14 +1,14 @@
-import { useState } from 'react';
-import { Button } from '@/components/ui/Button';
-import { Textarea } from '@/components/ui/TextArea';
+import { useState } from "react";
+import { Button } from "@/components/ui/Button";
+import { Textarea } from "@/components/ui/TextArea";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/Dialog';
-import { CheckCircle, XCircle } from 'lucide-react';
+} from "@/components/ui/Dialog";
+import { CheckCircle, XCircle } from "lucide-react";
 
 interface DocumentValidationProps {
   documentName: string;
@@ -23,7 +23,7 @@ export const DocumentValidation = ({
 }: DocumentValidationProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isValidating, setIsValidating] = useState<boolean | null>(null);
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   if (!canValidate) return null;
 
@@ -36,12 +36,12 @@ export const DocumentValidation = ({
 
     setIsOpen(false);
     setIsValidating(null);
-    setComment('');
+    setComment("");
   };
 
   const resetForm = () => {
     setIsValidating(null);
-    setComment('');
+    setComment("");
   };
 
   return (
@@ -65,12 +65,14 @@ export const DocumentValidation = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-3">
-            <div className="text-sm font-medium">Resultado de la validación:</div>
+            <div className="text-sm font-medium">
+              Resultado de la validación:
+            </div>
 
             <div className="flex space-x-2">
               <Button
                 type="button"
-                variant={isValidating === true ? 'default' : 'outline'}
+                variant={isValidating === true ? "default" : "outline"}
                 className="flex-1 gap-2"
                 onClick={() => setIsValidating(true)}
               >
@@ -79,7 +81,7 @@ export const DocumentValidation = ({
               </Button>
               <Button
                 type="button"
-                variant={isValidating === false ? 'destructive' : 'outline'}
+                variant={isValidating === false ? "destructive" : "outline"}
                 className="flex-1 gap-2"
                 onClick={() => setIsValidating(false)}
               >
@@ -92,15 +94,15 @@ export const DocumentValidation = ({
           {isValidating !== null && (
             <div className="space-y-2">
               <label className="text-sm font-medium">
-                {isValidating ? 'Comentario (opcional)' : 'Motivo del rechazo'}
+                {isValidating ? "Comentario (opcional)" : "Motivo del rechazo"}
               </label>
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={
                   isValidating
-                    ? 'Agregar comentarios sobre la validación...'
-                    : 'Especificar por qué se rechaza el documento...'
+                    ? "Agregar comentarios sobre la validación..."
+                    : "Especificar por qué se rechaza el documento..."
                 }
                 required={!isValidating}
               />
@@ -108,15 +110,19 @@ export const DocumentValidation = ({
           )}
 
           <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               Cancelar
             </Button>
             <Button
               type="submit"
               disabled={isValidating === null}
-              variant={isValidating === false ? 'destructive' : 'default'}
+              variant={isValidating === false ? "destructive" : "default"}
             >
-              {isValidating ? 'Validar documento' : 'Rechazar documento'}
+              {isValidating ? "Validar documento" : "Rechazar documento"}
             </Button>
           </div>
         </form>

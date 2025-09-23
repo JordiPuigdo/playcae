@@ -1,4 +1,4 @@
-import { Document } from "@/types/document";
+import { Document, EntityStatus } from "@/types/document";
 
 import {
   Table,
@@ -13,8 +13,10 @@ import { FileText, AlertTriangle } from "lucide-react";
 import { DocumentFormData } from "@/types/document";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
 import { DocumentUpload } from "./DocumentUpload";
-import { DocumentValidation } from "./DocumentValidation";
 import { UserRole } from "@/types/user";
+import Link from "next/link";
+import { formatDate, isExpired } from "@/app/utils/date";
+import { DocumentValidation } from "./DocumentValidation";
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -29,29 +31,22 @@ export const DocumentsTable = ({
   onUpload,
   onValidate,
 }: DocumentsTableProps) => {
-  const formatDate = (dateString?: string) => {
-    if (!dateString) return "-";
-    return new Date(dateString).toLocaleDateString("es-ES");
-  };
-
-  const isExpiringSoon = (expiryDate?: string) => {
-    if (!expiryDate) return false;
-    const expiry = new Date(expiryDate);
-    const today = new Date();
-    const diffTime = expiry.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 && diffDays > 0;
-  };
-
-  const isExpired = (expiryDate?: string) => {
-    if (!expiryDate) return false;
-    const expiry = new Date(expiryDate);
-    const today = new Date();
-    return expiry < today;
-  };
-
   const canUpload = userRole == UserRole.Company;
-  const canValidate = userRole == UserRole.Company;
+  const canValidate = userRole == UserRole.Admin;
+
+  const renderFile = (document: Document) => {
+    if (document.storagePath) {
+      return (
+        <Link href={document.storagePath} target="_blank">
+          <div className="flex items-center gap-2 hover:text-blue-500">
+            <FileText className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm">{document.documentType.name}</span>
+          </div>
+        </Link>
+      );
+    }
+    return <span className="text-sm text-muted-foreground">Sin archivo</span>;
+  };
 
   return (
     <Card className="bg-white">
@@ -80,21 +75,8 @@ export const DocumentsTable = ({
                   <TableCell className="font-medium">
                     {document.documentType.name}
                   </TableCell>
-                  <TableCell>
-                    {document.documentType ? (
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">
-                          {document.documentType.name}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="text-sm text-muted-foreground">
-                        Sin archivo
-                      </span>
-                    )}
-                  </TableCell>
-                  <TableCell>{formatDate(document.uploadDate)}</TableCell>
+                  <TableCell>{renderFile(document)}</TableCell>
+                  <TableCell>{formatDate(document.uploadedDate)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {formatDate(document.expirationDate)}
@@ -121,24 +103,25 @@ export const DocumentsTable = ({
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
-                      {/*canUpload && (
+                      {canUpload && (
                         <DocumentUpload
-                          documentName={document.name}
-                          hasFile={!!document.fileName}
-                          onUpload={(data) => onUpload(document.id, data)}
+                          documentName={document.originalName}
+                          hasFile={!!document.storagePath}
+                          onUpload={(data) => onUpload(document.id!, data)}
                         />
-                      )*/}
-                      {/*canValidate &&
-                        document.fileName &&
-                        document.status === "Pendiente" && (
+                      )}
+
+                      {canValidate &&
+                        document.storagePath &&
+                        document.status === EntityStatus.Pending && (
                           <DocumentValidation
-                            documentName={document.name}
+                            documentName={document.originalName}
                             canValidate={canValidate}
                             onValidate={(isValid, comment) =>
-                              onValidate(document.id, isValid, comment)
+                              onValidate(document.id!, isValid, comment)
                             }
                           />
-                        )*/}
+                        )}
                     </div>
                   </TableCell>
                 </TableRow>

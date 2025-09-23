@@ -7,7 +7,7 @@ export default function WhyUs() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Por qué las empresas CAE confían en ValerDoc
+            Por qué las empresas CAE confían en PlayCAE
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Más de 200 empresas del sector construcción y prevención de riesgos

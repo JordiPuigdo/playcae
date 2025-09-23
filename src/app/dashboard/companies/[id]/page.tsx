@@ -10,10 +10,12 @@ import { Card, CardContent } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { WorkersTable } from "@/components/WorkersTable";
 import { useToast } from "@/hooks/use-Toast";
+import { useAuthStore } from "@/hooks/useAuthStore";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
 import { Company, CompanyFormData } from "@/types/company";
+import { DocumentFormData, UploadDocument } from "@/types/document";
 import { UserRole } from "@/types/user";
 import { WorkerFormData } from "@/types/worker";
 import { FileText, MessageSquare, Users } from "lucide-react";
@@ -25,10 +27,12 @@ const CompanyDetailPage = () => {
   const { getCompanyById, updateCompany } = useCompanies();
   const { createWorker, updateWorker, getWorkersByCompanyId, workers } =
     useWorkers(id);
-  const { documents, observations } = useDocuments(id || "");
+  const { documents, observations, uploadDocument, validateDocument } =
+    useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
+  const { user } = useAuthStore();
 
   const fetchCompany = async (id: string) => {
     const response = await getCompanyById(id);
@@ -40,6 +44,22 @@ const CompanyDetailPage = () => {
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
+  };
+
+  const handleValidateDocument = async (
+    documentId: string,
+    isValid: boolean,
+    comment?: string
+  ) => {
+    try {
+      setIsLoading(true);
+
+      validateDocument(documentId, isValid, comment);
+    } catch (err) {
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleUpdateCompany = async (id: string, data: CompanyFormData) => {
@@ -66,6 +86,29 @@ const CompanyDetailPage = () => {
   useEffect(() => {
     fetchCompany(id);
   }, [id]);
+
+  const handleUploadDocument = async (
+    documentId: string,
+    data: DocumentFormData
+  ) => {
+    try {
+      setIsLoading(true);
+      console.log(documentId, data);
+      const request: UploadDocument = {
+        file: data.file,
+        expiryDate: data.expiryDate,
+        companyId: id,
+        documentId,
+      };
+      await uploadDocument(request);
+    } catch (err) {
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+
+    //await fetchCompany(id);
+  };
 
   if (!company && !isLoading) {
     return (
@@ -127,7 +170,7 @@ const CompanyDetailPage = () => {
                   updateWorker(workerId, workerData);
                 }}
                 onDeleteWorker={() => {}}
-                userRole={UserRole.Admin}
+                userRole={user?.role!}
                 onUploadDocument={() => {}}
                 onValidateDocument={() => {}}
                 workers={workers}
@@ -136,9 +179,17 @@ const CompanyDetailPage = () => {
             <TabsContent value="documents" className="space-y-6">
               <DocumentsTable
                 documents={documents}
-                userRole={UserRole.Admin}
-                onUpload={() => {}}
-                onValidate={() => {}}
+                userRole={user?.role!}
+                onUpload={(documentId: string, data: DocumentFormData) => {
+                  return handleUploadDocument(documentId, data);
+                }}
+                onValidate={(
+                  id: string,
+                  isValid: boolean,
+                  comment?: string
+                ) => {
+                  return handleValidateDocument(id, isValid, comment);
+                }}
               />
             </TabsContent>
 

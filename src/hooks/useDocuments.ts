@@ -1,14 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   Document,
-  DocumentFormData,
   CompanyObservation,
   EntityStatus,
+  UploadDocument,
 } from "@/types/document";
 
 import { DocumentService } from "@/services/document.service";
 import { useAuthStore } from "./useAuthStore";
-import { useToast } from "./use-Toast";
 
 export const useDocuments = (companyId: string) => {
   const [documents, setDocuments] = useState<Document[]>([]);
@@ -45,27 +44,6 @@ export const useDocuments = (companyId: string) => {
     [observations, companyId]
   );
 
-  const uploadDocument = async (documentId: string, data: DocumentFormData) => {
-    try {
-      setIsLoading(true);
-
-      // En un caso real, aquí subirías el archivo primero
-      // const fileUrl = await uploadFile(data.file);
-
-      const response = await documentService.update(documentId, {
-        status: EntityStatus.Pending,
-      });
-
-      setDocuments((prev) =>
-        prev.map((doc) => (doc.id === documentId ? response.data : doc))
-      );
-    } catch (err) {
-      throw err;
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const validateDocument = async (
     documentId: string,
     isValid: boolean,
@@ -76,17 +54,8 @@ export const useDocuments = (companyId: string) => {
       const status = isValid ? EntityStatus.Approved : EntityStatus.Rejected;
       const response = await documentService.updateStatus(documentId, status);
 
-      setDocuments((prev) =>
-        prev.map((doc) =>
-          doc.id === documentId
-            ? {
-                ...response.data,
-                validatorComment: comment,
-                validatedBy: "Admin",
-              }
-            : doc
-        )
-      );
+      const existsDoc = documents.find((doc) => doc.id === documentId);
+      if (existsDoc) existsDoc.status = status;
     } catch (err) {
       throw err;
     } finally {
@@ -108,6 +77,37 @@ export const useDocuments = (companyId: string) => {
 
       setObservations((prev) => [newObservation, ...prev]);
     } catch (err) {
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const uploadDocument = async (request: UploadDocument) => {
+    try {
+      setIsLoading(true);
+      const response = await documentService.upload(request);
+
+      if (response.status === 200) {
+        const existsDoc = documents.find((doc) => doc.id === response.data.id);
+        if (existsDoc) {
+          existsDoc.storagePath = response.data.storagePath;
+          existsDoc.uploadedDate = response.data.uploadedDate;
+          existsDoc.expirationDate = response.data.expirationDate;
+        } else {
+          const existsRequestDoc = documents.find(
+            (doc) => doc.id === request.documentId
+          );
+          if (existsRequestDoc) {
+            setDocuments((prev) => [
+              ...prev.filter((doc) => doc.id !== existsRequestDoc.id),
+              response.data,
+            ]);
+          }
+        }
+      }
+    } catch (err) {
+      setIsLoading(false);
       throw err;
     } finally {
       setIsLoading(false);

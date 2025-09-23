@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geistSans.className} ${geistMono.className}`}>
+    <html lang="es" className={`${geistSans.className} ${geistMono.className}`}>
       <body suppressHydrationWarning className="min-h-screen bg-gray-100">
         {children}
         <Toaster />

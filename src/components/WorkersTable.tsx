@@ -21,7 +21,6 @@ import {
 import { WorkerStatusBadge } from "./WorkerStatusBadge";
 import { Button } from "./ui/Button";
 import { Badge } from "./ui/Badge";
-import { WorkerDocumentUpload } from "./WorkerDocumentUpload";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import React from "react";
 import { UserRole } from "@/types/user";

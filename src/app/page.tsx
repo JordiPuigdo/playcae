@@ -28,7 +28,13 @@ export default function Landing() {
           <nav className="flex space-x-4">
             <Button variant="outline">Agenda una demo</Button>
 
-            <Button>Login</Button>
+            <Button
+              onClick={() => {
+                window.location.href = "/login";
+              }}
+            >
+              Login
+            </Button>
           </nav>
         </div>
       </header>

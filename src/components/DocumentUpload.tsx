@@ -1,16 +1,18 @@
-import { useState, useRef } from 'react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
+import { useState, useRef } from "react";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/Dialog';
-import { Upload, Calendar } from 'lucide-react';
-import { DocumentFormData } from '@/types/document';
+} from "@/components/ui/Dialog";
+import { Upload, Calendar } from "lucide-react";
+import dayjs from "dayjs";
+import { DocumentFormData } from "@/types/document";
+import { DatePicker } from "./ui/DatePicker";
 
 interface DocumentUploadProps {
   documentName: string;
@@ -18,10 +20,14 @@ interface DocumentUploadProps {
   hasFile: boolean;
 }
 
-export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUploadProps) => {
+export const DocumentUpload = ({
+  documentName,
+  onUpload,
+  hasFile,
+}: DocumentUploadProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [expiryDate, setExpiryDate] = useState('');
+  const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -56,17 +62,17 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
 
     onUpload({
       file: selectedFile,
-      expiryDate: expiryDate || undefined,
+      expiryDate: expiryDate ? expiryDate.toISOString() : undefined,
     });
 
     setIsOpen(false);
     setSelectedFile(null);
-    setExpiryDate('');
+    setExpiryDate(undefined);
   };
 
   const resetForm = () => {
     setSelectedFile(null);
-    setExpiryDate('');
+    setExpiryDate(undefined);
     setIsDragging(false);
   };
 
@@ -81,13 +87,13 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
       <DialogTrigger asChild>
         <Button variant="outline" size="sm" className="gap-2">
           <Upload className="h-4 w-4" />
-          {hasFile ? 'Reemplazar' : 'Subir'}
+          {hasFile ? "Reemplazar" : "Subir"}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {hasFile ? 'Reemplazar' : 'Subir'} {documentName}
+            {hasFile ? "Reemplazar" : "Subir"} {documentName}
           </DialogTitle>
         </DialogHeader>
 
@@ -95,8 +101,8 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
               isDragging
-                ? 'border-primary bg-primary/5'
-                : 'border-muted-foreground/25 hover:border-muted-foreground/50'
+                ? "border-primary bg-primary/5"
+                : "border-muted-foreground/25 hover:border-muted-foreground/50"
             }`}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
@@ -104,7 +110,9 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
           >
             {selectedFile ? (
               <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">{selectedFile.name}</div>
+                <div className="text-sm font-medium text-foreground">
+                  {selectedFile.name}
+                </div>
                 <div className="text-xs text-muted-foreground">
                   {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                 </div>
@@ -123,7 +131,9 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
                 <div className="text-sm font-medium">
                   Arrastra el archivo aquí o haz clic para seleccionar
                 </div>
-                <div className="text-xs text-muted-foreground">PDF, DOC, DOCX hasta 10MB</div>
+                <div className="text-xs text-muted-foreground">
+                  PDF, DOC, DOCX hasta 10MB
+                </div>
                 <Button
                   type="button"
                   variant="outline"
@@ -152,20 +162,23 @@ export const DocumentUpload = ({ documentName, onUpload, hasFile }: DocumentUplo
               <Calendar className="h-4 w-4" />
               Fecha de caducidad (opcional)
             </Label>
-            <Input
+            <DatePicker
               id="expiryDate"
-              type="date"
               value={expiryDate}
-              onChange={(e) => setExpiryDate(e.target.value)}
+              onChange={(date) => setExpiryDate(date || undefined)}
             />
           </div>
 
           <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={() => setIsOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsOpen(false)}
+            >
               Cancelar
             </Button>
             <Button type="submit" disabled={!selectedFile}>
-              {hasFile ? 'Reemplazar' : 'Subir'} documento
+              {hasFile ? "Reemplazar" : "Subir"} documento
             </Button>
           </div>
         </form>
