@@ -60,7 +60,7 @@ const Hero: React.FC = () => {
       />
 
       <motion.div
-        className="container relative z-10 mx-auto px-4 py-20 md:py-24"
+        className="container relative z-10 mx-auto px-4 py-12 sm:py-16 lg:py-24"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
