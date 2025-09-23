@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { motion } from "framer-motion";
 
@@ -61,9 +63,9 @@ const Hero: React.FC = () => {
 
       <motion.div
         className="container relative z-10 mx-auto px-4 py-12 sm:py-16 lg:py-24"
-        initial={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
       >
         <div className="flex flex-col items-center lg:flex-row">
           {/* Texto */}
