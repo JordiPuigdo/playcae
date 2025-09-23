@@ -1,4 +1,7 @@
+"use client";
+
 import React from "react";
+import { motion } from "framer-motion";
 
 const ContactSection: React.FC = () => {
   return (
@@ -23,7 +26,13 @@ const ContactSection: React.FC = () => {
 
       <div className="container relative z-10 mx-auto px-4">
         {/* Cabecera */}
-        <div className="mx-auto mb-16 max-w-2xl text-center">
+        <motion.div
+          className="mx-auto mb-16 max-w-2xl text-center"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2
             id="contact-title"
             className="text-4xl font-bold text-gray-900 md:text-5xl"
@@ -34,10 +43,16 @@ const ContactSection: React.FC = () => {
             Agenda una demo personalizada o escríbenos para resolver tus dudas.
             Nuestro equipo te acompañará en todo el proceso.
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid principal */}
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 rounded-2xl border border-gray-200 bg-white p-8 shadow-xl md:grid-cols-2">
+        <motion.div
+          className="mx-auto grid max-w-5xl grid-cols-1 gap-10 rounded-2xl border border-gray-200 bg-white p-8 shadow-xl md:grid-cols-2"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut" }}
+        >
           {/* Formulario */}
           <form className="space-y-6">
             <div>
@@ -149,7 +164,7 @@ const ContactSection: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

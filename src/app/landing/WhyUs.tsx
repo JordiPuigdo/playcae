@@ -1,3 +1,5 @@
+import { motion } from "framer-motion";
+
 export default function WhyUs() {
   return (
     <section className="relative py-16 bg-gradient-to-b from-gray-50 to-white overflow-hidden">
@@ -5,7 +7,13 @@ export default function WhyUs() {
       <div className="absolute -top-20 -right-20 w-64 h-64 bg-blue-100 rounded-full opacity-30 blur-3xl"></div>
 
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             Por qué las empresas CAE confían en PlayCAE
           </h2>
@@ -13,10 +21,16 @@ export default function WhyUs() {
             Más de 200 empresas del sector construcción y prevención de riesgos
             avalan nuestra solución
           </p>
-        </div>
+        </motion.div>
 
         {/* Grid de 4 items */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7, ease: "easeOut", staggerChildren: 0.15 }}
+        >
           {/* Item 1: Actualización normativa */}
           <div className="bg-white p-6 rounded-xl shadow-lg border border-blue-100 hover:shadow-xl transition-shadow">
             <div className="w-14 h-14 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
@@ -123,7 +137,7 @@ export default function WhyUs() {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Sección de integraciones y certificaciones */}
         <div className="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-8 md:p-12 border border-blue-200">
