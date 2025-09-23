@@ -75,10 +75,11 @@ export default function Header() {
             </a>
             <button
               onClick={handleLogin}
-              className="font-bold text-lg tracking-wide text-gray-900 hover:text-primary transition-colors"
+              className="self-end font-bold text-lg tracking-wide text-gray-900 hover:text-primary transition-colors"
             >
               Login
             </button>
+
             <a href="#contact" onClick={() => setMenuOpen(false)}>
               <div className="w-[70%] ml-auto rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg hover:from-blue-700 hover:to-cyan-700 transition-colors text-center">
                 Agenda una demo
