@@ -6,6 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useWorkers } from "@/hooks/useWorkers";
 import { EntityStatus } from "@/types/document";
+import { WorkerStatus } from "@/types/worker";
 
 import {
   AlertTriangle,
@@ -52,10 +53,10 @@ export default function DashboardPage() {
   const { workers } = useWorkers(undefined);
 
   const totalNoAptoWorkers = workers.filter(
-    (w) => w.status === EntityStatus.Rejected
+    (w) => w.status === WorkerStatus.Rejected
   ).length;
   const noAptoWorkers = workers
-    .filter((w) => w.status === EntityStatus.Rejected)
+    .filter((w) => w.status === WorkerStatus.Rejected)
     .map((w) => {
       const company = companies.find((c) => c.id === w.companyId);
       return {

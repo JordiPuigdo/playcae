@@ -8,6 +8,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import { WorkerFilters } from "@/components/WorkersFilter";
 import { WorkersTable } from "@/components/WorkersTable";
 import { useToast } from "@/hooks/use-Toast";
 import { useAuthStore } from "@/hooks/useAuthStore";
@@ -15,9 +16,13 @@ import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
 import { Company, CompanyFormData } from "@/types/company";
-import { DocumentFormData, UploadDocument } from "@/types/document";
+import {
+  DocumentFormData,
+  EntityStatus,
+  UploadDocument,
+} from "@/types/document";
 import { UserRole } from "@/types/user";
-import { WorkerFormData } from "@/types/worker";
+import { WorkerFormData, WorkerStatus } from "@/types/worker";
 import { FileText, MessageSquare, Users } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -31,6 +36,8 @@ const CompanyDetailPage = () => {
     getWorkersByCompanyId,
     workers,
     deleteWorker,
+    activateWorker,
+    filteredWorkers,
   } = useWorkers(id);
   const {
     documents,
@@ -43,6 +50,16 @@ const CompanyDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { user } = useAuthStore();
+
+  const [filters, setFilters] = useState<{
+    search: string;
+    status?: WorkerStatus;
+    activeFilter: "Activos" | "Inactivos" | "Todos";
+  }>({
+    search: "",
+    status: undefined,
+    activeFilter: "Todos",
+  });
 
   const fetchCompany = async (id: string) => {
     const response = await getCompanyById(id);
@@ -131,6 +148,12 @@ const CompanyDetailPage = () => {
     //await fetchCompany(id);
   };
 
+  const displayedWorkers = filteredWorkers(
+    filters.search,
+    filters.status,
+    filters.activeFilter
+  );
+
   useEffect(() => {
     if (showErrorUpload) {
       toast({
@@ -193,6 +216,12 @@ const CompanyDetailPage = () => {
               </TabsTrigger>
             </TabsList>
             <TabsContent value="workers" className="space-y-6">
+              {/* Filters */}
+              <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
+                <div className="flex-1">
+                  <WorkerFilters onFilter={setFilters} />
+                </div>
+              </div>
               <WorkersTable
                 onCreateWorker={(e) => {
                   handleCreateWorker(e);
@@ -212,7 +241,10 @@ const CompanyDetailPage = () => {
                   return handleUploadDocument(documentId, data, workerId);
                 }}
                 onValidateDocument={() => {}}
-                workers={workers}
+                workers={displayedWorkers}
+                onActivateWorker={(workerId: string) => {
+                  activateWorker(workerId);
+                }}
               />
             </TabsContent>
             <TabsContent value="documents" className="space-y-6">

@@ -1,5 +1,4 @@
 import { BaseEntity } from "./baseEntity";
-import { EntityStatus } from "./document";
 import { Document } from "./document";
 
 export interface Worker extends BaseEntity {
@@ -8,23 +7,14 @@ export interface Worker extends BaseEntity {
   lastName: string;
   cardId: string;
   position?: string;
-  status: EntityStatus;
+  status: WorkerStatus;
   documents?: Document[];
 }
 
-/*export interface WorkerDocument {
-  id: string;
-  workerId: string;
-  documentType: DocumentType;
-  name: string;
-  uploadedDate?: string;
-  status: EntityStatus;
-  validatorComment?: string;
-  validatedBy?: string;
-  validatedAt?: string;
-  storagePath?: string;
-  expirationDate?: string;
-}*/
+export enum WorkerStatus {
+  Approved,
+  Rejected,
+}
 
 export interface DocumentType {
   code: string;

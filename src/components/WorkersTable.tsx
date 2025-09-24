@@ -9,6 +9,7 @@ import {
   Edit,
   Trash2,
   Plus,
+  Check,
 } from "lucide-react";
 import {
   Table,
@@ -49,6 +50,7 @@ interface WorkersTableProps {
     isValid: boolean,
     comment?: string
   ) => void;
+  onActivateWorker: (workerId: string) => void;
 }
 
 const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
@@ -61,6 +63,7 @@ export const WorkersTable = ({
   onDeleteWorker,
   onUploadDocument,
   onValidateDocument,
+  onActivateWorker,
 }: WorkersTableProps) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
@@ -149,6 +152,12 @@ export const WorkersTable = ({
     }
   };
 
+  const handleActivateClick = (worker: Worker) => {
+    if (!worker.active) {
+      onActivateWorker(worker.id!);
+    }
+  };
+
   const canUpload = true;
   const canValidate = true;
   const canEdit = true;
@@ -188,7 +197,12 @@ export const WorkersTable = ({
                 {workers &&
                   workers.map((worker) => (
                     <React.Fragment key={worker.id}>
-                      <TableRow key={worker.id}>
+                      <TableRow
+                        key={worker.id}
+                        className={`hover:bg-muted/50 ${
+                          !worker.active ? "opacity-60" : ""
+                        }`}
+                      >
                         <TableCell>
                           <Button
                             variant="ghost"
@@ -203,7 +217,14 @@ export const WorkersTable = ({
                           </Button>
                         </TableCell>
                         <TableCell className="font-medium">
-                          {worker.firstName} {worker.lastName}
+                          <div className="flex items-center gap-2">
+                            {worker.firstName} {worker.lastName}
+                            {!worker.active && (
+                              <Badge variant="secondary" className="text-xs">
+                                Inactivo
+                              </Badge>
+                            )}
+                          </div>
                         </TableCell>
                         <TableCell className="font-mono text-sm">
                           {worker.cardId}
@@ -215,7 +236,7 @@ export const WorkersTable = ({
                         </TableCell>
                         <TableCell>
                           <div className="flex gap-2">
-                            {canEdit && (
+                            {canEdit && worker.active && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -226,7 +247,7 @@ export const WorkersTable = ({
                                 Editar
                               </Button>
                             )}
-                            {canEdit && (
+                            {canEdit && worker.active && (
                               <Button
                                 variant="outline"
                                 size="sm"
@@ -235,6 +256,17 @@ export const WorkersTable = ({
                               >
                                 <Trash2 className="h-3 w-3" />
                                 Eliminar
+                              </Button>
+                            )}
+                            {!worker.active && (
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleActivateClick(worker)}
+                                className="gap-1 text-success hover:text-success"
+                              >
+                                <Check className="h-3 w-3" />
+                                Activar
                               </Button>
                             )}
                           </div>

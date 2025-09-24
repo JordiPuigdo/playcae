@@ -1,22 +1,13 @@
 import { useState, useMemo } from "react";
-import { Worker, WorkerFormData } from "@/types/worker";
+import { Worker, WorkerFormData, WorkerStatus } from "@/types/worker";
 import { UserRole } from "@/types/user";
-import { EntityStatus } from "@/types/document";
 import { WorkerService } from "@/services/worker.service";
-import { useToast } from "./use-Toast";
-
-const REQUIRED_WORKER_DOCUMENTS = [
-  { type: "dni" as const, name: "DNI/NIE" },
-  { type: "formacion-prl" as const, name: "Certificado de Formación PRL" },
-  { type: "aptitud-medica" as const, name: "Aptitud Médica" },
-];
 
 export const useWorkers = (companyId: string | undefined) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [userRole] = useState<UserRole>(UserRole.Admin);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const workerService = new WorkerService();
   const companyWorkers = useMemo(() => {
@@ -24,7 +15,11 @@ export const useWorkers = (companyId: string | undefined) => {
     return workers.filter((worker) => worker.companyId === companyId);
   }, [workers, companyId]);
 
-  const filteredWorkers = (search: string, status: EntityStatus) => {
+  const filteredWorkers = (
+    search: string,
+    status: WorkerStatus | undefined,
+    activeFilter: "Activos" | "Inactivos" | "Todos" = "Todos"
+  ) => {
     let filtered = companyWorkers;
 
     if (search) {
@@ -37,9 +32,15 @@ export const useWorkers = (companyId: string | undefined) => {
       );
     }
 
-    /*if (status !== "Todos") {
+    if (status !== undefined) {
       filtered = filtered.filter((worker) => worker.status === status);
-    }*/
+    }
+
+    if (activeFilter !== "Todos") {
+      filtered = filtered.filter((worker) =>
+        activeFilter === "Activos" ? worker.active : !worker.active
+      );
+    }
 
     return filtered;
   };
@@ -55,7 +56,7 @@ export const useWorkers = (companyId: string | undefined) => {
         lastName: data.lastName,
         cardId: data.cardId,
         position: data.position,
-        status: EntityStatus.Pending,
+        status: WorkerStatus.Rejected,
       }));
 
       const response = await workerService.createBulk(
@@ -87,7 +88,7 @@ export const useWorkers = (companyId: string | undefined) => {
       lastName: data.lastName,
       cardId: data.cardId,
       position: data.position,
-      status: EntityStatus.Pending,
+      status: WorkerStatus.Rejected,
     };
     await workerService.create(newWorker);
     setWorkers((prev) => [...prev, newWorker]);
@@ -104,7 +105,20 @@ export const useWorkers = (companyId: string | undefined) => {
 
   const deleteWorker = async (workerId: string) => {
     await workerService.delete(workerId);
-    setWorkers((prev) => prev.filter((worker) => worker.id !== workerId));
+    setWorkers((prev) =>
+      prev.map((worker) =>
+        worker.id === workerId ? { ...worker, active: false } : worker
+      )
+    );
+  };
+
+  const activateWorker = async (workerId: string) => {
+    await workerService.activate(workerId);
+    setWorkers((prev) =>
+      prev.map((worker) =>
+        worker.id === workerId ? { ...worker, active: true } : worker
+      )
+    );
   };
 
   /*const uploadWorkerDocument = (
@@ -216,6 +230,7 @@ export const useWorkers = (companyId: string | undefined) => {
     deleteWorker,
     getWorkersByCompanyId,
     createBulkWorkers,
+    activateWorker,
     //uploadWorkerDocument,
     //validateWorkerDocument,
   };

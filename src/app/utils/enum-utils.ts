@@ -1,4 +1,5 @@
 import { EntityStatus } from "@/types/document";
+import { WorkerStatus } from "@/types/worker";
 
 export function getEntityStatusLabel(status: EntityStatus | string): string {
   if (typeof status === "string" && status === "Todos") {
@@ -24,5 +25,30 @@ export function getEntityStatusOptions() {
     .map(([key]) => ({
       value: key,
       label: getEntityStatusLabel(key),
+    }));
+}
+
+export function getWorkerStatusLabel(status: WorkerStatus | string): string {
+  if (typeof status === "string" && status === "Todos") {
+    return "Todos los estados";
+  }
+
+  const statusKey = typeof status === "string" ? status : WorkerStatus[status];
+
+  const labels: Record<string, string> = {
+    Approved: "Apto",
+    Rejected: "No apto",
+    Todos: "Todos los estados",
+  };
+
+  return labels[statusKey] || statusKey;
+}
+
+export function getWorkerStatusOptions() {
+  return Object.entries(WorkerStatus)
+    .filter(([key]) => isNaN(Number(key)))
+    .map(([key]) => ({
+      value: key,
+      label: getWorkerStatusLabel(key),
     }));
 }

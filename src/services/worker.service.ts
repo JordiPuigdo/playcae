@@ -57,4 +57,8 @@ export class WorkerService implements IWorkerService {
   async delete(id: string): Promise<ApiResponse<void>> {
     return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
+
+  async activate(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.put<void>(`${this.baseUrl}/${id}/activate`, {});
+  }
 }
