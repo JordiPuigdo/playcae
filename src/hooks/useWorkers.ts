@@ -102,9 +102,9 @@ export const useWorkers = (companyId: string | undefined) => {
     );
   };
 
-  const deleteWorker = (workerId: string) => {
+  const deleteWorker = async (workerId: string) => {
+    await workerService.delete(workerId);
     setWorkers((prev) => prev.filter((worker) => worker.id !== workerId));
-    console.log(`Trabajador eliminado`);
   };
 
   /*const uploadWorkerDocument = (

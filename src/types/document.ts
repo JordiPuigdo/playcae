@@ -37,3 +37,8 @@ export interface UploadDocument {
   companyId: string;
   documentId: string;
 }
+
+export interface DocumentUploadResponse {
+  document: Document;
+  errorMessage: string;
+}

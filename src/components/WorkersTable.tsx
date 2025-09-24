@@ -27,6 +27,10 @@ import { UserRole } from "@/types/user";
 import { WorkerForm } from "./WorkerForm";
 import { EntityStatus } from "@/types/document";
 import { getEntityStatusLabel } from "@/app/utils/enum-utils";
+import { DocumentUpload } from "./DocumentUpload";
+import { renderFile } from "./RenderFile";
+import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
+import { toast } from "@/hooks/use-Toast";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -35,8 +39,8 @@ interface WorkersTableProps {
   onUpdateWorker: (workerId: string, data: WorkerFormData) => void;
   onDeleteWorker: (workerId: string) => void;
   onUploadDocument: (
+    documentId: string,
     workerId: string,
-    documentType: string,
     data: WorkerDocumentFormData
   ) => void;
   onValidateDocument: (
@@ -46,6 +50,8 @@ interface WorkersTableProps {
     comment?: string
   ) => void;
 }
+
+const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
 
 export const WorkersTable = ({
   workers,
@@ -59,14 +65,16 @@ export const WorkersTable = ({
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [deleteWorker, setDeleteWorker] = useState<Worker | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const formatDate = (dateString?: string) => {
-    if (!dateString) return "-";
+    if (!dateString || dateString === DEFAULT_EXPIRY_DATE) return "-";
     return new Date(dateString).toLocaleDateString("es-ES");
   };
 
   const isExpiringSoon = (expiryDate?: string) => {
-    if (!expiryDate) return false;
+    if (!expiryDate || expiryDate === DEFAULT_EXPIRY_DATE) return false;
     const expiry = new Date(expiryDate);
     const today = new Date();
     const diffTime = expiry.getTime() - today.getTime();
@@ -75,7 +83,7 @@ export const WorkersTable = ({
   };
 
   const isExpired = (expiryDate?: string) => {
-    if (!expiryDate) return false;
+    if (!expiryDate || expiryDate === DEFAULT_EXPIRY_DATE) return false;
     const expiry = new Date(expiryDate);
     const today = new Date();
     return expiry < today;
@@ -113,6 +121,32 @@ export const WorkersTable = ({
   const handleCloseForm = () => {
     setEditingWorker(null);
     setIsFormOpen(false);
+  };
+
+  const handleDeleteClick = (worker: Worker) => {
+    setDeleteWorker(worker);
+  };
+
+  const handleDeleteWorker = async () => {
+    if (!deleteWorker) return;
+
+    setIsDeleting(true);
+    try {
+      onDeleteWorker(deleteWorker.id!);
+      toast({
+        title: "Trabajador eliminado",
+        description: `${deleteWorker.firstName} ${deleteWorker.lastName} ha sido eliminado correctamente.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo eliminar el trabajador. Inténtalo de nuevo.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
+      setDeleteWorker(null);
+    }
   };
 
   const canUpload = true;
@@ -196,7 +230,7 @@ export const WorkersTable = ({
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => onDeleteWorker(worker.id!)}
+                                onClick={() => handleDeleteClick(worker)}
                                 className="gap-1 text-destructive hover:text-destructive"
                               >
                                 <Trash2 className="h-3 w-3" />
@@ -237,38 +271,31 @@ export const WorkersTable = ({
                                           {document.documentType.name}
                                         </TableCell>
                                         <TableCell>
-                                          {document.fileName ? (
-                                            <div className="flex items-center gap-2">
-                                              <FileText className="h-4 w-4 text-muted-foreground" />
-                                              <span className="text-sm">
-                                                {document.fileName}
-                                              </span>
-                                            </div>
-                                          ) : (
-                                            <span className="text-sm text-muted-foreground">
-                                              Sin archivo
-                                            </span>
-                                          )}
+                                          {renderFile(document)}
                                         </TableCell>
                                         <TableCell>
-                                          {formatDate(document.uploadDate)}
+                                          {formatDate(document.uploadedDate)}
                                         </TableCell>
                                         <TableCell>
-                                          {formatDate(document.issueDate)}
+                                          {formatDate(document.expirationDate)}
                                         </TableCell>
                                         <TableCell>
                                           <div className="flex items-center gap-2">
-                                            {formatDate(document.expiryDate)}
-                                            {isExpired(document.expiryDate) && (
+                                            {formatDate(
+                                              document.expirationDate
+                                            )}
+                                            {isExpired(
+                                              document.expirationDate
+                                            ) && (
                                               <span title="Documento caducado">
                                                 <AlertTriangle className="h-4 w-4 text-destructive" />
                                               </span>
                                             )}
                                             {isExpiringSoon(
-                                              document.expiryDate
+                                              document.expirationDate
                                             ) &&
                                               !isExpired(
-                                                document.expiryDate
+                                                document.expirationDate
                                               ) && (
                                                 <span title="Caduca pronto">
                                                   <AlertTriangle className="h-4 w-4 text-pending" />
@@ -302,28 +329,31 @@ export const WorkersTable = ({
                                                 document.status
                                               )}
                                             </Badge>
-                                            {document.validatorComment && (
+                                            {/*document.validatorComment && (
                                               <div className="text-xs text-muted-foreground">
                                                 {document.validatorComment}
                                               </div>
-                                            )}
+                                            )*/}
                                           </div>
                                         </TableCell>
                                         <TableCell>
                                           <div className="flex gap-2">
-                                            {/*<WorkerDocumentUpload
-                                              documentName={document.name}
-                                              //documentType={document.type}
-                                              hasFile={!!document.fileName}
-                                              canUpload={canUpload}
-                                              onUpload={(docType, data) =>
-                                                onUploadDocument(
-                                                  worker.id!,
-                                                  docType,
-                                                  data
-                                                )
-                                              }
-                                            />/*}
+                                            {
+                                              <DocumentUpload
+                                                documentName={
+                                                  document.documentType.name
+                                                }
+                                                hasFile={!!document.storagePath}
+                                                canUpload={canUpload}
+                                                onUpload={(data) =>
+                                                  onUploadDocument(
+                                                    document.id!,
+                                                    worker.id!,
+                                                    data
+                                                  )
+                                                }
+                                              />
+                                            }
                                             {/*canValidate &&
                                           document.fileName &&
                                           document.status === 'Pendiente' && (
@@ -367,6 +397,20 @@ export const WorkersTable = ({
           mode={editingWorker ? "edit" : "create"}
         />
       }
+
+      <DeleteConfirmationModal
+        isOpen={!!deleteWorker}
+        onClose={() => setDeleteWorker(null)}
+        onConfirm={handleDeleteWorker}
+        title="Eliminar Trabajador"
+        description="¿Estás seguro de que deseas eliminar este trabajador? Esta acción no se puede deshacer y se perderán todos los documentos asociados."
+        itemName={
+          deleteWorker
+            ? `${deleteWorker.firstName} ${deleteWorker.lastName}`
+            : undefined
+        }
+        isLoading={isDeleting}
+      />
     </>
   );
 };

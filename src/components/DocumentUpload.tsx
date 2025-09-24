@@ -1,37 +1,53 @@
 import { useState, useRef } from "react";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
+import { Upload, Calendar, FileText } from "lucide-react";
+import { WorkerDocumentFormData } from "@/types/worker";
+
+import { Button } from "./ui/Button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/Dialog";
-import { Upload, Calendar } from "lucide-react";
-import dayjs from "dayjs";
-import { DocumentFormData } from "@/types/document";
-import { DatePicker } from "./ui/DatePicker";
+} from "./ui/Dialog";
+import { Input } from "./ui/Input";
+import { Label } from "./ui/Label";
+import { InfoTooltip } from "./ui/InfoToolTip";
 
 interface DocumentUploadProps {
   documentName: string;
-  onUpload: (data: DocumentFormData) => void;
+  onUpload: (data: WorkerDocumentFormData) => void;
   hasFile: boolean;
+  canUpload: boolean;
 }
+
+const MAX_FILE_SIZE_MB = 10;
 
 export const DocumentUpload = ({
   documentName,
   onUpload,
   hasFile,
+  canUpload,
 }: DocumentUploadProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [expiryDate, setExpiryDate] = useState<Date | undefined>(undefined);
+  const [issueDate, setIssueDate] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [forceValidation, setForceValidation] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  if (!canUpload) return null;
+
   const handleFileSelect = (file: File) => {
+    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB}MB`);
+      setSelectedFile(null);
+      return;
+    }
+    setError(null);
     setSelectedFile(file);
   };
 
@@ -40,40 +56,30 @@ export const DocumentUpload = ({
     setIsDragging(false);
 
     const files = Array.from(e.dataTransfer.files);
-    if (files.length > 0) {
-      handleFileSelect(files[0]);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
+    if (files.length > 0) handleFileSelect(files[0]);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!selectedFile) return;
 
     onUpload({
       file: selectedFile,
-      expiryDate: expiryDate ? expiryDate.toISOString() : undefined,
+      issueDate: issueDate || undefined,
+      expiryDate: expiryDate || undefined,
     });
 
     setIsOpen(false);
-    setSelectedFile(null);
-    setExpiryDate(undefined);
+    resetForm();
   };
 
   const resetForm = () => {
     setSelectedFile(null);
-    setExpiryDate(undefined);
+    setIssueDate("");
+    setExpiryDate("");
     setIsDragging(false);
+    setError(null);
+    setForceValidation(false);
   };
 
   return (
@@ -92,12 +98,14 @@ export const DocumentUpload = ({
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="flex items-center gap-2">
+            <FileText className="h-5 w-5" />
             {hasFile ? "Reemplazar" : "Subir"} {documentName}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Dropzone */}
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
               isDragging
@@ -105,8 +113,14 @@ export const DocumentUpload = ({
                 : "border-muted-foreground/25 hover:border-muted-foreground/50"
             }`}
             onDrop={handleDrop}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
+            onDragOver={(e) => {
+              e.preventDefault();
+              setIsDragging(true);
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault();
+              setIsDragging(false);
+            }}
           >
             {selectedFile ? (
               <div className="space-y-2">
@@ -132,7 +146,7 @@ export const DocumentUpload = ({
                   Arrastra el archivo aquí o haz clic para seleccionar
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  PDF, DOC, DOCX hasta 10MB
+                  PDF, JPG, PNG hasta {MAX_FILE_SIZE_MB}MB
                 </div>
                 <Button
                   type="button"
@@ -149,7 +163,7 @@ export const DocumentUpload = ({
           <input
             ref={fileInputRef}
             type="file"
-            accept=".pdf,.doc,.docx"
+            accept=".pdf,.jpg,.jpeg,.png"
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (file) handleFileSelect(file);
@@ -157,18 +171,56 @@ export const DocumentUpload = ({
             className="hidden"
           />
 
-          <div className="space-y-2">
-            <Label htmlFor="expiryDate" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Fecha de caducidad (opcional)
-            </Label>
-            <DatePicker
-              id="expiryDate"
-              value={expiryDate}
-              onChange={(date) => setExpiryDate(date || undefined)}
-            />
+          {error && <p className="text-sm text-destructive">{error}</p>}
+
+          {/* Dates */}
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="issueDate" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Fecha de emisión (opcional)
+              </Label>
+              <Input
+                id="issueDate"
+                type="date"
+                value={issueDate}
+                onChange={(e) => setIssueDate(e.target.value)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="expiryDate" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Fecha de caducidad (opcional)
+              </Label>
+              <Input
+                id="expiryDate"
+                type="date"
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+              />
+            </div>
           </div>
 
+          {/* Force validation with tooltip */}
+          <div className="flex items-center gap-2">
+            <Label
+              htmlFor="forceValidation"
+              className="flex items-center gap-2"
+            >
+              <Input
+                id="forceValidation"
+                checked={forceValidation}
+                onChange={(e) => setForceValidation(e.target.checked)}
+                type="checkbox"
+                className="h-4 w-4"
+              />
+              Forzar Validación
+            </Label>
+            <InfoTooltip text="Si la validación del documento automática no funciona puede forzar la validación del documento" />
+          </div>
+
+          {/* Actions */}
           <div className="flex justify-end space-x-2">
             <Button
               type="button"
@@ -177,7 +229,7 @@ export const DocumentUpload = ({
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={!selectedFile}>
+            <Button type="submit" disabled={!selectedFile || !!error}>
               {hasFile ? "Reemplazar" : "Subir"} documento
             </Button>
           </div>

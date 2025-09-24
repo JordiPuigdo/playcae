@@ -25,10 +25,20 @@ import { useEffect, useState } from "react";
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { getCompanyById, updateCompany } = useCompanies();
-  const { createWorker, updateWorker, getWorkersByCompanyId, workers } =
-    useWorkers(id);
-  const { documents, observations, uploadDocument, validateDocument } =
-    useDocuments(id || "");
+  const {
+    createWorker,
+    updateWorker,
+    getWorkersByCompanyId,
+    workers,
+    deleteWorker,
+  } = useWorkers(id);
+  const {
+    documents,
+    observations,
+    uploadDocument,
+    validateDocument,
+    showErrorUpload,
+  } = useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
@@ -110,6 +120,16 @@ const CompanyDetailPage = () => {
     //await fetchCompany(id);
   };
 
+  useEffect(() => {
+    if (showErrorUpload) {
+      toast({
+        title: "Error al subir el documento",
+        description: showErrorUpload,
+        variant: "destructive",
+      });
+    }
+  }, [showErrorUpload, toast]);
+
   if (!company && !isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -169,9 +189,17 @@ const CompanyDetailPage = () => {
                 onUpdateWorker={(workerId, workerData) => {
                   updateWorker(workerId, workerData);
                 }}
-                onDeleteWorker={() => {}}
+                onDeleteWorker={(workerId) => {
+                  deleteWorker(workerId);
+                }}
                 userRole={user?.role!}
-                onUploadDocument={() => {}}
+                onUploadDocument={(
+                  documentId: string,
+                  workerId: string,
+                  data: DocumentFormData
+                ) => {
+                  return handleUploadDocument(documentId, data);
+                }}
                 onValidateDocument={() => {}}
                 workers={workers}
               />

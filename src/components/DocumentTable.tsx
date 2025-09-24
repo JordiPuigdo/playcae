@@ -12,11 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { FileText, AlertTriangle } from "lucide-react";
 import { DocumentFormData } from "@/types/document";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
-import { DocumentUpload } from "./DocumentUpload";
 import { UserRole } from "@/types/user";
 import Link from "next/link";
 import { formatDate, isExpired } from "@/app/utils/date";
 import { DocumentValidation } from "./DocumentValidation";
+import { renderFile } from "./RenderFile";
+import { DocumentUpload } from "./DocumentUpload";
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -33,20 +34,6 @@ export const DocumentsTable = ({
 }: DocumentsTableProps) => {
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
-
-  const renderFile = (document: Document) => {
-    if (document.storagePath) {
-      return (
-        <Link href={document.storagePath} target="_blank">
-          <div className="flex items-center gap-2 hover:text-blue-500">
-            <FileText className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{document.documentType.name}</span>
-          </div>
-        </Link>
-      );
-    }
-    return <span className="text-sm text-muted-foreground">Sin archivo</span>;
-  };
 
   return (
     <Card className="bg-white">
@@ -108,6 +95,7 @@ export const DocumentsTable = ({
                           documentName={document.originalName}
                           hasFile={!!document.storagePath}
                           onUpload={(data) => onUpload(document.id!, data)}
+                          canUpload
                         />
                       )}
 

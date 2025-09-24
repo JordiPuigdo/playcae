@@ -1,7 +1,12 @@
 import { ApiResponse } from "@/interfaces/api-response";
 
 import { HttpClient } from "./http-client";
-import { Document, EntityStatus, UploadDocument } from "@/types/document";
+import {
+  Document,
+  DocumentUploadResponse,
+  EntityStatus,
+  UploadDocument,
+} from "@/types/document";
 
 export interface IDocumentService {
   getById(id: string): Promise<ApiResponse<Document>>;
@@ -18,7 +23,9 @@ export interface IDocumentService {
     status: EntityStatus
   ): Promise<ApiResponse<Document>>;
   delete(id: string): Promise<ApiResponse<void>>;
-  upload(document: UploadDocument): Promise<ApiResponse<Document>>;
+  upload(
+    document: UploadDocument
+  ): Promise<ApiResponse<DocumentUploadResponse>>;
 }
 
 export class DocumentService implements IDocumentService {
@@ -73,7 +80,9 @@ export class DocumentService implements IDocumentService {
     return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  async upload(document: UploadDocument): Promise<ApiResponse<Document>> {
+  async upload(
+    document: UploadDocument
+  ): Promise<ApiResponse<DocumentUploadResponse>> {
     const formData = new FormData();
     formData.append("companyId", document.companyId);
     formData.append("documentId", document.documentId);
@@ -81,7 +90,7 @@ export class DocumentService implements IDocumentService {
     if (document.expiryDate) formData.append("expiryDate", document.expiryDate);
     if (document.workerId) formData.append("workerId", document.workerId);
 
-    return this.httpClient.upload<Document>(
+    return this.httpClient.upload<DocumentUploadResponse>(
       `${this.baseUrl}/uploadDocument`,
       formData
     );

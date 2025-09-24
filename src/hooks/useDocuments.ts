@@ -14,7 +14,8 @@ export const useDocuments = (companyId: string) => {
   const [observations, setObservations] = useState<CompanyObservation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { user } = useAuthStore();
+
+  const [showErrorUpload, setShowErrorUpload] = useState<string | null>(null);
 
   const documentService = useMemo(() => new DocumentService(), []);
 
@@ -89,11 +90,22 @@ export const useDocuments = (companyId: string) => {
       const response = await documentService.upload(request);
 
       if (response.status === 200) {
-        const existsDoc = documents.find((doc) => doc.id === response.data.id);
+        if (response.data.errorMessage) {
+          setShowErrorUpload(response.data.errorMessage);
+
+          setTimeout(() => {
+            setShowErrorUpload(null);
+          }, 5000);
+          return;
+        }
+        const documentResponse = response.data.document;
+        const existsDoc = documents.find(
+          (doc) => doc.id === documentResponse.id
+        );
         if (existsDoc) {
-          existsDoc.storagePath = response.data.storagePath;
-          existsDoc.uploadedDate = response.data.uploadedDate;
-          existsDoc.expirationDate = response.data.expirationDate;
+          existsDoc.storagePath = documentResponse.storagePath;
+          existsDoc.uploadedDate = documentResponse.uploadedDate;
+          existsDoc.expirationDate = documentResponse.expirationDate;
         } else {
           const existsRequestDoc = documents.find(
             (doc) => doc.id === request.documentId
@@ -101,7 +113,7 @@ export const useDocuments = (companyId: string) => {
           if (existsRequestDoc) {
             setDocuments((prev) => [
               ...prev.filter((doc) => doc.id !== existsRequestDoc.id),
-              response.data,
+              documentResponse,
             ]);
           }
         }
@@ -119,6 +131,7 @@ export const useDocuments = (companyId: string) => {
     observations: companyObservations,
     isLoading,
     error,
+    showErrorUpload,
     uploadDocument,
     validateDocument,
     addObservation,

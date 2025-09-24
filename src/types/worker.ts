@@ -1,5 +1,6 @@
 import { BaseEntity } from "./baseEntity";
 import { EntityStatus } from "./document";
+import { Document } from "./document";
 
 export interface Worker extends BaseEntity {
   companyId: string;
@@ -8,23 +9,22 @@ export interface Worker extends BaseEntity {
   cardId: string;
   position?: string;
   status: EntityStatus;
-  documents?: WorkerDocument[];
+  documents?: Document[];
 }
 
-export interface WorkerDocument {
+/*export interface WorkerDocument {
   id: string;
   workerId: string;
   documentType: DocumentType;
   name: string;
-  fileName?: string;
-  uploadDate?: string;
-  issueDate?: string;
-  expiryDate?: string;
+  uploadedDate?: string;
   status: EntityStatus;
   validatorComment?: string;
   validatedBy?: string;
   validatedAt?: string;
-}
+  storagePath?: string;
+  expirationDate?: string;
+}*/
 
 export interface DocumentType {
   code: string;
