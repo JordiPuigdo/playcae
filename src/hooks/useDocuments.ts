@@ -11,6 +11,7 @@ import { useAuthStore } from "./useAuthStore";
 
 export const useDocuments = (companyId: string) => {
   const [documents, setDocuments] = useState<Document[]>([]);
+
   const [observations, setObservations] = useState<CompanyObservation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -98,9 +99,10 @@ export const useDocuments = (companyId: string) => {
           }, 5000);
           return;
         }
+
         const documentResponse = response.data.document;
         const existsDoc = documents.find(
-          (doc) => doc.id === documentResponse.id
+          (doc) => doc.id === request.documentId
         );
         if (existsDoc) {
           existsDoc.storagePath = documentResponse.storagePath;
@@ -117,6 +119,7 @@ export const useDocuments = (companyId: string) => {
             ]);
           }
         }
+        return response.data;
       }
     } catch (err) {
       setIsLoading(false);

@@ -485,7 +485,7 @@ export default function CompanyOnboarding() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h4 className="font-medium mb-3">Company Information</h4>
+          <h4 className="font-medium mb-3">Empresa</h4>
           <div className="bg-muted rounded-lg p-4 space-y-2">
             <p>
               <strong>Nombre:</strong> {onboardingData.company.name}

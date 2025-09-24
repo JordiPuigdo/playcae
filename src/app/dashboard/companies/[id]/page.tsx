@@ -99,7 +99,8 @@ const CompanyDetailPage = () => {
 
   const handleUploadDocument = async (
     documentId: string,
-    data: DocumentFormData
+    data: DocumentFormData,
+    workerId: string
   ) => {
     try {
       setIsLoading(true);
@@ -110,7 +111,17 @@ const CompanyDetailPage = () => {
         companyId: id,
         documentId,
       };
-      await uploadDocument(request);
+      const resultUpload = await uploadDocument(request);
+      if (workerId != "") {
+        const worker = workers.find((w) => w.id === workerId);
+        const existDoc = worker?.documents?.find((d) => d.id === documentId);
+        if (existDoc) {
+          existDoc.storagePath = resultUpload?.document.storagePath ?? "";
+          existDoc.uploadedDate = resultUpload?.document.uploadedDate ?? "";
+          existDoc.expirationDate = resultUpload?.document.expirationDate ?? "";
+          existDoc.status = resultUpload?.document.status!;
+        }
+      }
     } catch (err) {
       throw err;
     } finally {
@@ -195,10 +206,10 @@ const CompanyDetailPage = () => {
                 userRole={user?.role!}
                 onUploadDocument={(
                   documentId: string,
-                  workerId: string,
-                  data: DocumentFormData
+                  data: DocumentFormData,
+                  workerId: string
                 ) => {
-                  return handleUploadDocument(documentId, data);
+                  return handleUploadDocument(documentId, data, workerId);
                 }}
                 onValidateDocument={() => {}}
                 workers={workers}
@@ -209,7 +220,7 @@ const CompanyDetailPage = () => {
                 documents={documents}
                 userRole={user?.role!}
                 onUpload={(documentId: string, data: DocumentFormData) => {
-                  return handleUploadDocument(documentId, data);
+                  return handleUploadDocument(documentId, data, "");
                 }}
                 onValidate={(
                   id: string,

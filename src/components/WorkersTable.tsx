@@ -40,8 +40,8 @@ interface WorkersTableProps {
   onDeleteWorker: (workerId: string) => void;
   onUploadDocument: (
     documentId: string,
-    workerId: string,
-    data: WorkerDocumentFormData
+    data: WorkerDocumentFormData,
+    workerId: string
   ) => void;
   onValidateDocument: (
     workerId: string,
@@ -348,8 +348,8 @@ export const WorkersTable = ({
                                                 onUpload={(data) =>
                                                   onUploadDocument(
                                                     document.id!,
-                                                    worker.id!,
-                                                    data
+                                                    data,
+                                                    worker.id!
                                                   )
                                                 }
                                               />
