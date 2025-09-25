@@ -16,7 +16,7 @@ export enum WorkerStatus {
   Rejected,
 }
 
-export interface DocumentType {
+export interface DocumentType extends BaseEntity {
   code: string;
   name: string;
 }

@@ -1,3 +1,4 @@
+import { CompanyStatus } from "@/types/company";
 import { EntityStatus } from "@/types/document";
 import { WorkerStatus } from "@/types/worker";
 
@@ -50,5 +51,31 @@ export function getWorkerStatusOptions() {
     .map(([key]) => ({
       value: key,
       label: getWorkerStatusLabel(key),
+    }));
+}
+
+export function getCompanyStatusLabel(status: CompanyStatus | string): string {
+  if (typeof status === "string" && status === "Todos") {
+    return "Todos los estados";
+  }
+
+  const statusKey = typeof status === "string" ? status : CompanyStatus[status];
+
+  const labels: Record<string, string> = {
+    Approved: "Apta",
+    Rejected: "No apta",
+    Pending: "Pendiente",
+    Todos: "Todos los estados",
+  };
+
+  return labels[statusKey] || statusKey;
+}
+
+export function getCompanyStatusOptions() {
+  return Object.entries(CompanyStatus)
+    .filter(([key]) => isNaN(Number(key)))
+    .map(([key]) => ({
+      value: key,
+      label: getCompanyStatusLabel(key),
     }));
 }

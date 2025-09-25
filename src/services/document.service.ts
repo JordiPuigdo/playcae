@@ -6,6 +6,7 @@ import {
   DocumentUploadResponse,
   EntityStatus,
   UploadDocument,
+  WorkerDocumentHistoricalRequest,
 } from "@/types/document";
 
 export interface IDocumentService {
@@ -26,6 +27,9 @@ export interface IDocumentService {
   upload(
     document: UploadDocument
   ): Promise<ApiResponse<DocumentUploadResponse>>;
+  getWorkerDocumentsHistory(
+    request: WorkerDocumentHistoricalRequest
+  ): Promise<ApiResponse<Document[]>>;
 }
 
 export class DocumentService implements IDocumentService {
@@ -93,6 +97,15 @@ export class DocumentService implements IDocumentService {
     return this.httpClient.upload<DocumentUploadResponse>(
       `${this.baseUrl}/uploadDocument`,
       formData
+    );
+  }
+
+  async getWorkerDocumentsHistory(
+    request: WorkerDocumentHistoricalRequest
+  ): Promise<ApiResponse<Document[]>> {
+    return this.httpClient.post<Document[]>(
+      `${this.baseUrl}/WorkerDocumentHistoricalRequest`,
+      request
     );
   }
 }

@@ -21,7 +21,7 @@ import {
   Users,
   CheckCircle,
 } from "lucide-react";
-import { CompanyFormData } from "@/types/company";
+import { CompanyFormData, CompanyStatus } from "@/types/company";
 import { WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-Toast";
 import { useCompanies } from "@/hooks/useCompanies";
@@ -29,7 +29,6 @@ import Loader from "@/components/Loader";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { EntityStatus } from "@/types/document";
 
 interface OnboardingData {
   company: CompanyFormData;
@@ -230,7 +229,7 @@ export default function CompanyOnboarding() {
     setIsLoading(true);
     try {
       await createBulkWorkers(onboardingData.workers);
-      await updateCompanyStatus(token!, EntityStatus.Rejected);
+      await updateCompanyStatus(token!, CompanyStatus.Rejected);
 
       toast({
         title: "Empresa creada correctamente",

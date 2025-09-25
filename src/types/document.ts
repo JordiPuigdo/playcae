@@ -6,6 +6,7 @@ export interface Document extends BaseEntity {
   status: EntityStatus;
   originalName: string;
   storagePath: string;
+  issueDate?: string;
   expirationDate?: string;
   uploadedDate: string;
 }
@@ -41,4 +42,11 @@ export interface UploadDocument {
 export interface DocumentUploadResponse {
   document: Document;
   errorMessage: string;
+}
+
+export interface WorkerDocumentHistoricalRequest {
+  workerId: string;
+  documentTypeId: string;
+  startDate: string;
+  endDate: string;
 }

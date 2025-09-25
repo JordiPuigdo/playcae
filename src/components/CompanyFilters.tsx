@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import { Search, X } from "lucide-react";
-import { Company } from "@/types/company";
+import { Company, CompanyStatus } from "@/types/company";
 import { Input } from "./ui/Input";
 import { Button } from "./ui/Button";
 import { Card, CardContent } from "./ui/Card";
@@ -14,10 +14,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/Select";
-import { EntityStatus } from "@/types/document";
+
 import {
-  getEntityStatusLabel,
-  getEntityStatusOptions,
+  getCompanyStatusLabel,
+  getCompanyStatusOptions,
 } from "@/app/utils/enum-utils";
 
 interface CompanyFiltersProps {
@@ -69,12 +69,12 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
           <div className="space-y-2 min-w-[200px]">
             <label className="text-sm font-medium">Estado de validación</label>
             <Select
-              value={status === "Todos" ? "Todos" : EntityStatus[status]}
+              value={status === "Todos" ? "Todos" : CompanyStatus[status]}
               onValueChange={(value) =>
                 handleStatusChange(
                   value === "Todos"
                     ? "Todos"
-                    : EntityStatus[value as keyof typeof EntityStatus]
+                    : CompanyStatus[value as keyof typeof CompanyStatus]
                 )
               }
             >
@@ -83,9 +83,9 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
               </SelectTrigger>
               <SelectContent className="bg-white hover:cursor-pointer">
                 <SelectItem className="hover:cursor-pointer" value="Todos">
-                  {getEntityStatusLabel("Todos")}
+                  {getCompanyStatusLabel("Todos")}
                 </SelectItem>
-                {getEntityStatusOptions().map((option) => (
+                {getCompanyStatusOptions().map((option) => (
                   <SelectItem
                     key={option.value}
                     className="hover:cursor-pointer"

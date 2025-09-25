@@ -1,6 +1,5 @@
 import { ApiResponse } from "@/interfaces/api-response";
-import { Company } from "@/types/company";
-import { EntityStatus } from "@/types/document";
+import { Company, CompanyStatus } from "@/types/company";
 import { HttpClient } from "./http-client";
 
 export interface ICompanyService {
@@ -9,7 +8,8 @@ export interface ICompanyService {
   create(company: Omit<Company, "id">): Promise<ApiResponse<Company>>;
   update(id: string, company: Partial<Company>): Promise<ApiResponse<Company>>;
   delete(id: string): Promise<ApiResponse<void>>;
-  updateStatus(id: string, status: EntityStatus): Promise<ApiResponse<void>>;
+  updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
+  activate(id: string): Promise<ApiResponse<void>>;
 }
 
 export class CompanyService implements ICompanyService {
@@ -43,8 +43,12 @@ export class CompanyService implements ICompanyService {
 
   async updateStatus(
     id: string,
-    status: EntityStatus
+    status: CompanyStatus
   ): Promise<ApiResponse<void>> {
     return this.httpClient.put(`${this.baseUrl}/${id}/status/${status}`, null);
+  }
+
+  async activate(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.put(`${this.baseUrl}/${id}/activate`, null);
   }
 }

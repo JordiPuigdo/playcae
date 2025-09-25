@@ -1,4 +1,4 @@
-import { Company } from "@/types/company";
+import { Company, CompanyStatus } from "@/types/company";
 import { Badge } from "./ui/Badge";
 import { EntityStatus } from "@/types/document";
 
@@ -9,19 +9,19 @@ interface StatusBadgeProps {
 export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const getStatusConfig = (status: Company["status"]) => {
     switch (status) {
-      case EntityStatus.Approved:
+      case CompanyStatus.Approved:
         return {
           variant: "default" as const,
           className: "bg-success text-white hover:bg-success/80",
           text: "Apta",
         };
-      case EntityStatus.Rejected:
+      case CompanyStatus.Rejected:
         return {
           variant: "destructive" as const,
           className: "bg-red-600 text-white hover:bg-red-700",
           text: "No apta",
         };
-      case EntityStatus.Pending:
+      case CompanyStatus.Pending:
       default:
         return {
           variant: "secondary" as const,

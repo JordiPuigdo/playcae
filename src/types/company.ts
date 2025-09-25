@@ -1,5 +1,4 @@
 import { BaseEntity } from "./baseEntity";
-import { EntityStatus } from "./document";
 
 export interface Company extends BaseEntity {
   name: string;
@@ -7,8 +6,14 @@ export interface Company extends BaseEntity {
   contactPerson: string;
   email: string;
   phone?: string;
-  status: EntityStatus;
+  status: CompanyStatus;
   userId: string;
+}
+
+export enum CompanyStatus {
+  Approved,
+  Rejected,
+  Pending,
 }
 
 export interface CompanyFormData {

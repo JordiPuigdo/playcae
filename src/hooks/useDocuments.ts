@@ -4,13 +4,16 @@ import {
   CompanyObservation,
   EntityStatus,
   UploadDocument,
+  WorkerDocumentHistoricalRequest,
 } from "@/types/document";
 
 import { DocumentService } from "@/services/document.service";
-import { useAuthStore } from "./useAuthStore";
 
 export const useDocuments = (companyId: string) => {
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [historicalDocuments, setHistoricalDocuments] = useState<Document[]>(
+    []
+  );
 
   const [observations, setObservations] = useState<CompanyObservation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -129,12 +132,29 @@ export const useDocuments = (companyId: string) => {
     }
   };
 
+  const getWorkerDocumentsHistory = async (
+    request: WorkerDocumentHistoricalRequest
+  ) => {
+    try {
+      setIsLoading(true);
+      const response = await documentService.getWorkerDocumentsHistory(request);
+      setHistoricalDocuments(response.data || []);
+    } catch (err) {
+      setIsLoading(false);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     documents,
+    historicalDocuments,
     observations: companyObservations,
     isLoading,
     error,
     showErrorUpload,
+    getWorkerDocumentsHistory,
     uploadDocument,
     validateDocument,
     addObservation,

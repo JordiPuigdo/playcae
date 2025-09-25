@@ -32,6 +32,7 @@ import { DocumentUpload } from "./DocumentUpload";
 import { renderFile } from "./RenderFile";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
+import { WorkerDocumentHistory } from "./WorkerDocumentHistory";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -309,7 +310,7 @@ export const WorkersTable = ({
                                           {formatDate(document.uploadedDate)}
                                         </TableCell>
                                         <TableCell>
-                                          {formatDate(document.expirationDate)}
+                                          {formatDate(document.issueDate)}
                                         </TableCell>
                                         <TableCell>
                                           <div className="flex items-center gap-2">
@@ -370,6 +371,12 @@ export const WorkersTable = ({
                                         </TableCell>
                                         <TableCell>
                                           <div className="flex gap-2">
+                                            <WorkerDocumentHistory
+                                              workerId={worker.id!}
+                                              documentTypeId={
+                                                document.documentType.id!
+                                              }
+                                            />
                                             {
                                               <DocumentUpload
                                                 documentName={

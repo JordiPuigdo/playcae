@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -18,81 +18,33 @@ import {
 } from "@/components/ui/Table";
 import { ScrollArea } from "@/components/ui/Scroll-Area";
 import { History, FileText, Calendar, User } from "lucide-react";
-
-interface DocumentHistoryEntry {
-  id: string;
-  documentId: string;
-  documentName: string;
-  fileName: string;
-  action: "uploaded" | "validated" | "rejected" | "updated";
-  actionDate: string;
-  performedBy: string;
-  comment?: string;
-  previousStatus?: string;
-  newStatus?: string;
-}
+import { useDocuments } from "@/hooks/useDocuments";
+import { renderFile } from "./RenderFile";
+import { formatDate } from "@/app/utils/date";
 
 interface WorkerDocumentHistoryProps {
   workerId: string;
-  workerName: string;
-  onFetchHistory: (workerId: string) => Promise<DocumentHistoryEntry[]>;
+  documentTypeId: string;
 }
 
 export const WorkerDocumentHistory = ({
   workerId,
-  workerName,
-  onFetchHistory,
+  documentTypeId,
 }: WorkerDocumentHistoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [history, setHistory] = useState<DocumentHistoryEntry[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleOpenHistory = async () => {
-    setIsOpen(true);
-    setIsLoading(true);
+  const { getWorkerDocumentsHistory, historicalDocuments } = useDocuments("");
 
-    try {
-      const historyData = await onFetchHistory(workerId);
-      setHistory(historyData);
-    } catch (error) {
-      console.error("Error fetching document history:", error);
-      setHistory([]);
-    } finally {
-      setIsLoading(false);
+  const handleOpenHistory = () => {
+    if (workerId) {
+      getWorkerDocumentsHistory({
+        workerId,
+        documentTypeId,
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+      });
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-
-  const getActionBadge = (action: DocumentHistoryEntry["action"]) => {
-    const variants = {
-      uploaded: { variant: "secondary" as const, text: "Subido" },
-      validated: { variant: "default" as const, text: "Validado" },
-      rejected: { variant: "destructive" as const, text: "Rechazado" },
-      updated: { variant: "secondary" as const, text: "Actualizado" },
-    };
-
-    const config = variants[action];
-    return (
-      <Badge
-        variant={config.variant}
-        className={
-          action === "validated"
-            ? "bg-success text-white hover:bg-success/80"
-            : ""
-        }
-      >
-        {config.text}
-      </Badge>
-    );
   };
 
   return (
@@ -112,7 +64,8 @@ export const WorkerDocumentHistory = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Historial de Documentos - {workerName}
+            Historial de Documentos -{" "}
+            {historicalDocuments[0]?.documentType.name}
           </DialogTitle>
         </DialogHeader>
 
@@ -127,52 +80,21 @@ export const WorkerDocumentHistory = ({
                 <TableRow>
                   <TableHead>Documento</TableHead>
                   <TableHead>Archivo</TableHead>
-                  <TableHead>Acción</TableHead>
                   <TableHead>Fecha</TableHead>
-                  <TableHead>Usuario</TableHead>
-                  <TableHead>Comentario</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {history.map((entry) => (
+                {historicalDocuments.map((entry) => (
                   <TableRow key={entry.id}>
                     <TableCell className="font-medium">
-                      {entry.documentName}
+                      {entry.documentType.name}
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="text-sm">{entry.fileName}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-1">
-                        {getActionBadge(entry.action)}
-                        {entry.previousStatus && entry.newStatus && (
-                          <div className="text-xs text-muted-foreground">
-                            {entry.previousStatus} → {entry.newStatus}
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
+                    <TableCell>{renderFile(entry)}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1 text-sm">
                         <Calendar className="h-3 w-3 text-muted-foreground" />
-                        {formatDate(entry.actionDate)}
+                        {formatDate(entry.creationDate)}
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-sm">
-                        <User className="h-3 w-3 text-muted-foreground" />
-                        {entry.performedBy}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      {entry.comment && (
-                        <span className="text-sm text-muted-foreground">
-                          {entry.comment}
-                        </span>
-                      )}
                     </TableCell>
                   </TableRow>
                 ))}

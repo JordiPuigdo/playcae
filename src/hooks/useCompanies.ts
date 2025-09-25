@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import useSWR, { mutate as globalMutate } from "swr";
-import { Company, CompanyFormData } from "@/types/company";
+import { Company, CompanyFormData, CompanyStatus } from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
 import { ApiError, ApiResponse } from "@/interfaces/api-response";
@@ -50,7 +50,7 @@ export const useCompanies = () => {
     try {
       const newCompany: Company = {
         ...data,
-        status: EntityStatus.Pending,
+        status: CompanyStatus.Pending,
         userId: user!.userId!,
       };
 
@@ -79,7 +79,7 @@ export const useCompanies = () => {
 
   const updateCompanyStatus = async (
     id: string,
-    status: EntityStatus
+    status: CompanyStatus
   ): Promise<void> => {
     try {
       const optimisticData = companies.map((c) =>
@@ -115,6 +115,16 @@ export const useCompanies = () => {
     };
   }, [companies]);
 
+  const deleteCompany = async (id: string) => {
+    await companyService.delete(id);
+    refreshCompanies();
+  };
+
+  const activateCompany = async (id: string) => {
+    await companyService.activate(id);
+    refreshCompanies();
+  };
+
   return {
     companies,
     loading: isValidating,
@@ -125,6 +135,8 @@ export const useCompanies = () => {
     updateCompanyStatus,
     filteredCompanies,
     refreshCompanies,
+    deleteCompany,
+    activateCompany,
   };
 };
 

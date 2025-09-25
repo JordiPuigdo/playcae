@@ -6,7 +6,7 @@ import { CompanyTable } from "@/components/CompanyTable";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { DialogHeader } from "@/components/ui/Dialog";
-import { useToast } from "@/hooks/use-Toast";
+
 import { useCompanies } from "@/hooks/useCompanies";
 import { Company, CompanyFormData } from "@/types/company";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
@@ -14,7 +14,13 @@ import { Building2, Plus } from "lucide-react";
 import { useState } from "react";
 
 const CompaniesManagement = () => {
-  const { createCompany, updateCompany, filteredCompanies } = useCompanies();
+  const {
+    createCompany,
+    updateCompany,
+    filteredCompanies,
+    deleteCompany,
+    activateCompany,
+  } = useCompanies();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<Company["status"] | "Todos">(
     "Todos"
@@ -23,6 +29,10 @@ const CompaniesManagement = () => {
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const filteredResults = filteredCompanies(searchTerm, statusFilter);
+
+  const handleDeleteCompany = async (companyId: string) => {
+    deleteCompany(companyId);
+  };
 
   const handleFilter = (filters: {
     search: string;
@@ -84,7 +94,14 @@ const CompaniesManagement = () => {
           </div>
         </div>
 
-        <CompanyTable companies={filteredResults} onEdit={handleEdit} />
+        <CompanyTable
+          companies={filteredResults}
+          onEdit={handleEdit}
+          onDeleteCompany={handleDeleteCompany}
+          onActivateCompany={(id) => {
+            activateCompany(id);
+          }}
+        />
 
         <Dialog open={isFormOpen} onOpenChange={handleCloseForm}>
           <DialogContent className="max-w-2xl bg-white">
