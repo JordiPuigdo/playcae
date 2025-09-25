@@ -3,18 +3,27 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
-import ForgotPassword from "@/components/ForgotPassword";
-import Loader from "@/components/Loader";
+import { Input } from "@/components/ui/Input";
+import { Label } from "@/components/ui/Label";
+import { Alert, AlertDescription } from "@/components/ui/Alert";
+
+import { Loader2 } from "lucide-react";
 import { UserRole } from "@/types/user";
-import { useToast } from "@/hooks/use-Toast";
+import { PasswordInput } from "@/components/PasswordInput";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login, user, errorAuth } = useAuthStore();
 
@@ -22,7 +31,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      setError("Por favor completa todos los campos");
+      setError("Por favor complete todos los campos.");
       return;
     }
 
@@ -38,9 +47,8 @@ export default function LoginPage() {
   }, [errorAuth]);
 
   useEffect(() => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
+
     if (user?.role === UserRole.Admin) {
       router.push("/dashboard");
     } else if (user?.role === UserRole.Company) {
@@ -53,88 +61,87 @@ export default function LoginPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <main className="max-w-md w-full p-8 bg-white rounded-lg shadow-lg">
-        {showForgotPassword ? (
-          <ForgotPassword onClose={() => setShowForgotPassword(false)} />
-        ) : (
-          <>
-            {isLoading && <Loader text="Iniciando sesión..." />}
-            <h1 className="text-3xl font-semibold mb-8 text-center text-gray-900">
-              Iniciar sesión
-            </h1>
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      {/* Loading Overlay */}
+      {isLoading && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+          <div className="flex flex-col items-center space-y-4">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <p className="text-sm text-muted-foreground" aria-live="polite">
+              Iniciando sesión...
+            </p>
+          </div>
+        </div>
+      )}
 
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            Iniciar Sesión
+          </CardTitle>
+          <CardDescription className="text-center">
+            Acceda a su cuenta para continuar.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <p className="mb-6 text-center text-red-600 bg-red-100 border border-red-300 rounded-md py-2 px-4">
-                {error}
-              </p>
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="email"
-                  className="block mb-2 font-medium text-gray-700"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleSubmit(e as any);
-                    }
-                  }}
-                  required
-                  placeholder="ejemplo@correo.com"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Correo electrónico *</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="ejemplo@correo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                autoFocus
+              />
+            </div>
 
-              <div>
-                <label
-                  htmlFor="password"
-                  className="block mb-2 font-medium text-gray-700"
-                >
-                  Contraseña
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  className="w-full rounded-md border border-gray-300 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      handleSubmit(e as any);
-                    }
-                  }}
-                  required
-                  placeholder="********"
-                />
-              </div>
-              <div className="flex items-center justify-between">
-                <Button
-                  type="button"
-                  variant="link"
-                  className="px-0 font-normal"
-                  onClick={() => setShowForgotPassword(true)}
-                >
-                  Olvido su contraseña?
-                </Button>
-              </div>
-              <Button className="w-full bg-blue-600 text-white font-semibold py-3 rounded-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 transition">
-                Entrar
+            <PasswordInput
+              id="password"
+              name="password"
+              label="Contraseña *"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Ingrese su contraseña"
+              required
+            />
+
+            <div className="flex justify-end">
+              <Button
+                type="button"
+                variant="link"
+                className="px-0 font-normal text-sm"
+                onClick={() => router.push("/forgot-password")}
+              >
+                ¿Olvidó su contraseña?
               </Button>
-            </form>
-          </>
-        )}
-      </main>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Ingresando..." : "Entrar"}
+            </Button>
+
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full"
+              onClick={() => router.push("/register")}
+            >
+              ¿No tiene cuenta? Regístrese
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }
