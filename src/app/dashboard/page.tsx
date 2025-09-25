@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useWorkers } from "@/hooks/useWorkers";
+import { CompanyStatus } from "@/types/company";
 import { EntityStatus } from "@/types/document";
 import { WorkerStatus } from "@/types/worker";
 
@@ -42,13 +43,13 @@ export default function DashboardPage() {
   const { companies } = useCompanies();
   const total = companies.length;
   const totalPending = companies.filter(
-    (c) => c.status === EntityStatus.Pending
+    (c) => c.status === CompanyStatus.Pending
   ).length;
   const totalApto = companies.filter(
-    (c) => c.status === EntityStatus.Approved
+    (c) => c.status === CompanyStatus.Approved
   ).length;
   const totalNoApto = companies.filter(
-    (c) => c.status === EntityStatus.Rejected
+    (c) => c.status === CompanyStatus.Rejected
   ).length;
   const { workers } = useWorkers(undefined);
 
