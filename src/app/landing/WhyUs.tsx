@@ -209,7 +209,10 @@ export default function WhyUs() {
 
         {/* CTA final */}
         <div className="text-center mt-16">
-          <button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 inline-flex items-center">
+          <button
+            className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 inline-flex items-center"
+            onClick={() => window.open("/register", "_blank")}
+          >
             Comenzar Prueba Gratuita
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -20,6 +20,12 @@ export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
           className: "text-white",
           text: "Rechazado",
         };
+      case EntityStatus.Expired:
+        return {
+          variant: "destructive" as const,
+          className: "text-white",
+          text: "Expirado",
+        };
       case EntityStatus.Pending:
       default:
         return {

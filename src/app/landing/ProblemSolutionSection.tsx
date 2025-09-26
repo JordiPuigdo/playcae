@@ -306,7 +306,10 @@ export default function ProblemSolutionSection() {
           </div>
 
           <div className="mt-8 text-center">
-            <button className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105">
+            <button
+              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
+              onClick={() => window.open("/register", "_blank")}
+            >
               Probar validación gratuita
             </button>
             <p className="mt-2 text-sm text-gray-500">
