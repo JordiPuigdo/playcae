@@ -125,6 +125,16 @@ export const useCompanies = () => {
     refreshCompanies();
   };
 
+  /*const getCompaniesByUserId = async (userId: string) => {
+    try {
+      const response = await companyService.getByUserId(userId);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+      return [];
+    }
+  };*/
+
   return {
     companies,
     loading: isValidating,
