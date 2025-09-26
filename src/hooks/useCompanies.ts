@@ -20,7 +20,7 @@ export const useCompanies = () => {
   } = useSWR<Company[]>(
     COMPANIES_KEY,
     async () => {
-      const response = await companyService.getAll();
+      const response = await companyService.getByUserId(user!.userId!);
       return response.data;
     },
     {
@@ -124,6 +124,16 @@ export const useCompanies = () => {
     await companyService.activate(id);
     refreshCompanies();
   };
+
+  /*const getCompaniesByUserId = async (userId: string) => {
+    try {
+      const response = await companyService.getByUserId(userId);
+      return response.data;
+    } catch (err) {
+      handleError(err);
+      return [];
+    }
+  };*/
 
   return {
     companies,

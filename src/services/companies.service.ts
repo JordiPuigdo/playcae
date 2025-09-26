@@ -10,6 +10,8 @@ export interface ICompanyService {
   delete(id: string): Promise<ApiResponse<void>>;
   updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
   activate(id: string): Promise<ApiResponse<void>>;
+
+  getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
 }
 
 export class CompanyService implements ICompanyService {
@@ -50,5 +52,9 @@ export class CompanyService implements ICompanyService {
 
   async activate(id: string): Promise<ApiResponse<void>> {
     return this.httpClient.put(`${this.baseUrl}/${id}/activate`, null);
+  }
+
+  async getByUserId(userId: string): Promise<ApiResponse<Company[]>> {
+    return this.httpClient.get<Company[]>(`${this.baseUrl}/user/${userId}`);
   }
 }

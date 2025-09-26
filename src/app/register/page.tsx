@@ -17,6 +17,7 @@ import { Textarea } from "@/components/ui/TextArea";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Loader2, Building2 } from "lucide-react";
 import { toast } from "@/hooks/use-Toast";
+import { useUsers } from "@/hooks/useUsers";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -31,6 +32,9 @@ export default function RegisterPage() {
     password: "",
     confirmPassword: "",
   });
+
+  const { createUser } = useUsers();
+
   const [error, setError] = useState("");
 
   const validateEmail = (email: string) =>
@@ -99,8 +103,20 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      // Simulación API
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      const response = await createUser({
+        companyName: registerData.companyName,
+        taxId: registerData.cif,
+        contactPerson: registerData.contactPerson,
+        email: registerData.email,
+        phone: "",
+        address: "",
+        password: registerData.password,
+      });
+
+      if (response.data.errorMessage !== null) {
+        setError(response.data.errorMessage);
+        return;
+      }
 
       toast({
         title: "Registro exitoso",
