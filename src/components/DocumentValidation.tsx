@@ -9,17 +9,20 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog";
 import { CheckCircle, XCircle } from "lucide-react";
+import { Document, EntityStatus } from "@/types/document";
 
 interface DocumentValidationProps {
   documentName: string;
   onValidate: (isValid: boolean, comment?: string) => void;
   canValidate: boolean;
+  document: Document;
 }
 
 export const DocumentValidation = ({
   documentName,
   onValidate,
   canValidate,
+  document,
 }: DocumentValidationProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isValidating, setIsValidating] = useState<boolean | null>(null);
@@ -44,16 +47,28 @@ export const DocumentValidation = ({
     setComment("");
   };
 
+  const isValidStatusForValidation =
+    document.status === EntityStatus.Rejected ||
+    document.status === EntityStatus.Expired;
+
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
+        if (!isValidStatusForValidation) return;
         setIsOpen(open);
         if (!open) resetForm();
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
+        <Button
+          variant="outline"
+          size="sm"
+          className={`gap-2 ${
+            isValidStatusForValidation ? "" : "opacity-50 cursor-not-allowed"
+          }`}
+          disabled={!isValidStatusForValidation}
+        >
           <CheckCircle className="h-4 w-4" />
           Validar
         </Button>

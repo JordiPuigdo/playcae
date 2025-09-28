@@ -33,6 +33,7 @@ import { renderFile } from "./RenderFile";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { WorkerDocumentHistory } from "./WorkerDocumentHistory";
+import { DocumentValidation } from "./DocumentValidation";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -160,7 +161,7 @@ export const WorkersTable = ({
   };
 
   const canUpload = true;
-  const canValidate = true;
+  const canValidate = userRole == UserRole.Admin;
   const canEdit = true;
 
   return (
@@ -393,22 +394,26 @@ export const WorkersTable = ({
                                                 }
                                               />
                                             }
-                                            {/*canValidate &&
-                                          document.fileName &&
-                                          document.status === 'Pendiente' && (
-                                            <DocumentValidation
-                                              documentName={document.name}
-                                              canValidate={canValidate}
-                                              onValidate={(isValid, comment) =>
-                                                onValidateDocument(
-                                                  worker.id,
-                                                  document.id,
+                                            {canValidate && (
+                                              <DocumentValidation
+                                                documentName={
+                                                  document.documentType.name
+                                                }
+                                                canValidate={canValidate}
+                                                onValidate={(
                                                   isValid,
                                                   comment
-                                                )
-                                              }
-                                            />
-                                          )*/}
+                                                ) =>
+                                                  onValidateDocument(
+                                                    worker.id!,
+                                                    document.id!,
+                                                    isValid,
+                                                    comment
+                                                  )
+                                                }
+                                                document={document}
+                                              />
+                                            )}
                                           </div>
                                         </TableCell>
                                       </TableRow>

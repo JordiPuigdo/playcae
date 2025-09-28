@@ -99,17 +99,16 @@ export const DocumentsTable = ({
                         />
                       )}
 
-                      {canValidate &&
-                        document.storagePath &&
-                        document.status === EntityStatus.Pending && (
-                          <DocumentValidation
-                            documentName={document.originalName}
-                            canValidate={canValidate}
-                            onValidate={(isValid, comment) =>
-                              onValidate(document.id!, isValid, comment)
-                            }
-                          />
-                        )}
+                      {canValidate && (
+                        <DocumentValidation
+                          documentName={document.originalName}
+                          canValidate={canValidate}
+                          onValidate={(isValid, comment) =>
+                            onValidate(document.id!, isValid, comment)
+                          }
+                          document={document}
+                        />
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>
