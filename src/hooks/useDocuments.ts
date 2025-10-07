@@ -111,6 +111,7 @@ export const useDocuments = (companyId: string) => {
           existsDoc.storagePath = documentResponse.storagePath;
           existsDoc.uploadedDate = documentResponse.uploadedDate;
           existsDoc.expirationDate = documentResponse.expirationDate;
+          existsDoc.status = documentResponse.status;
         } else {
           const existsRequestDoc = documents.find(
             (doc) => doc.id === request.documentId
@@ -126,7 +127,14 @@ export const useDocuments = (companyId: string) => {
       }
     } catch (err) {
       setIsLoading(false);
-      throw err;
+      if (err instanceof Error) {
+        setShowErrorUpload(err.message);
+      } else {
+        setShowErrorUpload("Error desconocido al subir el documento");
+      }
+      setTimeout(() => {
+        setShowErrorUpload(null);
+      }, 5000);
     } finally {
       setIsLoading(false);
     }

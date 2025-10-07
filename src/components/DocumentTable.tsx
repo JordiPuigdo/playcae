@@ -92,7 +92,7 @@ export const DocumentsTable = ({
                     <div className="flex gap-2">
                       {canUpload && (
                         <DocumentUpload
-                          documentName={document.originalName}
+                          documentName={document.documentType.name}
                           hasFile={!!document.storagePath}
                           onUpload={(data) => onUpload(document.id!, data)}
                           canUpload
