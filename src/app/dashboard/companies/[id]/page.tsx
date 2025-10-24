@@ -127,6 +127,7 @@ const CompanyDetailPage = () => {
         expiryDate: data.expiryDate,
         companyId: id,
         documentId,
+        workerId,
       };
       const resultUpload = await uploadDocument(request);
       if (workerId != "") {

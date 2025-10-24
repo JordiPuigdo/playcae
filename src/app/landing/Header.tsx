@@ -8,7 +8,7 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogin = () => {
-    window.open("/register", "_blank");
+    window.open("/login", "_blank");
     setMenuOpen(false);
   };
 
