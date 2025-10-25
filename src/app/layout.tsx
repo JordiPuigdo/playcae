@@ -49,6 +49,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={`${geistSans.className} ${geistMono.className}`}>
+      <meta
+        name="google-site-verification"
+        content="SnZ03ugbapbdmUzwIwTZVQEnkdSpDKx44Uqse-C7sVA"
+      />
       <body suppressHydrationWarning className="min-h-screen bg-gray-100">
         {children}
         <Toaster />
