@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./../styles/global.css";
 import { Toaster } from "@/components/ui/Toaster";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,6 +43,8 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID; // p.ej. "G-Y723QWMBWF"
+
 export default function RootLayout({
   children,
 }: {
@@ -53,9 +56,32 @@ export default function RootLayout({
         name="google-site-verification"
         content="SnZ03ugbapbdmUzwIwTZVQEnkdSpDKx44Uqse-C7sVA"
       />
+
       <body suppressHydrationWarning className="min-h-screen bg-gray-100">
         {children}
         <Toaster />
+
+        {process.env.NODE_ENV === "production" && GA_ID ? (
+          <>
+            <Script
+              id="gtag-src"
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+            />
+            <Script
+              id="gtag-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', '${GA_ID}', { send_page_view: false });
+                `,
+              }}
+            />
+          </>
+        ) : null}
       </body>
     </html>
   );
