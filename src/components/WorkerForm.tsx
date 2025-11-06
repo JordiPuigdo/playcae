@@ -35,6 +35,7 @@ export const WorkerForm = ({
     cardId: "",
     position: "",
     companyId: "",
+    ssn: "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -47,6 +48,7 @@ export const WorkerForm = ({
         cardId: worker.cardId,
         position: worker.position || "",
         companyId: worker.companyId,
+        ssn: "",
       });
     } else {
       setFormData({
@@ -55,6 +57,7 @@ export const WorkerForm = ({
         cardId: "",
         position: "",
         companyId: "",
+        ssn: "",
       });
     }
     setErrors({});
@@ -97,6 +100,7 @@ export const WorkerForm = ({
       cardId: "",
       position: "",
       companyId: "",
+      ssn: "",
     });
     setErrors({});
   };
