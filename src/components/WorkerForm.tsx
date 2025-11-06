@@ -48,7 +48,7 @@ export const WorkerForm = ({
         cardId: worker.cardId,
         position: worker.position || "",
         companyId: worker.companyId,
-        ssn: "",
+        ssn: worker.ssn || "",
       });
     } else {
       setFormData({
@@ -172,6 +172,27 @@ export const WorkerForm = ({
             />
             {errors.dni && (
               <p className="text-sm text-destructive">{errors.dni}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="ssn" className="flex items-center gap-2">
+              SSN *
+            </Label>
+            <Input
+              id="ssn"
+              value={formData.ssn}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  ssn: e.target.value.toUpperCase(),
+                }))
+              }
+              placeholder="Número seguridad social"
+              className={errors.ssn ? "border-destructive" : ""}
+            />
+            {errors.ssn && (
+              <p className="text-sm text-destructive">{errors.ssn}</p>
             )}
           </div>
 

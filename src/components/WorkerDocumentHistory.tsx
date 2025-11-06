@@ -19,7 +19,7 @@ import {
 import { ScrollArea } from "@/components/ui/Scroll-Area";
 import { History, FileText, Calendar, User } from "lucide-react";
 import { useDocuments } from "@/hooks/useDocuments";
-import { renderFile } from "./RenderFile";
+import { renderFile } from "./FileCell";
 import { formatDate } from "@/app/utils/date";
 
 interface WorkerDocumentHistoryProps {

@@ -25,7 +25,7 @@ import { UserRole } from "@/types/user";
 import { WorkerFormData, WorkerStatus } from "@/types/worker";
 import { FileText, MessageSquare, Users } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -45,6 +45,7 @@ const CompanyDetailPage = () => {
     uploadDocument,
     validateDocument,
     showErrorUpload,
+    openDocument,
   } = useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -113,6 +114,10 @@ const CompanyDetailPage = () => {
   useEffect(() => {
     fetchCompany(id);
   }, [id]);
+
+  const handleOpenDocument = useCallback(async (documentId: string) => {
+    await openDocument(documentId);
+  }, []);
 
   const handleUploadDocument = async (
     documentId: string,
@@ -246,6 +251,7 @@ const CompanyDetailPage = () => {
                 onActivateWorker={(workerId: string) => {
                   activateWorker(workerId);
                 }}
+                onOpenDocument={(documentId) => handleOpenDocument(documentId)}
               />
             </TabsContent>
             <TabsContent value="documents" className="space-y-6">

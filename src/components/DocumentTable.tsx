@@ -16,7 +16,7 @@ import { UserRole } from "@/types/user";
 import Link from "next/link";
 import { formatDate, isExpired } from "@/app/utils/date";
 import { DocumentValidation } from "./DocumentValidation";
-import { renderFile } from "./RenderFile";
+import { renderFile } from "./FileCell";
 import { DocumentUpload } from "./DocumentUpload";
 
 interface DocumentsTableProps {

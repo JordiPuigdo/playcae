@@ -30,6 +30,7 @@ export interface IDocumentService {
   getWorkerDocumentsHistory(
     request: WorkerDocumentHistoricalRequest
   ): Promise<ApiResponse<Document[]>>;
+  open(id: string): Promise<ApiResponse<string>>;
 }
 
 export class DocumentService implements IDocumentService {
@@ -39,6 +40,10 @@ export class DocumentService implements IDocumentService {
 
   constructor() {
     this.httpClient = new HttpClient();
+  }
+
+  async open(id: string): Promise<ApiResponse<string>> {
+    return this.httpClient.get<string>(`${this.baseUrl}/${id}/open`);
   }
 
   async getById(id: string): Promise<ApiResponse<Document>> {

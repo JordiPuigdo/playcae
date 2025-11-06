@@ -29,11 +29,12 @@ import { WorkerForm } from "./WorkerForm";
 import { EntityStatus } from "@/types/document";
 import { getEntityStatusLabel } from "@/app/utils/enum-utils";
 import { DocumentUpload } from "./DocumentUpload";
-import { renderFile } from "./RenderFile";
+
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { WorkerDocumentHistory } from "./WorkerDocumentHistory";
 import { DocumentValidation } from "./DocumentValidation";
+import { FileCell } from "./FileCell";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -53,6 +54,7 @@ interface WorkersTableProps {
     comment?: string
   ) => void;
   onActivateWorker: (workerId: string) => void;
+  onOpenDocument: (documentId: string) => void;
 }
 
 const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
@@ -66,6 +68,7 @@ export const WorkersTable = ({
   onUploadDocument,
   onValidateDocument,
   onActivateWorker,
+  onOpenDocument,
 }: WorkersTableProps) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
@@ -305,7 +308,10 @@ export const WorkersTable = ({
                                           {document.documentType.name}
                                         </TableCell>
                                         <TableCell>
-                                          {renderFile(document)}
+                                          <FileCell
+                                            document={document}
+                                            onOpen={onOpenDocument}
+                                          />
                                         </TableCell>
                                         <TableCell>
                                           {formatDate(document.uploadedDate)}

@@ -155,6 +155,19 @@ export const useDocuments = (companyId: string) => {
     }
   };
 
+  const openDocument = async (documentId: string) => {
+    try {
+      console.log(documentId);
+      const sasUrl = await documentService.open(documentId);
+      console.log(sasUrl);
+      if (sasUrl.status !== 200 || sasUrl.data == null)
+        setError("No se pudo abrir el documento");
+      else window.open(sasUrl.data, "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Error al abrir documento", error);
+    }
+  };
+
   return {
     documents,
     historicalDocuments,
@@ -167,5 +180,6 @@ export const useDocuments = (companyId: string) => {
     validateDocument,
     addObservation,
     refreshDocuments: loadDocuments,
+    openDocument,
   };
 };
