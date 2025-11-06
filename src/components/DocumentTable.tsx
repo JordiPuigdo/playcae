@@ -13,17 +13,17 @@ import { FileText, AlertTriangle } from "lucide-react";
 import { DocumentFormData } from "@/types/document";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
 import { UserRole } from "@/types/user";
-import Link from "next/link";
 import { formatDate, isExpired } from "@/app/utils/date";
 import { DocumentValidation } from "./DocumentValidation";
-import { renderFile } from "./FileCell";
 import { DocumentUpload } from "./DocumentUpload";
+import { FileCell } from "./FileCell";
 
 interface DocumentsTableProps {
   documents: Document[];
   userRole: UserRole;
   onUpload: (documentId: string, data: DocumentFormData) => void;
   onValidate: (documentId: string, isValid: boolean, comment?: string) => void;
+  onOpen: (documentId: string) => void;
 }
 
 export const DocumentsTable = ({
@@ -31,6 +31,7 @@ export const DocumentsTable = ({
   userRole,
   onUpload,
   onValidate,
+  onOpen,
 }: DocumentsTableProps) => {
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
@@ -66,7 +67,9 @@ export const DocumentsTable = ({
                   <TableCell className="font-medium">
                     {document.documentType.name}
                   </TableCell>
-                  <TableCell>{renderFile(document)}</TableCell>
+                  <TableCell>
+                    <FileCell document={document} onOpen={onOpen} />
+                  </TableCell>
                   <TableCell>{formatDate(document.uploadedDate)}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">

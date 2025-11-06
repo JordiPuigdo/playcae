@@ -268,6 +268,7 @@ const CompanyDetailPage = () => {
                 ) => {
                   return handleValidateDocument(id, isValid, comment);
                 }}
+                onOpen={(documentId) => handleOpenDocument(documentId)}
               />
             </TabsContent>
 
