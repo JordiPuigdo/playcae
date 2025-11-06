@@ -4,7 +4,6 @@ import { Company, CompanyFormData, CompanyStatus } from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
 import { ApiError, ApiResponse } from "@/interfaces/api-response";
-import { EntityStatus } from "@/types/document";
 import { useAuthStore } from "./useAuthStore";
 
 const COMPANIES_KEY = "/api/companies";

@@ -40,7 +40,11 @@ export const DocumentsTable = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          Documentación Requerida
+          Documentación Requerida{" "}
+          {documents.length > 0 &&
+            `(${
+              documents.filter((x) => x.status == EntityStatus.Pending).length
+            } / ${documents.length})`}
         </CardTitle>
       </CardHeader>
       <CardContent>

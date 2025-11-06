@@ -57,6 +57,7 @@ export const useWorkers = (companyId: string | undefined) => {
         cardId: data.cardId,
         position: data.position,
         status: WorkerStatus.Rejected,
+        ssn: data.ssn,
       }));
 
       const response = await workerService.createBulk(
@@ -89,6 +90,7 @@ export const useWorkers = (companyId: string | undefined) => {
       cardId: data.cardId,
       position: data.position,
       status: WorkerStatus.Rejected,
+      ssn: data.ssn,
     };
     await workerService.create(newWorker);
     setWorkers((prev) => [...prev, newWorker]);

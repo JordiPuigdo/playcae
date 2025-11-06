@@ -96,6 +96,7 @@ export default function CompanyOnboarding() {
         cardId: "",
         position: "",
         companyId: "",
+        ssn: "",
       },
     ],
   });
@@ -136,6 +137,9 @@ export default function CompanyOnboarding() {
       }
       if (!worker.cardId.trim()) {
         newErrors[`worker-${index}-dni`] = "DNI is required";
+      }
+      if (!worker.ssn.trim()) {
+        newErrors[`worker-${index}-ssn`] = "SSN is required";
       }
     });
 
@@ -193,6 +197,7 @@ export default function CompanyOnboarding() {
           cardId: "",
           position: "",
           companyId: "",
+          ssn: "",
         },
       ],
     }));
@@ -453,6 +458,23 @@ export default function CompanyOnboarding() {
                   }
                   placeholder="Escriba posición"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor={`worker-${index}-ssn`}>SSN *</Label>
+                <Input
+                  id={`worker-${index}-ssn`}
+                  value={worker.ssn}
+                  onChange={(e) =>
+                    handleWorkerChange(index, "ssn", e.target.value)
+                  }
+                  placeholder="Escriba número de seguridad social"
+                />
+                {errors[`worker-${index}-ssn`] && (
+                  <p className="text-sm text-destructive">
+                    {errors[`worker-${index}-ssn`]}
+                  </p>
+                )}
               </div>
             </div>
           </div>

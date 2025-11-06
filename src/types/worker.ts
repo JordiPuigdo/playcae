@@ -8,6 +8,7 @@ export interface Worker extends BaseEntity {
   cardId: string;
   position?: string;
   status: WorkerStatus;
+  ssn: string;
   documents?: Document[];
 }
 
@@ -27,6 +28,7 @@ export interface WorkerFormData {
   cardId: string;
   position?: string;
   companyId: string;
+  ssn: string;
 }
 
 export interface WorkerDocumentFormData {

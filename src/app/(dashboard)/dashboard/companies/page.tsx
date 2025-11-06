@@ -6,12 +6,13 @@ import { CompanyTable } from "@/components/CompanyTable";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { DialogHeader } from "@/components/ui/Dialog";
+import { toast } from "@/hooks/use-Toast";
 
 import { useCompanies } from "@/hooks/useCompanies";
 import { Company, CompanyFormData } from "@/types/company";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
 import { Building2, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CompaniesManagement = () => {
   const {
@@ -29,6 +30,7 @@ const CompaniesManagement = () => {
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const filteredResults = filteredCompanies(searchTerm, statusFilter);
+  const [error, setError] = useState<string | null>(null);
 
   const handleDeleteCompany = async (companyId: string) => {
     deleteCompany(companyId);
@@ -47,16 +49,34 @@ const CompaniesManagement = () => {
   };
 
   const handleFormSubmit = async (data: CompanyFormData) => {
-    setIsLoading(true);
-    if (editingCompany && editingCompany.id) {
-      updateCompany(editingCompany.id, data);
-    } else {
-      await createCompany(data);
+    try {
+      setIsLoading(true);
+      if (editingCompany && editingCompany.id) {
+        updateCompany(editingCompany.id, data);
+      } else {
+        await createCompany(data);
+      }
+      setIsFormOpen(false);
+      setEditingCompany(null);
+    } catch (error) {
+      setError("Error creando empresa");
+      setTimeout(() => {
+        setError(null);
+      }, 5000);
+    } finally {
+      setIsLoading(false);
     }
-    setIsFormOpen(false);
-    setEditingCompany(null);
-    setIsLoading(false);
   };
+
+  useEffect(() => {
+    if (error != null) {
+      toast({
+        title: "Error al crear empresa",
+        description: error,
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
 
   const handleCloseForm = () => {
     setIsFormOpen(false);

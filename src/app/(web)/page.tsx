@@ -10,8 +10,8 @@ export default function LandingPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "PlayCAE",
-    url: "https://playcae.com",
-    logo: "https://playcae.com/og-logo.png",
+    url: "https://www.playcae.com",
+    logo: "https://www.playcae.com/og-logo.png",
     contactPoint: [
       {
         "@type": "ContactPoint",
