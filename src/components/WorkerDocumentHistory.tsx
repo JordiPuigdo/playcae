@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -19,8 +19,8 @@ import {
 import { ScrollArea } from "@/components/ui/Scroll-Area";
 import { History, FileText, Calendar, User } from "lucide-react";
 import { useDocuments } from "@/hooks/useDocuments";
-import { renderFile } from "./FileCell";
 import { formatDate } from "@/app/utils/date";
+import { FileCell } from "./FileCell";
 
 interface WorkerDocumentHistoryProps {
   workerId: string;
@@ -34,7 +34,8 @@ export const WorkerDocumentHistory = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { getWorkerDocumentsHistory, historicalDocuments } = useDocuments("");
+  const { getWorkerDocumentsHistory, historicalDocuments, openDocument } =
+    useDocuments("");
 
   const handleOpenHistory = () => {
     if (workerId) {
@@ -46,6 +47,10 @@ export const WorkerDocumentHistory = ({
       });
     }
   };
+
+  const handleOpenDocument = useCallback(async (documentId: string) => {
+    await openDocument(documentId);
+  }, []);
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -89,7 +94,9 @@ export const WorkerDocumentHistory = ({
                     <TableCell className="font-medium">
                       {entry.documentType.name}
                     </TableCell>
-                    <TableCell>{renderFile(entry)}</TableCell>
+                    <TableCell>
+                      <FileCell document={entry} onOpen={handleOpenDocument} />
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1 text-sm">
                         <Calendar className="h-3 w-3 text-muted-foreground" />
