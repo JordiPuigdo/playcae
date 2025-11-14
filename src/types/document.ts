@@ -31,6 +31,7 @@ export enum EntityStatus {
   Expired,
   ValidatedByAI,
   ExpiredByAI,
+  PendingManualy,
 }
 
 export interface UploadDocument {

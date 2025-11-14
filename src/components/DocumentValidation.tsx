@@ -8,12 +8,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog";
-import { CheckCircle, XCircle } from "lucide-react";
+import { Calendar, CheckCircle, XCircle } from "lucide-react";
 import { Document, EntityStatus } from "@/types/document";
+import { Input } from "./ui/Input";
+import { Label } from "./ui/Label";
 
 interface DocumentValidationProps {
   documentName: string;
-  onValidate: (isValid: boolean, comment?: string) => void;
+  onValidate: (isValid: boolean, comment?: string, expiryDate?: string) => void;
   canValidate: boolean;
   document: Document;
 }
@@ -26,6 +28,7 @@ export const DocumentValidation = ({
 }: DocumentValidationProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isValidating, setIsValidating] = useState<boolean | null>(null);
+  const [expiryDate, setExpiryDate] = useState("");
   const [comment, setComment] = useState("");
 
   if (!canValidate) return null;
@@ -49,7 +52,8 @@ export const DocumentValidation = ({
 
   const isValidStatusForValidation =
     document.status === EntityStatus.Rejected ||
-    document.status === EntityStatus.Expired;
+    document.status === EntityStatus.Expired ||
+    document.status === EntityStatus.PendingManualy;
 
   return (
     <Dialog
@@ -80,6 +84,18 @@ export const DocumentValidation = ({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-3">
+            <div className="space-y-2">
+              <Label htmlFor="expiryDate" className="flex items-center gap-2">
+                <Calendar className="h-4 w-4" />
+                Fecha de caducidad
+              </Label>
+              <Input
+                id="expiryDate"
+                type="date"
+                value={expiryDate}
+                onChange={(e) => setExpiryDate(e.target.value)}
+              />
+            </div>
             <div className="text-sm font-medium">
               Resultado de la validación:
             </div>
@@ -97,7 +113,7 @@ export const DocumentValidation = ({
               <Button
                 type="button"
                 variant={isValidating === false ? "destructive" : "outline"}
-                className="flex-1 gap-2"
+                className={`flex-1 gap-2 ${!isValidating && "text-white"}`}
                 onClick={() => setIsValidating(false)}
               >
                 <XCircle className="h-4 w-4" />
@@ -136,6 +152,7 @@ export const DocumentValidation = ({
               type="submit"
               disabled={isValidating === null}
               variant={isValidating === false ? "destructive" : "default"}
+              className={!isValidating ? "text-white" : ""}
             >
               {isValidating ? "Validar documento" : "Rechazar documento"}
             </Button>

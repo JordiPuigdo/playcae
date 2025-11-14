@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const MIN_DATE = "0001-01-01T00:00:00";
 
 // ✅ Formatea fechas válidas, muestra "-" si es null o DateTime.MinValue
@@ -10,7 +12,7 @@ export const formatDate = (dateString?: string): string => {
     return "-";
   }
 
-  return new Date(dateString).toLocaleDateString("es-ES");
+  return dayjs(dateString).format("DD/MM/YYYY");
 };
 
 // ✅ Verifica si una fecha caduca en los próximos 30 días (pero aún no caducó)

@@ -45,6 +45,12 @@ export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
           className: "bg-pending text-white hover:bg-pending/80",
           text: "Pendiente",
         };
+      case EntityStatus.PendingManualy:
+        return {
+          variant: "destructive" as const,
+          className: "text-white",
+          text: "Pendiente Validación",
+        };
     }
   };
 
