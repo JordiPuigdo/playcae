@@ -14,6 +14,18 @@ export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
           className: "bg-success text-white hover:bg-success/80",
           text: "Validado",
         };
+      case EntityStatus.ValidatedByAI:
+        return {
+          variant: "default" as const,
+          className: "bg-success text-white hover:bg-success/80",
+          text: "Validado por IA",
+        };
+      case EntityStatus.ExpiredByAI:
+        return {
+          variant: "destructive" as const,
+          className: "text-white",
+          text: "Caducado por IA",
+        };
       case EntityStatus.Rejected:
         return {
           variant: "destructive" as const,

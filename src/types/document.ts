@@ -29,6 +29,8 @@ export enum EntityStatus {
   Approved,
   Rejected,
   Expired,
+  ValidatedByAI,
+  ExpiredByAI,
 }
 
 export interface UploadDocument {

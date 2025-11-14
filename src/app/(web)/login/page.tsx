@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { Loader2 } from "lucide-react";
 import { UserRole } from "@/types/user";
 import { PasswordInput } from "@/components/PasswordInput";
+import { useAuthSession } from "@/hooks/useAuthSession";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -26,6 +27,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login, user, errorAuth } = useAuthStore();
+
+  useAuthSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
