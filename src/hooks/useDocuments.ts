@@ -52,7 +52,8 @@ export const useDocuments = (companyId: string) => {
   const validateDocument = async (
     documentId: string,
     isValid: boolean,
-    comment?: string
+    comment?: string,
+    expiryDate?: string
   ) => {
     try {
       setIsLoading(true);

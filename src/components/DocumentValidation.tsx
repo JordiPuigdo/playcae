@@ -38,7 +38,7 @@ export const DocumentValidation = ({
 
     if (isValidating === null) return;
 
-    onValidate(isValidating, comment || undefined);
+    onValidate(isValidating, comment || undefined, expiryDate);
 
     setIsOpen(false);
     setIsValidating(null);

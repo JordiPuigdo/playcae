@@ -51,7 +51,8 @@ interface WorkersTableProps {
     workerId: string,
     documentId: string,
     isValid: boolean,
-    comment?: string
+    comment?: string,
+    expiryDate?: string
   ) => void;
   onActivateWorker: (workerId: string) => void;
   onOpenDocument: (documentId: string) => void;
@@ -166,6 +167,13 @@ export const WorkersTable = ({
   const canUpload = true;
   const canValidate = userRole == UserRole.Admin;
   const canEdit = true;
+
+  const validStates = [EntityStatus.Approved, EntityStatus.ValidatedByAI];
+  const rejectedStates = [
+    EntityStatus.Rejected,
+    EntityStatus.ExpiredByAI,
+    EntityStatus.PendingManualy,
+  ];
 
   return (
     <>
@@ -348,19 +356,31 @@ export const WorkersTable = ({
                                             <Badge
                                               variant={
                                                 document.status ===
-                                                EntityStatus.Approved
+                                                  EntityStatus.Approved ||
+                                                document.status ===
+                                                  EntityStatus.ValidatedByAI
                                                   ? "default"
                                                   : document.status ===
-                                                    EntityStatus.Rejected
+                                                      EntityStatus.Rejected ||
+                                                    document.status ===
+                                                      EntityStatus.ExpiredByAI ||
+                                                    document.status ===
+                                                      EntityStatus.PendingManualy
                                                   ? "destructive"
                                                   : "secondary"
                                               }
                                               className={
                                                 document.status ===
-                                                EntityStatus.Approved
+                                                  EntityStatus.Approved ||
+                                                document.status ===
+                                                  EntityStatus.ValidatedByAI
                                                   ? "bg-success text-white hover:bg-success/80"
                                                   : document.status ===
-                                                    EntityStatus.Rejected
+                                                      EntityStatus.Rejected ||
+                                                    document.status ===
+                                                      EntityStatus.ExpiredByAI ||
+                                                    document.status ===
+                                                      EntityStatus.PendingManualy
                                                   ? "bg-pending text-white hover:bg-pending/80"
                                                   : ""
                                               }

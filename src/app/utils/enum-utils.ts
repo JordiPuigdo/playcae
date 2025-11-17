@@ -14,6 +14,9 @@ export function getEntityStatusLabel(status: EntityStatus | string): string {
     Approved: "Aprobada",
     Rejected: "Rechazada",
     Expired: "Expirada",
+    ExpiredByAI: "Expirada por IA",
+    ValidatedByAI: "Validada por IA",
+    PendingManualy: "Pendiente Validación",
     Todos: "Todos los estados",
   };
 
