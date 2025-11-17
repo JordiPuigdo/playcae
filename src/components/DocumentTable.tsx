@@ -17,6 +17,7 @@ import { formatDate, isExpired } from "@/app/utils/date";
 import { DocumentValidation } from "./DocumentValidation";
 import { DocumentUpload } from "./DocumentUpload";
 import { FileCell } from "./FileCell";
+import { DocumentHistory } from "./DocumentHistory";
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -24,6 +25,7 @@ interface DocumentsTableProps {
   onUpload: (documentId: string, data: DocumentFormData) => void;
   onValidate: (documentId: string, isValid: boolean, comment?: string) => void;
   onOpen: (documentId: string) => void;
+  companyId: string;
 }
 
 export const DocumentsTable = ({
@@ -32,6 +34,7 @@ export const DocumentsTable = ({
   onUpload,
   onValidate,
   onOpen,
+  companyId,
 }: DocumentsTableProps) => {
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
@@ -97,6 +100,10 @@ export const DocumentsTable = ({
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2">
+                      <DocumentHistory
+                        companyId={companyId}
+                        documentTypeId={document.documentType.id!}
+                      />
                       {canUpload && (
                         <DocumentUpload
                           documentName={document.documentType.name}

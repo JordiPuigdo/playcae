@@ -48,7 +48,8 @@ export interface DocumentUploadResponse {
 }
 
 export interface WorkerDocumentHistoricalRequest {
-  workerId: string;
+  workerId?: string;
+  companyId?: string;
   documentTypeId: string;
   startDate: string;
   endDate: string;

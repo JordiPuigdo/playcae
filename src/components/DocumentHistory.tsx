@@ -22,15 +22,17 @@ import { useDocuments } from "@/hooks/useDocuments";
 import { formatDate } from "@/app/utils/date";
 import { FileCell } from "./FileCell";
 
-interface WorkerDocumentHistoryProps {
-  workerId: string;
+interface DocumentHistoryProps {
+  workerId?: string;
+  companyId?: string;
   documentTypeId: string;
 }
 
-export const WorkerDocumentHistory = ({
+export const DocumentHistory = ({
   workerId,
+  companyId,
   documentTypeId,
-}: WorkerDocumentHistoryProps) => {
+}: DocumentHistoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -41,6 +43,15 @@ export const WorkerDocumentHistory = ({
     if (workerId) {
       getWorkerDocumentsHistory({
         workerId,
+        documentTypeId,
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+      });
+    }
+    if (companyId) {
+      getWorkerDocumentsHistory({
+        workerId: undefined,
+        companyId: companyId,
         documentTypeId,
         startDate: new Date().toISOString(),
         endDate: new Date().toISOString(),

@@ -21,7 +21,7 @@ interface DocumentUploadProps {
   canUpload: boolean;
 }
 
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 20;
 
 export const DocumentUpload = ({
   documentName,

@@ -32,9 +32,10 @@ import { DocumentUpload } from "./DocumentUpload";
 
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
-import { WorkerDocumentHistory } from "./WorkerDocumentHistory";
+import { DocumentHistory } from "./DocumentHistory";
 import { DocumentValidation } from "./DocumentValidation";
 import { FileCell } from "./FileCell";
+import { DocumentStatusBadge } from "./DocumentStatusBadge";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -288,7 +289,7 @@ export const WorkersTable = ({
 
                       {expandedRows.has(worker.id!) && (
                         <TableRow>
-                          <TableCell colSpan={7} className="p-0">
+                          <TableCell colSpan={9} className="p-0">
                             <div className="p-4 bg-muted/30">
                               <div className="mb-3">
                                 <h4 className="font-medium flex items-center gap-2">
@@ -304,8 +305,12 @@ export const WorkersTable = ({
                                     <TableHead>Fecha Subida</TableHead>
                                     <TableHead>Fecha Emisión</TableHead>
                                     <TableHead>Fecha Caducidad</TableHead>
-                                    <TableHead>Estado</TableHead>
-                                    <TableHead>Acciones</TableHead>
+                                    <TableHead className="w-[120px]">
+                                      Estado
+                                    </TableHead>
+                                    <TableHead className="w-[120px]">
+                                      Acciones
+                                    </TableHead>
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -351,54 +356,19 @@ export const WorkersTable = ({
                                               )}
                                           </div>
                                         </TableCell>
-                                        <TableCell>
-                                          <div className="space-y-1">
-                                            <Badge
-                                              variant={
-                                                document.status ===
-                                                  EntityStatus.Approved ||
-                                                document.status ===
-                                                  EntityStatus.ValidatedByAI
-                                                  ? "default"
-                                                  : document.status ===
-                                                      EntityStatus.Rejected ||
-                                                    document.status ===
-                                                      EntityStatus.ExpiredByAI ||
-                                                    document.status ===
-                                                      EntityStatus.PendingManualy
-                                                  ? "destructive"
-                                                  : "secondary"
-                                              }
-                                              className={
-                                                document.status ===
-                                                  EntityStatus.Approved ||
-                                                document.status ===
-                                                  EntityStatus.ValidatedByAI
-                                                  ? "bg-success text-white hover:bg-success/80"
-                                                  : document.status ===
-                                                      EntityStatus.Rejected ||
-                                                    document.status ===
-                                                      EntityStatus.ExpiredByAI ||
-                                                    document.status ===
-                                                      EntityStatus.PendingManualy
-                                                  ? "bg-pending text-white hover:bg-pending/80"
-                                                  : ""
-                                              }
-                                            >
-                                              {getEntityStatusLabel(
-                                                document.status
-                                              )}
-                                            </Badge>
-                                            {/*document.validatorComment && (
+                                        <TableCell className="w-[140px]">
+                                          <DocumentStatusBadge
+                                            status={document.status}
+                                          />
+                                          {/*document.validatorComment && (
                                               <div className="text-xs text-muted-foreground">
                                                 {document.validatorComment}
                                               </div>
                                             )*/}
-                                          </div>
                                         </TableCell>
-                                        <TableCell>
+                                        <TableCell className="w-[140px]">
                                           <div className="flex gap-2">
-                                            <WorkerDocumentHistory
+                                            <DocumentHistory
                                               workerId={worker.id!}
                                               documentTypeId={
                                                 document.documentType.id!

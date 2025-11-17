@@ -34,7 +34,11 @@ export const useDocuments = (companyId: string) => {
     setIsLoading(true);
     try {
       const response = await documentService.getByCompanyId(companyId);
-      setDocuments(response.data || []);
+      const docs = response.data || [];
+      docs.sort((a, b) =>
+        (a.documentType?.name ?? "").localeCompare(b.documentType?.name ?? "")
+      );
+      setDocuments(docs);
       setError(null);
     } catch (err) {
       setError("Error al cargar documentos");
