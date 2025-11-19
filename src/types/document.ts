@@ -14,6 +14,7 @@ export interface Document extends BaseEntity {
 export interface DocumentFormData {
   file: File;
   expiryDate?: string;
+  forceValidation: boolean;
 }
 
 export interface CompanyObservation {
@@ -40,6 +41,7 @@ export interface UploadDocument {
   workerId?: string;
   companyId: string;
   documentId: string;
+  forceValidation: boolean;
 }
 
 export interface DocumentUploadResponse {

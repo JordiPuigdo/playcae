@@ -133,6 +133,7 @@ const CompanyDetailPage = () => {
         companyId: id,
         documentId,
         workerId,
+        forceValidation: data.forceValidation,
       };
       const resultUpload = await uploadDocument(request);
       if (workerId != "") {

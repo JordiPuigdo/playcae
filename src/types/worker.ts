@@ -35,4 +35,5 @@ export interface WorkerDocumentFormData {
   file: File;
   issueDate?: string;
   expiryDate?: string;
+  forceValidation: boolean;
 }

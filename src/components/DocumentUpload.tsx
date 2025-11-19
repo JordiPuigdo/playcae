@@ -67,6 +67,7 @@ export const DocumentUpload = ({
       file: selectedFile,
       issueDate: issueDate || undefined,
       expiryDate: expiryDate || undefined,
+      forceValidation: forceValidation,
     });
 
     setIsOpen(false);

@@ -8,6 +8,7 @@ import {
   UploadDocument,
   WorkerDocumentHistoricalRequest,
 } from "@/types/document";
+import { createFromNextReadableStream } from "next/dist/client/components/router-reducer/fetch-server-response";
 
 export interface IDocumentService {
   getById(id: string): Promise<ApiResponse<Document>>;
@@ -92,9 +93,15 @@ export class DocumentService implements IDocumentService {
   async upload(
     document: UploadDocument
   ): Promise<ApiResponse<DocumentUploadResponse>> {
+    console.log("here");
+    console.log("document", document);
     const formData = new FormData();
     formData.append("companyId", document.companyId);
     formData.append("documentId", document.documentId);
+    formData.append(
+      "forceValidation",
+      document.forceValidation ? "true" : "false"
+    );
     formData.append("file", document.file);
     if (document.expiryDate) formData.append("expiryDate", document.expiryDate);
     if (document.workerId) formData.append("workerId", document.workerId);
