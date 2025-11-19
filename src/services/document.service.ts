@@ -93,8 +93,6 @@ export class DocumentService implements IDocumentService {
   async upload(
     document: UploadDocument
   ): Promise<ApiResponse<DocumentUploadResponse>> {
-    console.log("here");
-    console.log("document", document);
     const formData = new FormData();
     formData.append("companyId", document.companyId);
     formData.append("documentId", document.documentId);
