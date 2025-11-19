@@ -4,6 +4,7 @@ import { UserLoginResponse } from "@/types/user";
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
+const AUTH_VERSION = 2;
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -69,6 +70,15 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "auth-storage",
+      version: AUTH_VERSION,
+      migrate: (persistedState: any, version) => {
+        if (version < AUTH_VERSION) {
+          return {
+            ...initialState,
+          };
+        }
+        return persistedState as AuthState;
+      },
       partialize: (state) => ({
         user: state.user,
         token: state.token,

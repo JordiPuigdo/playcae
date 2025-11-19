@@ -126,7 +126,6 @@ const CompanyDetailPage = () => {
   ) => {
     try {
       setIsLoading(true);
-      console.log(documentId, data);
       const request: UploadDocument = {
         file: data.file,
         expiryDate: data.expiryDate,

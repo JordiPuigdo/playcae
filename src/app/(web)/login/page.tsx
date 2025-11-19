@@ -19,6 +19,7 @@ import { Loader2 } from "lucide-react";
 import { UserRole } from "@/types/user";
 import { PasswordInput } from "@/components/PasswordInput";
 import { useAuthSession } from "@/hooks/useAuthSession";
+import dayjs from "dayjs";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -50,7 +51,9 @@ export default function LoginPage() {
   }, [errorAuth]);
 
   useEffect(() => {
+    debugger;
     if (!user) return;
+    if (dayjs().isAfter(dayjs(user.refreshTokenExpiryTime))) return;
 
     if (user?.role === UserRole.Admin) {
       router.push("/dashboard");

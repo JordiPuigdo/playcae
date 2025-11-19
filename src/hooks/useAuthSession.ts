@@ -12,7 +12,6 @@ export const useAuthSession = () => {
 
     const now = Date.now();
 
-    // si ya está caducado al hidratar, salir inmediatamente
     if (now >= expiresAt) {
       logout();
       return;
