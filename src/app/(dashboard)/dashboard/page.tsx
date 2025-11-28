@@ -51,7 +51,10 @@ export default function DashboardPage() {
       c.workerStatus === WorkerStatus.Approved
   ).length;
   const totalNoApto = companies.filter(
-    (c) => c.status === CompanyStatus.Rejected
+    (c) =>
+      c.status === CompanyStatus.Rejected ||
+      (c.status === CompanyStatus.Approved &&
+        c.workerStatus !== WorkerStatus.Approved)
   ).length;
   const { workers } = useWorkers(undefined);
 
