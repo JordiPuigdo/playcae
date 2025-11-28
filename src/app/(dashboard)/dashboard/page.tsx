@@ -46,7 +46,9 @@ export default function DashboardPage() {
     (c) => c.status === CompanyStatus.Pending
   ).length;
   const totalApto = companies.filter(
-    (c) => c.status === CompanyStatus.Approved
+    (c) =>
+      c.status === CompanyStatus.Approved &&
+      c.workerStatus === WorkerStatus.Approved
   ).length;
   const totalNoApto = companies.filter(
     (c) => c.status === CompanyStatus.Rejected
