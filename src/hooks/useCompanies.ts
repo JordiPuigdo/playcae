@@ -51,6 +51,7 @@ export const useCompanies = () => {
         ...data,
         status: CompanyStatus.Pending,
         userId: user!.userId!,
+        workerStatus: 0,
       };
 
       const response = await companyService.create(newCompany);
