@@ -50,24 +50,29 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
   const hasActiveFilters = search !== "" || status !== "Todos";
 
   return (
-    <Card>
+    <Card className="border border-playBlueLight/30 bg-white">
       <CardContent className="p-4">
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex-1 space-y-2">
-            <label className="text-sm font-medium">Buscar empresa</label>
+            <label className="text-sm font-medium text-brand-primary">
+              Buscar empresa
+            </label>
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-playBlueLight" />
               <Input
                 placeholder="Buscar por nombre o CIF..."
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10"
+                className="pl-10 border-playBlueLight focus-visible:ring-brand-primary"
               />
             </div>
           </div>
 
           <div className="space-y-2 min-w-[200px]">
-            <label className="text-sm font-medium">Estado de validación</label>
+            <label className="text-sm font-medium text-brand-primary">
+              Estado de validación
+            </label>
+
             <Select
               value={status === "Todos" ? "Todos" : CompanyStatus[status]}
               onValueChange={(value) =>
@@ -78,17 +83,22 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
                 )
               }
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white hover:cursor-pointer">
-                <SelectItem className="hover:cursor-pointer" value="Todos">
+
+              <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
+                <SelectItem
+                  className="hover:bg-playGrey hover:text-brand-primary"
+                  value="Todos"
+                >
                   {getCompanyStatusLabel("Todos")}
                 </SelectItem>
+
                 {getCompanyStatusOptions().map((option) => (
                   <SelectItem
                     key={option.value}
-                    className="hover:cursor-pointer"
+                    className="hover:bg-playGrey hover:text-brand-primary"
                     value={option.value}
                   >
                     {option.label}
@@ -99,7 +109,11 @@ export const CompanyFilters = ({ onFilter }: CompanyFiltersProps) => {
           </div>
 
           {hasActiveFilters && (
-            <Button variant="outline" onClick={clearFilters} className="gap-2">
+            <Button
+              variant="outline"
+              onClick={clearFilters}
+              className="gap-2 border-playBlueLight text-brand-primary hover:bg-playGrey"
+            >
               <X className="h-4 w-4" />
               Limpiar filtros
             </Button>

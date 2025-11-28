@@ -40,10 +40,10 @@ export const DocumentsTable = ({
   const canValidate = userRole == UserRole.Admin;
 
   return (
-    <Card className="bg-white">
+    <Card className="bg-white border border-playBlueLight/30">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-brand-primary">
+          <FileText className="h-5 w-5 text-brand-primary" />
           Documentación Requerida{" "}
           {documents.length > 0 &&
             `(${
@@ -51,59 +51,61 @@ export const DocumentsTable = ({
             } / ${documents.length})`}
         </CardTitle>
       </CardHeader>
+
       <CardContent>
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
-              <TableRow>
-                <TableHead>Documento</TableHead>
-                <TableHead>Archivo</TableHead>
-                <TableHead>Fecha Subida</TableHead>
-                <TableHead>Fecha Caducidad</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Acciones</TableHead>
+              <TableRow className="bg-playGrey">
+                <TableHead className="text-brand-primary">Documento</TableHead>
+                <TableHead className="text-brand-primary">Archivo</TableHead>
+                <TableHead className="text-brand-primary">
+                  Fecha Subida
+                </TableHead>
+                <TableHead className="text-brand-primary">
+                  Fecha Caducidad
+                </TableHead>
+                <TableHead className="text-brand-primary">Estado</TableHead>
+                <TableHead className="text-brand-primary">Acciones</TableHead>
               </TableRow>
             </TableHeader>
+
             <TableBody>
               {documents.map((document) => (
                 <TableRow key={document.id}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium text-brand-primary">
                     {document.documentType.name}
                   </TableCell>
+
                   <TableCell>
                     <FileCell document={document} onOpen={onOpen} />
                   </TableCell>
-                  <TableCell>{formatDate(document.uploadedDate)}</TableCell>
+
+                  <TableCell className="text-brand-primary">
+                    {formatDate(document.uploadedDate)}
+                  </TableCell>
+
                   <TableCell>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 text-brand-primary">
                       {formatDate(document.expirationDate)}
+
                       {isExpired(document.expirationDate) && (
-                        <span title="Documento caducado">
-                          <AlertTriangle className="h-4 w-4 text-destructive" />
-                        </span>
+                        <AlertTriangle className="h-4 w-4 text-brand-secondary" />
                       )}
-                      {/*isExpiringSoon(document.expiryDate) &&
-                        !isExpired(document.expiryDate) && (
-                          <span title="Caduca pronto">
-                            <AlertTriangle className="h-4 w-4 text-pending" />
-                          </span>
-                        )*/}
                     </div>
                   </TableCell>
-                  <TableCell>
+
+                  <TableCell className="text-center">
                     <DocumentStatusBadge status={document.status} />
-                    {/*document.validatorComment && (
-                      <div className="text-xs text-muted-foreground mt-1">
-                        {document.validatorComment}
-                      </div>
-                    )*/}
                   </TableCell>
+
                   <TableCell>
                     <div className="flex gap-2">
                       <DocumentHistory
                         companyId={companyId}
                         documentTypeId={document.documentType.id!}
                       />
+
                       {canUpload && (
                         <DocumentUpload
                           documentName={document.documentType.name}

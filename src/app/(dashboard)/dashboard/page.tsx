@@ -69,77 +69,82 @@ export default function DashboardPage() {
 
   return (
     <div className="">
-      <div className="border-b bg-card">
+      <div className="border-b bg-playGrey">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-6 w-px bg-border" />
+            <div className="h-6 w-px bg-playBlueLight" />
             <div className="flex w-full justify-between">
-              <h1 className="text-2xl h-10 font-bold text-foreground flex items-center gap-3">
-                <ChartBarStacked className="h-7 w-7 text-primary" />
+              <h1 className="text-2xl h-10 font-bold text-brand-primary flex items-center gap-3">
+                <ChartBarStacked className="h-7 w-7 text-brand-primary" />
                 Panel de Control
               </h1>
             </div>
           </div>
         </div>
       </div>
+
       <div className="container mx-auto px-4 py-8 space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-white">
+          <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-brand-primary">
                 Total Empresas
               </CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
+              <Users className="h-4 w-4 text-playBlueLight" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{companies.length}</div>
-              <p className="text-xs text-muted-foreground">
-                Empresas registradas
-              </p>
+              <div className="text-2xl font-bold text-brand-primary">
+                {companies.length}
+              </div>
+              <p className="text-xs text-playBlueLight">Empresas registradas</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Autorizadas</CardTitle>
-              <CheckCircle className="h-4 w-4 text-success" />
+              <CardTitle className="text-sm font-medium text-brand-primary">
+                Autorizadas
+              </CardTitle>
+              <CheckCircle className="h-4 w-4 text-playGreen" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-success">{totalApto}</div>
-              <p className="text-xs text-muted-foreground">
+              <div className="text-2xl font-bold text-playGreen">
+                {totalApto}
+              </div>
+              <p className="text-xs text-playBlueLight">
                 {total > 0 ? Math.round((totalApto / total) * 100) : 0}% del
                 total
               </p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Pendientes</CardTitle>
-              <Clock className="h-4 w-4 text-pending" />
+              <CardTitle className="text-sm font-medium text-brand-primary">
+                Pendientes
+              </CardTitle>
+              <Clock className="h-4 w-4 text-playYellow" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-pending">
+              <div className="text-2xl font-bold text-playYellow">
                 {totalPending}
               </div>
-              <p className="text-xs text-muted-foreground">
-                Requieren revisión
-              </p>
+              <p className="text-xs text-playBlueLight">Requieren revisión</p>
             </CardContent>
           </Card>
 
-          <Card className="bg-white">
+          <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">
+              <CardTitle className="text-sm font-medium text-brand-primary">
                 No Autorizadas
               </CardTitle>
-              <AlertTriangle className="h-4 w-4 text-destructive" />
+              <AlertTriangle className="h-4 w-4 text-brand-secondary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-destructive">
+              <div className="text-2xl font-bold text-brand-secondary">
                 {totalNoApto}
               </div>
-              <p className="text-xs text-muted-foreground">Acceso denegado</p>
+              <p className="text-xs text-playBlueLight">Acceso denegado</p>
             </CardContent>
           </Card>
         </div>
@@ -147,9 +152,9 @@ export default function DashboardPage() {
 
       {totalNoAptoWorkers > 0 && (
         <>
-          <div className="container mx-auto px-4 ">
-            <Alert className="bg-red-200/50">
-              <AlertTriangle className="h-4 w-4" />
+          <div className="container mx-auto px-4">
+            <Alert className="bg-brand-secondary/20 border border-brand-secondary/40 text-brand-primary">
+              <AlertTriangle className="h-4 w-4 text-brand-secondary" />
               <AlertDescription>
                 Hay {totalNoAptoWorkers} trabajador
                 {totalNoAptoWorkers > 1 ? "es" : ""} sin autorización para
@@ -157,6 +162,7 @@ export default function DashboardPage() {
               </AlertDescription>
             </Alert>
           </div>
+
           <div className="container mx-auto px-4 py-8 space-y-8">
             <AuthorizedPersonnelTable
               workers={noAptoWorkers}

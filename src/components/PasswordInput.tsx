@@ -14,6 +14,7 @@ interface PasswordInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   required?: boolean;
+  className?: string;
 }
 
 export function PasswordInput({
@@ -24,6 +25,7 @@ export function PasswordInput({
   onChange,
   placeholder = "Escriba su contraseña",
   required = false,
+  className,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,7 +41,7 @@ export function PasswordInput({
           value={value}
           onChange={onChange}
           required={required}
-          className="pr-10"
+          className={className + " pr-10"}
         />
         <Button
           type="button"

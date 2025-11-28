@@ -85,19 +85,19 @@ const CompaniesManagement = () => {
 
   return (
     <div>
-      <div className="border-b bg-card">
+      <div className="border-b bg-playGrey">
         {isLoading && <Loader text="Creando empresa..." />}
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
-            <div className="h-6 w-px bg-border" />
+            <div className="h-6 w-px bg-playBlueLight" />
             <div className="flex w-full justify-between items-center">
-              <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
-                <Building2 className="h-7 w-7 text-primary" />
+              <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
+                <Building2 className="h-7 w-7 text-brand-primary" />
                 Gestión de Empresas
               </h1>
               <Button
                 onClick={() => setIsFormOpen(true)}
-                className="flex items-center"
+                className="flex items-center bg-playOrange hover:bg-playOrange/90 text-white"
                 variant={"submit"}
               >
                 <Plus className="h-4 w-4" />
@@ -107,9 +107,10 @@ const CompaniesManagement = () => {
           </div>
         </div>
       </div>
+
       <div className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex justify-between items-center">
-          <div className="flex-1 bg-white">
+          <div className="flex-1 bg-white border border-playBlueLight/20">
             <CompanyFilters onFilter={handleFilter} />
           </div>
         </div>
@@ -124,12 +125,13 @@ const CompaniesManagement = () => {
         />
 
         <Dialog open={isFormOpen} onOpenChange={handleCloseForm}>
-          <DialogContent className="max-w-2xl bg-white">
+          <DialogContent className="max-w-2xl bg-white border border-playBlueLight/30">
             <DialogHeader>
-              <DialogTitle>
+              <DialogTitle className="text-brand-primary">
                 {editingCompany ? "Editar Empresa" : "Nueva Empresa"}
               </DialogTitle>
             </DialogHeader>
+
             <CompanyForm
               isOpen={isFormOpen}
               onClose={handleCloseForm}

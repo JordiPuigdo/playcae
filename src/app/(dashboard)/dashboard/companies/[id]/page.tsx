@@ -191,7 +191,9 @@ const CompanyDetailPage = () => {
     return (
       <div>
         <CompanyDetailHeader companyName={company?.name || ""} />
+
         {isLoading && <Loader text="Cargando información..." />}
+
         <div className="container mx-auto px-4 py-8 space-y-8">
           <EditableCompanyInfo
             company={company}
@@ -199,35 +201,42 @@ const CompanyDetailPage = () => {
             userRole={UserRole.Admin}
           />
         </div>
+
         <div className="container mx-auto px-4 py-8 space-y-8">
           <Tabs defaultValue="workers" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-200">
-              <TabsTrigger value="workers" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-3 bg-playGrey border border-playBlueLight">
+              <TabsTrigger
+                value="workers"
+                className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
+              >
                 <Users className="h-4 w-4" />
                 Documentos Trabajadores ({workers.length})
               </TabsTrigger>
+
               <TabsTrigger
                 value="documents"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <FileText className="h-4 w-4" />
                 Documentos Empresa
               </TabsTrigger>
+
               <TabsTrigger
                 value="observations"
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <MessageSquare className="h-4 w-4" />
                 Observaciones
               </TabsTrigger>
             </TabsList>
+
             <TabsContent value="workers" className="space-y-6">
-              {/* Filters */}
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-end">
                 <div className="flex-1">
                   <WorkerFilters onFilter={setFilters} />
                 </div>
               </div>
+
               <WorkersTable
                 onCreateWorker={(e) => {
                   handleCreateWorker(e);
@@ -239,35 +248,28 @@ const CompanyDetailPage = () => {
                   deleteWorker(workerId);
                 }}
                 userRole={user?.role!}
-                onUploadDocument={(
-                  documentId: string,
-                  data: DocumentFormData,
-                  workerId: string
-                ) => {
-                  return handleUploadDocument(documentId, data, workerId);
-                }}
+                onUploadDocument={(documentId, data, workerId) =>
+                  handleUploadDocument(documentId, data, workerId)
+                }
                 onValidateDocument={() => {}}
                 workers={displayedWorkers}
-                onActivateWorker={(workerId: string) => {
+                onActivateWorker={(workerId) => {
                   activateWorker(workerId);
                 }}
                 onOpenDocument={(documentId) => handleOpenDocument(documentId)}
               />
             </TabsContent>
+
             <TabsContent value="documents" className="space-y-6">
               <DocumentsTable
                 documents={documents}
                 userRole={user?.role!}
-                onUpload={(documentId: string, data: DocumentFormData) => {
-                  return handleUploadDocument(documentId, data, "");
-                }}
-                onValidate={(
-                  id: string,
-                  isValid: boolean,
-                  comment?: string
-                ) => {
-                  return handleValidateDocument(id, isValid, comment);
-                }}
+                onUpload={(documentId, data) =>
+                  handleUploadDocument(documentId, data, "")
+                }
+                onValidate={(id, isValid, comment) =>
+                  handleValidateDocument(id, isValid, comment)
+                }
                 onOpen={(documentId) => handleOpenDocument(documentId)}
                 companyId={id}
               />

@@ -178,42 +178,51 @@ export const WorkersTable = ({
 
   return (
     <>
-      <Card className="bg-white">
+      <Card className="bg-white border border-playBlueLight/30">
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-brand-primary">
+              <Users className="h-5 w-5 text-brand-primary" />
               Trabajadores ({workers.length})
             </CardTitle>
+
             {canEdit && (
-              <Button onClick={() => setIsFormOpen(true)} className="gap-2">
+              <Button
+                onClick={() => setIsFormOpen(true)}
+                className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
+              >
                 <Plus className="h-4 w-4" />
                 Añadir Trabajador
               </Button>
             )}
           </div>
         </CardHeader>
+
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead className="w-10"></TableHead>
-                  <TableHead>Trabajador</TableHead>
-                  <TableHead>DNI/NIE</TableHead>
-                  <TableHead>Puesto</TableHead>
-                  <TableHead>Fecha Alta</TableHead>
-                  <TableHead>Estado</TableHead>
-                  <TableHead>Acciones</TableHead>
+                <TableRow className="bg-playGrey">
+                  <TableHead className="w-10" />
+                  <TableHead className="text-brand-primary">
+                    Trabajador
+                  </TableHead>
+                  <TableHead className="text-brand-primary">DNI/NIE</TableHead>
+                  <TableHead className="text-brand-primary">Puesto</TableHead>
+                  <TableHead className="text-brand-primary">
+                    Fecha Alta
+                  </TableHead>
+                  <TableHead className="text-brand-primary">Estado</TableHead>
+                  <TableHead className="text-brand-primary">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
+
               <TableBody>
                 {workers &&
                   workers.map((worker) => (
                     <React.Fragment key={worker.id}>
                       <TableRow
-                        key={worker.id}
-                        className={`hover:bg-muted/50 ${
+                        className={`hover:bg-playGrey/50 ${
                           !worker.active ? "opacity-60" : ""
                         }`}
                       >
@@ -222,6 +231,7 @@ export const WorkersTable = ({
                             variant="ghost"
                             size="sm"
                             onClick={() => toggleRow(worker.id!)}
+                            className="text-brand-primary"
                           >
                             <ChevronDown
                               className={`h-4 w-4 transition-transform ${
@@ -230,24 +240,37 @@ export const WorkersTable = ({
                             />
                           </Button>
                         </TableCell>
-                        <TableCell className="font-medium">
+
+                        <TableCell className="font-medium text-brand-primary">
                           <div className="flex items-center gap-2">
                             {worker.firstName} {worker.lastName}
                             {!worker.active && (
-                              <Badge variant="secondary" className="text-xs">
+                              <Badge
+                                variant="secondary"
+                                className="text-xs bg-playGrey text-brand-primary"
+                              >
                                 Inactivo
                               </Badge>
                             )}
                           </div>
                         </TableCell>
-                        <TableCell className="font-mono text-sm">
+
+                        <TableCell className="font-mono text-sm text-brand-primary">
                           {worker.cardId}
                         </TableCell>
-                        <TableCell>{worker.position || "-"}</TableCell>
-                        <TableCell>{formatDate(worker.creationDate)}</TableCell>
+
+                        <TableCell className="text-brand-primary">
+                          {worker.position || "-"}
+                        </TableCell>
+
+                        <TableCell className="text-brand-primary">
+                          {formatDate(worker.creationDate)}
+                        </TableCell>
+
                         <TableCell>
                           <WorkerStatusBadge status={worker.status} />
                         </TableCell>
+
                         <TableCell>
                           <div className="flex gap-2">
                             {canEdit && worker.active && (
@@ -255,29 +278,31 @@ export const WorkersTable = ({
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleEdit(worker)}
-                                className="gap-1"
+                                className="gap-1 border-playBlueLight text-brand-primary hover:bg-playGrey"
                               >
                                 <Edit className="h-3 w-3" />
                                 Editar
                               </Button>
                             )}
+
                             {canEdit && worker.active && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleDeleteClick(worker)}
-                                className="gap-1 text-destructive hover:text-destructive"
+                                className="gap-1 border-playBlueLight text-brand-secondary hover:bg-playGrey"
                               >
                                 <Trash2 className="h-3 w-3" />
                                 Eliminar
                               </Button>
                             )}
+
                             {!worker.active && (
                               <Button
                                 variant="outline"
                                 size="sm"
                                 onClick={() => handleActivateClick(worker)}
-                                className="gap-1 text-success hover:text-success"
+                                className="gap-1 border-playGreen text-playGreen hover:bg-playGrey"
                               >
                                 <Check className="h-3 w-3" />
                                 Activar
@@ -290,82 +315,93 @@ export const WorkersTable = ({
                       {expandedRows.has(worker.id!) && (
                         <TableRow>
                           <TableCell colSpan={9} className="p-0">
-                            <div className="p-4 bg-muted/30">
+                            <div className="p-4 bg-playGrey/30">
                               <div className="mb-3">
-                                <h4 className="font-medium flex items-center gap-2">
-                                  <FileText className="h-4 w-4" />
+                                <h4 className="font-medium flex items-center gap-2 text-brand-primary">
+                                  <FileText className="h-4 w-4 text-brand-primary" />
                                   Documentación Requerida
                                 </h4>
                               </div>
+
                               <Table>
                                 <TableHeader>
-                                  <TableRow>
-                                    <TableHead>Documento</TableHead>
-                                    <TableHead>Archivo</TableHead>
-                                    <TableHead>Fecha Subida</TableHead>
-                                    <TableHead>Fecha Emisión</TableHead>
-                                    <TableHead>Fecha Caducidad</TableHead>
-                                    <TableHead className="w-[120px]">
+                                  <TableRow className="bg-playGrey">
+                                    <TableHead className="text-brand-primary">
+                                      Documento
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
+                                      Archivo
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
+                                      Fecha Subida
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
+                                      Fecha Emisión
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
+                                      Fecha Caducidad
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
                                       Estado
                                     </TableHead>
-                                    <TableHead className="w-[120px]">
+                                    <TableHead className="text-brand-primary">
                                       Acciones
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
+
                                 <TableBody>
                                   {worker.documents &&
                                     worker.documents.map((document) => (
                                       <TableRow key={document.id}>
-                                        <TableCell className="font-medium">
+                                        <TableCell className="font-medium text-brand-primary">
                                           {document.documentType.name}
                                         </TableCell>
+
                                         <TableCell>
                                           <FileCell
                                             document={document}
                                             onOpen={onOpenDocument}
                                           />
                                         </TableCell>
-                                        <TableCell>
+
+                                        <TableCell className="text-brand-primary">
                                           {formatDate(document.uploadedDate)}
                                         </TableCell>
-                                        <TableCell>
+
+                                        <TableCell className="text-brand-primary">
                                           {formatDate(document.issueDate)}
                                         </TableCell>
+
                                         <TableCell>
-                                          <div className="flex items-center gap-2">
+                                          <div className="flex items-center gap-2 text-brand-primary">
                                             {formatDate(
                                               document.expirationDate
                                             )}
+
                                             {isExpired(
                                               document.expirationDate
                                             ) && (
-                                              <span title="Documento caducado">
-                                                <AlertTriangle className="h-4 w-4 text-destructive" />
-                                              </span>
+                                              <AlertTriangle className="h-4 w-4 text-brand-secondary" />
                                             )}
+
                                             {isExpiringSoon(
                                               document.expirationDate
                                             ) &&
                                               !isExpired(
                                                 document.expirationDate
                                               ) && (
-                                                <span title="Caduca pronto">
-                                                  <AlertTriangle className="h-4 w-4 text-pending" />
-                                                </span>
+                                                <AlertTriangle className="h-4 w-4 text-playYellow" />
                                               )}
                                           </div>
                                         </TableCell>
-                                        <TableCell className="w-[140px]">
+
+                                        <TableCell className="text-center">
                                           <DocumentStatusBadge
                                             status={document.status}
                                           />
-                                          {/*document.validatorComment && (
-                                              <div className="text-xs text-muted-foreground">
-                                                {document.validatorComment}
-                                              </div>
-                                            )*/}
                                         </TableCell>
+
                                         <TableCell className="w-[140px]">
                                           <div className="flex gap-2">
                                             <DocumentHistory
@@ -374,22 +410,22 @@ export const WorkersTable = ({
                                                 document.documentType.id!
                                               }
                                             />
-                                            {
-                                              <DocumentUpload
-                                                documentName={
-                                                  document.documentType.name
-                                                }
-                                                hasFile={!!document.storagePath}
-                                                canUpload={canUpload}
-                                                onUpload={(data) =>
-                                                  onUploadDocument(
-                                                    document.id!,
-                                                    data,
-                                                    worker.id!
-                                                  )
-                                                }
-                                              />
-                                            }
+
+                                            <DocumentUpload
+                                              documentName={
+                                                document.documentType.name
+                                              }
+                                              hasFile={!!document.storagePath}
+                                              canUpload={canUpload}
+                                              onUpload={(data) =>
+                                                onUploadDocument(
+                                                  document.id!,
+                                                  data,
+                                                  worker.id!
+                                                )
+                                              }
+                                            />
+
                                             {canValidate && (
                                               <DocumentValidation
                                                 documentName={
@@ -428,15 +464,13 @@ export const WorkersTable = ({
         </CardContent>
       </Card>
 
-      {
-        <WorkerForm
-          isOpen={isFormOpen}
-          onClose={handleCloseForm}
-          onSubmit={editingWorker ? handleUpdateWorker : handleCreateWorker}
-          worker={editingWorker || undefined}
-          mode={editingWorker ? "edit" : "create"}
-        />
-      }
+      <WorkerForm
+        isOpen={isFormOpen}
+        onClose={handleCloseForm}
+        onSubmit={editingWorker ? handleUpdateWorker : handleCreateWorker}
+        worker={editingWorker || undefined}
+        mode={editingWorker ? "edit" : "create"}
+      />
 
       <DeleteConfirmationModal
         isOpen={!!deleteWorker}

@@ -12,7 +12,6 @@ import {
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { Button } from "./ui/Button";
-import { useToast } from "@/hooks/use-Toast";
 
 interface CompanyFormProps {
   isOpen: boolean;
@@ -78,27 +77,31 @@ export const CompanyForm = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px] bg-white">
+      <DialogContent className="sm:max-w-[425px] bg-white border border-brand-accent/30 shadow-xl">
         <DialogHeader>
-          <DialogTitle>
+          <DialogTitle className="text-brand-primary">
             {mode === "create" ? "Añadir Nueva Empresa" : "Editar Empresa"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-brand-accent">
             {mode === "create"
               ? "Completa los datos para registrar una nueva empresa externa."
               : "Modifica los datos de la empresa seleccionada."}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <Label htmlFor="name">Nombre de la empresa *</Label>
+            <Label htmlFor="name" className="text-brand-primary">
+              Nombre de la empresa *
+            </Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => handleInputChange("name", e.target.value)}
               placeholder="Ej: Constructora ABC S.L."
-              className={errors.name ? "border-destructive" : ""}
+              className={
+                errors.name ? "border-destructive" : "border-brand-accent"
+              }
             />
             {errors.name && (
               <p className="text-sm text-destructive">{errors.name}</p>
@@ -106,13 +109,17 @@ export const CompanyForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="cif">CIF</Label>
+            <Label htmlFor="cif" className="text-brand-primary">
+              CIF
+            </Label>
             <Input
               id="cif"
               value={formData.taxId}
               onChange={(e) => handleInputChange("taxId", e.target.value)}
               placeholder="A12345678"
-              className={errors.taxId ? "border-destructive" : ""}
+              className={
+                errors.taxId ? "border-destructive" : "border-brand-accent"
+              }
             />
             {errors.taxId && (
               <p className="text-sm text-destructive">{errors.taxId}</p>
@@ -120,7 +127,9 @@ export const CompanyForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contactPerson">Persona de contacto</Label>
+            <Label htmlFor="contactPerson" className="text-brand-primary">
+              Persona de contacto
+            </Label>
             <Input
               id="contactPerson"
               value={formData.contactPerson}
@@ -128,7 +137,11 @@ export const CompanyForm = ({
                 handleInputChange("contactPerson", e.target.value)
               }
               placeholder="Nombre y apellidos"
-              className={errors.contactPerson ? "border-destructive" : ""}
+              className={
+                errors.contactPerson
+                  ? "border-destructive"
+                  : "border-brand-accent"
+              }
             />
             {errors.contactPerson && (
               <p className="text-sm text-destructive">{errors.contactPerson}</p>
@@ -136,14 +149,18 @@ export const CompanyForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
+            <Label htmlFor="email" className="text-brand-primary">
+              Email *
+            </Label>
             <Input
               id="email"
               type="email"
               value={formData.email}
               onChange={(e) => handleInputChange("email", e.target.value)}
               placeholder="contacto@empresa.com"
-              className={errors.email ? "border-destructive" : ""}
+              className={
+                errors.email ? "border-destructive" : "border-brand-accent"
+              }
             />
             {errors.email && (
               <p className="text-sm text-destructive">{errors.email}</p>
@@ -151,20 +168,32 @@ export const CompanyForm = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Teléfono</Label>
+            <Label htmlFor="phone" className="text-brand-primary">
+              Teléfono
+            </Label>
             <Input
               id="phone"
               value={formData.phone}
               onChange={(e) => handleInputChange("phone", e.target.value)}
               placeholder="123 456 789"
+              className="border-brand-accent"
             />
           </div>
 
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={onClose}
+              className="border-brand-accent text-brand-primary hover:bg-brand-neutral"
+            >
               Cancelar
             </Button>
-            <Button variant={"submit"} type="submit">
+
+            <Button
+              type="submit"
+              className="bg-brand-secondary hover:bg-brand-secondary/90 text-white shadow-md"
+            >
               {mode === "create" ? "Crear Empresa" : "Guardar Cambios"}
             </Button>
           </DialogFooter>

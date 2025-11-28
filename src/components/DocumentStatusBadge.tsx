@@ -1,64 +1,33 @@
 import { EntityStatus } from "@/types/document";
-import { Badge } from "./ui/Badge";
 
 interface DocumentStatusBadgeProps {
   status: EntityStatus;
 }
 
 export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
-  const getStatusConfig = (status: EntityStatus) => {
+  const getColor = (status: EntityStatus) => {
     switch (status) {
       case EntityStatus.Approved:
-        return {
-          variant: "default" as const,
-          className: "bg-success text-white hover:bg-success/80",
-          text: "Validado",
-        };
       case EntityStatus.ValidatedByAI:
-        return {
-          variant: "default" as const,
-          className: "bg-success text-white hover:bg-success/80",
-          text: "Validado por IA",
-        };
-      case EntityStatus.ExpiredByAI:
-        return {
-          variant: "destructive" as const,
-          className: "text-white",
-          text: "Caducado por IA",
-        };
+        return "bg-playGreen border-playGreen/60";
+
       case EntityStatus.Rejected:
-        return {
-          variant: "destructive" as const,
-          className: "text-white",
-          text: "Rechazado",
-        };
       case EntityStatus.Expired:
-        return {
-          variant: "destructive" as const,
-          className: "text-white",
-          text: "Expirado",
-        };
+      case EntityStatus.ExpiredByAI:
+        return "bg-brand-secondary border-brand-secondary/60";
+
+      case EntityStatus.PendingManualy:
       case EntityStatus.Pending:
       default:
-        return {
-          variant: "secondary" as const,
-          className: "bg-pending text-white hover:bg-pending/80",
-          text: "Pendiente",
-        };
-      case EntityStatus.PendingManualy:
-        return {
-          variant: "destructive" as const,
-          className: "text-white",
-          text: "Pendiente Validación",
-        };
+        return "bg-playYellow border-playYellow/60";
     }
   };
 
-  const config = getStatusConfig(status);
-
   return (
-    <Badge variant={config.variant} className={config.className}>
-      {config.text}
-    </Badge>
+    <span
+      className={`inline-block w-6 h-6 rounded-full border shadow-sm ${getColor(
+        status
+      )}`}
+    />
   );
 };

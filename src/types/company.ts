@@ -1,4 +1,5 @@
 import { BaseEntity } from "./baseEntity";
+import { WorkerStatus } from "./worker";
 
 export interface Company extends BaseEntity {
   name: string;
@@ -8,6 +9,7 @@ export interface Company extends BaseEntity {
   phone?: string;
   status: CompanyStatus;
   userId: string;
+  workerStatus: WorkerStatus;
 }
 
 export enum CompanyStatus {

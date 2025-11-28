@@ -23,18 +23,18 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sticky top-0 h-screen w-64 bg-brandNeutralDark text-brandNeutralLight p-6 flex flex-col">
+    <aside className="sticky top-0 h-screen w-64 bg-brand-primary text-playGrey p-6 flex flex-col">
       <Image
-        src="/assets/playcae2.png"
+        src="/assets/playcaeDashboard.png"
         alt="Logo Play CAE"
         width={150}
         height={40}
         className="mb-8 select-none pt-4"
       />
+
       <nav className="flex flex-col space-y-3 flex-grow">
         {links.map(({ href, label }) => {
           const active = isActive(href);
-
           if (!hasAccess(href)) return null;
 
           return (
@@ -42,11 +42,11 @@ export default function Sidebar() {
               key={href}
               href={href}
               className={`block px-4 py-2 rounded-md font-medium transition-colors
-        ${
-          active
-            ? "bg-brandPrimary text-white"
-            : "hover:bg-brandNeutralLight hover:text-brandNeutralDark text-brandNeutralLight"
-        }`}
+            ${
+              active
+                ? "bg-playOrange text-white"
+                : "hover:bg-playBlueLight hover:text-white text-playGrey"
+            }`}
             >
               {label}
             </Link>

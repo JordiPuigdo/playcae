@@ -16,6 +16,8 @@ import { useState } from "react";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { Badge } from "./ui/Badge";
+import { WorkerStatusBadge } from "./WorkerStatusBadge";
+import { DocumentStatusBadge } from "./DocumentStatusBadge";
 
 interface CompanyTableProps {
   companies: Company[];
@@ -89,7 +91,12 @@ export const CompanyTable = ({
                 <TableHead>CIF</TableHead>
                 <TableHead>Contacto</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Estado</TableHead>
+                <TableHead className="min-w-[140px] text-center">
+                  Empresa
+                </TableHead>
+                <TableHead className="bg-playBlueLight/20 min-w-[140px]">
+                  Trabajadores
+                </TableHead>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
@@ -114,8 +121,11 @@ export const CompanyTable = ({
                   </TableCell>
                   <TableCell>{company.contactPerson}</TableCell>
                   <TableCell>{company.email}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-center">
                     <StatusBadge status={company.status} />
+                  </TableCell>
+                  <TableCell className="text-center bg-playBlueLight/20 min-w-[140px]">
+                    <WorkerStatusBadge status={company.workerStatus} />
                   </TableCell>
                   <TableCell className="text-right">
                     {company.active ? (
@@ -129,7 +139,6 @@ export const CompanyTable = ({
                           className="gap-2"
                         >
                           <Eye className="h-4 w-4" />
-                          Ver Detalle
                         </Button>
                         <Button
                           variant="outline"
@@ -138,7 +147,6 @@ export const CompanyTable = ({
                           className="gap-2"
                         >
                           <Edit className="h-4 w-4" />
-                          Editar
                         </Button>
                         <Button
                           variant="outline"
@@ -147,7 +155,6 @@ export const CompanyTable = ({
                           className="gap-1 text-destructive hover:text-destructive"
                         >
                           <Trash2 className="h-3 w-3" />
-                          Eliminar
                         </Button>
                       </div>
                     ) : (

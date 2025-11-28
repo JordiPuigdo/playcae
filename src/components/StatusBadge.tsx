@@ -1,6 +1,5 @@
 import { Company, CompanyStatus } from "@/types/company";
 import { Badge } from "./ui/Badge";
-import { EntityStatus } from "@/types/document";
 
 interface StatusBadgeProps {
   status: Company["status"];
@@ -12,20 +11,23 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
       case CompanyStatus.Approved:
         return {
           variant: "default" as const,
-          className: "bg-success text-white hover:bg-success/80",
+          className:
+            "bg-playGreen text-white shadow-sm border border-playGreen/40",
           text: "Apta",
         };
       case CompanyStatus.Rejected:
         return {
           variant: "destructive" as const,
-          className: "bg-red-600 text-white hover:bg-red-700",
+          className:
+            "bg-brand-secondary text-white shadow-sm border border-brand-secondary/40",
           text: "No apta",
         };
       case CompanyStatus.Pending:
       default:
         return {
           variant: "secondary" as const,
-          className: "bg-pending text-white hover:bg-pending/80",
+          className:
+            "bg-playYellow text-black shadow-sm border border-playYellow/40",
           text: "Pendiente",
         };
     }

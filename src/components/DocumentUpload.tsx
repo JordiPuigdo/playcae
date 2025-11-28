@@ -92,26 +92,30 @@ export const DocumentUpload = ({
       }}
     >
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="gap-2">
-          <Upload className="h-4 w-4" />
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2 border-playBlueLight text-brand-primary hover:bg-playGrey"
+        >
+          <Upload className="h-4 w-4 text-brand-primary" />
           {hasFile ? "Reemplazar" : "Subir"}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+
+      <DialogContent className="sm:max-w-md bg-white border border-playBlueLight/30">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+          <DialogTitle className="flex items-center gap-2 text-brand-primary">
+            <FileText className="h-5 w-5 text-brand-primary" />
             {hasFile ? "Reemplazar" : "Subir"} {documentName}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Dropzone */}
           <div
             className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
               isDragging
-                ? "border-primary bg-primary/5"
-                : "border-muted-foreground/25 hover:border-muted-foreground/50"
+                ? "border-brand-primary bg-brand-primary/5"
+                : "border-playBlueLight/40 hover:border-playBlueLight"
             }`}
             onDrop={handleDrop}
             onDragOver={(e) => {
@@ -125,10 +129,10 @@ export const DocumentUpload = ({
           >
             {selectedFile ? (
               <div className="space-y-2">
-                <div className="text-sm font-medium text-foreground">
+                <div className="text-sm font-medium text-brand-primary">
                   {selectedFile.name}
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-playBlueLight">
                   {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                 </div>
                 <Button
@@ -136,17 +140,18 @@ export const DocumentUpload = ({
                   variant="outline"
                   size="sm"
                   onClick={() => setSelectedFile(null)}
+                  className="border-playBlueLight text-brand-primary hover:bg-playGrey"
                 >
                   Cambiar archivo
                 </Button>
               </div>
             ) : (
               <div className="space-y-2">
-                <Upload className="h-10 w-10 text-muted-foreground mx-auto" />
-                <div className="text-sm font-medium">
+                <Upload className="h-10 w-10 text-playBlueLight mx-auto" />
+                <div className="text-sm font-medium text-brand-primary">
                   Arrastra el archivo aquí o haz clic para seleccionar
                 </div>
-                <div className="text-xs text-muted-foreground">
+                <div className="text-xs text-playBlueLight">
                   PDF, JPG, PNG hasta {MAX_FILE_SIZE_MB}MB
                 </div>
                 <Button
@@ -154,6 +159,7 @@ export const DocumentUpload = ({
                   variant="outline"
                   size="sm"
                   onClick={() => fileInputRef.current?.click()}
+                  className="border-playBlueLight text-brand-primary hover:bg-playGrey"
                 >
                   Seleccionar archivo
                 </Button>
@@ -172,13 +178,15 @@ export const DocumentUpload = ({
             className="hidden"
           />
 
-          {error && <p className="text-sm text-destructive">{error}</p>}
+          {error && <p className="text-sm text-brand-secondary">{error}</p>}
 
-          {/* Dates */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="issueDate" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
+              <Label
+                htmlFor="issueDate"
+                className="flex items-center gap-2 text-brand-primary"
+              >
+                <Calendar className="h-4 w-4 text-brand-primary" />
                 Fecha de emisión (opcional)
               </Label>
               <Input
@@ -186,12 +194,16 @@ export const DocumentUpload = ({
                 type="date"
                 value={issueDate}
                 onChange={(e) => setIssueDate(e.target.value)}
+                className="border-playBlueLight focus-visible:ring-brand-primary"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="expiryDate" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
+              <Label
+                htmlFor="expiryDate"
+                className="flex items-center gap-2 text-brand-primary"
+              >
+                <Calendar className="h-4 w-4 text-brand-primary" />
                 Fecha de caducidad (opcional)
               </Label>
               <Input
@@ -199,38 +211,43 @@ export const DocumentUpload = ({
                 type="date"
                 value={expiryDate}
                 onChange={(e) => setExpiryDate(e.target.value)}
+                className="border-playBlueLight focus-visible:ring-brand-primary"
               />
             </div>
           </div>
 
-          {/* Force validation with tooltip */}
           <div className="flex items-center gap-2">
             <Label
               htmlFor="forceValidation"
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 text-brand-primary"
             >
               <Input
                 id="forceValidation"
                 checked={forceValidation}
                 onChange={(e) => setForceValidation(e.target.checked)}
                 type="checkbox"
-                className="h-4 w-4"
+                className="h-4 w-4 border-playBlueLight text-brand-primary"
               />
               Forzar Validación
             </Label>
-            <InfoTooltip text="Si la validación del documento automática no funciona puede forzar la validación del documento" />
+            <InfoTooltip text="Si la validación automática no funciona, puede forzar la validación del documento." />
           </div>
 
-          {/* Actions */}
           <div className="flex justify-end space-x-2">
             <Button
               type="button"
               variant="outline"
               onClick={() => setIsOpen(false)}
+              className="border-playBlueLight text-brand-primary hover:bg-playGrey"
             >
               Cancelar
             </Button>
-            <Button type="submit" disabled={!selectedFile || !!error}>
+
+            <Button
+              type="submit"
+              disabled={!selectedFile || !!error}
+              className="bg-playOrange hover:bg-playOrange/90 text-white"
+            >
               {hasFile ? "Reemplazar" : "Subir"} documento
             </Button>
           </div>

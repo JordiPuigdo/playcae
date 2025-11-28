@@ -67,25 +67,25 @@ export default function LoginPage() {
   }, [user]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+    <div className="min-h-screen flex items-center justify-center bg-playGrey p-4">
       {/* Loading Overlay */}
       {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-playGrey/80 backdrop-blur-sm">
           <div className="flex flex-col items-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground" aria-live="polite">
+            <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+            <p className="text-sm text-playBlueLight" aria-live="polite">
               Iniciando sesión...
             </p>
           </div>
         </div>
       )}
 
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-md border border-playBlueLight/30 shadow-lg">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
+          <CardTitle className="text-2xl font-bold text-center text-brand-primary">
             Iniciar Sesión
           </CardTitle>
-          <CardDescription className="text-center">
+          <CardDescription className="text-center text-playBlueLight">
             Acceda a su cuenta para continuar.
           </CardDescription>
         </CardHeader>
@@ -93,18 +93,22 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <Alert variant="destructive">
-                <AlertDescription>{error}</AlertDescription>
+              <Alert className="border-l-4 border-brand-secondary bg-brand-secondary/10">
+                <AlertDescription className="text-brand-secondary">
+                  {error}
+                </AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Correo electrónico *</Label>
+              <Label htmlFor="email" className="text-brand-primary">
+                Correo electrónico *
+              </Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
                 placeholder="ejemplo@correo.com"
+                className="border-playBlueLight focus-visible:ring-brand-primary"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -120,27 +124,34 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Ingrese su contraseña"
               required
+              className="border-playBlueLight focus-visible:ring-brand-primary"
             />
 
             <div className="flex justify-end">
               <Button
                 type="button"
                 variant="link"
-                className="px-0 font-normal text-sm"
+                className="px-0 font-normal text-sm text-playBlueLight hover:text-brand-primary"
                 onClick={() => router.push("/forgot-password")}
               >
                 ¿Olvidó su contraseña?
               </Button>
             </div>
 
-            <Button type="submit" className="w-full" disabled={isLoading}>
+            {/* Botón principal: azul oficial */}
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-brand-primary hover:bg-playBlueLight text-white"
+            >
               {isLoading ? "Ingresando..." : "Entrar"}
             </Button>
 
+            {/* Botón secundario: estilo gris neutro */}
             <Button
               type="button"
               variant="ghost"
-              className="w-full"
+              className="w-full text-brand-primary hover:bg-playGrey"
               onClick={() => router.push("/register")}
             >
               ¿No tiene cuenta? Regístrese

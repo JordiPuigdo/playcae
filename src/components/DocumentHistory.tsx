@@ -70,16 +70,17 @@ export const DocumentHistory = ({
           variant="outline"
           size="sm"
           onClick={handleOpenHistory}
-          className="gap-1"
+          className="gap-1 border-playBlueLight text-brand-primary hover:bg-playGrey"
         >
-          <History className="h-3 w-3" />
+          <History className="h-3 w-3 text-brand-primary" />
           Historial
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[80vh]">
+
+      <DialogContent className="max-w-4xl max-h-[80vh] bg-white border border-playBlueLight/30">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+          <DialogTitle className="flex items-center gap-2 text-brand-primary">
+            <FileText className="h-5 w-5 text-brand-primary" />
             Historial de Documentos -{" "}
             {historicalDocuments[0]?.documentType.name}
           </DialogTitle>
@@ -88,29 +89,34 @@ export const DocumentHistory = ({
         <ScrollArea className="h-[500px] w-full">
           {isLoading ? (
             <div className="flex items-center justify-center p-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary"></div>
             </div>
           ) : history.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Documento</TableHead>
-                  <TableHead>Archivo</TableHead>
-                  <TableHead>Fecha</TableHead>
+                <TableRow className="bg-playGrey">
+                  <TableHead className="text-brand-primary">
+                    Documento
+                  </TableHead>
+                  <TableHead className="text-brand-primary">Archivo</TableHead>
+                  <TableHead className="text-brand-primary">Fecha</TableHead>
                 </TableRow>
               </TableHeader>
+
               <TableBody>
                 {historicalDocuments.map((entry) => (
                   <TableRow key={entry.id}>
-                    <TableCell className="font-medium">
+                    <TableCell className="font-medium text-brand-primary">
                       {entry.documentType.name}
                     </TableCell>
+
                     <TableCell>
                       <FileCell document={entry} onOpen={handleOpenDocument} />
                     </TableCell>
+
                     <TableCell>
-                      <div className="flex items-center gap-1 text-sm">
-                        <Calendar className="h-3 w-3 text-muted-foreground" />
+                      <div className="flex items-center gap-1 text-sm text-brand-primary">
+                        <Calendar className="h-3 w-3 text-playBlueLight" />
                         {formatDate(entry.creationDate)}
                       </div>
                     </TableCell>
@@ -120,9 +126,11 @@ export const DocumentHistory = ({
             </Table>
           ) : (
             <div className="flex flex-col items-center justify-center p-8 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium mb-2">Sin historial</h3>
-              <p className="text-muted-foreground">
+              <FileText className="h-12 w-12 text-playBlueLight mb-4" />
+              <h3 className="text-lg font-medium text-brand-primary mb-2">
+                Sin historial
+              </h3>
+              <p className="text-playBlueLight">
                 No hay historial de documentos para este trabajador.
               </p>
             </div>

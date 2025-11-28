@@ -2,7 +2,7 @@ import { Badge } from "./ui/Badge";
 import { Worker, WorkerStatus } from "@/types/worker";
 
 interface WorkerStatusBadgeProps {
-  status: Worker["status"];
+  status: WorkerStatus;
 }
 
 export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
@@ -10,24 +10,28 @@ export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
     switch (status) {
       case WorkerStatus.Approved:
         return {
-          variant: "default" as const,
-          className: "bg-success text-white hover:bg-success/80",
+          className:
+            "bg-playGreen text-white border border-playGreen/40 shadow-sm",
           text: "Apto",
         };
+
       case WorkerStatus.Rejected:
         return {
-          variant: "destructive" as const,
-          className: "bg-red-500 text-white px-2 py-1 rounded",
+          className:
+            "bg-securityRed text-white border border-securityRed/40 shadow-sm hover:bg-securityRed/80",
           text: "No apto",
+        };
+
+      default:
+        return {
+          className:
+            "bg-playYellow text-black border border-playYellow/40 shadow-sm",
+          text: "Pendiente",
         };
     }
   };
 
   const config = getStatusConfig(status);
 
-  return (
-    <Badge variant={config.variant} className={config.className}>
-      {config.text}
-    </Badge>
-  );
+  return <Badge className={config.className}>{config.text}</Badge>;
 };
