@@ -23,7 +23,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="sticky top-0 h-screen w-64 bg-brand-primary text-playGrey p-6 flex flex-col">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-brand-primary text-playGrey p-6 flex flex-col overflow-y-auto">
       <Image
         src="/assets/playcaeDashboard.png"
         alt="Logo Play CAE"

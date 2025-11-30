@@ -24,9 +24,9 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-screen w-full bg-gray-100">
       <Sidebar />
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 ml-64">
         <Header />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
         {/*user && <SupportChat />*/}
         <Toaster />
       </div>
