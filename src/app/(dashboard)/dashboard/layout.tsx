@@ -22,9 +22,9 @@ export default function DashboardLayout({
     return null;
   }
   return (
-    <div className="flex min-h-screen w-full bg-gray-100">
+    <div className="flex h-screen w-full bg-gray-100 overflow-hidden">
       <Sidebar />
-      <div className="flex flex-col flex-1 ml-64">
+      <div className="flex flex-col flex-1 ml-64 h-full overflow-hidden">
         <Header />
         <main className="flex-1 p-6 overflow-y-auto">{children}</main>
         {/*user && <SupportChat />*/}
