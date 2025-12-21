@@ -47,6 +47,7 @@ const CompanyDetailPage = () => {
     showErrorUpload,
     openDocument,
     update,
+    refreshDocuments,
   } = useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -83,10 +84,7 @@ const CompanyDetailPage = () => {
   ) => {
     try {
       setIsLoading(true);
-
-      await validateDocument(documentId, isValid, comment);
-      
-      await update(documentId, { expirationDate: expiryDate });
+      await validateDocument(documentId, isValid, comment, expiryDate);
     } catch (err) {
       throw err;
     } finally {
@@ -271,11 +269,12 @@ const CompanyDetailPage = () => {
                 onUpload={(documentId, data) =>
                   handleUploadDocument(documentId, data, "")
                 }
-                onValidate={(id, isValid, comment) =>
-                  handleValidateDocument(id, isValid, comment)
+                onValidate={(id, isValid, comment, expiryDate) =>
+                  handleValidateDocument(id, isValid, comment, expiryDate)
                 }
                 onOpen={(documentId) => handleOpenDocument(documentId)}
                 companyId={id}
+                onRefresh={refreshDocuments}
               />
             </TabsContent>
 

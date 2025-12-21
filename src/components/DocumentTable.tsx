@@ -31,6 +31,7 @@ interface DocumentsTableProps {
   ) => void;
   onOpen: (documentId: string) => void;
   companyId: string;
+  onRefresh?: () => void;
 }
 
 export const DocumentsTable = ({
@@ -40,6 +41,7 @@ export const DocumentsTable = ({
   onValidate,
   onOpen,
   companyId,
+  onRefresh,
 }: DocumentsTableProps) => {
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
@@ -133,6 +135,7 @@ export const DocumentsTable = ({
                             )
                           }
                           document={document}
+                          onSuccess={onRefresh}
                         />
                       )}
                     </div>

@@ -434,13 +434,15 @@ export const WorkersTable = ({
                                                 canValidate={canValidate}
                                                 onValidate={(
                                                   isValid,
-                                                  comment
+                                                  comment,
+                                                  expiryDate
                                                 ) =>
                                                   onValidateDocument(
                                                     worker.id!,
                                                     document.id!,
                                                     isValid,
-                                                    comment
+                                                    comment,
+                                                    expiryDate
                                                   )
                                                 }
                                                 document={document}

@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/TextArea";
 import {
@@ -9,15 +8,17 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog";
 import { Calendar, CheckCircle, XCircle } from "lucide-react";
-import { Document, EntityStatus } from "@/types/document";
-import { Input } from "./ui/Input";
+import { Document } from "@/types/document";
 import { Label } from "./ui/Label";
+import { DatePicker } from "./ui/DatePicker";
+import { useDocumentValidation } from "@/hooks/useDocumentValidation";
 
 interface DocumentValidationProps {
   documentName: string;
   onValidate: (isValid: boolean, comment?: string, expiryDate?: string) => void;
   canValidate: boolean;
   document: Document;
+  onSuccess?: () => void;
 }
 
 export const DocumentValidation = ({
@@ -25,43 +26,37 @@ export const DocumentValidation = ({
   onValidate,
   canValidate,
   document,
+  onSuccess,
 }: DocumentValidationProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isValidating, setIsValidating] = useState<boolean | null>(null);
-  const [expiryDate, setExpiryDate] = useState("");
-  const [comment, setComment] = useState("");
+  const {
+    isOpen,
+    isValidating,
+    expiryDate,
+    comment,
+    isValidStatusForValidation,
+    canSubmit,
+    closeDialog,
+    setIsValidating,
+    setExpiryDate,
+    setComment,
+    handleSubmit,
+    resetForm,
+  } = useDocumentValidation({
+    document,
+    onValidate,
+    onSuccess,
+  });
 
   if (!canValidate) return null;
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (isValidating === null) return;
-
-    onValidate(isValidating, comment || undefined, expiryDate);
-
-    setIsOpen(false);
-    setIsValidating(null);
-    setComment("");
-  };
-
-  const resetForm = () => {
-    setIsValidating(null);
-    setComment("");
-  };
-
-  const isValidStatusForValidation =
-    document.status === EntityStatus.Rejected ||
-    document.status === EntityStatus.Expired ||
-    document.status === EntityStatus.PendingManualy;
 
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
         if (!isValidStatusForValidation) return;
-        setIsOpen(open);
-        if (!open) resetForm();
+        if (!open) {
+          closeDialog();
+        }
       }}
     >
       <DialogTrigger asChild>
@@ -95,11 +90,11 @@ export const DocumentValidation = ({
                 <Calendar className="h-4 w-4 text-brand-primary" />
                 Fecha de caducidad
               </Label>
-              <Input
+              <DatePicker
                 id="expiryDate"
-                type="date"
                 value={expiryDate}
-                onChange={(e) => setExpiryDate(e.target.value)}
+                onChange={setExpiryDate}
+                placeholder="Selecciona fecha de caducidad"
                 className="border-playBlueLight focus-visible:ring-brand-primary"
               />
             </div>
@@ -141,9 +136,9 @@ export const DocumentValidation = ({
 
           {isValidating !== null && (
             <div className="space-y-2">
-              <label className="text-sm font-medium text-brand-primary">
+              <Label className="text-sm font-medium text-brand-primary">
                 {isValidating ? "Comentario (opcional)" : "Motivo del rechazo"}
-              </label>
+              </Label>
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
@@ -162,7 +157,7 @@ export const DocumentValidation = ({
             <Button
               type="button"
               variant="outline"
-              onClick={() => setIsOpen(false)}
+              onClick={closeDialog}
               className="border-playBlueLight text-brand-primary hover:bg-playGrey"
             >
               Cancelar
@@ -170,7 +165,7 @@ export const DocumentValidation = ({
 
             <Button
               type="submit"
-              disabled={isValidating === null}
+              disabled={!canSubmit}
               className={`${
                 isValidating === false
                   ? "bg-brand-secondary hover:bg-brand-secondary/90 text-white"
