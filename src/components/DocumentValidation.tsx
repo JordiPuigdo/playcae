@@ -35,12 +35,12 @@ export const DocumentValidation = ({
     comment,
     isValidStatusForValidation,
     canSubmit,
+    openDialog,
     closeDialog,
     setIsValidating,
     setExpiryDate,
     setComment,
     handleSubmit,
-    resetForm,
   } = useDocumentValidation({
     document,
     onValidate,
@@ -54,7 +54,9 @@ export const DocumentValidation = ({
       open={isOpen}
       onOpenChange={(open) => {
         if (!isValidStatusForValidation) return;
-        if (!open) {
+        if (open) {
+          openDialog();
+        } else {
           closeDialog();
         }
       }}
