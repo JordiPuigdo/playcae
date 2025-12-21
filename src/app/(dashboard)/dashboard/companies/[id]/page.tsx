@@ -46,6 +46,7 @@ const CompanyDetailPage = () => {
     validateDocument,
     showErrorUpload,
     openDocument,
+    update,
   } = useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -77,12 +78,15 @@ const CompanyDetailPage = () => {
   const handleValidateDocument = async (
     documentId: string,
     isValid: boolean,
-    comment?: string
+    comment?: string,
+    expiryDate?: string
   ) => {
     try {
       setIsLoading(true);
 
-      validateDocument(documentId, isValid, comment);
+      await validateDocument(documentId, isValid, comment);
+      
+      await update(documentId, { expirationDate: expiryDate });
     } catch (err) {
       throw err;
     } finally {

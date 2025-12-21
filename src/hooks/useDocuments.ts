@@ -62,10 +62,10 @@ export const useDocuments = (companyId: string) => {
     try {
       setIsLoading(true);
       const status = isValid ? EntityStatus.Approved : EntityStatus.Rejected;
-      const response = await documentService.updateStatus(documentId, status);
-
+      await documentService.updateStatus(documentId, status);
       const existsDoc = documents.find((doc) => doc.id === documentId);
       if (existsDoc) existsDoc.status = status;
+      await update(documentId, { expirationDate: expiryDate });
     } catch (err) {
       throw err;
     } finally {
@@ -173,6 +173,22 @@ export const useDocuments = (companyId: string) => {
     }
   };
 
+  const update = async (id: string, document: Partial<Document>) => {
+    try {
+      setIsLoading(true);
+      const response = await documentService.update(id, document);
+      const updatedDoc = response.data;
+      setDocuments((prevDocs) =>
+        prevDocs.map((doc) => (doc.id === id ? updatedDoc : doc))
+      );
+      return updatedDoc;
+    } catch (err) {
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return {
     documents,
     historicalDocuments,
@@ -186,5 +202,6 @@ export const useDocuments = (companyId: string) => {
     addObservation,
     refreshDocuments: loadDocuments,
     openDocument,
+    update,
   };
 };

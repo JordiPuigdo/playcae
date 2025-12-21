@@ -23,7 +23,12 @@ interface DocumentsTableProps {
   documents: Document[];
   userRole: UserRole;
   onUpload: (documentId: string, data: DocumentFormData) => void;
-  onValidate: (documentId: string, isValid: boolean, comment?: string) => void;
+  onValidate: (
+    documentId: string,
+    isValid: boolean,
+    comment?: string,
+    expiryDate?: string
+  ) => void;
   onOpen: (documentId: string) => void;
   companyId: string;
 }
@@ -119,8 +124,13 @@ export const DocumentsTable = ({
                         <DocumentValidation
                           documentName={document.originalName}
                           canValidate={canValidate}
-                          onValidate={(isValid, comment) =>
-                            onValidate(document.id!, isValid, comment)
+                          onValidate={(isValid, comment, expiryDate) =>
+                            onValidate(
+                              document.id!,
+                              isValid,
+                              comment,
+                              expiryDate
+                            )
                           }
                           document={document}
                         />
