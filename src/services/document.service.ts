@@ -5,6 +5,7 @@ import {
   Document,
   DocumentUploadResponse,
   EntityStatus,
+  ManualValidationRequest,
   UploadDocument,
   WorkerDocumentHistoricalRequest,
 } from "@/types/document";
@@ -32,6 +33,10 @@ export interface IDocumentService {
     request: WorkerDocumentHistoricalRequest
   ): Promise<ApiResponse<Document[]>>;
   open(id: string): Promise<ApiResponse<string>>;
+  manualValidation(
+    id: string,
+    request: ManualValidationRequest
+  ): Promise<ApiResponse<Document>>;
 }
 
 export class DocumentService implements IDocumentService {
@@ -115,6 +120,16 @@ export class DocumentService implements IDocumentService {
   ): Promise<ApiResponse<Document[]>> {
     return this.httpClient.post<Document[]>(
       `${this.baseUrl}/WorkerDocumentHistoricalRequest`,
+      request
+    );
+  }
+
+  async manualValidation(
+    id: string,
+    request: ManualValidationRequest
+  ): Promise<ApiResponse<Document>> {
+    return this.httpClient.put<Document>(
+      `${this.baseUrl}/${id}/manual-validation`,
       request
     );
   }

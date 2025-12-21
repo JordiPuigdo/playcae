@@ -4,13 +4,18 @@ import { Document, EntityStatus } from "@/types/document";
 
 interface UseDocumentValidationProps {
   document: Document;
-  onValidate: (isValid: boolean, comment?: string, expiryDate?: string) => void;
+  onValidate: (
+    isValid: boolean,
+    comment?: string,
+    expiryDate?: string
+  ) => void | Promise<void>;
   onSuccess?: () => void;
 }
 
 interface UseDocumentValidationReturn {
   isOpen: boolean;
   isValidating: boolean | null;
+  isLoading: boolean;
   expiryDate: Date | null;
   comment: string;
   isValidStatusForValidation: boolean;
@@ -37,6 +42,7 @@ export const useDocumentValidation = ({
 }: UseDocumentValidationProps): UseDocumentValidationReturn => {
   const [isOpen, setIsOpen] = useState(false);
   const [isValidating, setIsValidating] = useState<boolean | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const [expiryDate, setExpiryDate] = useState<Date | null>(null);
   const [comment, setComment] = useState("");
 
@@ -63,7 +69,7 @@ export const useDocumentValidation = ({
   }, [resetForm]);
 
   const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
+    async (e: React.FormEvent) => {
       e.preventDefault();
 
       if (isValidating === null) return;
@@ -72,9 +78,16 @@ export const useDocumentValidation = ({
         ? dayjs(expiryDate).format("YYYY-MM-DD")
         : undefined;
 
-      onValidate(isValidating, comment || undefined, formattedDate);
-      closeDialog();
-      onSuccess?.();
+      setIsLoading(true);
+      try {
+        await onValidate(isValidating, comment || undefined, formattedDate);
+        closeDialog();
+        onSuccess?.();
+      } catch (error) {
+        console.error("Error al validar documento:", error);
+      } finally {
+        setIsLoading(false);
+      }
     },
     [isValidating, expiryDate, comment, onValidate, closeDialog, onSuccess]
   );
@@ -94,6 +107,7 @@ export const useDocumentValidation = ({
   return {
     isOpen,
     isValidating,
+    isLoading,
     expiryDate,
     comment,
     isValidStatusForValidation,

@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog";
-import { Calendar, CheckCircle, XCircle } from "lucide-react";
+import { Calendar, CheckCircle, XCircle, Loader2 } from "lucide-react";
 import { Document } from "@/types/document";
 import { Label } from "./ui/Label";
 import { DatePicker } from "./ui/DatePicker";
@@ -15,7 +15,11 @@ import { useDocumentValidation } from "@/hooks/useDocumentValidation";
 
 interface DocumentValidationProps {
   documentName: string;
-  onValidate: (isValid: boolean, comment?: string, expiryDate?: string) => void;
+  onValidate: (
+    isValid: boolean,
+    comment?: string,
+    expiryDate?: string
+  ) => void | Promise<void>;
   canValidate: boolean;
   document: Document;
   onSuccess?: () => void;
@@ -31,6 +35,7 @@ export const DocumentValidation = ({
   const {
     isOpen,
     isValidating,
+    isLoading,
     expiryDate,
     comment,
     isValidStatusForValidation,
@@ -167,14 +172,23 @@ export const DocumentValidation = ({
 
             <Button
               type="submit"
-              disabled={!canSubmit}
+              disabled={!canSubmit || isLoading}
               className={`${
                 isValidating === false
                   ? "bg-brand-secondary hover:bg-brand-secondary/90 text-white"
                   : "bg-playGreen hover:bg-playGreen/90 text-white"
               }`}
             >
-              {isValidating ? "Validar documento" : "Rechazar documento"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Procesando...
+                </>
+              ) : isValidating ? (
+                "Validar documento"
+              ) : (
+                "Rechazar documento"
+              )}
             </Button>
           </div>
         </form>

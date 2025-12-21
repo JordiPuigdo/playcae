@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Worker, WorkerFormData, WorkerDocumentFormData } from "@/types/worker";
 
 import {
@@ -57,6 +57,7 @@ interface WorkersTableProps {
   ) => void;
   onActivateWorker: (workerId: string) => void;
   onOpenDocument: (documentId: string) => void;
+  onRefresh?: () => void;
 }
 
 const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
@@ -71,12 +72,37 @@ export const WorkersTable = ({
   onValidateDocument,
   onActivateWorker,
   onOpenDocument,
+  onRefresh,
 }: WorkersTableProps) => {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteWorker, setDeleteWorker] = useState<Worker | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  const PENDING_STATUSES = [
+    EntityStatus.Pending,
+    EntityStatus.Rejected,
+    EntityStatus.Expired,
+    EntityStatus.ExpiredByAI,
+    EntityStatus.PendingManualy,
+  ];
+
+  const workersWithPendingDocs = useMemo(() => {
+    return workers
+      .filter(
+        (worker) =>
+          worker.active &&
+          worker.documents?.some((doc) => PENDING_STATUSES.includes(doc.status))
+      )
+      .map((worker) => worker.id!);
+  }, [workers]);
+
+  useEffect(() => {
+    if (workersWithPendingDocs.length > 0) {
+      setExpandedRows(new Set(workersWithPendingDocs));
+    }
+  }, [workersWithPendingDocs]);
 
   const formatDate = (dateString?: string) => {
     if (!dateString || dateString === DEFAULT_EXPIRY_DATE) return "-";
@@ -446,6 +472,7 @@ export const WorkersTable = ({
                                                   )
                                                 }
                                                 document={document}
+                                                onSuccess={onRefresh}
                                               />
                                             )}
                                           </div>

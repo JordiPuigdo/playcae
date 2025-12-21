@@ -60,12 +60,21 @@ export const useDocuments = (companyId: string) => {
     expiryDate?: string
   ) => {
     try {
+      debugger;
       setIsLoading(true);
       const status = isValid ? EntityStatus.Approved : EntityStatus.Rejected;
-      await documentService.updateStatus(documentId, status);
-      const existsDoc = documents.find((doc) => doc.id === documentId);
-      if (existsDoc) existsDoc.status = status;
-      await update(documentId, { expirationDate: expiryDate });
+
+      const response = await documentService.manualValidation(documentId, {
+        status,
+        expirationDate: expiryDate || new Date().toISOString(),
+        comment,
+      });
+
+      if (response.data) {
+        setDocuments((prevDocs) =>
+          prevDocs.map((doc) => (doc.id === documentId ? response.data : doc))
+        );
+      }
     } catch (err) {
       throw err;
     } finally {

@@ -56,3 +56,9 @@ export interface WorkerDocumentHistoricalRequest {
   startDate: string;
   endDate: string;
 }
+
+export interface ManualValidationRequest {
+  status: EntityStatus;
+  expirationDate: string;
+  comment?: string;
+}

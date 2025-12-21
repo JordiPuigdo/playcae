@@ -38,6 +38,7 @@ const CompanyDetailPage = () => {
     deleteWorker,
     activateWorker,
     filteredWorkers,
+    validateWorkerDocument,
   } = useWorkers(id);
   const {
     documents,
@@ -253,12 +254,27 @@ const CompanyDetailPage = () => {
                 onUploadDocument={(documentId, data, workerId) =>
                   handleUploadDocument(documentId, data, workerId)
                 }
-                onValidateDocument={() => {}}
+                onValidateDocument={(
+                  workerId,
+                  documentId,
+                  isValid,
+                  comment,
+                  expiryDate
+                ) =>
+                  validateWorkerDocument(
+                    workerId,
+                    documentId,
+                    isValid,
+                    comment,
+                    expiryDate
+                  )
+                }
                 workers={displayedWorkers}
                 onActivateWorker={(workerId) => {
                   activateWorker(workerId);
                 }}
                 onOpenDocument={(documentId) => handleOpenDocument(documentId)}
+                onRefresh={() => getWorkersByCompanyId(id)}
               />
             </TabsContent>
 

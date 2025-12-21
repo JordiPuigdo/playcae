@@ -2,6 +2,8 @@ import { useState, useMemo } from "react";
 import { Worker, WorkerFormData, WorkerStatus } from "@/types/worker";
 import { UserRole } from "@/types/user";
 import { WorkerService } from "@/services/worker.service";
+import { DocumentService } from "@/services/document.service";
+import { EntityStatus } from "@/types/document";
 
 export const useWorkers = (companyId: string | undefined) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
@@ -10,6 +12,7 @@ export const useWorkers = (companyId: string | undefined) => {
   const [error, setError] = useState<string | null>(null);
 
   const workerService = new WorkerService();
+  const documentService = useMemo(() => new DocumentService(), []);
   const companyWorkers = useMemo(() => {
     if (!companyId) return workers;
     return workers.filter((worker) => worker.companyId === companyId);
@@ -123,6 +126,47 @@ export const useWorkers = (companyId: string | undefined) => {
     );
   };
 
+  const validateWorkerDocument = async (
+    workerId: string,
+    documentId: string,
+    isValid: boolean,
+    comment?: string,
+    expiryDate?: string
+  ) => {
+    try {
+      setIsLoading(true);
+      const status = isValid ? EntityStatus.Approved : EntityStatus.Rejected;
+
+      const response = await documentService.manualValidation(documentId, {
+        status,
+        expirationDate: expiryDate || new Date().toISOString(),
+        comment,
+      });
+
+      if (response.data) {
+        setWorkers((prev) =>
+          prev.map((worker) => {
+            if (worker.id !== workerId) return worker;
+
+            const updatedDocuments = worker.documents?.map((doc) =>
+              doc.id === documentId ? response.data : doc
+            );
+
+            return {
+              ...worker,
+              documents: updatedDocuments,
+            };
+          })
+        );
+      }
+    } catch (err) {
+      setError("Error al validar el documento");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   /*const uploadWorkerDocument = (
     workerId: string,
     documentType: string,
@@ -226,6 +270,8 @@ export const useWorkers = (companyId: string | undefined) => {
   return {
     workers: companyWorkers,
     userRole,
+    isLoading,
+    error,
     filteredWorkers,
     createWorker,
     updateWorker,
@@ -233,7 +279,6 @@ export const useWorkers = (companyId: string | undefined) => {
     getWorkersByCompanyId,
     createBulkWorkers,
     activateWorker,
-    //uploadWorkerDocument,
-    //validateWorkerDocument,
+    validateWorkerDocument,
   };
 };
