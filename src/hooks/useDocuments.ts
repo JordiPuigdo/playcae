@@ -60,7 +60,6 @@ export const useDocuments = (companyId: string) => {
     expiryDate?: string
   ) => {
     try {
-      debugger;
       setIsLoading(true);
       const status = isValid ? EntityStatus.Approved : EntityStatus.Rejected;
 

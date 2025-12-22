@@ -17,7 +17,7 @@ import { Textarea } from "@/components/ui/TextArea";
 import { PasswordInput } from "@/components/PasswordInput";
 import { Loader2, Building2 } from "lucide-react";
 import { toast } from "@/hooks/use-Toast";
-import { useUsers } from "@/hooks/useUsers";
+import { useLead, LeadOrigin } from "@/hooks/useLead";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -33,7 +33,7 @@ export default function RegisterPage() {
     confirmPassword: "",
   });
 
-  const { createUser } = useUsers();
+  const { createLead } = useLead();
 
   const [error, setError] = useState("");
 
@@ -103,20 +103,16 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const response = await createUser({
+      await createLead({
         companyName: registerData.companyName,
         taxId: registerData.cif,
         contactPerson: registerData.contactPerson,
         email: registerData.email,
-        phone: "",
-        address: "",
+        phone: registerData.phone,
+        address: registerData.address,
         password: registerData.password,
+        origin: LeadOrigin.Web,
       });
-
-      if (response.data.errorMessage !== null) {
-        setError(response.data.errorMessage);
-        return;
-      }
 
       toast({
         title: "Registro exitoso",
@@ -137,7 +133,11 @@ export default function RegisterPage() {
 
       router.push("/login");
     } catch (err) {
-      setError("El registro ha fallado. Intente nuevamente.");
+      if (err instanceof Error && err.message.includes("409")) {
+        setError("Ya existe una empresa registrada con este email o CIF.");
+      } else {
+        setError("El registro ha fallado. Intente nuevamente.");
+      }
     } finally {
       setIsLoading(false);
     }

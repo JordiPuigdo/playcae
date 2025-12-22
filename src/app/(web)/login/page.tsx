@@ -51,7 +51,6 @@ export default function LoginPage() {
   }, [errorAuth]);
 
   useEffect(() => {
-    debugger;
     if (!user) return;
     if (dayjs().isAfter(dayjs(user.refreshTokenExpiryTime))) return;
 
