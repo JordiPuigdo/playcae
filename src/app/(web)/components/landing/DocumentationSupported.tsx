@@ -5,11 +5,11 @@ export default function DocumentationSupported() {
   return (
     <section
       id="how-it-works"
-      className="relative py-20 bg-gradient-to-b from-white to-gray-50 overflow-hidden"
+      className="relative py-20 bg-gradient-to-b from-white to-playGrey overflow-hidden"
     >
       {/* Elementos decorativos */}
-      <div className="absolute top-20 left-0 w-32 h-32 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-48 h-48 bg-green-100 rounded-full opacity-30 blur-3xl"></div>
+      <div className="absolute top-20 left-0 w-32 h-32 bg-playBlueLight/30 rounded-full opacity-50 blur-3xl"></div>
+      <div className="absolute bottom-10 right-10 w-48 h-48 bg-playGreen/20 rounded-full opacity-30 blur-3xl"></div>
 
       <div className="container mx-auto px-4">
         <motion.div
@@ -62,7 +62,7 @@ export default function DocumentationSupported() {
               </div>
 
               {/* IA - caja con loader */}
-              <div className="bg-blue-600 text-white rounded-xl w-48 h-24 flex items-center justify-center mt-8 shadow-lg animate-pulse">
+              <div className="bg-playBlueDark text-white rounded-xl w-48 h-24 flex items-center justify-center mt-8 shadow-lg animate-pulse">
                 <div className="text-center">
                   <div className="animate-spin h-6 w-6 mx-auto mb-2 border-2 border-white border-t-transparent rounded-full"></div>
                   <span className="text-sm font-semibold">
@@ -99,13 +99,13 @@ export default function DocumentationSupported() {
               {/* Paso 1 */}
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center">
+                  <div className="bg-playBlueLight/20 w-16 h-16 rounded-full flex items-center justify-center">
                     <span className="text-2xl">🔄</span>
                   </div>
                 </div>
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    <span className="bg-blue-600 text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
+                    <span className="bg-playBlueDark text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       1
                     </span>
                     Sube documentos
@@ -150,13 +150,13 @@ export default function DocumentationSupported() {
               {/* Paso 2 */}
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center">
+                  <div className="bg-playOrange/20 w-16 h-16 rounded-full flex items-center justify-center">
                     <span className="text-2xl">🤖</span>
                   </div>
                 </div>
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    <span className="bg-purple-600 text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
+                    <span className="bg-playOrange text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       2
                     </span>
                     Validación automática
@@ -209,13 +209,13 @@ export default function DocumentationSupported() {
               {/* Paso 3 */}
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center">
+                  <div className="bg-playGreen/20 w-16 h-16 rounded-full flex items-center justify-center">
                     <span className="text-2xl">📊</span>
                   </div>
                 </div>
                 <div className="ml-6">
                   <h3 className="text-xl font-bold text-gray-900 mb-3">
-                    <span className="bg-green-600 text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
+                    <span className="bg-playGreen text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       3
                     </span>
                     Resultados ejecutables
@@ -263,7 +263,7 @@ export default function DocumentationSupported() {
 
             {/* CTA */}
             <div className="mt-12 text-center">
-              <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center mx-auto">
+              <button className="bg-gradient-to-r from-playBlueDark to-playBlueLight hover:from-playBlueDark/90 hover:to-playBlueLight/90 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center mx-auto">
                 Ver demostración en vivo
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -279,7 +279,7 @@ export default function DocumentationSupported() {
                 </svg>
               </button>
               <p className="mt-4 text-gray-600">
-                <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm mr-2">
+                <span className="bg-playBlueLight/20 text-playBlueDark px-3 py-1 rounded-full text-sm mr-2">
                   🆕
                 </span>
                 Procesamiento en tiempo real con precisión del 99.2%

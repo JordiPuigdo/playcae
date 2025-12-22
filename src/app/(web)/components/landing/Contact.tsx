@@ -12,15 +12,15 @@ const ContactSection: React.FC = () => {
     >
       {/* Fondo degradado y blobs decorativos */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-sky-50 to-cyan-50"
+        className="absolute inset-0 bg-gradient-to-br from-playGrey to-white"
         aria-hidden="true"
       />
       <div
-        className="absolute top-20 left-10 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl"
+        className="absolute top-20 left-10 h-72 w-72 rounded-full bg-playBlueLight/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-20 -right-10 h-80 w-80 rounded-full bg-cyan-200/40 blur-3xl"
+        className="absolute -bottom-20 -right-10 h-80 w-80 rounded-full bg-playOrange/15 blur-3xl"
         aria-hidden="true"
       />
 
@@ -67,7 +67,7 @@ const ContactSection: React.FC = () => {
                 id="name"
                 name="name"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-500/30"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-playBlueLight focus:ring focus:ring-playBlueLight/30"
               />
             </div>
             <div>
@@ -82,7 +82,7 @@ const ContactSection: React.FC = () => {
                 id="email"
                 name="email"
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-500/30"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-playBlueLight focus:ring focus:ring-playBlueLight/30"
               />
             </div>
             <div>
@@ -97,12 +97,12 @@ const ContactSection: React.FC = () => {
                 name="message"
                 rows={4}
                 required
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-500/30"
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-playBlueLight focus:ring focus:ring-playBlueLight/30"
               ></textarea>
             </div>
             <button
               type="submit"
-              className="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/50"
+              className="w-full rounded-full bg-gradient-to-r from-playOrange to-playOrange/80 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-playOrange/90 hover:to-playOrange/70 focus:outline-none focus-visible:ring focus-visible:ring-playOrange/50"
             >
               Enviar mensaje
             </button>
@@ -120,7 +120,7 @@ const ContactSection: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-playBlueLight/20 text-playBlueDark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -139,7 +139,7 @@ const ContactSection: React.FC = () => {
                 <span className="text-gray-700">soporte@playcae.ai</span>
               </div>
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 text-cyan-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-playOrange/20 text-playOrange">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"

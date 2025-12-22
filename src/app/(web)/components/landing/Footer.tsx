@@ -48,7 +48,7 @@ function Particles({ count = 15 }: { count?: number }) {
       {particles.map((p, i) => (
         <div
           key={i}
-          className="absolute rounded-full bg-cyan-400/20"
+          className="absolute rounded-full bg-playBlueLight/20"
           style={{
             top: p.top,
             left: p.left,
@@ -68,13 +68,13 @@ export default function Footer() {
 
   return (
     <footer
-      className="relative overflow-hidden bg-gradient-to-br from-blue-900 to-cyan-800 py-24 text-white"
+      className="relative overflow-hidden bg-gradient-to-br from-playBlueDark to-playBlueLight py-24 text-white"
       aria-labelledby="footer-title"
     >
       {/* Fondos decorativos */}
       <div className="absolute inset-0 opacity-10" aria-hidden="true">
         <div className="absolute top-20 left-10 h-64 w-64 rounded-full bg-white" />
-        <div className="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-cyan-500" />
+        <div className="absolute bottom-10 right-10 h-80 w-80 rounded-full bg-playOrange" />
       </div>
 
       <div className="container relative z-10 mx-auto px-4">
@@ -86,12 +86,12 @@ export default function Footer() {
               className="mb-6 text-4xl font-bold leading-tight md:text-5xl"
             >
               Transforma tu gestión PRL: <br />
-              <span className="text-cyan-300">Menos Riesgo, Más Control</span>
+              <span className="text-playOrange">Menos Riesgo, Más Control</span>
             </h2>
 
-            <p className="mb-8 max-w-xl text-xl text-blue-100">
+            <p className="mb-8 max-w-xl text-xl text-playGrey">
               Obtén el sello{" "}
-              <span className="rounded-md bg-blue-700 px-2 py-1 text-cyan-300">
+              <span className="rounded-md bg-playBlueLight px-2 py-1 text-white">
                 #Cumplimiento100%
               </span>{" "}
               verificable para inspecciones de Trabajo
@@ -105,7 +105,7 @@ export default function Footer() {
             >
               <Link
                 href="/signup"
-                className="flex items-center justify-center rounded-full bg-white px-8 py-4 font-bold text-blue-900 shadow-lg transition-transform hover:scale-105 hover:shadow-xl"
+                className="flex items-center justify-center rounded-full bg-playOrange px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl hover:bg-playOrange/90"
                 aria-label="Crear cuenta gratis en PlayCAE"
               >
                 Prueba Gratis 30 Días
@@ -126,7 +126,7 @@ export default function Footer() {
 
               <Link
                 href="/contacto"
-                className="flex items-center justify-center rounded-full border-2 border-cyan-400 bg-transparent px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-cyan-500/20"
+                className="flex items-center justify-center rounded-full border-2 border-playOrange bg-transparent px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-playOrange/20"
                 aria-label="Solicitar demo personalizada de PlayCAE"
               >
                 Solicitar Demo Personalizada
@@ -176,13 +176,13 @@ export default function Footer() {
           {/* Columna derecha: sello (sin cambios visuales) */}
           <div className="flex w-full justify-center lg:w-1/2">
             <div className="relative" aria-hidden="true">
-              <div className="flex h-64 w-64 items-center justify-center rounded-full border-8 border-cyan-400 animate-pulse-slow">
-                <div className="flex h-56 w-56 items-center justify-center rounded-full border-4 border-cyan-300">
+              <div className="flex h-64 w-64 items-center justify-center rounded-full border-8 border-playOrange animate-pulse-slow">
+                <div className="flex h-56 w-56 items-center justify-center rounded-full border-4 border-playOrange/60">
                   <div className="text-center">
                     <div className="animate-bounce-slow">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        className="mx-auto h-20 w-20 text-cyan-300"
+                        className="mx-auto h-20 w-20 text-playOrange"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -194,7 +194,7 @@ export default function Footer() {
                       </svg>
                     </div>
                     <div className="mt-4">
-                      <span className="block text-xl font-bold text-cyan-300">
+                      <span className="block text-xl font-bold text-playOrange">
                         VALIDADO
                       </span>
                       <span className="text-sm text-white">
@@ -206,8 +206,8 @@ export default function Footer() {
               </div>
 
               {/* Decorativos */}
-              <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-cyan-500 opacity-20 animate-ping-slow" />
-              <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-blue-500 opacity-30 animate-ping-slower" />
+              <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-playOrange opacity-20 animate-ping-slow" />
+              <div className="absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-playBlueLight opacity-30 animate-ping-slower" />
             </div>
           </div>
         </div>
@@ -219,10 +219,10 @@ export default function Footer() {
           aria-label="Enlaces del sitio"
         >
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-cyan-200">
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
               Producto
             </h3>
-            <ul className="space-y-2 text-blue-100">
+            <ul className="space-y-2 text-playGrey">
               <li>
                 <Link
                   href="/servicios/gestion-documentacion-cae"
@@ -248,10 +248,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-cyan-200">
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
               Compañía
             </h3>
-            <ul className="space-y-2 text-blue-100">
+            <ul className="space-y-2 text-playGrey">
               <li>
                 <Link href="/contacto" className="hover:underline">
                   Contacto
@@ -271,8 +271,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-cyan-200">Legal</h3>
-            <ul className="space-y-2 text-blue-100">
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
+              Legal
+            </h3>
+            <ul className="space-y-2 text-playGrey">
               <li>
                 <Link href="/legal/aviso-legal" className="hover:underline">
                   Aviso legal
@@ -292,10 +294,10 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="mb-4 text-lg font-semibold text-cyan-2 00">
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
               Síguenos
             </h3>
-            <ul className="space-y-2 text-blue-100">
+            <ul className="space-y-2 text-playGrey">
               <li>
                 <a
                   href="https://www.linkedin.com/company/playcae"
@@ -312,11 +314,8 @@ export default function Footer() {
         </div>
 
         {/* Línea inferior */}
-        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-blue-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p>
-            © {year} PlayCAE — Kölder Refrigeració SLU. Todos los derechos
-            reservados.
-          </p>
+        <div className="mt-12 border-t border-white/10 pt-6 text-sm text-playGrey flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {year} PlayCAE. Todos los derechos reservados.</p>
           <p className="opacity-90">
             Operamos en España · Cumplimiento LSSI y RGPD ·{" "}
             <Link href="/sitemap.xml" className="underline">

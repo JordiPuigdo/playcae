@@ -12,16 +12,17 @@ const Hero = () => {
       aria-labelledby="hero-title"
       style={{
         backgroundImage:
-          "radial-gradient(1200px 500px at 10% 0%, rgba(59,130,246,.08), transparent 60%), radial-gradient(1200px 500px at 100% 100%, rgba(34,211,238,.10), transparent 60%)",
+          "radial-gradient(1400px 700px at 5% 0%, rgba(21,52,84,.35), transparent 45%), radial-gradient(1400px 700px at 95% 100%, rgba(239,121,50,.30), transparent 45%)",
       }}
     >
       {/* Background */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-sky-50 to-cyan-50"
+        className="absolute inset-0 bg-gradient-to-br from-playBlueDark/15 via-playGrey to-playOrange/15"
         aria-hidden="true"
       />
-      <div className="pointer-events-none absolute top-24 -left-16 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-10 -right-10 h-80 w-80 rounded-full bg-cyan-200/40 blur-3xl" />
+      <div className="pointer-events-none absolute -top-10 -left-32 h-[30rem] w-[30rem] rounded-full bg-playBlueDark/40 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-32 -right-32 h-[35rem] w-[35rem] rounded-full bg-playOrange/50 blur-3xl" />
+      <div className="pointer-events-none absolute top-1/3 right-1/4 h-80 w-80 rounded-full bg-playBlueLight/30 blur-3xl" />
 
       {/* Content */}
       <motion.div

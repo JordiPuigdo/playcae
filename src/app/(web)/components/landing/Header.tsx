@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Shield, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,41 +19,44 @@ export default function Header() {
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center space-x-2 transition-transform hover:scale-[1.02]"
+          className="flex items-center transition-transform hover:scale-[1.02]"
           aria-label="Ir al inicio"
         >
-          <Shield className="h-8 w-8 text-blue-700" />
-          <h1 className="text-2xl font-bold text-gray-900">
-            Play<span className="text-cyan-600">CAE</span>
-          </h1>
+          <Image
+            src="/assets/playcae.png"
+            alt="Logo Play CAE"
+            width={120}
+            height={40}
+            className="select-none"
+          />
         </Link>
 
         {/* Desktop nav */}
         <nav className="hidden md:flex items-center space-x-6">
           <Link
             href="/"
-            className="text-gray-700 font-medium transition-colors hover:text-blue-700"
+            className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
             Inicio
           </Link>
 
           <Link
             href="/servicios"
-            className="text-gray-700 font-medium transition-colors hover:text-blue-700"
+            className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
             Producto
           </Link>
 
           <Link
             href="/blog"
-            className="text-gray-700 font-medium transition-colors hover:text-blue-700"
+            className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
             Blog
           </Link>
 
           <Link
             href="/contacto"
-            className="text-gray-700 font-medium transition-colors hover:text-blue-700"
+            className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
             Contacto
           </Link>
@@ -60,7 +64,7 @@ export default function Header() {
           {/* CTA principal */}
           <Link
             href="/contacto"
-            className="rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-2 font-semibold text-white shadow-md transition-transform hover:scale-[1.03] hover:from-blue-700 hover:to-cyan-700"
+            className="rounded-full bg-gradient-to-r from-playOrange to-playOrange/80 px-6 py-2 font-semibold text-white shadow-md transition-transform hover:scale-[1.03] hover:from-playOrange/90 hover:to-playOrange/70"
           >
             Agenda una demo
           </Link>
@@ -68,7 +72,7 @@ export default function Header() {
           {/* Login */}
           <button
             onClick={handleLogin}
-            className="rounded-full border border-cyan-500 px-5 py-2 font-semibold text-cyan-700 transition-colors hover:bg-cyan-50"
+            className="rounded-full border border-playBlueDark px-5 py-2 font-semibold text-playBlueDark transition-colors hover:bg-playBlueLight/10"
           >
             Login
           </button>
@@ -97,7 +101,7 @@ export default function Header() {
           >
             <Link
               href="/"
-              className="font-semibold text-lg text-gray-900 hover:text-blue-700 transition-colors"
+              className="font-semibold text-lg text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               Inicio
@@ -105,7 +109,7 @@ export default function Header() {
 
             <Link
               href="/servicios"
-              className="font-semibold text-lg text-gray-900 hover:text-blue-700 transition-colors"
+              className="font-semibold text-lg text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               Producto
@@ -113,7 +117,7 @@ export default function Header() {
 
             <Link
               href="/blog"
-              className="font-semibold text-lg text-gray-900 hover:text-blue-700 transition-colors"
+              className="font-semibold text-lg text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               Blog
@@ -121,7 +125,7 @@ export default function Header() {
 
             <Link
               href="/contacto"
-              className="font-semibold text-lg text-gray-900 hover:text-blue-700 transition-colors"
+              className="font-semibold text-lg text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               Contacto
@@ -130,14 +134,14 @@ export default function Header() {
             <Link
               href="/contacto"
               onClick={() => setMenuOpen(false)}
-              className="w-[70%] ml-auto rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg hover:from-blue-700 hover:to-cyan-700 transition-colors text-center"
+              className="w-[70%] ml-auto rounded-full bg-gradient-to-r from-playOrange to-playOrange/80 px-6 py-3 font-semibold text-white shadow-lg hover:from-playOrange/90 hover:to-playOrange/70 transition-colors text-center"
             >
               Agenda una demo
             </Link>
 
             <button
               onClick={handleLogin}
-              className="self-end font-semibold text-lg text-gray-900 hover:text-blue-700 transition-colors"
+              className="self-end font-semibold text-lg text-gray-900 hover:text-playBlueDark transition-colors"
             >
               Login
             </button>

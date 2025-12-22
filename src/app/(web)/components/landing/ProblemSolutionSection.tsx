@@ -167,18 +167,18 @@ export default function ProblemSolutionSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: "easeOut" }}
         >
-          <div className="relative bg-gradient-to-br from-blue-50 to-cyan-50 p-8 pt-16 md:pt-8 rounded-2xl border border-blue-100 shadow-sm">
+          <div className="relative bg-gradient-to-br from-playGrey to-playBlueLight/10 p-8 pt-16 md:pt-8 rounded-2xl border border-playBlueLight/30 shadow-sm">
             <div className="absolute top-6 right-6">
-              <div className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-bold">
+              <div className="bg-playGreen text-white px-4 py-1 rounded-full text-sm font-bold">
                 SOLUCIÓN
               </div>
             </div>
 
             <div className="flex items-center mb-6">
-              <div className="bg-blue-100 p-3 rounded-full mr-4">
+              <div className="bg-playBlueLight/20 p-3 rounded-full mr-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  className="h-8 w-8 text-blue-600"
+                  className="h-8 w-8 text-playBlueDark"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -191,13 +191,13 @@ export default function ProblemSolutionSection() {
                   />
                 </svg>
               </div>
-              <h4 className="text-2xl font-bold text-blue-800">
+              <h4 className="text-2xl font-bold text-playBlueDark">
                 Nuestra solución inteligente
               </h4>
             </div>
             <div className="space-y-4 mb-8">
               <div className="flex">
-                <div className="flex-shrink-0 mt-1 text-blue-600">
+                <div className="flex-shrink-0 mt-1 text-playBlueDark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -226,7 +226,7 @@ export default function ProblemSolutionSection() {
               </div>
 
               <div className="flex">
-                <div className="flex-shrink-0 mt-1 text-blue-600">
+                <div className="flex-shrink-0 mt-1 text-playBlueDark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -255,7 +255,7 @@ export default function ProblemSolutionSection() {
               </div>
 
               <div className="flex">
-                <div className="flex-shrink-0 mt-1 text-blue-600">
+                <div className="flex-shrink-0 mt-1 text-playBlueDark">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-6 w-6"
@@ -281,7 +281,7 @@ export default function ProblemSolutionSection() {
               </div>
             </div>
 
-            <div className="bg-blue-500 text-white p-4 rounded-lg mt-6">
+            <div className="bg-playGreen text-white p-4 rounded-lg mt-6">
               <div className="flex items-center">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -307,7 +307,7 @@ export default function ProblemSolutionSection() {
 
           <div className="mt-8 text-center">
             <button
-              className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
+              className="bg-gradient-to-r from-playOrange to-playOrange/80 hover:from-playOrange/90 hover:to-playOrange/70 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
               onClick={() => window.open("/register", "_blank")}
             >
               Probar validación gratuita
