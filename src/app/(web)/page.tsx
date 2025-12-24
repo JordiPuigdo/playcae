@@ -55,6 +55,11 @@ export default function LandingPage() {
     name: "PlayCAE",
     url: "https://www.playcae.com",
     logo: "https://www.playcae.com/og-logo.png",
+    sameAs: [
+      "https://www.facebook.com/profile.php?id=61585276397164",
+      "https://www.instagram.com/playcae",
+      "https://www.linkedin.com/company/playcae",
+    ],
     contactPoint: [
       {
         "@type": "ContactPoint",

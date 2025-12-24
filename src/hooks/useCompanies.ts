@@ -1,6 +1,12 @@
 import { useMemo } from "react";
 import useSWR, { mutate as globalMutate } from "swr";
-import { Company, CompanyFormData, CompanyStatus } from "@/types/company";
+import {
+  Company,
+  CompanyFormData,
+  CompanySimple,
+  CompanyStatus,
+  CreateSubcontractorData,
+} from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
 import { ApiError, ApiResponse } from "@/interfaces/api-response";
@@ -52,6 +58,7 @@ export const useCompanies = () => {
         status: CompanyStatus.Pending,
         userId: user!.userId!,
         workerStatus: 0,
+        isSubcontractor: false,
       };
 
       const response = await companyService.create(newCompany);
@@ -125,15 +132,66 @@ export const useCompanies = () => {
     refreshCompanies();
   };
 
-  /*const getCompaniesByUserId = async (userId: string) => {
+  // ============ SUBCONTRATAS ============
+
+  /**
+   * Obtiene las subcontratas directas de una empresa
+   */
+  const getSubcontractors = async (
+    companyId: string
+  ): Promise<CompanySimple[]> => {
     try {
-      const response = await companyService.getByUserId(userId);
+      const response = await companyService.getSubcontractors(companyId);
       return response.data;
     } catch (err) {
       handleError(err);
       return [];
     }
-  };*/
+  };
+
+  /**
+   * Obtiene todas las subcontratas de forma recursiva (multinivel)
+   */
+  const getAllSubcontractorsRecursive = async (
+    companyId: string
+  ): Promise<CompanySimple[]> => {
+    try {
+      const response = await companyService.getAllSubcontractorsRecursive(
+        companyId
+      );
+      return response.data;
+    } catch (err) {
+      handleError(err);
+      return [];
+    }
+  };
+
+  /**
+   * Crea una subcontrata para una empresa
+   */
+  const createSubcontractor = async (
+    parentCompanyId: string,
+    data: CompanyFormData
+  ): Promise<Company> => {
+    try {
+      const subcontractorData: CreateSubcontractorData = {
+        ...data,
+        userCompanyId: user!.companyId || companies[0]?.id || "",
+      };
+
+      const response = await companyService.createSubcontractor(
+        parentCompanyId,
+        subcontractorData
+      );
+
+      // Refresca la lista de empresas
+      await refreshCompanies();
+
+      return response.data;
+    } catch (err) {
+      throw handleError(err);
+    }
+  };
 
   return {
     companies,
@@ -147,6 +205,10 @@ export const useCompanies = () => {
     refreshCompanies,
     deleteCompany,
     activateCompany,
+    // Subcontratas
+    getSubcontractors,
+    getAllSubcontractorsRecursive,
+    createSubcontractor,
   };
 };
 

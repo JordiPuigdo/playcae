@@ -1,5 +1,10 @@
 import { ApiResponse } from "@/interfaces/api-response";
-import { Company, CompanyStatus } from "@/types/company";
+import {
+  Company,
+  CompanySimple,
+  CompanyStatus,
+  CreateSubcontractorData,
+} from "@/types/company";
 import { HttpClient } from "./http-client";
 
 export interface ICompanyService {
@@ -10,8 +15,16 @@ export interface ICompanyService {
   delete(id: string): Promise<ApiResponse<void>>;
   updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
   activate(id: string): Promise<ApiResponse<void>>;
-
   getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
+  // Subcontratas
+  getSubcontractors(companyId: string): Promise<ApiResponse<CompanySimple[]>>;
+  getAllSubcontractorsRecursive(
+    companyId: string
+  ): Promise<ApiResponse<CompanySimple[]>>;
+  createSubcontractor(
+    parentCompanyId: string,
+    data: CreateSubcontractorData
+  ): Promise<ApiResponse<Company>>;
 }
 
 export class CompanyService implements ICompanyService {
@@ -56,5 +69,42 @@ export class CompanyService implements ICompanyService {
 
   async getByUserId(userId: string): Promise<ApiResponse<Company[]>> {
     return this.httpClient.get<Company[]>(`${this.baseUrl}/user/${userId}`);
+  }
+
+  // ============ SUBCONTRATAS ============
+
+  /**
+   * Obtiene las subcontratas directas de una empresa
+   */
+  async getSubcontractors(
+    companyId: string
+  ): Promise<ApiResponse<CompanySimple[]>> {
+    return this.httpClient.get<CompanySimple[]>(
+      `${this.baseUrl}/${companyId}/subcontractors`
+    );
+  }
+
+  /**
+   * Obtiene todas las subcontratas de forma recursiva (multinivel)
+   */
+  async getAllSubcontractorsRecursive(
+    companyId: string
+  ): Promise<ApiResponse<CompanySimple[]>> {
+    return this.httpClient.get<CompanySimple[]>(
+      `${this.baseUrl}/${companyId}/subcontractors/all`
+    );
+  }
+
+  /**
+   * Crea una subcontrata para una empresa
+   */
+  async createSubcontractor(
+    parentCompanyId: string,
+    data: CreateSubcontractorData
+  ): Promise<ApiResponse<Company>> {
+    return this.httpClient.post<Company>(
+      `${this.baseUrl}/${parentCompanyId}/subcontractors`,
+      data
+    );
   }
 }

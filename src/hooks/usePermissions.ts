@@ -9,8 +9,19 @@ export const usePermissions = () => {
 
     if (user.role === UserRole.Admin) return true;
 
-    const subcontractorPermissions = ["/dashboard/company/1"];
-    return subcontractorPermissions.includes(section);
+    // Permisos para rol Company (subcontratistas)
+    if (user.role === UserRole.Company) {
+      const companyPermissions = [
+        "/dashboard",
+        `/dashboard/companies/${user.companyId}`, // Su propia empresa
+        "/dashboard/subcontractors",
+      ];
+      return companyPermissions.some(
+        (p) => section === p || section.startsWith(p + "/")
+      );
+    }
+
+    return false;
   };
 
   return { role: user?.role, hasAccess };

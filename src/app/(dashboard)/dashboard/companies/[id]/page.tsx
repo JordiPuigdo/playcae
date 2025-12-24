@@ -1,12 +1,20 @@
 "use client";
 
 import { CompanyDetailHeader } from "@/components/CompanyDetailHeader";
+import { CompanyForm } from "@/components/CompanyForm";
 import { CompanyObservations } from "@/components/CompanyObservations";
+import { CompanyTree } from "@/components/CompanyTree";
 import { DocumentsTable } from "@/components/DocumentTable";
 import { EditableCompanyInfo } from "@/components/EditableCompanyInfo";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 import { WorkerFilters } from "@/components/WorkersFilter";
 import { WorkersTable } from "@/components/WorkersTable";
@@ -15,7 +23,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
-import { Company, CompanyFormData } from "@/types/company";
+import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import {
   DocumentFormData,
   EntityStatus,
@@ -23,13 +31,19 @@ import {
 } from "@/types/document";
 import { UserRole } from "@/types/user";
 import { WorkerFormData, WorkerStatus } from "@/types/worker";
-import { FileText, MessageSquare, Users } from "lucide-react";
-import { useParams } from "next/navigation";
+import { FileText, MessageSquare, Users, Network, Plus } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { getCompanyById, updateCompany } = useCompanies();
+  const router = useRouter();
+  const {
+    getCompanyById,
+    updateCompany,
+    getSubcontractors,
+    createSubcontractor,
+  } = useCompanies();
   const {
     createWorker,
     updateWorker,
@@ -51,7 +65,9 @@ const CompanyDetailPage = () => {
     refreshDocuments,
   } = useDocuments(id || "");
   const [company, setCompany] = useState<Company | null>(null);
+  const [subcontractors, setSubcontractors] = useState<CompanySimple[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSubcontractorFormOpen, setIsSubcontractorFormOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuthStore();
 
@@ -72,6 +88,15 @@ const CompanyDetailPage = () => {
     }
     await getWorkersByCompanyId(id);
     setCompany(response);
+
+    // Cargar subcontratas
+    if (response.subcontractors) {
+      setSubcontractors(response.subcontractors);
+    } else {
+      const subs = await getSubcontractors(id);
+      setSubcontractors(subs);
+    }
+
     setTimeout(() => {
       setIsLoading(false);
     }, 500);
@@ -193,7 +218,12 @@ const CompanyDetailPage = () => {
   if (company)
     return (
       <div>
-        <CompanyDetailHeader companyName={company?.name || ""} />
+        <CompanyDetailHeader
+          companyName={company?.name || ""}
+          isSubcontractor={company?.isSubcontractor || false}
+          parentCompanyId={company?.parentCompanyId}
+          parentCompanyName={company?.parentCompanyName}
+        />
 
         {isLoading && <Loader text="Cargando información..." />}
 
@@ -207,13 +237,14 @@ const CompanyDetailPage = () => {
 
         <div className="container mx-auto px-4 py-8 space-y-8">
           <Tabs defaultValue="workers" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3 bg-playGrey border border-playBlueLight">
+            <TabsList className="grid w-full grid-cols-4 bg-playGrey border border-playBlueLight">
               <TabsTrigger
                 value="workers"
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <Users className="h-4 w-4" />
-                Documentos Trabajadores ({workers.length})
+                <span className="hidden sm:inline">Trabajadores</span> (
+                {workers.length})
               </TabsTrigger>
 
               <TabsTrigger
@@ -221,7 +252,16 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <FileText className="h-4 w-4" />
-                Documentos Empresa
+                <span className="hidden sm:inline">Documentos</span>
+              </TabsTrigger>
+
+              <TabsTrigger
+                value="subcontractors"
+                className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playOrange data-[state=active]:text-white"
+              >
+                <Network className="h-4 w-4" />
+                <span className="hidden sm:inline">Subcontratas</span> (
+                {subcontractors.length})
               </TabsTrigger>
 
               <TabsTrigger
@@ -229,7 +269,7 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <MessageSquare className="h-4 w-4" />
-                Observaciones
+                <span className="hidden sm:inline">Observaciones</span>
               </TabsTrigger>
             </TabsList>
 
@@ -294,6 +334,93 @@ const CompanyDetailPage = () => {
               />
             </TabsContent>
 
+            <TabsContent value="subcontractors" className="space-y-6">
+              {/* Header con botón añadir */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold text-playBlueDark">
+                    Subcontratas de {company.name}
+                  </h3>
+                  <p className="text-sm text-playBlueLight">
+                    Empresas que trabajan como subcontratas de este proveedor
+                  </p>
+                </div>
+                <Button
+                  onClick={() => setIsSubcontractorFormOpen(true)}
+                  className="flex items-center gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
+                >
+                  <Plus className="h-4 w-4" />
+                  Añadir subcontrata
+                </Button>
+              </div>
+
+              {/* Lista de subcontratas */}
+              {subcontractors.length === 0 ? (
+                <Card className="bg-white border-dashed border-2 border-playBlueLight/30">
+                  <CardContent className="p-12 text-center">
+                    <div className="w-16 h-16 bg-playOrange/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                      <Network className="h-8 w-8 text-playOrange" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-playBlueDark mb-2">
+                      Sin subcontratas
+                    </h3>
+                    <p className="text-playBlueLight mb-6 max-w-md mx-auto">
+                      Esta empresa no tiene subcontratas registradas. Añade una
+                      subcontrata para gestionar su documentación CAE.
+                    </p>
+                    <Button
+                      onClick={() => setIsSubcontractorFormOpen(true)}
+                      className="bg-playOrange hover:bg-playOrange/90 text-white"
+                    >
+                      <Plus className="h-4 w-4 mr-2" />
+                      Añadir primera subcontrata
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-3">
+                  {subcontractors.map((sub) => (
+                    <div
+                      key={sub.id}
+                      className="flex items-center justify-between p-4 bg-white rounded-xl border border-playBlueLight/20 hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() =>
+                        router.push(`/dashboard/companies/${sub.id}`)
+                      }
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-playOrange/10 rounded-xl flex items-center justify-center">
+                          <Network className="h-5 w-5 text-playOrange" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-playBlueDark">
+                            {sub.name}
+                          </h4>
+                          <p className="text-sm text-playBlueLight">
+                            {sub.taxId} • {sub.email}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs px-2 py-1 rounded-full bg-playOrange/10 text-playOrange font-medium">
+                          Subcontrata
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/dashboard/companies/${sub.id}`);
+                          }}
+                        >
+                          Ver detalle →
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
+
             <TabsContent value="observations" className="space-y-6">
               <CompanyObservations
                 observations={observations}
@@ -303,6 +430,53 @@ const CompanyDetailPage = () => {
             </TabsContent>
           </Tabs>
         </div>
+
+        {/* Modal para añadir subcontrata */}
+        <Dialog
+          open={isSubcontractorFormOpen}
+          onOpenChange={setIsSubcontractorFormOpen}
+        >
+          <DialogContent className="max-w-2xl bg-white border border-playBlueLight/30">
+            <DialogHeader>
+              <DialogTitle className="text-brand-primary flex items-center gap-2">
+                <Network className="h-5 w-5 text-playOrange" />
+                Nueva subcontrata de {company.name}
+              </DialogTitle>
+              <p className="text-sm text-playBlueLight mt-1">
+                Esta empresa será una subcontrata que trabaja para{" "}
+                {company.name}
+              </p>
+            </DialogHeader>
+
+            <CompanyForm
+              isOpen={isSubcontractorFormOpen}
+              onClose={() => setIsSubcontractorFormOpen(false)}
+              onSubmit={async (data) => {
+                try {
+                  setIsLoading(true);
+                  await createSubcontractor(id, data);
+                  toast({
+                    title: "Subcontrata creada",
+                    description: `${data.name} ha sido añadida como subcontrata.`,
+                  });
+                  // Refrescar subcontratas
+                  const subs = await getSubcontractors(id);
+                  setSubcontractors(subs);
+                  setIsSubcontractorFormOpen(false);
+                } catch (error) {
+                  toast({
+                    title: "Error",
+                    description: "No se pudo crear la subcontrata.",
+                    variant: "destructive",
+                  });
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              mode="create"
+            />
+          </DialogContent>
+        </Dialog>
       </div>
     );
 };

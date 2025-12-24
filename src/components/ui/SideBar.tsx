@@ -1,19 +1,34 @@
 import { usePermissions } from "@/hooks/usePermissions";
+import { useAuthStore } from "@/hooks/useAuthStore";
+import { UserRole } from "@/types/user";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-
-const links = [
-  { href: "/dashboard", label: "Panel de control" },
-  { href: "/dashboard/companies", label: "Empresas" },
-  { href: "/access-control", label: "Control de Acceso" },
-  /*{ href: "/dashboard/audit", label: "Auditoría" },
-  { href: "/dashboard/settings", label: "Configuración" },*/
-];
+import { LayoutDashboard, Building2, Network, Building } from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const { hasAccess } = usePermissions();
+  const { hasAccess, role } = usePermissions();
+  const { user } = useAuthStore();
+
+  // Links para Admin
+  const adminLinks = [
+    { href: "/dashboard", label: "Panel de control", icon: LayoutDashboard },
+    { href: "/dashboard/companies", label: "Empresas", icon: Building2 },
+    { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+  ];
+
+  // Links para Company
+  const companyLinks = [
+    {
+      href: `/dashboard/companies/${user?.companyId}`,
+      label: "Empresa",
+      icon: Building,
+    },
+    { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+  ];
+
+  const links = role === UserRole.Admin ? adminLinks : companyLinks;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -32,8 +47,8 @@ export default function Sidebar() {
         className="mb-8 select-none pt-4"
       />
 
-      <nav className="flex flex-col space-y-3 flex-grow">
-        {links.map(({ href, label }) => {
+      <nav className="flex flex-col space-y-2 flex-grow">
+        {links.map(({ href, label, icon: Icon }) => {
           const active = isActive(href);
           if (!hasAccess(href)) return null;
 
@@ -41,13 +56,14 @@ export default function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`block px-4 py-2 rounded-md font-medium transition-colors
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
             ${
               active
-                ? "bg-playOrange text-white"
+                ? "bg-playOrange text-white shadow-lg"
                 : "hover:bg-playBlueLight hover:text-white text-playGrey"
             }`}
             >
+              <Icon className="h-5 w-5" />
               {label}
             </Link>
           );
