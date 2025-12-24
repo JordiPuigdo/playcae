@@ -136,7 +136,7 @@ const ContactSection: React.FC = () => {
                     />
                   </svg>
                 </div>
-                <span className="text-gray-700">soporte@playcae.ai</span>
+                <span className="text-gray-700">soporte@playcae.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-playOrange/20 text-playOrange">

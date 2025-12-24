@@ -29,7 +29,7 @@ export default function ContactoPage() {
       {
         "@type": "ContactPoint",
         contactType: "sales",
-        email: "soporte@playcae.ai",
+        email: "soporte@playcae.com",
         telephone: "+34 600 123 456",
         areaServed: "ES",
         availableLanguage: ["es"],
@@ -143,10 +143,10 @@ export default function ContactoPage() {
                   </svg>
                 </div>
                 <a
-                  href="mailto:soporte@playcae.ai"
+                  href="mailto:soporte@playcae.com"
                   className="text-gray-700 hover:underline"
                 >
-                  soporte@playcae.ai
+                  soporte@playcae.com
                 </a>
               </div>
               <div className="flex items-center gap-3">

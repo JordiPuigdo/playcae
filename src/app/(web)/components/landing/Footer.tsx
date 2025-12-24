@@ -258,8 +258,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="mailto:soporte@playcae.ai" className="hover:underline">
-                  soporte@playcae.ai
+                <a
+                  href="mailto:soporte@playcae.com"
+                  className="hover:underline"
+                >
+                  soporte@playcae.com
                 </a>
               </li>
               <li>

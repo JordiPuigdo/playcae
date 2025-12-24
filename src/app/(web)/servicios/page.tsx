@@ -78,17 +78,14 @@ export default function ServiciosIndexPage() {
   return (
     <main className="relative overflow-hidden">
       {/* Fondo suave acorde a tu estilo */}
-      <div
-        className="absolute inset-0 bg-gradient-to-br from-sky-50 to-cyan-50"
-        aria-hidden="true"
-      />
+      <div className="absolute inset-0 bg-playGrey" aria-hidden="true" />
       <div className="container relative z-10 mx-auto px-4 py-24">
         {/* Cabecera */}
         <header className="mb-12 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+          <h1 className="text-4xl md:text-5xl font-bold text-playBlueDark">
             Servicios de PlayCAE
           </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="mt-4 text-lg text-playBlueLight max-w-2xl mx-auto">
             Automatiza la CAE y el PRL con Inteligencia Artificial y conecta el
             control de accesos en planta.
           </p>
@@ -99,13 +96,13 @@ export default function ServiciosIndexPage() {
           {services.map((s) => (
             <article
               key={s.slug}
-              className="rounded-2xl border border-gray-200 bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow"
+              className="rounded-2xl border border-playBlueLight/20 bg-white p-8 shadow-xl hover:shadow-2xl transition-shadow"
             >
-              <h2 className="text-2xl font-semibold text-gray-900">
+              <h2 className="text-2xl font-semibold text-playBlueDark">
                 {s.title}
               </h2>
-              <p className="mt-3 text-gray-600">{s.excerpt}</p>
-              <ul className="mt-4 list-disc pl-5 text-gray-700 space-y-1">
+              <p className="mt-3 text-playBlueLight">{s.excerpt}</p>
+              <ul className="mt-4 list-disc pl-5 text-playBlueDark/80 space-y-1">
                 {s.bullets.map((b) => (
                   <li key={b}>{b}</li>
                 ))}
@@ -114,14 +111,14 @@ export default function ServiciosIndexPage() {
               <div className="mt-6 flex gap-3">
                 <Link
                   href={`/servicios/${s.slug}`}
-                  className="rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-2 font-semibold text-white shadow-md hover:from-blue-700 hover:to-cyan-700"
+                  className="rounded-full bg-playOrange px-6 py-2 font-semibold text-white shadow-md hover:bg-playOrange/90 transition-colors"
                   aria-label={`Ver detalle de ${s.title}`}
                 >
                   Ver servicio
                 </Link>
                 <Link
                   href="/contacto"
-                  className="rounded-full border border-cyan-500 px-6 py-2 font-semibold text-cyan-700 hover:bg-cyan-50"
+                  className="rounded-full border border-playBlueDark px-6 py-2 font-semibold text-playBlueDark hover:bg-playBlueDark/5 transition-colors"
                 >
                   Agenda una demo
                 </Link>
@@ -132,12 +129,12 @@ export default function ServiciosIndexPage() {
 
         {/* CTA inferior */}
         <div className="mt-16 text-center">
-          <p className="text-gray-700">
+          <p className="text-playBlueDark">
             ¿No estás seguro de por dónde empezar?
           </p>
           <Link
             href="/contacto"
-            className="mt-4 inline-block rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-3 font-semibold text-white shadow-md hover:from-blue-700 hover:to-cyan-700"
+            className="mt-4 inline-block rounded-full bg-playOrange px-8 py-3 font-semibold text-white shadow-md hover:bg-playOrange/90 transition-colors"
           >
             Habla con nosotros
           </Link>
