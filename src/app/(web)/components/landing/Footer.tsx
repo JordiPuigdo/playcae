@@ -240,6 +240,37 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/precios" className="hover:underline">
+                  Precios
+                </Link>
+              </li>
+              <li>
+                <Link href="/servicios" className="hover:underline">
+                  Todos los servicios
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
+              Recursos
+            </h3>
+            <ul className="space-y-2 text-playGrey">
+              <li>
+                <Link href="/que-es-cae" className="hover:underline">
+                  ¿Qué es la CAE?
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/alternativas-software-cae"
+                  className="hover:underline"
+                >
+                  Alternativas CAE
+                </Link>
+              </li>
+              <li>
                 <Link href="/blog" className="hover:underline">
                   Blog
                 </Link>
@@ -293,25 +324,6 @@ export default function Footer() {
                   Política de cookies
                 </Link>
               </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-playOrange">
-              Síguenos
-            </h3>
-            <ul className="space-y-2 text-playGrey">
-              <li>
-                <a
-                  href="https://www.linkedin.com/company/playcae"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:underline"
-                >
-                  LinkedIn
-                </a>
-              </li>
-              {/* Añade otras redes si aplica */}
             </ul>
           </div>
         </div>

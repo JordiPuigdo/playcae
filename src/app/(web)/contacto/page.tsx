@@ -72,58 +72,61 @@ export default function ContactoPage() {
     >
       {/* Fondo degradado y blobs decorativos */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-sky-50 to-cyan-50"
+        className="absolute inset-0 bg-gradient-to-br from-playGrey to-playBlueLight/10"
         aria-hidden="true"
       />
       <div
-        className="absolute top-20 left-10 h-72 w-72 rounded-full bg-blue-200/30 blur-3xl"
+        className="absolute top-20 left-10 h-72 w-72 rounded-full bg-playBlueDark/10 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="absolute -bottom-20 -right-10 h-80 w-80 rounded-full bg-cyan-200/40 blur-3xl"
+        className="absolute -bottom-20 -right-10 h-80 w-80 rounded-full bg-playOrange/10 blur-3xl"
         aria-hidden="true"
       />
 
       <div className="container relative z-10 mx-auto px-4">
         {/* Breadcrumbs */}
         <nav aria-label="breadcrumbs" className="mb-6 text-sm">
-          <Link href="/" className="text-brandSecondary hover:underline">
+          <Link
+            href="/"
+            className="text-playBlueLight hover:underline hover:text-playOrange"
+          >
             Inicio
           </Link>
-          <span className="mx-2 text-brandNeutralDark">/</span>
-          <span className="text-brandNeutralDark">Contacto</span>
+          <span className="mx-2 text-playBlueLight">/</span>
+          <span className="text-playBlueDark">Contacto</span>
         </nav>
 
         {/* Cabecera */}
         <div className="mx-auto mb-16 max-w-2xl text-center">
           <h1
             id="contact-title"
-            className="text-4xl font-bold text-gray-900 md:text-5xl"
+            className="text-4xl font-bold text-playBlueDark md:text-5xl"
           >
             Agenda una demo
           </h1>
-          <p className="mt-4 text-lg text-gray-600">
+          <p className="mt-4 text-lg text-playBlueLight">
             Cuéntanos tu caso sobre CAE y PRL. Te responderemos en menos de 24
             horas 🚀
           </p>
         </div>
 
         {/* Grid principal: Form (client) + Info */}
-        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 rounded-2xl border border-gray-200 bg-white p-8 shadow-xl md:grid-cols-2">
+        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 rounded-2xl border border-playBlueLight/20 bg-white p-8 shadow-xl md:grid-cols-2">
           <ContactForm /> {/* ← componente cliente con acción de servidor */}
           <div className="flex flex-col justify-center space-y-8">
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-playBlueDark">
                 Información de contacto
               </h2>
-              <p className="mt-2 text-gray-600">
+              <p className="mt-2 text-playBlueLight">
                 También puedes escribirnos directamente o llamarnos:
               </p>
             </div>
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-blue-600"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-playOrange/10 text-playOrange"
                   aria-hidden="true"
                 >
                   {/* icono mail */}
@@ -144,14 +147,14 @@ export default function ContactoPage() {
                 </div>
                 <a
                   href="mailto:soporte@playcae.com"
-                  className="text-gray-700 hover:underline"
+                  className="text-playBlueDark hover:underline hover:text-playOrange"
                 >
                   soporte@playcae.com
                 </a>
               </div>
               <div className="flex items-center gap-3">
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 text-cyan-600"
+                  className="flex h-10 w-10 items-center justify-center rounded-full bg-playBlueDark/10 text-playBlueDark"
                   aria-hidden="true"
                 >
                   {/* icono phone */}
@@ -172,13 +175,13 @@ export default function ContactoPage() {
                 </div>
                 <a
                   href="tel:+34600123456"
-                  className="text-gray-700 hover:underline"
+                  className="text-playBlueDark hover:underline hover:text-playOrange"
                 >
                   +34 600 123 456
                 </a>
               </div>
             </div>
-            <p className="text-gray-600">
+            <p className="text-playBlueLight">
               Responderemos en menos de 24 horas 🚀
             </p>
           </div>
