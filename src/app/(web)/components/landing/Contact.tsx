@@ -35,13 +35,13 @@ const ContactSection: React.FC = () => {
         >
           <h2
             id="contact-title"
-            className="text-4xl font-bold text-gray-900 md:text-5xl"
+            className="text-4xl font-bold text-playBlueDark md:text-5xl"
           >
-            ¿Hablamos?
+            Solicita una demo del software CAE
           </h2>
-          <p className="mt-4 text-lg text-gray-600">
-            Agenda una demo personalizada o escríbenos para resolver tus dudas.
-            Nuestro equipo te acompañará en todo el proceso.
+          <p className="mt-4 text-lg text-playBlueLight">
+            Descubre cómo automatizar la coordinación de actividades
+            empresariales y la gestión documental PRL en tu empresa.
           </p>
         </motion.div>
 

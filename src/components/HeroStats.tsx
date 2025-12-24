@@ -3,9 +3,9 @@
 import { motion } from "framer-motion";
 
 const STATS = [
-  { value: "99.2%", label: "Precisión en validaciones" },
-  { value: "90%", label: "Ahorro de tiempo" },
-  { value: "0", label: "Sanciones por PRL" },
+  { value: "99.2%", label: "Precisión validación IA" },
+  { value: "90%", label: "Ahorro de tiempo en CAE" },
+  { value: "0", label: "Sanciones por incumplimiento" },
 ];
 
 const HeroStats = () => {
@@ -20,11 +20,11 @@ const HeroStats = () => {
     >
       {STATS.map((s, i) => (
         <li key={i} className="flex items-center">
-          <span className="mr-3 rounded-lg bg-blue-100 p-2">
+          <span className="mr-3 rounded-lg bg-playOrange/20 p-2">
             <svg
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6 text-blue-600"
+              className="h-6 w-6 text-playOrange"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -38,10 +38,10 @@ const HeroStats = () => {
             </svg>
           </span>
           <span>
-            <span className="block text-xl font-bold text-gray-900">
+            <span className="block text-xl font-bold text-playBlueDark">
               {s.value}
             </span>
-            <span className="block text-sm text-gray-600">{s.label}</span>
+            <span className="block text-sm text-playBlueLight">{s.label}</span>
           </span>
         </li>
       ))}

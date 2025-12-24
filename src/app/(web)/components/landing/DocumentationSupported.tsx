@@ -19,12 +19,12 @@ export default function DocumentationSupported() {
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Automatiza la validación PRL en 3 pasos
+          <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4">
+            Validación documental PRL automatizada en 3 pasos
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Transforma semanas de trabajo manual en minutos con nuestro agente
-            IA especializado en normativa PRL y CAE
+          <p className="text-lg text-playBlueLight max-w-3xl mx-auto">
+            Transforma semanas de gestión CAE manual en minutos con nuestro
+            software de coordinación de actividades empresariales
           </p>
         </motion.div>
 
