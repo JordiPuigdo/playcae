@@ -6,24 +6,6 @@ const nextConfig = {
     domains: ["example.com", "images.unsplash.com"],
   },
 
-  // Redireccionamientos 301: www → non-www (canónico)
-  async redirects() {
-    return [
-      // Redirige www.playcae.com → playcae.com
-      {
-        source: "/:path*",
-        has: [
-          {
-            type: "host",
-            value: "www.playcae.com",
-          },
-        ],
-        destination: "https://playcae.com/:path*",
-        permanent: true, // 301
-      },
-    ];
-  },
-
   // Headers de seguridad y SEO
   async headers() {
     return [
