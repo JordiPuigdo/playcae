@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import { Search, X } from "lucide-react";
 import { Company, CompanyStatus } from "@/types/company";
@@ -48,10 +48,31 @@ export const CompanyFilters = ({
     initialFilters?.workerStatus || "Todos"
   );
 
+  // Debounce para el campo de búsqueda
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleSearchChange = (value: string) => {
     setSearch(value);
-    onFilter({ search: value, status, activeFilter, workerStatus });
+
+    // Cancelar el timeout anterior
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Esperar 300ms antes de actualizar la URL
+    debounceRef.current = setTimeout(() => {
+      onFilter({ search: value, status, activeFilter, workerStatus });
+    }, 300);
   };
+
+  // Limpiar timeout al desmontar
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
 
   const handleStatusChange = (value: Company["status"] | "Todos") => {
     setStatus(value);

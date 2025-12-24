@@ -280,13 +280,9 @@ const CompaniesContent = () => {
 
 // Componente principal con Suspense boundary para useSearchParams
 const CompaniesManagement = () => {
-  const searchParams = useSearchParams();
-  // Usar los searchParams como key para forzar re-render al volver atrás
-  const filterKey = searchParams.toString();
-
   return (
     <Suspense fallback={<Loader text="Cargando..." />}>
-      <CompaniesContent key={filterKey} />
+      <CompaniesContent />
     </Suspense>
   );
 };
