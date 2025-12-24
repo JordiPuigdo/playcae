@@ -30,7 +30,7 @@ export default function ContactoPage() {
         "@type": "ContactPoint",
         contactType: "sales",
         email: "soporte@playcae.com",
-        telephone: "+34 600 123 456",
+        telephone: "+34 628 735 826",
         areaServed: "ES",
         availableLanguage: ["es"],
       },
@@ -177,7 +177,7 @@ export default function ContactoPage() {
                   href="tel:+34600123456"
                   className="text-playBlueDark hover:underline hover:text-playOrange"
                 >
-                  +34 600 123 456
+                  +34 628 735 826
                 </a>
               </div>
             </div>

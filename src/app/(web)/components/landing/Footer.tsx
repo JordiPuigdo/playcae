@@ -298,7 +298,7 @@ export default function Footer() {
               </li>
               <li>
                 <a href="tel:+34600123456" className="hover:underline">
-                  +34 600 123 456
+                  +34 628 735 826
                 </a>
               </li>
             </ul>
