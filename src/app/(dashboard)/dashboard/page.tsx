@@ -5,8 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useWorkers } from "@/hooks/useWorkers";
-import { CompanyStatus } from "@/types/company";
-import { EntityStatus } from "@/types/document";
+import { Company, CompanySimple, CompanyStatus } from "@/types/company";
 import { WorkerStatus } from "@/types/worker";
 
 import {
@@ -15,56 +14,68 @@ import {
   CheckCircle,
   Clock,
   Users,
+  Building2,
+  Network,
 } from "lucide-react";
+import { useMemo } from "react";
 
 export default function DashboardPage() {
-  /*const { 
-    workers, 
-    userRole, 
-    filteredWorkers, 
-    createWorker, 
-    updateWorker, 
-    deleteWorker,
-    uploadWorkerDocument, 
-    validateWorkerDocument 
-  } = useWorkers(companyId);
-
-    const getStatusStats = () => {
-    const stats = {
-      total: workers.length,
-      apto: workers.filter(w => w.status === 'Apto').length,
-      pendiente: workers.filter(w => w.status === 'Pendiente').length,
-      noApto: workers.filter(w => w.status === 'No apto').length
-    };
-    return stats;
-  };
-
-  const stats = getStats();*/
   const { companies } = useCompanies();
-  const total = companies.length;
-  const totalPending = companies.filter(
-    (c) => c.status === CompanyStatus.Pending
-  ).length;
-  const totalApto = companies.filter(
-    (c) =>
-      c.status === CompanyStatus.Approved &&
-      c.workerStatus === WorkerStatus.Approved
-  ).length;
-  const totalNoApto = companies.filter(
-    (c) =>
-      c.status === CompanyStatus.Rejected ||
-      (c.status === CompanyStatus.Approved &&
-        c.workerStatus !== WorkerStatus.Approved)
-  ).length;
   const { workers } = useWorkers(undefined);
+
+  // Aplanar empresas + subcontratas en una sola lista
+  const allCompanies = useMemo(() => {
+    const all: (Company | CompanySimple)[] = [];
+    companies.forEach((company) => {
+      all.push(company);
+      if (company.subcontractors) {
+        all.push(...company.subcontractors);
+      }
+    });
+    return all;
+  }, [companies]);
+
+  // Estadísticas
+  const stats = useMemo(() => {
+    const mainCompanies = companies.length;
+    const subcontractors = allCompanies.length - mainCompanies;
+    const total = allCompanies.length;
+
+    const pending = allCompanies.filter(
+      (c) => c.status === CompanyStatus.Pending
+    ).length;
+
+    const approved = allCompanies.filter(
+      (c) =>
+        c.status === CompanyStatus.Approved &&
+        c.workerStatus === WorkerStatus.Approved
+    ).length;
+
+    const rejected = allCompanies.filter(
+      (c) =>
+        c.status === CompanyStatus.Rejected ||
+        (c.status === CompanyStatus.Approved &&
+          c.workerStatus !== WorkerStatus.Approved)
+    ).length;
+
+    return {
+      total,
+      mainCompanies,
+      subcontractors,
+      pending,
+      approved,
+      rejected,
+    };
+  }, [companies, allCompanies]);
 
   const totalNoAptoWorkers = workers.filter(
     (w) => w.status === WorkerStatus.Rejected
   ).length;
+
   const noAptoWorkers = workers
     .filter((w) => w.status === WorkerStatus.Rejected)
     .map((w) => {
-      const company = companies.find((c) => c.id === w.companyId);
+      const company = allCompanies.find((c) => c.id === w.companyId);
       return {
         ...w,
         companyName: company?.name || "",
@@ -89,6 +100,7 @@ export default function DashboardPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* KPIs principales */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -99,9 +111,20 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brand-primary">
-                {companies.length}
+                {stats.total}
               </div>
-              <p className="text-xs text-playBlueLight">Empresas registradas</p>
+              <div className="flex items-center gap-3 text-xs text-playBlueLight">
+                <span className="flex items-center gap-1">
+                  <Building2 className="h-3 w-3" />
+                  {stats.mainCompanies} principales
+                </span>
+                {stats.subcontractors > 0 && (
+                  <span className="flex items-center gap-1">
+                    <Network className="h-3 w-3 text-playOrange" />
+                    {stats.subcontractors} subcontratas
+                  </span>
+                )}
+              </div>
             </CardContent>
           </Card>
 
@@ -114,11 +137,13 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-playGreen">
-                {totalApto}
+                {stats.approved}
               </div>
               <p className="text-xs text-playBlueLight">
-                {total > 0 ? Math.round((totalApto / total) * 100) : 0}% del
-                total
+                {stats.total > 0
+                  ? Math.round((stats.approved / stats.total) * 100)
+                  : 0}
+                % del total
               </p>
             </CardContent>
           </Card>
@@ -132,7 +157,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-playYellow">
-                {totalPending}
+                {stats.pending}
               </div>
               <p className="text-xs text-playBlueLight">Requieren revisión</p>
             </CardContent>
@@ -147,7 +172,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-brand-secondary">
-                {totalNoApto}
+                {stats.rejected}
               </div>
               <p className="text-xs text-playBlueLight">Acceso denegado</p>
             </CardContent>

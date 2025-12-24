@@ -3,8 +3,8 @@
 import { CompanyDetailHeader } from "@/components/CompanyDetailHeader";
 import { CompanyForm } from "@/components/CompanyForm";
 import { CompanyObservations } from "@/components/CompanyObservations";
-import { CompanyTree } from "@/components/CompanyTree";
 import { DocumentsTable } from "@/components/DocumentTable";
+import { SubcontractorsList } from "@/components/SubcontractorsList";
 import { EditableCompanyInfo } from "@/components/EditableCompanyInfo";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
@@ -43,6 +43,7 @@ const CompanyDetailPage = () => {
     updateCompany,
     getSubcontractors,
     createSubcontractor,
+    toggleCompanyActive,
   } = useCompanies();
   const {
     createWorker,
@@ -123,6 +124,18 @@ const CompanyDetailPage = () => {
     await updateCompany(id, data);
     await fetchCompany(id);
     setIsLoading(false);
+  };
+
+  const handleToggleActive = async (companyId: string, activate: boolean) => {
+    setIsLoading(true);
+    try {
+      await toggleCompanyActive(companyId, activate);
+      await fetchCompany(id);
+    } catch (error) {
+      // El error ya se maneja en EditableCompanyInfo con toast
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCreateWorker = async (data: WorkerFormData) => {
@@ -231,6 +244,7 @@ const CompanyDetailPage = () => {
           <EditableCompanyInfo
             company={company}
             onUpdate={handleUpdateCompany}
+            onToggleActive={handleToggleActive}
             userRole={UserRole.Admin}
           />
         </div>
@@ -335,90 +349,11 @@ const CompanyDetailPage = () => {
             </TabsContent>
 
             <TabsContent value="subcontractors" className="space-y-6">
-              {/* Header con botón añadir */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold text-playBlueDark">
-                    Subcontratas de {company.name}
-                  </h3>
-                  <p className="text-sm text-playBlueLight">
-                    Empresas que trabajan como subcontratas de este proveedor
-                  </p>
-                </div>
-                <Button
-                  onClick={() => setIsSubcontractorFormOpen(true)}
-                  className="flex items-center gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
-                >
-                  <Plus className="h-4 w-4" />
-                  Añadir subcontrata
-                </Button>
-              </div>
-
-              {/* Lista de subcontratas */}
-              {subcontractors.length === 0 ? (
-                <Card className="bg-white border-dashed border-2 border-playBlueLight/30">
-                  <CardContent className="p-12 text-center">
-                    <div className="w-16 h-16 bg-playOrange/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                      <Network className="h-8 w-8 text-playOrange" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-playBlueDark mb-2">
-                      Sin subcontratas
-                    </h3>
-                    <p className="text-playBlueLight mb-6 max-w-md mx-auto">
-                      Esta empresa no tiene subcontratas registradas. Añade una
-                      subcontrata para gestionar su documentación CAE.
-                    </p>
-                    <Button
-                      onClick={() => setIsSubcontractorFormOpen(true)}
-                      className="bg-playOrange hover:bg-playOrange/90 text-white"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Añadir primera subcontrata
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {subcontractors.map((sub) => (
-                    <div
-                      key={sub.id}
-                      className="flex items-center justify-between p-4 bg-white rounded-xl border border-playBlueLight/20 hover:shadow-md transition-shadow cursor-pointer"
-                      onClick={() =>
-                        router.push(`/dashboard/companies/${sub.id}`)
-                      }
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 bg-playOrange/10 rounded-xl flex items-center justify-center">
-                          <Network className="h-5 w-5 text-playOrange" />
-                        </div>
-                        <div>
-                          <h4 className="font-semibold text-playBlueDark">
-                            {sub.name}
-                          </h4>
-                          <p className="text-sm text-playBlueLight">
-                            {sub.taxId} • {sub.email}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs px-2 py-1 rounded-full bg-playOrange/10 text-playOrange font-medium">
-                          Subcontrata
-                        </span>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/dashboard/companies/${sub.id}`);
-                          }}
-                        >
-                          Ver detalle →
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
+              <SubcontractorsList
+                subcontractors={subcontractors}
+                parentCompanyName={company.name}
+                onAddSubcontractor={() => setIsSubcontractorFormOpen(true)}
+              />
             </TabsContent>
 
             <TabsContent value="observations" className="space-y-6">

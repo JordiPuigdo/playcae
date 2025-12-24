@@ -2,7 +2,7 @@
 
 import { CompanyFilters } from "@/components/CompanyFilters";
 import { CompanyForm } from "@/components/CompanyForm";
-import { CompanyTree } from "@/components/CompanyTree";
+import { CompanyTable } from "@/components/CompanyTable";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { DialogHeader } from "@/components/ui/Dialog";
@@ -10,98 +10,180 @@ import { toast } from "@/hooks/use-Toast";
 
 import { useCompanies } from "@/hooks/useCompanies";
 import { Company, CompanyFormData, CompanySimple } from "@/types/company";
+import { WorkerStatus } from "@/types/worker";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Building2, Plus, Network, LayoutGrid, List } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Building2, Plus } from "lucide-react";
+import { Suspense, useCallback, useEffect, useState } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-const CompaniesManagement = () => {
+// Componente interno que usa useSearchParams
+const CompaniesContent = () => {
   const {
+    companies,
     createCompany,
     updateCompany,
-    filteredCompanies,
     deleteCompany,
     activateCompany,
-    getSubcontractors,
-    createSubcontractor,
   } = useCompanies();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<Company["status"] | "Todos">(
-    "Todos"
-  );
+
+  // URL Query Params para persistir filtros
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Leer filtros desde URL (source of truth)
+  const searchTerm = searchParams.get("search") || "";
+  const statusParam = searchParams.get("status");
+  const statusFilter: Company["status"] | "Todos" = statusParam
+    ? (Number(statusParam) as Company["status"])
+    : "Todos";
+  const activeParam = searchParams.get("active");
+  const activeFilter: "Activas" | "Inactivas" | "Todas" = activeParam
+    ? (activeParam as "Activas" | "Inactivas")
+    : "Todas";
+  const workerStatusParam = searchParams.get("workerStatus");
+  const workerStatusFilter: WorkerStatus | "Todos" = workerStatusParam
+    ? (Number(workerStatusParam) as WorkerStatus)
+    : "Todos";
+
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [editingCompany, setEditingCompany] = useState<
-    Company | CompanySimple | null
-  >(null);
-  const [parentCompanyForSubcontractor, setParentCompanyForSubcontractor] =
-    useState<Company | CompanySimple | null>(null);
+  const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const filteredResults = filteredCompanies(searchTerm, statusFilter);
+
+  // Función para actualizar URL con nuevos filtros
+  const updateFiltersInUrl = useCallback(
+    (filters: {
+      search: string;
+      status: Company["status"] | "Todos";
+      activeFilter: "Activas" | "Inactivas" | "Todas";
+      workerStatus: WorkerStatus | "Todos";
+    }) => {
+      const params = new URLSearchParams();
+
+      // Solo añadir params que no sean el valor por defecto
+      if (filters.search) params.set("search", filters.search);
+      if (filters.status !== "Todos")
+        params.set("status", String(filters.status));
+      if (filters.activeFilter !== "Todas")
+        params.set("active", filters.activeFilter);
+      if (filters.workerStatus !== "Todos")
+        params.set("workerStatus", String(filters.workerStatus));
+
+      const queryString = params.toString();
+      router.push(`${pathname}${queryString ? `?${queryString}` : ""}`, {
+        scroll: false,
+      });
+    },
+    [router, pathname]
+  );
+
+  // Verificar si hay filtros activos (además del estado por defecto)
+  const hasActiveFilters =
+    searchTerm !== "" ||
+    statusFilter !== "Todos" ||
+    activeFilter !== "Todas" ||
+    workerStatusFilter !== "Todos";
+
+  // Función para verificar si una empresa/subcontrata cumple los filtros
+  const matchesFilters = (company: Company | CompanySimple): boolean => {
+    // Filtro de búsqueda
+    if (searchTerm !== "") {
+      const matchesSearch =
+        company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        company.taxId?.toLowerCase().includes(searchTerm.toLowerCase());
+      if (!matchesSearch) return false;
+    }
+
+    // Filtro estado de validación
+    if (statusFilter !== "Todos" && company.status !== statusFilter) {
+      return false;
+    }
+
+    // Filtro activas/inactivas
+    if (activeFilter === "Activas" && company.active === false) return false;
+    if (activeFilter === "Inactivas" && company.active !== false) return false;
+
+    // Filtro estado trabajadores
+    if (
+      workerStatusFilter !== "Todos" &&
+      company.workerStatus !== workerStatusFilter
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  // Calcular resultados filtrados
+  const filteredResults = (() => {
+    if (!hasActiveFilters) {
+      // Sin filtros: mostrar estructura jerárquica normal (empresas con subcontratas anidadas)
+      return companies;
+    }
+
+    // Con filtros: cada empresa/subcontrata es independiente
+    // Aplanar la lista y filtrar individualmente
+    const flatList: Company[] = [];
+
+    companies.forEach((company) => {
+      // Si la empresa principal cumple los filtros, agregarla (sin subcontratas)
+      if (matchesFilters(company)) {
+        flatList.push({
+          ...company,
+          subcontractors: [], // No mostrar subcontratas anidadas cuando hay filtros
+        });
+      }
+
+      // Cada subcontrata que cumpla los filtros se agrega como fila independiente
+      company.subcontractors?.forEach((sub) => {
+        if (matchesFilters(sub)) {
+          // Convertir CompanySimple a Company para la tabla
+          flatList.push({
+            ...sub,
+            subcontractors: [],
+            documents: [],
+          } as Company);
+        }
+      });
+    });
+
+    return flatList;
+  })();
+
   const [error, setError] = useState<string | null>(null);
 
-  const handleDeleteCompany = async (company: Company | CompanySimple) => {
-    if (!company.id) return;
-    deleteCompany(company.id);
-    toast({
-      title: "Empresa eliminada",
-      description: `${company.name} ha sido eliminada correctamente.`,
-    });
+  const handleDeleteCompany = async (companyId: string) => {
+    deleteCompany(companyId);
   };
 
-  const handleFilter = (filters: {
-    search: string;
-    status: Company["status"] | "Todos";
-  }) => {
-    setSearchTerm(filters.search);
-    setStatusFilter(filters.status);
-  };
-
-  const handleEdit = (company: Company | CompanySimple) => {
+  const handleFilter = useCallback(
+    (filters: {
+      search: string;
+      status: Company["status"] | "Todos";
+      activeFilter: "Activas" | "Inactivas" | "Todas";
+      workerStatus: WorkerStatus | "Todos";
+    }) => {
+      updateFiltersInUrl(filters);
+    },
+    [updateFiltersInUrl]
+  );
+  const handleEdit = (company: Company) => {
     setEditingCompany(company);
-    setParentCompanyForSubcontractor(null);
-    setIsFormOpen(true);
-  };
-
-  const handleAddSubcontractor = (parentCompany: Company | CompanySimple) => {
-    setParentCompanyForSubcontractor(parentCompany);
-    setEditingCompany(null);
     setIsFormOpen(true);
   };
 
   const handleFormSubmit = async (data: CompanyFormData) => {
     try {
       setIsLoading(true);
-
       if (editingCompany && editingCompany.id) {
-        // Editar empresa existente
-        await updateCompany(editingCompany.id, data);
-        toast({
-          title: "Empresa actualizada",
-          description: `${data.name} ha sido actualizada correctamente.`,
-        });
-      } else if (
-        parentCompanyForSubcontractor &&
-        parentCompanyForSubcontractor.id
-      ) {
-        // Crear subcontrata
-        await createSubcontractor(parentCompanyForSubcontractor.id, data);
-        toast({
-          title: "Subcontrata creada",
-          description: `${data.name} ha sido añadida como subcontrata de ${parentCompanyForSubcontractor.name}.`,
-        });
+        updateCompany(editingCompany.id, data);
       } else {
-        // Crear empresa nueva
         await createCompany(data);
-        toast({
-          title: "Empresa creada",
-          description: `${data.name} ha sido creada correctamente.`,
-        });
       }
-
       setIsFormOpen(false);
       setEditingCompany(null);
-      setParentCompanyForSubcontractor(null);
     } catch (error) {
-      setError("Error al procesar la operación");
+      setError("Error creando empresa");
       setTimeout(() => {
         setError(null);
       }, 5000);
@@ -113,60 +195,33 @@ const CompaniesManagement = () => {
   useEffect(() => {
     if (error != null) {
       toast({
-        title: "Error",
+        title: "Error al crear empresa",
         description: error,
         variant: "destructive",
       });
     }
-  }, [error]);
+  }, [error, toast]);
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
     setEditingCompany(null);
-    setParentCompanyForSubcontractor(null);
-  };
-
-  // Determinar el título del modal
-  const getFormTitle = () => {
-    if (editingCompany) return "Editar Empresa";
-    if (parentCompanyForSubcontractor)
-      return `Nueva Subcontrata de ${parentCompanyForSubcontractor.name}`;
-    return "Nueva Empresa";
   };
 
   return (
     <div>
       <div className="border-b bg-playGrey">
-        {isLoading && (
-          <Loader
-            text={
-              parentCompanyForSubcontractor
-                ? "Creando subcontrata..."
-                : "Procesando..."
-            }
-          />
-        )}
+        {isLoading && <Loader text="Creando empresa..." />}
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="h-6 w-px bg-playBlueLight" />
             <div className="flex w-full justify-between items-center">
-              <div>
-                <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
-                  <Building2 className="h-7 w-7 text-brand-primary" />
-                  Gestión de Empresas
-                </h1>
-                <p className="text-sm text-playBlueLight mt-1 flex items-center gap-2">
-                  <Network className="h-4 w-4" />
-                  Gestiona proveedores y subcontratas multinivel
-                </p>
-              </div>
+              <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
+                <Building2 className="h-7 w-7 text-brand-primary" />
+                Gestión de Empresas
+              </h1>
               <Button
-                onClick={() => {
-                  setParentCompanyForSubcontractor(null);
-                  setEditingCompany(null);
-                  setIsFormOpen(true);
-                }}
-                className="flex items-center gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
+                onClick={() => setIsFormOpen(true)}
+                className="flex items-center bg-playOrange hover:bg-playOrange/90 text-white"
                 variant={"submit"}
               >
                 <Plus className="h-4 w-4" />
@@ -179,48 +234,60 @@ const CompaniesManagement = () => {
 
       <div className="container mx-auto px-4 py-8 space-y-6">
         <div className="flex justify-between items-center">
-          <div className="flex-1 bg-white border border-playBlueLight/20 rounded-xl">
-            <CompanyFilters onFilter={handleFilter} />
+          <div className="flex-1 bg-white border border-playBlueLight/20">
+            <CompanyFilters
+              initialFilters={{
+                search: searchTerm,
+                status: statusFilter,
+                activeFilter,
+                workerStatus: workerStatusFilter,
+              }}
+              onFilter={handleFilter}
+            />
           </div>
         </div>
 
-        {/* Árbol de empresas con subcontratas */}
-        <CompanyTree
+        <CompanyTable
           companies={filteredResults}
           onEdit={handleEdit}
-          onDelete={handleDeleteCompany}
-          onAddSubcontractor={handleAddSubcontractor}
-          getSubcontractors={getSubcontractors}
+          onDeleteCompany={handleDeleteCompany}
+          onActivateCompany={(id) => {
+            activateCompany(id);
+          }}
         />
 
         <Dialog open={isFormOpen} onOpenChange={handleCloseForm}>
           <DialogContent className="max-w-2xl bg-white border border-playBlueLight/30">
             <DialogHeader>
-              <DialogTitle className="text-brand-primary flex items-center gap-2">
-                {parentCompanyForSubcontractor && (
-                  <Network className="h-5 w-5 text-playOrange" />
-                )}
-                {getFormTitle()}
+              <DialogTitle className="text-brand-primary">
+                {editingCompany ? "Editar Empresa" : "Nueva Empresa"}
               </DialogTitle>
-              {parentCompanyForSubcontractor && (
-                <p className="text-sm text-playBlueLight mt-1">
-                  Esta empresa será una subcontrata que trabaja para{" "}
-                  {parentCompanyForSubcontractor.name}
-                </p>
-              )}
             </DialogHeader>
 
             <CompanyForm
               isOpen={isFormOpen}
               onClose={handleCloseForm}
               onSubmit={handleFormSubmit}
-              company={(editingCompany as Company) || undefined}
+              company={editingCompany || undefined}
               mode={editingCompany ? "edit" : "create"}
             />
           </DialogContent>
         </Dialog>
       </div>
     </div>
+  );
+};
+
+// Componente principal con Suspense boundary para useSearchParams
+const CompaniesManagement = () => {
+  const searchParams = useSearchParams();
+  // Usar los searchParams como key para forzar re-render al volver atrás
+  const filterKey = searchParams.toString();
+
+  return (
+    <Suspense fallback={<Loader text="Cargando..." />}>
+      <CompaniesContent key={filterKey} />
+    </Suspense>
   );
 };
 

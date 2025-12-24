@@ -10,6 +10,7 @@ export interface CompanySimple extends BaseEntity {
   email: string;
   phone?: string;
   status: CompanyStatus;
+  active: boolean;
   userId: string;
   workerStatus: WorkerStatus;
   // Jerarquía de subcontratación

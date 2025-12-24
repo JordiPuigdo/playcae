@@ -15,6 +15,7 @@ export interface ICompanyService {
   delete(id: string): Promise<ApiResponse<void>>;
   updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
   activate(id: string): Promise<ApiResponse<void>>;
+  deactivate(id: string): Promise<ApiResponse<void>>;
   getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
   // Subcontratas
   getSubcontractors(companyId: string): Promise<ApiResponse<CompanySimple[]>>;
@@ -65,6 +66,10 @@ export class CompanyService implements ICompanyService {
 
   async activate(id: string): Promise<ApiResponse<void>> {
     return this.httpClient.put(`${this.baseUrl}/${id}/activate`, null);
+  }
+
+  async deactivate(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.delete(`${this.baseUrl}/${id}`);
   }
 
   async getByUserId(userId: string): Promise<ApiResponse<Company[]>> {

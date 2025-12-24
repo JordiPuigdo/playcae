@@ -248,28 +248,24 @@ export const WorkersTable = ({
                   workers.map((worker) => (
                     <React.Fragment key={worker.id}>
                       <TableRow
-                        className={`hover:bg-playGrey/50 ${
+                        className={`hover:bg-playOrange/5 cursor-pointer transition-colors group ${
                           !worker.active ? "opacity-60" : ""
                         }`}
+                        onClick={() => toggleRow(worker.id!)}
                       >
                         <TableCell>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => toggleRow(worker.id!)}
-                            className="text-brand-primary"
-                          >
-                            <ChevronDown
-                              className={`h-4 w-4 transition-transform ${
-                                expandedRows.has(worker.id!) ? "rotate-180" : ""
-                              }`}
-                            />
-                          </Button>
+                          <ChevronDown
+                            className={`h-4 w-4 transition-transform text-playBlueLight ${
+                              expandedRows.has(worker.id!) ? "rotate-180" : ""
+                            }`}
+                          />
                         </TableCell>
 
                         <TableCell className="font-medium text-brand-primary">
                           <div className="flex items-center gap-2">
-                            {worker.firstName} {worker.lastName}
+                            <span className="group-hover:text-playOrange transition-colors">
+                              {worker.firstName} {worker.lastName}
+                            </span>
                             {!worker.active && (
                               <Badge
                                 variant="secondary"
@@ -297,7 +293,7 @@ export const WorkersTable = ({
                           <WorkerStatusBadge status={worker.status} />
                         </TableCell>
 
-                        <TableCell>
+                        <TableCell onClick={(e) => e.stopPropagation()}>
                           <div className="flex gap-2">
                             {canEdit && worker.active && (
                               <Button

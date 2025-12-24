@@ -58,18 +58,12 @@ export const CompanyDetailHeader = ({
         <div className="flex items-center gap-4">
           <Button
             variant="ghost"
-            onClick={() => {
-              if (isSubcontractor && parentCompanyId) {
-                router.push(`/dashboard/companies/${parentCompanyId}`);
-              } else {
-                router.push("/dashboard/companies");
-              }
-            }}
+            onClick={() => router.back()}
             className="gap-2"
             visible={isAdmin}
           >
             <ArrowLeft className="h-4 w-4" />
-            {isSubcontractor ? "Volver a empresa" : "Volver"}
+            Volver
           </Button>
           <div className="h-6 w-px bg-border" />
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">

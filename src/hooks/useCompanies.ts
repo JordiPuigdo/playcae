@@ -29,8 +29,8 @@ export const useCompanies = () => {
       return response.data;
     },
     {
-      revalidateOnFocus: true,
-      revalidateOnReconnect: true,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
       shouldRetryOnError: true,
       errorRetryInterval: 5000,
     }
@@ -132,6 +132,19 @@ export const useCompanies = () => {
     refreshCompanies();
   };
 
+  const deactivateCompany = async (id: string) => {
+    await companyService.deactivate(id);
+    refreshCompanies();
+  };
+
+  const toggleCompanyActive = async (id: string, activate: boolean) => {
+    if (activate) {
+      await activateCompany(id);
+    } else {
+      await deactivateCompany(id);
+    }
+  };
+
   // ============ SUBCONTRATAS ============
 
   /**
@@ -205,6 +218,8 @@ export const useCompanies = () => {
     refreshCompanies,
     deleteCompany,
     activateCompany,
+    deactivateCompany,
+    toggleCompanyActive,
     // Subcontratas
     getSubcontractors,
     getAllSubcontractorsRecursive,
