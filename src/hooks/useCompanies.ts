@@ -59,6 +59,7 @@ export const useCompanies = () => {
         userId: user!.userId!,
         workerStatus: 0,
         isSubcontractor: false,
+        active: true,
       };
 
       const response = await companyService.create(newCompany);
