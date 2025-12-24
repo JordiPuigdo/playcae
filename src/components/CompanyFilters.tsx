@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { Search, X } from "lucide-react";
 import { Company, CompanyStatus } from "@/types/company";
@@ -47,19 +47,6 @@ export const CompanyFilters = ({
   const [workerStatus, setWorkerStatus] = useState<WorkerStatus | "Todos">(
     initialFilters?.workerStatus || "Todos"
   );
-
-  // Sincronizar estado interno con initialFilters (para navegación atrás)
-  useEffect(() => {
-    setSearch(initialFilters?.search || "");
-    setStatus(initialFilters?.status || "Todos");
-    setActiveFilter(initialFilters?.activeFilter || "Todas");
-    setWorkerStatus(initialFilters?.workerStatus || "Todos");
-  }, [
-    initialFilters?.search,
-    initialFilters?.status,
-    initialFilters?.activeFilter,
-    initialFilters?.workerStatus,
-  ]);
 
   const handleSearchChange = (value: string) => {
     setSearch(value);
