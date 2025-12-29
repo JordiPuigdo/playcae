@@ -15,6 +15,7 @@ interface PasswordInputProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
+  autoComplete?: string;
 }
 
 export function PasswordInput({
@@ -26,6 +27,7 @@ export function PasswordInput({
   placeholder = "Escriba su contraseña",
   required = false,
   className,
+  autoComplete,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,6 +43,7 @@ export function PasswordInput({
           value={value}
           onChange={onChange}
           required={required}
+          autoComplete={autoComplete}
           className={className + " pr-10"}
         />
         <Button

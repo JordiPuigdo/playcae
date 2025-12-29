@@ -25,23 +25,11 @@ export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login, user, errorAuth } = useAuthStore();
 
   useAuthSession();
-
-  // Cargar credenciales guardadas
-  useEffect(() => {
-    const savedEmail = localStorage.getItem("rememberedEmail");
-    const savedPassword = localStorage.getItem("rememberedPassword");
-    if (savedEmail && savedPassword) {
-      setEmail(savedEmail);
-      setPassword(savedPassword);
-      setRememberMe(true);
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,15 +37,6 @@ export default function LoginPage() {
     if (!email || !password) {
       setError("Por favor complete todos los campos.");
       return;
-    }
-
-    // Guardar o eliminar credenciales según la opción seleccionada
-    if (rememberMe) {
-      localStorage.setItem("rememberedEmail", email);
-      localStorage.setItem("rememberedPassword", password);
-    } else {
-      localStorage.removeItem("rememberedEmail");
-      localStorage.removeItem("rememberedPassword");
     }
 
     setIsLoading(true);
@@ -126,11 +105,13 @@ export default function LoginPage() {
               </Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="ejemplo@correo.com"
                 className="border-playBlueLight focus-visible:ring-brand-primary"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 required
                 autoFocus
               />
@@ -143,26 +124,12 @@ export default function LoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Ingrese su contraseña"
+              autoComplete="current-password"
               required
               className="border-playBlueLight focus-visible:ring-brand-primary"
             />
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="rememberMe"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 rounded border-playBlueLight text-brand-primary focus:ring-brand-primary cursor-pointer"
-                />
-                <Label
-                  htmlFor="rememberMe"
-                  className="text-sm text-playBlueLight cursor-pointer select-none"
-                >
-                  Recordar contraseña
-                </Label>
-              </div>
+            <div className="flex justify-end">
               <Button
                 type="button"
                 variant="link"
