@@ -23,15 +23,17 @@ export default function DashboardPage() {
   const { companies } = useCompanies();
   const { workers } = useWorkers(undefined);
 
-  // Aplanar empresas + subcontratas en una sola lista
+  // Aplanar empresas + subcontratas en una sola lista (solo activas)
   const allCompanies = useMemo(() => {
     const all: (Company | CompanySimple)[] = [];
-    companies.forEach((company) => {
-      all.push(company);
-      if (company.subcontractors) {
-        all.push(...company.subcontractors);
-      }
-    });
+    companies
+      .filter((company) => company.active)
+      .forEach((company) => {
+        all.push(company);
+        if (company.subcontractors) {
+          all.push(...company.subcontractors.filter((sub) => sub.active));
+        }
+      });
     return all;
   }, [companies]);
 
