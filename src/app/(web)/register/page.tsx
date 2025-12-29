@@ -60,6 +60,7 @@ export default function RegisterPage() {
       cif,
       contactPerson,
       email,
+      phone,
       password,
       confirmPassword,
     } = registerData;
@@ -69,6 +70,7 @@ export default function RegisterPage() {
       !cif ||
       !contactPerson ||
       !email ||
+      !phone ||
       !password ||
       !confirmPassword
     ) {
@@ -228,7 +230,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Teléfono</Label>
+              <Label htmlFor="phone">Teléfono *</Label>
               <Input
                 id="phone"
                 name="phone"
@@ -236,6 +238,7 @@ export default function RegisterPage() {
                 placeholder="+34 600 000 000"
                 value={registerData.phone}
                 onChange={handleRegisterInputChange}
+                required
               />
             </div>
 

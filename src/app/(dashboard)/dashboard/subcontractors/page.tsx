@@ -5,22 +5,22 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { UserRole } from "@/types/user";
 import { CompanySimple } from "@/types/company";
 import { useEffect, useState, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import Loader from "@/components/Loader";
-import {
-  Network,
-  Search,
-  Building2,
-  ChevronRight,
-  Users,
-  FileText,
-} from "lucide-react";
-import Link from "next/link";
+import { StatusBadge } from "@/components/StatusBadge";
+import { WorkerStatusBadge } from "@/components/WorkerStatusBadge";
+import { Network, Search, Building2, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useVirtualizer } from "@tanstack/react-virtual";
+
+type SubcontractorWithParent = CompanySimple & {
+  parentCompanyName?: string;
+  parentCompanyId?: string;
+};
 
 export default function SubcontractorsPage() {
+  const router = useRouter();
   const {
     companies,
     loading: companiesLoading,
@@ -31,17 +31,25 @@ export default function SubcontractorsPage() {
   const isAdmin = user?.role === UserRole.Admin;
 
   const [allSubcontractors, setAllSubcontractors] = useState<
-    (CompanySimple & {
-      parentCompanyName?: string;
-      parentCompanyId?: string;
-    })[]
+    SubcontractorWithParent[]
   >([]);
   const [filteredSubcontractors, setFilteredSubcontractors] = useState<
-    typeof allSubcontractors
+    SubcontractorWithParent[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const hasLoadedRef = useRef(false);
+
+  // Ref para el contenedor de scroll (virtualización)
+  const parentRef = useRef<HTMLDivElement>(null);
+
+  // Virtualizador para renderizar solo items visibles
+  const virtualizer = useVirtualizer({
+    count: filteredSubcontractors.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 72,
+    overscan: 5,
+  });
 
   // Cargar subcontratas según el rol
   useEffect(() => {
@@ -49,21 +57,15 @@ export default function SubcontractorsPage() {
       if (hasLoadedRef.current) return;
       if (!user) return;
 
-      // Admin: esperar a que carguen las companies
-      // Company: usar directamente su companyId
       if (isAdmin && (companiesLoading || !companies?.length)) return;
       if (!isAdmin && !user.companyId) return;
 
       hasLoadedRef.current = true;
       setIsLoading(true);
 
-      const allSubs: (CompanySimple & {
-        parentCompanyName?: string;
-        parentCompanyId?: string;
-      })[] = [];
+      const allSubs: SubcontractorWithParent[] = [];
 
       if (isAdmin) {
-        // Admin: cargar subcontratas de todas las empresas principales
         const mainCompanies = companies.filter((c) => !c.isSubcontractor);
 
         for (const company of mainCompanies) {
@@ -85,7 +87,6 @@ export default function SubcontractorsPage() {
           }
         }
       } else {
-        // Company: cargar solo subcontratas de su empresa
         try {
           const parentCompany = await getCompanyById(user.companyId);
           const subs = await getSubcontractors(user.companyId);
@@ -120,11 +121,16 @@ export default function SubcontractorsPage() {
     const filtered = allSubcontractors.filter(
       (sub) =>
         sub.name.toLowerCase().includes(term) ||
-        sub.cif?.toLowerCase().includes(term) ||
+        sub.taxId?.toLowerCase().includes(term) ||
         sub.parentCompanyName?.toLowerCase().includes(term)
     );
     setFilteredSubcontractors(filtered);
   }, [searchTerm, allSubcontractors]);
+
+  // Navegar al detalle
+  const handleRowClick = (id: string) => {
+    router.push(`/dashboard/companies/${id}`);
+  };
 
   if (companiesLoading || isLoading) {
     return (
@@ -135,182 +141,143 @@ export default function SubcontractorsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-playBlueDark flex items-center gap-3">
-            <Network className="h-8 w-8 text-playOrange" />
-            Subcontratas
-          </h1>
-          <p className="text-playBlueLight mt-1">
-            {isAdmin
-              ? "Vista global de todas las subcontratas de tus empresas"
-              : "Subcontratas de tu empresa"}
-          </p>
-        </div>
+    <div className="flex flex-col h-[calc(100vh-64px)]">
+      {/* Header fijo */}
+      <div className="bg-white border-b px-4 py-4 flex-shrink-0">
+        <div className="container mx-auto">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-playOrange/10 rounded-xl flex items-center justify-center">
+                <Network className="h-5 w-5 text-playOrange" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-playBlueDark">
+                  Subcontratas
+                </h1>
+                <p className="text-sm text-playBlueLight">
+                  {filteredSubcontractors.length} de {allSubcontractors.length}
+                </p>
+              </div>
+            </div>
+          </div>
 
-        <div className="flex items-center gap-4">
-          <Badge variant="secondary" className="text-lg px-4 py-2">
-            {allSubcontractors.length} subcontrata
-            {allSubcontractors.length !== 1 ? "s" : ""}
-          </Badge>
+          {/* Buscador */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-playBlueLight" />
+            <Input
+              placeholder="Buscar por nombre, CIF o empresa..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 bg-playGrey/50 border-playBlueLight/30"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Buscador */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nombre, CIF o empresa madre..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Lista de subcontratas */}
+      {/* Lista virtualizada */}
       {filteredSubcontractors.length === 0 ? (
-        <Card>
-          <CardContent className="py-12 text-center">
-            <Network className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-            <h3 className="text-xl font-semibold text-muted-foreground mb-2">
-              {searchTerm
-                ? "No se encontraron resultados"
-                : "No hay subcontratas"}
+        <div className="flex-1 flex items-center justify-center">
+          <div className="text-center">
+            <Network className="h-16 w-16 mx-auto text-playBlueLight/50 mb-4" />
+            <h3 className="text-lg font-semibold text-playBlueDark mb-1">
+              {searchTerm ? "Sin resultados" : "Sin subcontratas"}
             </h3>
-            <p className="text-muted-foreground">
+            <p className="text-sm text-playBlueLight">
               {searchTerm
-                ? "Intenta con otros términos de búsqueda"
+                ? "Prueba con otros términos"
                 : "Añade subcontratas desde el detalle de una empresa"}
             </p>
-            {!searchTerm && (
-              <Button asChild className="mt-4">
-                <Link href="/dashboard/companies">Ver empresas</Link>
-              </Button>
-            )}
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredSubcontractors.map((sub) => (
-            <Card
-              key={sub.id}
-              className="hover:shadow-lg transition-all hover:border-playOrange/50 group"
-            >
-              <CardHeader className="pb-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="p-2 rounded-lg bg-playOrange/10">
-                      <Network className="h-5 w-5 text-playOrange" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-lg group-hover:text-playOrange transition-colors">
-                        {sub.name}
-                      </CardTitle>
-                      {sub.cif && (
-                        <p className="text-sm text-muted-foreground">
-                          CIF: {sub.cif}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardHeader>
-
-              <CardContent className="space-y-4">
-                {/* Empresa padre */}
-                <div className="flex items-center gap-2 text-sm text-playBlueLight">
-                  <Building2 className="h-4 w-4" />
-                  <span>Empresa:</span>
-                  <Link
-                    href={`/dashboard/companies/${sub.parentCompanyId}`}
-                    className="font-medium hover:text-playBlueDark hover:underline"
-                  >
-                    {sub.parentCompanyName}
-                  </Link>
-                </div>
-
-                {/* Stats */}
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Users className="h-4 w-4" />
-                    <span>{sub.workerCount || 0} trabajadores</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <FileText className="h-4 w-4" />
-                    <span>{sub.documentCount || 0} documentos</span>
-                  </div>
-                </div>
-
-                {/* Acciones */}
-                <div className="pt-2 border-t">
-                  <Button
-                    asChild
-                    variant="ghost"
-                    className="w-full justify-between group"
-                  >
-                    <Link href={`/dashboard/companies/${sub.id}`}>
-                      Ver detalles
-                      <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                    </Link>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+          </div>
         </div>
-      )}
-
-      {/* Resumen por empresa */}
-      {allSubcontractors.length > 0 && !searchTerm && (
-        <Card className="mt-8">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-playBlueDark" />
-              Resumen por empresa
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {(() => {
-                // Agrupar por empresa padre
-                const grouped = allSubcontractors.reduce((acc, sub) => {
-                  const key = sub.parentCompanyId || "unknown";
-                  if (!acc[key]) {
-                    acc[key] = {
-                      name: sub.parentCompanyName || "Desconocida",
-                      id: sub.parentCompanyId,
-                      count: 0,
-                    };
-                  }
-                  acc[key].count++;
-                  return acc;
-                }, {} as Record<string, { name: string; id?: string; count: number }>);
-
-                return Object.entries(grouped).map(([id, data]) => (
-                  <Link
-                    key={id}
-                    href={`/dashboard/companies/${data.id}`}
-                    className="flex items-center justify-between p-4 rounded-lg bg-playGrey/50 hover:bg-playGrey transition-colors"
+      ) : (
+        <div
+          ref={parentRef}
+          className="flex-1 overflow-auto bg-white"
+          style={{ contain: "strict" }}
+        >
+          <div
+            style={{
+              height: `${virtualizer.getTotalSize()}px`,
+              width: "100%",
+              position: "relative",
+            }}
+          >
+            {virtualizer.getVirtualItems().map((virtualRow) => {
+              const sub = filteredSubcontractors[virtualRow.index];
+              return (
+                <div
+                  key={sub.id}
+                  style={{
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    width: "100%",
+                    height: `${virtualRow.size}px`,
+                    transform: `translateY(${virtualRow.start}px)`,
+                  }}
+                >
+                  <div
+                    onClick={() => handleRowClick(sub.id!)}
+                    className={`flex items-center gap-3 px-4 py-3 border-b border-playGrey/50 hover:bg-playOrange/5 cursor-pointer transition-colors active:bg-playOrange/10 ${
+                      !sub.active ? "opacity-50" : ""
+                    }`}
                   >
-                    <div className="flex items-center gap-3">
-                      <Building2 className="h-5 w-5 text-playBlueDark" />
-                      <span className="font-medium">{data.name}</span>
+                    {/* Avatar/Icono */}
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        sub.active ? "bg-playOrange/10" : "bg-gray-200"
+                      }`}
+                    >
+                      <Network
+                        className={`h-5 w-5 ${
+                          sub.active ? "text-playOrange" : "text-gray-400"
+                        }`}
+                      />
                     </div>
-                    <Badge variant="secondary">
-                      {data.count} subcontrata{data.count !== 1 ? "s" : ""}
-                    </Badge>
-                  </Link>
-                ));
-              })()}
-            </div>
-          </CardContent>
-        </Card>
+
+                    {/* Info principal */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3
+                          className={`font-semibold truncate ${
+                            sub.active ? "text-playBlueDark" : "text-gray-500"
+                          }`}
+                        >
+                          {sub.name}
+                        </h3>
+                        {!sub.active && (
+                          <Badge
+                            variant="secondary"
+                            className="text-xs flex-shrink-0"
+                          >
+                            Inactiva
+                          </Badge>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2 text-sm text-playBlueLight truncate">
+                        <span className="font-mono">{sub.taxId}</span>
+                        <span className="text-playBlueLight/50">•</span>
+                        <div className="flex items-center gap-1 truncate">
+                          <Building2 className="h-3 w-3 flex-shrink-0" />
+                          <span className="truncate">
+                            {sub.parentCompanyName}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Estados */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      <StatusBadge status={sub.status} />
+                      <WorkerStatusBadge status={sub.workerStatus} />
+                      <ChevronRight className="h-4 w-4 text-playBlueLight" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       )}
     </div>
   );
