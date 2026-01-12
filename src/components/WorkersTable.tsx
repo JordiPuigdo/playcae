@@ -128,7 +128,9 @@ export const WorkersTable = ({
           comparison = aDate - bDate;
           break;
         case "status":
-          comparison = (a.status || "").localeCompare(b.status || "");
+          comparison = String(a.status || "").localeCompare(
+            String(b.status || "")
+          );
           break;
       }
 

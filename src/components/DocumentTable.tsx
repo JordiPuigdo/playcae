@@ -104,7 +104,9 @@ export const DocumentsTable = ({
           comparison = aExp - bExp;
           break;
         case "status":
-          comparison = (a.status || "").localeCompare(b.status || "");
+          comparison = String(a.status || "").localeCompare(
+            String(b.status || "")
+          );
           break;
       }
 

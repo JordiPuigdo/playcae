@@ -92,11 +92,13 @@ export const CompanyTable = ({
           comparison = (a.email || "").localeCompare(b.email || "");
           break;
         case "status":
-          comparison = (a.status || "").localeCompare(b.status || "");
+          comparison = String(a.status || "").localeCompare(
+            String(b.status || "")
+          );
           break;
         case "workerStatus":
-          comparison = (a.workerStatus || "").localeCompare(
-            b.workerStatus || ""
+          comparison = String(a.workerStatus || "").localeCompare(
+            String(b.workerStatus || "")
           );
           break;
       }
