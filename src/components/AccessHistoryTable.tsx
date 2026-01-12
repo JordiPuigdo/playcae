@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -9,6 +10,17 @@ import {
 import { AccessHistoryEntry } from "@/types/accessHistory";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
+import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+
+type SortField =
+  | "technicianName"
+  | "dni"
+  | "company"
+  | "entryTime"
+  | "exitTime"
+  | "duration"
+  | "status";
+type SortDirection = "asc" | "desc" | null;
 
 interface AccessHistoryTableProps {
   history: AccessHistoryEntry[];
@@ -19,8 +31,18 @@ export const AccessHistoryTable = ({
   history,
   onSelectEntry,
 }: AccessHistoryTableProps) => {
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
   const formatDateTime = (dateString: string) => {
     return format(new Date(dateString), "dd/MM/yyyy HH:mm", { locale: es });
+  };
+
+  const calculateDurationMinutes = (entry: AccessHistoryEntry): number => {
+    if (!entry.exitTime) return Infinity; // "En instalación" va al final
+    const entryTime = new Date(entry.entryTime);
+    const exitTime = new Date(entry.exitTime);
+    return (exitTime.getTime() - entryTime.getTime()) / (1000 * 60);
   };
 
   const calculateDuration = (entry: AccessHistoryEntry) => {
@@ -34,6 +56,92 @@ export const AccessHistoryTable = ({
 
     return `${hours}h ${minutes}m`;
   };
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      // Ciclo: asc -> desc -> null
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortDirection(null);
+        setSortField(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedHistory = useMemo(() => {
+    if (!sortField || !sortDirection) return history;
+
+    return [...history].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case "technicianName":
+          comparison = a.technicianName.localeCompare(b.technicianName);
+          break;
+        case "dni":
+          comparison = a.dni.localeCompare(b.dni);
+          break;
+        case "company":
+          comparison = a.company.localeCompare(b.company);
+          break;
+        case "entryTime":
+          comparison =
+            new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime();
+          break;
+        case "exitTime":
+          const aExit = a.exitTime ? new Date(a.exitTime).getTime() : Infinity;
+          const bExit = b.exitTime ? new Date(b.exitTime).getTime() : Infinity;
+          comparison = aExit - bExit;
+          break;
+        case "duration":
+          comparison =
+            calculateDurationMinutes(a) - calculateDurationMinutes(b);
+          break;
+        case "status":
+          comparison = a.status.localeCompare(b.status);
+          break;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [history, sortField, sortDirection]);
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+    }
+    if (sortDirection === "asc") {
+      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    if (sortDirection === "desc") {
+      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+  };
+
+  const SortableHeader = ({
+    field,
+    children,
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+  }) => (
+    <TableHead
+      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center">
+        {children}
+        {renderSortIcon(field)}
+      </div>
+    </TableHead>
+  );
 
   const renderStatusLight = (status: string) => {
     const color =
@@ -53,18 +161,18 @@ export const AccessHistoryTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-playGrey">
-            <TableHead className="text-brand-primary">Técnico</TableHead>
-            <TableHead className="text-brand-primary">DNI</TableHead>
-            <TableHead className="text-brand-primary">Empresa</TableHead>
-            <TableHead className="text-brand-primary">Entrada</TableHead>
-            <TableHead className="text-brand-primary">Salida</TableHead>
-            <TableHead className="text-brand-primary">Duración</TableHead>
-            <TableHead className="text-brand-primary">Estado</TableHead>
+            <SortableHeader field="technicianName">Técnico</SortableHeader>
+            <SortableHeader field="dni">DNI</SortableHeader>
+            <SortableHeader field="company">Empresa</SortableHeader>
+            <SortableHeader field="entryTime">Entrada</SortableHeader>
+            <SortableHeader field="exitTime">Salida</SortableHeader>
+            <SortableHeader field="duration">Duración</SortableHeader>
+            <SortableHeader field="status">Estado</SortableHeader>
           </TableRow>
         </TableHeader>
 
         <TableBody>
-          {history.length === 0 ? (
+          {sortedHistory.length === 0 ? (
             <TableRow>
               <TableCell
                 colSpan={7}
@@ -74,7 +182,7 @@ export const AccessHistoryTable = ({
               </TableCell>
             </TableRow>
           ) : (
-            history.map((entry) => (
+            sortedHistory.map((entry) => (
               <TableRow
                 key={entry.id}
                 className="cursor-pointer hover:bg-playGrey/60 transition-colors"

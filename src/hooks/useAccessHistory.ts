@@ -1,94 +1,23 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import {
   AccessHistoryEntry,
   AccessHistoryFilters,
+  AccessRecordFilter,
+  AccessKPIData,
+  mapAccessRecordToEntry,
 } from "@/types/accessHistory";
+import { AccessService } from "@/services/access.service";
 
-// Mock data para el histórico
-const mockAccessHistory: AccessHistoryEntry[] = [
-  {
-    id: "1",
-    technicianName: "Juan Pérez",
-    dni: "12345678A",
-    company: "TechCorp S.L.",
-    companyId: "1",
-    entryTime: "2024-01-15T08:30:00",
-    exitTime: "2024-01-15T17:45:00",
-    status: "Apto",
-  },
-  {
-    id: "2",
-    technicianName: "María García",
-    dni: "87654321B",
-    company: "Construcciones ABC",
-    companyId: "2",
-    entryTime: "2024-01-15T09:00:00",
-    exitTime: "2024-01-15T18:00:00",
-    status: "Apto",
-  },
-  {
-    id: "3",
-    technicianName: "Carlos López",
-    dni: "11223344C",
-    company: "TechCorp S.L.",
-    companyId: "1",
-    entryTime: "2024-01-15T08:45:00",
-    exitTime: null,
-    status: "Apto",
-  },
-  {
-    id: "4",
-    technicianName: "Ana Martínez",
-    dni: "55667788D",
-    company: "Instalaciones XYZ",
-    companyId: "3",
-    entryTime: "2024-01-14T10:15:00",
-    exitTime: "2024-01-14T19:30:00",
-    status: "No apto",
-  },
-  {
-    id: "5",
-    technicianName: "Pedro Sánchez",
-    dni: "99887766E",
-    company: "Construcciones ABC",
-    companyId: "2",
-    entryTime: "2024-01-14T07:30:00",
-    exitTime: "2024-01-14T16:00:00",
-    status: "Apto",
-  },
-  {
-    id: "6",
-    technicianName: "Laura Fernández",
-    dni: "44332211F",
-    company: "TechCorp S.L.",
-    companyId: "1",
-    entryTime: "2024-01-13T09:30:00",
-    exitTime: "2024-01-13T18:30:00",
-    status: "Apto",
-  },
-  {
-    id: "7",
-    technicianName: "Roberto Díaz",
-    dni: "66778899G",
-    company: "Instalaciones XYZ",
-    companyId: "3",
-    entryTime: "2024-01-13T08:00:00",
-    exitTime: "2024-01-13T17:00:00",
-    status: "Apto",
-  },
-  {
-    id: "8",
-    technicianName: "Elena Torres",
-    dni: "33445566H",
-    company: "Construcciones ABC",
-    companyId: "2",
-    entryTime: "2024-01-12T10:00:00",
-    exitTime: "2024-01-12T19:00:00",
-    status: "Apto",
-  },
-];
+const accessService = new AccessService();
 
-export const useAccessHistory = () => {
+export const useAccessHistory = (accessCompanyId?: string) => {
+  const [history, setHistory] = useState<AccessHistoryEntry[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState(0);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(50);
+
   const [filters, setFilters] = useState<AccessHistoryFilters>({
     searchTechnician: "",
     company: "",
@@ -96,37 +25,125 @@ export const useAccessHistory = () => {
     endDate: "",
   });
 
-  const filteredHistory = useMemo(() => {
-    return mockAccessHistory.filter((entry) => {
-      // Filtro por nombre o DNI
-      const searchLower = filters.searchTechnician.toLowerCase();
-      const matchesSearch =
-        !filters.searchTechnician ||
-        entry.technicianName.toLowerCase().includes(searchLower) ||
-        entry.dni.toLowerCase().includes(searchLower);
+  const [companies, setCompanies] = useState<{ id: string; name: string }[]>(
+    []
+  );
 
-      // Filtro por empresa
-      const matchesCompany =
-        !filters.company || entry.companyId === filters.company;
+  const [kpiData, setKpiData] = useState<AccessKPIData>({
+    validDocumentationPercentage: 0,
+    totalAccessesToday: 0,
+    hoursWorkedToday: 0,
+    failedAccesses: 0,
+    companiesOnSite: 0,
+    trend: "stable",
+  });
 
-      // Filtro por fecha de inicio
-      const matchesStartDate =
-        !filters.startDate ||
-        new Date(entry.entryTime) >= new Date(filters.startDate);
+  const fetchHistory = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      // Filtro por fecha de fin
-      const matchesEndDate =
-        !filters.endDate ||
-        new Date(entry.entryTime) <= new Date(filters.endDate + "T23:59:59");
+    try {
+      const apiFilter: AccessRecordFilter = {
+        accessCompanyId: accessCompanyId,
+        workerCompanyId: filters.company || undefined,
+        searchTerm: filters.searchTechnician || undefined,
+        fromDate: filters.startDate || undefined,
+        toDate: filters.endDate || undefined,
+        page,
+        pageSize,
+      };
 
-      return (
-        matchesSearch && matchesCompany && matchesStartDate && matchesEndDate
-      );
+      const response = await accessService.getFiltered(apiFilter);
+
+      if (response.data) {
+        const entries = response.data.items.map(mapAccessRecordToEntry);
+        setHistory(entries);
+        setTotalCount(response.data.totalCount);
+
+        // Extraer empresas únicas para el filtro
+        const uniqueCompanies = new Map<string, string>();
+        response.data.items.forEach((item) => {
+          uniqueCompanies.set(item.workerCompanyId, item.workerCompanyName);
+        });
+        setCompanies(
+          Array.from(uniqueCompanies.entries()).map(([id, name]) => ({
+            id,
+            name,
+          }))
+        );
+
+        // Calcular KPIs basados en los datos
+        calculateKPIs(response.data.items);
+      }
+    } catch (err) {
+      setError("Error al cargar el histórico de accesos");
+      console.error("Error fetching access history:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, [accessCompanyId, filters, page, pageSize]);
+
+  const calculateKPIs = (items: any[]) => {
+    const today = new Date().toISOString().split("T")[0];
+    const todayItems = items.filter((item) =>
+      item.checkInTime?.startsWith(today)
+    );
+
+    const totalAccessesToday = todayItems.length;
+    const failedAccesses = todayItems.filter(
+      (item) => item.wasAccessDenied
+    ).length;
+    const validAccesses = totalAccessesToday - failedAccesses;
+
+    const validDocumentationPercentage =
+      totalAccessesToday > 0
+        ? Math.round((validAccesses / totalAccessesToday) * 100)
+        : 100;
+
+    // Calcular horas trabajadas hoy
+    let hoursWorkedToday = 0;
+    todayItems.forEach((item) => {
+      if (item.checkInTime && item.checkOutTime) {
+        const checkIn = new Date(item.checkInTime);
+        const checkOut = new Date(item.checkOutTime);
+        hoursWorkedToday += (checkOut.getTime() - checkIn.getTime()) / 3600000;
+      }
     });
-  }, [filters]);
+
+    // Empresas únicas en sitio hoy
+    const uniqueCompaniesOnSite = new Set(
+      todayItems.map((item) => item.workerCompanyId)
+    );
+
+    // Determinar tendencia (comparar con ayer si hay datos)
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = yesterday.toISOString().split("T")[0];
+    const yesterdayItems = items.filter((item) =>
+      item.checkInTime?.startsWith(yesterdayStr)
+    );
+
+    let trend: "up" | "down" | "stable" = "stable";
+    if (todayItems.length > yesterdayItems.length) trend = "up";
+    else if (todayItems.length < yesterdayItems.length) trend = "down";
+
+    setKpiData({
+      validDocumentationPercentage,
+      totalAccessesToday,
+      hoursWorkedToday: Number(hoursWorkedToday.toFixed(1)),
+      failedAccesses,
+      companiesOnSite: uniqueCompaniesOnSite.size,
+      trend,
+    });
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
 
   const updateFilters = (newFilters: Partial<AccessHistoryFilters>) => {
     setFilters((prev) => ({ ...prev, ...newFilters }));
+    setPage(1); // Reset page when filters change
   };
 
   const clearFilters = () => {
@@ -136,55 +153,26 @@ export const useAccessHistory = () => {
       startDate: "",
       endDate: "",
     });
+    setPage(1);
   };
 
-  const getUniqueCompanies = () => {
-    const companies = new Map<string, string>();
-    mockAccessHistory.forEach((entry) => {
-      companies.set(entry.companyId, entry.company);
-    });
-    return Array.from(companies.entries()).map(([id, name]) => ({ id, name }));
-  };
-
-  const getKPIData = () => {
-    // Valores aleatorios pero coherentes
-    const totalAccessesToday = Math.floor(Math.random() * 50) + 5; // entre 5 y 55
-    const failedAccesses = Math.floor(Math.random() * (totalAccessesToday / 3)); // máx 33%
-    const validAccesses = totalAccessesToday - failedAccesses;
-
-    const validDocumentationPercentage =
-      totalAccessesToday > 0
-        ? Math.round((validAccesses / totalAccessesToday) * 100)
-        : 100;
-
-    const hoursWorkedToday = Number((Math.random() * 40).toFixed(1)); // 0h–40h
-
-    const companiesOnSite = Math.floor(Math.random() * 10) + 1; // 1–10 empresas
-
-    // Tendencia aleatoria
-    const trendOptions: Array<"up" | "down" | "stable"> = [
-      "up",
-      "down",
-      "stable",
-    ];
-    const trend = trendOptions[Math.floor(Math.random() * trendOptions.length)];
-
-    return {
-      validDocumentationPercentage,
-      totalAccessesToday,
-      hoursWorkedToday,
-      failedAccesses,
-      companiesOnSite,
-      trend,
-    };
+  const refreshHistory = () => {
+    fetchHistory();
   };
 
   return {
-    history: filteredHistory,
+    history,
     filters,
     updateFilters,
     clearFilters,
-    companies: getUniqueCompanies(),
-    kpiData: getKPIData(),
+    companies,
+    kpiData,
+    loading,
+    error,
+    totalCount,
+    page,
+    setPage,
+    pageSize,
+    refreshHistory,
   };
 };

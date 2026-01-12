@@ -10,7 +10,13 @@ import {
   Trash2,
   Plus,
   Check,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
 } from "lucide-react";
+
+type SortField = "name" | "cardId" | "position" | "creationDate" | "status";
+type SortDirection = "asc" | "desc" | null;
 import {
   Table,
   TableBody,
@@ -79,6 +85,87 @@ export const WorkersTable = ({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteWorker, setDeleteWorker] = useState<Worker | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortDirection(null);
+        setSortField(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedWorkers = useMemo(() => {
+    if (!sortField || !sortDirection) return workers;
+
+    return [...workers].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case "name":
+          const aName = `${a.firstName} ${a.lastName}`;
+          const bName = `${b.firstName} ${b.lastName}`;
+          comparison = aName.localeCompare(bName);
+          break;
+        case "cardId":
+          comparison = (a.cardId || "").localeCompare(b.cardId || "");
+          break;
+        case "position":
+          comparison = (a.position || "").localeCompare(b.position || "");
+          break;
+        case "creationDate":
+          const aDate = a.creationDate ? new Date(a.creationDate).getTime() : 0;
+          const bDate = b.creationDate ? new Date(b.creationDate).getTime() : 0;
+          comparison = aDate - bDate;
+          break;
+        case "status":
+          comparison = (a.status || "").localeCompare(b.status || "");
+          break;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [workers, sortField, sortDirection]);
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+    }
+    if (sortDirection === "asc") {
+      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    if (sortDirection === "desc") {
+      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+  };
+
+  const SortableHeader = ({
+    field,
+    children,
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+  }) => (
+    <TableHead
+      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center">
+        {children}
+        {renderSortIcon(field)}
+      </div>
+    </TableHead>
+  );
 
   const PENDING_STATUSES = [
     EntityStatus.Pending,
@@ -230,22 +317,20 @@ export const WorkersTable = ({
               <TableHeader>
                 <TableRow className="bg-playGrey">
                   <TableHead className="w-10" />
-                  <TableHead className="text-brand-primary">
-                    Trabajador
-                  </TableHead>
-                  <TableHead className="text-brand-primary">DNI/NIE</TableHead>
-                  <TableHead className="text-brand-primary">Puesto</TableHead>
-                  <TableHead className="text-brand-primary">
+                  <SortableHeader field="name">Trabajador</SortableHeader>
+                  <SortableHeader field="cardId">DNI/NIE</SortableHeader>
+                  <SortableHeader field="position">Puesto</SortableHeader>
+                  <SortableHeader field="creationDate">
                     Fecha Alta
-                  </TableHead>
-                  <TableHead className="text-brand-primary">Estado</TableHead>
+                  </SortableHeader>
+                  <SortableHeader field="status">Estado</SortableHeader>
                   <TableHead className="text-brand-primary">Acciones</TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
-                {workers &&
-                  workers.map((worker) => (
+                {sortedWorkers &&
+                  sortedWorkers.map((worker) => (
                     <React.Fragment key={worker.id}>
                       <TableRow
                         className={`hover:bg-playOrange/5 cursor-pointer transition-colors group ${

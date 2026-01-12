@@ -1,6 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Company, CompanySimple } from "@/types/company";
-import { Edit, Trash2, Check, Network } from "lucide-react";
+import {
+  Edit,
+  Trash2,
+  Check,
+  Network,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+} from "lucide-react";
 import { Button } from "./ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
 import {
@@ -18,6 +26,15 @@ import { toast } from "@/hooks/use-Toast";
 import { Badge } from "./ui/Badge";
 import { WorkerStatusBadge } from "./WorkerStatusBadge";
 
+type SortField =
+  | "name"
+  | "taxId"
+  | "contactPerson"
+  | "email"
+  | "status"
+  | "workerStatus";
+type SortDirection = "asc" | "desc" | null;
+
 interface CompanyTableProps {
   companies: Company[];
   onEdit: (company: Company) => void;
@@ -34,6 +51,92 @@ export const CompanyTable = ({
   const router = useRouter();
   const [deleteCompany, setDeleteCompany] = useState<Company | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortDirection(null);
+        setSortField(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedCompanies = useMemo(() => {
+    if (!sortField || !sortDirection) return companies;
+
+    return [...companies].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case "name":
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case "taxId":
+          comparison = (a.taxId || "").localeCompare(b.taxId || "");
+          break;
+        case "contactPerson":
+          comparison = (a.contactPerson || "").localeCompare(
+            b.contactPerson || ""
+          );
+          break;
+        case "email":
+          comparison = (a.email || "").localeCompare(b.email || "");
+          break;
+        case "status":
+          comparison = (a.status || "").localeCompare(b.status || "");
+          break;
+        case "workerStatus":
+          comparison = (a.workerStatus || "").localeCompare(
+            b.workerStatus || ""
+          );
+          break;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [companies, sortField, sortDirection]);
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+    }
+    if (sortDirection === "asc") {
+      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    if (sortDirection === "desc") {
+      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+  };
+
+  const SortableHeader = ({
+    field,
+    children,
+    className = "",
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+    className?: string;
+  }) => (
+    <TableHead
+      className={`cursor-pointer hover:bg-playGrey/80 select-none transition-colors ${className}`}
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center">
+        {children}
+        {renderSortIcon(field)}
+      </div>
+    </TableHead>
+  );
 
   const handleDeleteClick = (company: Company) => {
     setDeleteCompany(company);
@@ -192,21 +295,27 @@ export const CompanyTable = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>CIF</TableHead>
-                <TableHead>Contacto</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead className="min-w-[140px] text-center">
+                <SortableHeader field="name">Nombre</SortableHeader>
+                <SortableHeader field="taxId">CIF</SortableHeader>
+                <SortableHeader field="contactPerson">Contacto</SortableHeader>
+                <SortableHeader field="email">Email</SortableHeader>
+                <SortableHeader
+                  field="status"
+                  className="min-w-[140px] text-center"
+                >
                   Empresa
-                </TableHead>
-                <TableHead className="bg-playBlueLight/20 min-w-[140px]">
+                </SortableHeader>
+                <SortableHeader
+                  field="workerStatus"
+                  className="bg-playBlueLight/20 min-w-[140px]"
+                >
                   Trabajadores
-                </TableHead>
+                </SortableHeader>
                 <TableHead className="text-right">Acciones</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {companies.map((company) => (
+              {sortedCompanies.map((company) => (
                 <React.Fragment key={company.id}>
                   {/* Empresa principal */}
                   {renderRow(company, false)}

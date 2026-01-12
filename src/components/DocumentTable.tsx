@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { Document, EntityStatus } from "@/types/document";
 
 import {
@@ -9,7 +10,13 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import { FileText, AlertTriangle } from "lucide-react";
+import {
+  FileText,
+  AlertTriangle,
+  ArrowUp,
+  ArrowDown,
+  ArrowUpDown,
+} from "lucide-react";
 import { DocumentFormData } from "@/types/document";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
 import { UserRole } from "@/types/user";
@@ -18,6 +25,9 @@ import { DocumentValidation } from "./DocumentValidation";
 import { DocumentUpload } from "./DocumentUpload";
 import { FileCell } from "./FileCell";
 import { DocumentHistory } from "./DocumentHistory";
+
+type SortField = "name" | "uploadedDate" | "expirationDate" | "status";
+type SortDirection = "asc" | "desc" | null;
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -43,8 +53,95 @@ export const DocumentsTable = ({
   companyId,
   onRefresh,
 }: DocumentsTableProps) => {
+  const [sortField, setSortField] = useState<SortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
+
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      if (sortDirection === "asc") {
+        setSortDirection("desc");
+      } else if (sortDirection === "desc") {
+        setSortDirection(null);
+        setSortField(null);
+      } else {
+        setSortDirection("asc");
+      }
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+  };
+
+  const sortedDocuments = useMemo(() => {
+    if (!sortField || !sortDirection) return documents;
+
+    return [...documents].sort((a, b) => {
+      let comparison = 0;
+
+      switch (sortField) {
+        case "name":
+          comparison = a.documentType.name.localeCompare(b.documentType.name);
+          break;
+        case "uploadedDate":
+          const aUpload = a.uploadedDate
+            ? new Date(a.uploadedDate).getTime()
+            : 0;
+          const bUpload = b.uploadedDate
+            ? new Date(b.uploadedDate).getTime()
+            : 0;
+          comparison = aUpload - bUpload;
+          break;
+        case "expirationDate":
+          const aExp = a.expirationDate
+            ? new Date(a.expirationDate).getTime()
+            : Infinity;
+          const bExp = b.expirationDate
+            ? new Date(b.expirationDate).getTime()
+            : Infinity;
+          comparison = aExp - bExp;
+          break;
+        case "status":
+          comparison = (a.status || "").localeCompare(b.status || "");
+          break;
+      }
+
+      return sortDirection === "asc" ? comparison : -comparison;
+    });
+  }, [documents, sortField, sortDirection]);
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) {
+      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+    }
+    if (sortDirection === "asc") {
+      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    if (sortDirection === "desc") {
+      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
+    }
+    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
+  };
+
+  const SortableHeader = ({
+    field,
+    children,
+  }: {
+    field: SortField;
+    children: React.ReactNode;
+  }) => (
+    <TableHead
+      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
+      onClick={() => handleSort(field)}
+    >
+      <div className="flex items-center">
+        {children}
+        {renderSortIcon(field)}
+      </div>
+    </TableHead>
+  );
 
   return (
     <Card className="bg-white border border-playBlueLight/30">
@@ -64,21 +161,21 @@ export const DocumentsTable = ({
           <Table>
             <TableHeader>
               <TableRow className="bg-playGrey">
-                <TableHead className="text-brand-primary">Documento</TableHead>
+                <SortableHeader field="name">Documento</SortableHeader>
                 <TableHead className="text-brand-primary">Archivo</TableHead>
-                <TableHead className="text-brand-primary">
+                <SortableHeader field="uploadedDate">
                   Fecha Subida
-                </TableHead>
-                <TableHead className="text-brand-primary">
+                </SortableHeader>
+                <SortableHeader field="expirationDate">
                   Fecha Caducidad
-                </TableHead>
-                <TableHead className="text-brand-primary">Estado</TableHead>
+                </SortableHeader>
+                <SortableHeader field="status">Estado</SortableHeader>
                 <TableHead className="text-brand-primary">Acciones</TableHead>
               </TableRow>
             </TableHeader>
 
             <TableBody>
-              {documents.map((document) => (
+              {sortedDocuments.map((document) => (
                 <TableRow key={document.id}>
                   <TableCell className="font-medium text-brand-primary">
                     {document.documentType.name}

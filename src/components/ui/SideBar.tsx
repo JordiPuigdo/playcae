@@ -4,7 +4,14 @@ import { UserRole } from "@/types/user";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { LayoutDashboard, Building2, Network, Building } from "lucide-react";
+import {
+  LayoutDashboard,
+  Building2,
+  Network,
+  Building,
+  ClipboardList,
+  ScanLine,
+} from "lucide-react";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -16,6 +23,16 @@ export default function Sidebar() {
     { href: "/dashboard", label: "Panel de control", icon: LayoutDashboard },
     { href: "/dashboard/companies", label: "Empresas", icon: Building2 },
     { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+    {
+      href: "/dashboard/access-history",
+      label: "Histórico de Accesos",
+      icon: ClipboardList,
+    },
+    {
+      href: "/access-control",
+      label: "Control de Acceso",
+      icon: ScanLine,
+    },
   ];
 
   // Links para Company
@@ -26,6 +43,11 @@ export default function Sidebar() {
       icon: Building,
     },
     { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+    {
+      href: "/access-control",
+      label: "Control de Acceso",
+      icon: ScanLine,
+    },
   ];
 
   const links = role === UserRole.Admin ? adminLinks : companyLinks;
