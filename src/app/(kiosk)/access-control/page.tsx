@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog";
@@ -17,12 +18,18 @@ import {
 import Image from "next/image";
 import { AccessService } from "@/services/access.service";
 import { AccessValidationResult } from "@/types/accessHistory";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 const accessService = new AccessService();
 
 type ModalState = "idle" | "validated" | "checkin" | "checkout" | "error";
 
-const AccessControl = () => {
+const AccessControlContent = () => {
+  const searchParams = useSearchParams();
+  const accessCompanyId = searchParams.get("companyId") || "";
+  const { user } = useAuthStore();
+  const adminUserId = user?.userId || "";
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dni, setDni] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -61,7 +68,11 @@ const AccessControl = () => {
     setErrorMessage("");
 
     try {
-      const response = await accessService.validateAccess({ cardId: dni });
+      const response = await accessService.validateAccess({
+        cardId: dni,
+        adminUserId: adminUserId,
+        accessCompanyId: accessCompanyId || undefined,
+      });
 
       if (response.data) {
         setValidationResult(response.data);
@@ -83,7 +94,11 @@ const AccessControl = () => {
     setIsLoading(true);
 
     try {
-      await accessService.checkIn({ cardId: dni });
+      await accessService.checkIn({
+        cardId: dni,
+        adminUserId: adminUserId,
+        accessCompanyId: accessCompanyId || undefined,
+      });
       setModalState("checkin");
 
       // Auto-close after 3 seconds
@@ -105,7 +120,11 @@ const AccessControl = () => {
     setIsLoading(true);
 
     try {
-      await accessService.checkOut({ cardId: dni });
+      await accessService.checkOut({
+        cardId: dni,
+        adminUserId: adminUserId,
+        accessCompanyId: accessCompanyId || undefined,
+      });
       setModalState("checkout");
 
       // Auto-close after 3 seconds
@@ -364,6 +383,21 @@ const AccessControl = () => {
         </DialogContent>
       </Dialog>
     </div>
+  );
+};
+
+// Wrapper con Suspense para useSearchParams
+const AccessControl = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-background">
+          <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
+        </div>
+      }
+    >
+      <AccessControlContent />
+    </Suspense>
   );
 };
 

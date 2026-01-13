@@ -112,4 +112,15 @@ export class CompanyService implements ICompanyService {
       data
     );
   }
+
+  /**
+   * Obtiene las empresas padre de una empresa (para proveedores que trabajan con múltiples clientes)
+   */
+  async getParentCompanies(
+    companyId: string
+  ): Promise<ApiResponse<CompanySimple[]>> {
+    return this.httpClient.get<CompanySimple[]>(
+      `${this.baseUrl}/${companyId}/parent-companies`
+    );
+  }
 }

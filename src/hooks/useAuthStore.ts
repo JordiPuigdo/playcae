@@ -1,10 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { UserLoginResponse } from "@/types/user";
+import { ParentCompany, UserLoginResponse, UserRole } from "@/types/user";
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 2;
+const AUTH_VERSION = 3; // Incrementado para forzar migración
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -13,18 +13,36 @@ interface AuthState {
   isLoading: boolean;
   errorAuth: string | null;
   expiresAt: number | null; // timestamp en ms
+  // Nuevo: para selección de empresa padre
+  selectedParentCompanyId: string | null;
+  pendingParentCompanySelection: boolean; // true si necesita seleccionar empresa
+  availableParentCompanies: ParentCompany[]; // lista de empresas disponibles
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
+  setSelectedParentCompany: (companyId: string) => void;
+  setAvailableParentCompanies: (companies: ParentCompany[]) => void;
+  setPendingParentCompanySelection: (pending: boolean) => void;
 }
 
-const initialState: Omit<AuthState, "login" | "logout" | "clearError"> = {
+const initialState: Omit<
+  AuthState,
+  | "login"
+  | "logout"
+  | "clearError"
+  | "setSelectedParentCompany"
+  | "setAvailableParentCompanies"
+  | "setPendingParentCompanySelection"
+> = {
   user: null,
   token: null,
   isAuthenticated: false,
   isLoading: false,
   errorAuth: null,
   expiresAt: null,
+  selectedParentCompanyId: null,
+  pendingParentCompanySelection: false,
+  availableParentCompanies: [],
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -39,13 +57,44 @@ export const useAuthStore = create<AuthState>()(
 
           if (response?.data) {
             const now = Date.now();
-            set({
-              user: response.data,
-              // token: response.data.token ?? null, // si viene del backend
-              isAuthenticated: true,
-              isLoading: false,
-              expiresAt: now + SESSION_DURATION_MS,
-            });
+            const userData = response.data;
+
+            // Admin no tiene companyId, no necesita selección de empresa padre
+            const isAdmin =
+              userData.role === UserRole.Admin ||
+              userData.role === UserRole.SuperAdmin;
+
+            if (isAdmin) {
+              // Admin: login directo sin selección de empresa
+              set({
+                user: userData,
+                isAuthenticated: true,
+                isLoading: false,
+                expiresAt: now + SESSION_DURATION_MS,
+                selectedParentCompanyId: null,
+                pendingParentCompanySelection: false,
+              });
+            } else if (userData.parentCompanyId) {
+              // Company con parentCompanyId definido: usarlo directamente
+              set({
+                user: userData,
+                isAuthenticated: true,
+                isLoading: false,
+                expiresAt: now + SESSION_DURATION_MS,
+                selectedParentCompanyId: userData.parentCompanyId,
+                pendingParentCompanySelection: false,
+              });
+            } else {
+              // Company sin parentCompanyId: necesita seleccionar empresa
+              set({
+                user: userData,
+                isAuthenticated: true,
+                isLoading: false,
+                expiresAt: now + SESSION_DURATION_MS,
+                pendingParentCompanySelection: true,
+                selectedParentCompanyId: null,
+              });
+            }
           } else {
             set({
               errorAuth: "Invalid credentials or server error",
@@ -67,6 +116,18 @@ export const useAuthStore = create<AuthState>()(
       clearError: () => {
         set({ errorAuth: null });
       },
+      setSelectedParentCompany: (companyId: string) => {
+        set({
+          selectedParentCompanyId: companyId,
+          pendingParentCompanySelection: false,
+        });
+      },
+      setAvailableParentCompanies: (companies: ParentCompany[]) => {
+        set({ availableParentCompanies: companies });
+      },
+      setPendingParentCompanySelection: (pending: boolean) => {
+        set({ pendingParentCompanySelection: pending });
+      },
     }),
     {
       name: "auth-storage",
@@ -83,7 +144,8 @@ export const useAuthStore = create<AuthState>()(
         user: state.user,
         token: state.token,
         isAuthenticated: state.isAuthenticated,
-        expiresAt: state.expiresAt, // <--- importante persistirlo
+        expiresAt: state.expiresAt,
+        selectedParentCompanyId: state.selectedParentCompanyId, // Persistir selección
       }),
     }
   )

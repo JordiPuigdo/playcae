@@ -3,14 +3,28 @@ import {
   AccessHistoryEntry,
   AccessHistoryFilters,
   AccessRecordFilter,
+  AccessRecord,
   AccessKPIData,
   mapAccessRecordToEntry,
 } from "@/types/accessHistory";
 import { AccessService } from "@/services/access.service";
+import { format, subDays } from "date-fns";
 
 const accessService = new AccessService();
 
+// Helper para obtener fechas por defecto (últimos 7 días)
+const getDefaultDateRange = () => {
+  const today = new Date();
+  const sevenDaysAgo = subDays(today, 7);
+  return {
+    startDate: format(sevenDaysAgo, "yyyy-MM-dd"),
+    endDate: format(today, "yyyy-MM-dd"),
+  };
+};
+
 export const useAccessHistory = (accessCompanyId?: string) => {
+  const defaultDates = getDefaultDateRange();
+
   const [history, setHistory] = useState<AccessHistoryEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -21,8 +35,8 @@ export const useAccessHistory = (accessCompanyId?: string) => {
   const [filters, setFilters] = useState<AccessHistoryFilters>({
     searchTechnician: "",
     company: "",
-    startDate: "",
-    endDate: "",
+    startDate: defaultDates.startDate,
+    endDate: defaultDates.endDate,
   });
 
   const [companies, setCompanies] = useState<{ id: string; name: string }[]>(
@@ -56,13 +70,14 @@ export const useAccessHistory = (accessCompanyId?: string) => {
       const response = await accessService.getFiltered(apiFilter);
 
       if (response.data) {
-        const entries = response.data.items.map(mapAccessRecordToEntry);
+        const records = response.data.records ?? [];
+        const entries = records.map(mapAccessRecordToEntry);
         setHistory(entries);
-        setTotalCount(response.data.totalCount);
+        setTotalCount(response.data.totalCount ?? 0);
 
         // Extraer empresas únicas para el filtro
         const uniqueCompanies = new Map<string, string>();
-        response.data.items.forEach((item) => {
+        records.forEach((item) => {
           uniqueCompanies.set(item.workerCompanyId, item.workerCompanyName);
         });
         setCompanies(
@@ -73,7 +88,7 @@ export const useAccessHistory = (accessCompanyId?: string) => {
         );
 
         // Calcular KPIs basados en los datos
-        calculateKPIs(response.data.items);
+        calculateKPIs(records);
       }
     } catch (err) {
       setError("Error al cargar el histórico de accesos");
@@ -83,15 +98,15 @@ export const useAccessHistory = (accessCompanyId?: string) => {
     }
   }, [accessCompanyId, filters, page, pageSize]);
 
-  const calculateKPIs = (items: any[]) => {
+  const calculateKPIs = (records: AccessRecord[]) => {
     const today = new Date().toISOString().split("T")[0];
-    const todayItems = items.filter((item) =>
-      item.checkInTime?.startsWith(today)
+    const todayRecords = records.filter((record) =>
+      record.entryTime?.startsWith(today)
     );
 
-    const totalAccessesToday = todayItems.length;
-    const failedAccesses = todayItems.filter(
-      (item) => item.wasAccessDenied
+    const totalAccessesToday = todayRecords.length;
+    const failedAccesses = todayRecords.filter(
+      (record) => record.status !== 0
     ).length;
     const validAccesses = totalAccessesToday - failedAccesses;
 
@@ -102,30 +117,30 @@ export const useAccessHistory = (accessCompanyId?: string) => {
 
     // Calcular horas trabajadas hoy
     let hoursWorkedToday = 0;
-    todayItems.forEach((item) => {
-      if (item.checkInTime && item.checkOutTime) {
-        const checkIn = new Date(item.checkInTime);
-        const checkOut = new Date(item.checkOutTime);
-        hoursWorkedToday += (checkOut.getTime() - checkIn.getTime()) / 3600000;
+    todayRecords.forEach((record) => {
+      if (record.entryTime && record.exitTime) {
+        const entry = new Date(record.entryTime);
+        const exit = new Date(record.exitTime);
+        hoursWorkedToday += (exit.getTime() - entry.getTime()) / 3600000;
       }
     });
 
     // Empresas únicas en sitio hoy
     const uniqueCompaniesOnSite = new Set(
-      todayItems.map((item) => item.workerCompanyId)
+      todayRecords.map((record) => record.workerCompanyId)
     );
 
     // Determinar tendencia (comparar con ayer si hay datos)
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toISOString().split("T")[0];
-    const yesterdayItems = items.filter((item) =>
-      item.checkInTime?.startsWith(yesterdayStr)
+    const yesterdayRecords = records.filter((record) =>
+      record.entryTime?.startsWith(yesterdayStr)
     );
 
     let trend: "up" | "down" | "stable" = "stable";
-    if (todayItems.length > yesterdayItems.length) trend = "up";
-    else if (todayItems.length < yesterdayItems.length) trend = "down";
+    if (todayRecords.length > yesterdayRecords.length) trend = "up";
+    else if (todayRecords.length < yesterdayRecords.length) trend = "down";
 
     setKpiData({
       validDocumentationPercentage,
@@ -147,11 +162,12 @@ export const useAccessHistory = (accessCompanyId?: string) => {
   };
 
   const clearFilters = () => {
+    const defaultDates = getDefaultDateRange();
     setFilters({
       searchTechnician: "",
       company: "",
-      startDate: "",
-      endDate: "",
+      startDate: defaultDates.startDate,
+      endDate: defaultDates.endDate,
     });
     setPage(1);
   };

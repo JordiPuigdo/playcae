@@ -2,6 +2,7 @@
 
 export interface AccessValidationRequest {
   cardId: string; // DNI del trabajador
+  adminUserId: string; // ID del usuario admin que valida (dueño del terminal)
   accessCompanyId?: string; // ID del centro de trabajo (opcional)
 }
 
@@ -25,12 +26,14 @@ export interface AccessValidationResult {
 
 export interface CheckInRequest {
   cardId: string; // DNI del trabajador
+  adminUserId: string; // ID del usuario admin que realiza el fichaje
   accessCompanyId?: string; // ID del centro de trabajo
   notes?: string;
 }
 
 export interface CheckOutRequest {
   cardId: string; // DNI del trabajador
+  adminUserId: string; // ID del usuario admin que realiza el desfichaje
   accessCompanyId?: string; // ID del centro de trabajo
   notes?: string;
 }
@@ -41,17 +44,18 @@ export interface AccessRecord {
   id: string;
   workerId: string;
   workerName: string;
-  workerDni: string;
+  workerCardId: string; // DNI del trabajador
   workerCompanyId: string;
   workerCompanyName: string;
   accessCompanyId?: string;
   accessCompanyName?: string;
-  checkInTime: string;
-  checkOutTime?: string | null;
-  wasAccessDenied: boolean;
-  denialReason?: string;
-  notes?: string;
-  createdAt: string;
+  entryTime: string;
+  exitTime?: string | null;
+  status: number; // 0 = Apto, 1 = No apto
+  denialReason?: string | null;
+  problematicDocumentIds?: string[];
+  creationDate: string;
+  active: boolean;
 }
 
 export interface AccessRecordFilter {
@@ -68,7 +72,7 @@ export interface AccessRecordFilter {
 }
 
 export interface AccessRecordPagedResult {
-  items: AccessRecord[];
+  records: AccessRecord[]; // API devuelve "records", no "items"
   totalCount: number;
   page: number;
   pageSize: number;
@@ -111,11 +115,11 @@ export function mapAccessRecordToEntry(
   return {
     id: record.id,
     technicianName: record.workerName,
-    dni: record.workerDni,
+    dni: record.workerCardId,
     company: record.workerCompanyName,
     companyId: record.workerCompanyId,
-    entryTime: record.checkInTime,
-    exitTime: record.checkOutTime ?? null,
-    status: record.wasAccessDenied ? "No apto" : "Apto",
+    entryTime: record.entryTime,
+    exitTime: record.exitTime ?? null,
+    status: record.status === 0 ? "Apto" : "No apto",
   };
 }
