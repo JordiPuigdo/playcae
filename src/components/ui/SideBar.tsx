@@ -9,7 +9,7 @@ import {
   Building2,
   Network,
   Building,
-  ClipboardList,
+  History,
   ScanLine,
 } from "lucide-react";
 
@@ -26,7 +26,7 @@ export default function Sidebar() {
     {
       href: "/dashboard/access-history",
       label: "Histórico de Accesos",
-      icon: ClipboardList,
+      icon: History,
     },
     {
       href: "/access-control",
