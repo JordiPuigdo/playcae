@@ -44,6 +44,7 @@ export function PasswordInput({
           onChange={onChange}
           required={required}
           autoComplete={autoComplete}
+          uppercase={false}
           className={className + " pr-10"}
         />
         <Button
