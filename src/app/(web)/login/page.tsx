@@ -75,7 +75,7 @@ export default function LoginPage() {
         try {
           const companyService = new CompanyService(new HttpClient());
           const response = await companyService.getParentCompanies(
-            user.companyId
+            user.companyId,
           );
           if (response?.data) {
             // Mapear a ParentCompany
@@ -86,8 +86,12 @@ export default function LoginPage() {
             }));
             setParentCompanies(companies);
 
+            // Si no hay empresas padre, usar la propia empresa del usuario
+            if (companies.length === 0) {
+              setSelectedParentCompany(user.companyId);
+            }
             // Si solo hay una empresa, seleccionarla automáticamente
-            if (companies.length === 1) {
+            else if (companies.length === 1) {
               setSelectedParentCompany(companies[0].id);
             }
           }
