@@ -27,7 +27,7 @@ type ModalState = "idle" | "validated" | "checkin" | "checkout" | "error";
 const AccessControlContent = () => {
   const searchParams = useSearchParams();
   const accessCompanyId = searchParams.get("companyId") || "";
-  const { user } = useAuthStore();
+  const { user, logoUrl } = useAuthStore();
   const adminUserId = user?.userId || "";
 
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -38,6 +38,14 @@ const AccessControlContent = () => {
   const [validationResult, setValidationResult] =
     useState<AccessValidationResult | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [logoError, setLogoError] = useState(false);
+
+  // Usar logo personalizado si existe, si no usar el logo por defecto
+  // Agregar timestamp para evitar caché
+  const displayLogoUrl =
+    logoUrl && !logoError
+      ? `${logoUrl}?t=${Date.now()}`
+      : "/assets/playcae.png";
 
   const toggleFullscreen = async () => {
     try {
@@ -331,11 +339,14 @@ const AccessControlContent = () => {
             </h1>
             <div className="flex w-full items-center">
               <Image
-                src="/assets/girbau.png"
+                src={displayLogoUrl}
                 alt="Logo Play CAE"
                 width={400}
                 height={150}
                 className="flex items-center justify-center"
+                onError={() => setLogoError(true)}
+                priority
+                unoptimized
               />
             </div>
             <p className="text-xl text-muted-foreground">

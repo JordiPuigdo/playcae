@@ -6,17 +6,20 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 
 export default function Header() {
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { logout, logoUrl } = useAuthStore();
 
   const handleLogout = () => {
     logout();
     router.push("/login");
   };
 
+  // Usar logo personalizado si existe, si no usar el logo por defecto
+  const displayLogoUrl = logoUrl || "/assets/playcae.png";
+
   return (
     <header className="h-16 sticky top-0 z-50 bg-white shadow flex items-center justify-between px-6">
       <Image
-        src="/assets/girbau.png"
+        src={displayLogoUrl}
         alt="Logo Play CAE"
         width={90}
         height={35}

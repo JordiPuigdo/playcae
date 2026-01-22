@@ -28,12 +28,17 @@ export class HttpClient {
   }
 
   async put<T = void>(url: string, body: unknown): Promise<ApiResponse<T>> {
+    // Si body es FormData, no agregar Content-Type header
+    const isFormData = body instanceof FormData;
+
     const response = await fetch(`${this.baseUrl}${url}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+      headers: isFormData
+        ? undefined
+        : {
+            "Content-Type": "application/json",
+          },
+      body: isFormData ? body : JSON.stringify(body),
     });
     return this.handleResponse<T>(response);
   }

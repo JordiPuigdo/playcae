@@ -11,6 +11,7 @@ import {
   Building,
   History,
   ScanLine,
+  Settings,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -32,6 +33,11 @@ export default function Sidebar() {
       href: "/access-control",
       label: "Control de Acceso",
       icon: ScanLine,
+    },
+    {
+      href: "/dashboard/configuration",
+      label: "Configuración",
+      icon: Settings,
     },
   ];
 

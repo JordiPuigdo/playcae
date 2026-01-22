@@ -3,7 +3,21 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["example.com", "images.unsplash.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "example.com",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+      {
+        protocol: "https",
+        hostname: "stplaycaeprodweu01.blob.core.windows.net",
+        pathname: "/**",
+      },
+    ],
   },
 
   // Headers de seguridad y SEO
