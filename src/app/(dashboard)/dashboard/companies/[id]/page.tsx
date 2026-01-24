@@ -44,6 +44,7 @@ const CompanyDetailPage = () => {
     getSubcontractors,
     createSubcontractor,
     toggleCompanyActive,
+    resendWelcomeEmail,
   } = useCompanies();
   const {
     createWorker,
@@ -245,6 +246,7 @@ const CompanyDetailPage = () => {
             company={company}
             onUpdate={handleUpdateCompany}
             onToggleActive={handleToggleActive}
+            onResendWelcomeEmail={resendWelcomeEmail}
             userRole={UserRole.Admin}
           />
         </div>

@@ -207,6 +207,17 @@ export const useCompanies = () => {
     }
   };
 
+  /**
+   * Reenvía el correo de bienvenida a una empresa
+   */
+  const resendWelcomeEmail = async (companyId: string): Promise<void> => {
+    try {
+      await companyService.resendWelcomeEmail(companyId);
+    } catch (err) {
+      throw handleError(err);
+    }
+  };
+
   return {
     companies,
     loading: isValidating,
@@ -225,6 +236,8 @@ export const useCompanies = () => {
     getSubcontractors,
     getAllSubcontractorsRecursive,
     createSubcontractor,
+    // Correo de bienvenida
+    resendWelcomeEmail,
   };
 };
 

@@ -123,4 +123,14 @@ export class CompanyService implements ICompanyService {
       `${this.baseUrl}/${companyId}/parent-companies`
     );
   }
+
+  /**
+   * Reenvía el correo de bienvenida a la empresa
+   */
+  async resendWelcomeEmail(companyId: string): Promise<ApiResponse<void>> {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/${companyId}/resend-welcome-email`,
+      null
+    );
+  }
 }

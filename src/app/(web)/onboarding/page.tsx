@@ -21,11 +21,12 @@ import {
   Users,
   CheckCircle,
 } from "lucide-react";
-import { CompanyFormData, CompanyStatus } from "@/types/company";
+import { CompanyFormData, CompanyStatus, CompanyType } from "@/types/company";
 import { WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-Toast";
 import { useCompanies } from "@/hooks/useCompanies";
 import Loader from "@/components/Loader";
+import { Switch } from "@/components/ui/Switch";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
@@ -69,6 +70,8 @@ export default function CompanyOnboarding() {
         contactPerson: company.contactPerson,
         email: company.email,
         phone: company.phone,
+        type: company.type ?? CompanyType.Company,
+        hasInternalPreventionService: company.hasInternalPreventionService ?? false,
       },
       workers: workers,
     });
@@ -88,6 +91,8 @@ export default function CompanyOnboarding() {
       contactPerson: "",
       email: "",
       phone: "",
+      type: CompanyType.Company,
+      hasInternalPreventionService: false,
     },
     workers: [
       {
@@ -147,7 +152,7 @@ export default function CompanyOnboarding() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCompanyChange = (field: keyof CompanyFormData, value: string) => {
+  const handleCompanyChange = (field: keyof CompanyFormData, value: string | CompanyType | boolean) => {
     setOnboardingData((prev) => ({
       ...prev,
       company: {
@@ -296,6 +301,35 @@ export default function CompanyOnboarding() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="space-y-3">
+          <Label className="text-base font-medium">Tipo de entidad</Label>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              variant={onboardingData.company.type === CompanyType.Company ? "default" : "outline"}
+              className={`flex-1 gap-2 ${onboardingData.company.type === CompanyType.Company ? "" : "text-muted-foreground"}`}
+              onClick={() => handleCompanyChange("type", CompanyType.Company)}
+            >
+              <Building className="h-4 w-4" />
+              Empresa
+            </Button>
+            <Button
+              type="button"
+              variant={onboardingData.company.type === CompanyType.SelfEmployed ? "default" : "outline"}
+              className={`flex-1 gap-2 ${onboardingData.company.type === CompanyType.SelfEmployed ? "" : "text-muted-foreground"}`}
+              onClick={() => handleCompanyChange("type", CompanyType.SelfEmployed)}
+            >
+              <Users className="h-4 w-4" />
+              Autónomo
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {onboardingData.company.type === CompanyType.SelfEmployed
+              ? "Autónomo (trabajador por cuenta propia)"
+              : "Empresa (sociedad mercantil)"}
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
             <Label htmlFor="company-name">Nombre Empresa *</Label>
@@ -311,12 +345,14 @@ export default function CompanyOnboarding() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company-cif">CIF *</Label>
+            <Label htmlFor="company-cif">
+              {onboardingData.company.type === CompanyType.SelfEmployed ? "NIF" : "CIF"} *
+            </Label>
             <Input
               id="company-cif"
               value={onboardingData.company.taxId}
               onChange={(e) => handleCompanyChange("taxId", e.target.value)}
-              placeholder="Escriba su CIF"
+              placeholder={onboardingData.company.type === CompanyType.SelfEmployed ? "Escriba su NIF" : "Escriba su CIF"}
             />
             {errors.cif && (
               <p className="text-sm text-destructive">{errors.cif}</p>
@@ -360,6 +396,32 @@ export default function CompanyOnboarding() {
               onChange={(e) => handleCompanyChange("phone", e.target.value)}
               placeholder="Escriba un número de teléfono"
             />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between p-4 border rounded-lg bg-muted/50 mt-4">
+          <div className="space-y-0.5">
+            <Label htmlFor="prevention-service" className="text-base font-medium">
+              Servicio de Prevención Interno
+            </Label>
+            <p className="text-sm text-muted-foreground">
+              Indica si tu empresa dispone de un servicio de prevención de riesgos laborales propio
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className={`text-sm ${!onboardingData.company.hasInternalPreventionService ? 'font-medium' : 'text-muted-foreground'}`}>
+              No
+            </span>
+            <Switch
+              id="prevention-service"
+              checked={onboardingData.company.hasInternalPreventionService ?? false}
+              onCheckedChange={(checked) =>
+                handleCompanyChange("hasInternalPreventionService", checked)
+              }
+            />
+            <span className={`text-sm ${onboardingData.company.hasInternalPreventionService ? 'font-medium' : 'text-muted-foreground'}`}>
+              Sí
+            </span>
           </div>
         </div>
       </CardContent>
@@ -509,10 +571,13 @@ export default function CompanyOnboarding() {
           <h4 className="font-medium mb-3">Empresa</h4>
           <div className="bg-muted rounded-lg p-4 space-y-2">
             <p>
+              <strong>Tipo:</strong> {onboardingData.company.type === CompanyType.SelfEmployed ? "Autónomo" : "Empresa"}
+            </p>
+            <p>
               <strong>Nombre:</strong> {onboardingData.company.name}
             </p>
             <p>
-              <strong>CIF:</strong> {onboardingData.company.taxId}
+              <strong>{onboardingData.company.type === CompanyType.SelfEmployed ? "NIF" : "CIF"}:</strong> {onboardingData.company.taxId}
             </p>
             <p>
               <strong>Contacto:</strong> {onboardingData.company.contactPerson}

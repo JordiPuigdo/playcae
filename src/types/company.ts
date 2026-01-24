@@ -10,9 +10,12 @@ export interface CompanySimple extends BaseEntity {
   email: string;
   phone?: string;
   status: CompanyStatus;
+  type: CompanyType;
   active: boolean;
   userId: string;
   workerStatus: WorkerStatus;
+  // Servicio de prevención interno
+  hasInternalPreventionService: boolean;
   // Jerarquía de subcontratación
   parentCompanyId?: string | null;
   parentCompanyName?: string | null;
@@ -42,12 +45,19 @@ export enum CompanyStatus {
   Pending = 2,
 }
 
+export enum CompanyType {
+  Company = 0,      // Empresa
+  SelfEmployed = 1, // Autónomo
+}
+
 export interface CompanyFormData {
   name: string;
   taxId: string;
   contactPerson: string;
   email: string;
   phone?: string;
+  type?: CompanyType;
+  hasInternalPreventionService?: boolean;
 }
 
 export interface CreateSubcontractorData extends CompanyFormData {

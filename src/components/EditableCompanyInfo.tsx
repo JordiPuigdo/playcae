@@ -30,6 +30,7 @@ import {
   PowerOff,
   AlertTriangle,
   CheckCircle,
+  Send,
 } from "lucide-react";
 import { Company, CompanyFormData } from "@/types/company";
 import {
@@ -48,6 +49,7 @@ interface EditableCompanyInfoProps {
   company: Company;
   onUpdate: (id: string, data: CompanyFormData) => void;
   onToggleActive?: (id: string, activate: boolean) => Promise<void>;
+  onResendWelcomeEmail?: (id: string) => Promise<void>;
   userRole?: UserRole;
 }
 
@@ -108,12 +110,14 @@ export const EditableCompanyInfo = ({
   company,
   onUpdate,
   onToggleActive,
+  onResendWelcomeEmail,
   userRole = UserRole.Admin,
 }: EditableCompanyInfoProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
   const [isTogglingActive, setIsTogglingActive] = useState(false);
+  const [isSendingEmail, setIsSendingEmail] = useState(false);
   const { toast } = useToast();
 
   const canEdit = true;
@@ -163,6 +167,27 @@ export const EditableCompanyInfo = ({
       });
     } finally {
       setIsTogglingActive(false);
+    }
+  };
+
+  const handleResendWelcomeEmail = async () => {
+    if (!onResendWelcomeEmail) return;
+
+    setIsSendingEmail(true);
+    try {
+      await onResendWelcomeEmail(company.id!);
+      toast({
+        title: "Correo enviado",
+        description: "El correo de bienvenida ha sido reenviado correctamente.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "No se pudo reenviar el correo de bienvenida.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSendingEmail(false);
     }
   };
 
@@ -478,6 +503,22 @@ export const EditableCompanyInfo = ({
                   </>
                 )}
               </Button>
+              {onResendWelcomeEmail && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleResendWelcomeEmail}
+                  disabled={isSendingEmail}
+                  className="border-blue-300 text-blue-600 hover:bg-blue-50"
+                >
+                  {isSendingEmail ? (
+                    <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4 mr-1" />
+                  )}
+                  {isSendingEmail ? "Enviando..." : "Reenviar correo"}
+                </Button>
+              )}
               <Button
                 variant="outline"
                 size="sm"
