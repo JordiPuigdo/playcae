@@ -5,6 +5,7 @@ import {
   CompanyFormData,
   CompanySimple,
   CompanyStatus,
+  CompanyType,
   CreateSubcontractorData,
 } from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
@@ -60,6 +61,8 @@ export const useCompanies = () => {
         workerStatus: 0,
         isSubcontractor: false,
         active: true,
+        hasInternalPreventionService: false,
+        type: data.type ?? CompanyType.Company,
       };
 
       const response = await companyService.create(newCompany);
