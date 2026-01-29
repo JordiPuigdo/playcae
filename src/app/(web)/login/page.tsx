@@ -23,6 +23,7 @@ import { ParentCompanySelector } from "@/components/ParentCompanySelector";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
 import dayjs from "dayjs";
+import { useUserConfiguration } from "@/hooks/useUserConfiguration";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -39,8 +40,10 @@ export default function LoginPage() {
     errorAuth,
     pendingParentCompanySelection,
     setSelectedParentCompany,
-    setPendingParentCompanySelection,
+    setLogoUrl,
   } = useAuthStore();
+
+  const { getLogoUrl } = useUserConfiguration();
 
   useAuthSession();
 
@@ -71,6 +74,7 @@ export default function LoginPage() {
         pendingParentCompanySelection &&
         user.role === UserRole.Company
       ) {
+
         // Ocultar el overlay de "Iniciando sesión" para mostrar el selector
         setIsLoading(false);
         setIsLoadingCompanies(true);
@@ -80,6 +84,7 @@ export default function LoginPage() {
             user.companyId,
           );
           if (response?.data) {
+            
             // Mapear a ParentCompany (backend devuelve userId)
             const companies: ParentCompany[] = response.data.map((c) => ({
               id: c.userId,
@@ -109,11 +114,25 @@ export default function LoginPage() {
   }, [user, pendingParentCompanySelection, setSelectedParentCompany]);
 
   // Manejar selección de empresa padre
-  const handleParentCompanySelect = (companyId: string) => {
-    setIsLoading(true); // Mostrar loading mientras redirige
-    setSelectedParentCompany(companyId);
+  const handleParentCompanySelect = async (companyId: string) => {
+    try {
+      const url = await getLogoUrl(companyId);
+      console.log("Logo URL seleccionada:", url);
+      if (url) {
+        setLogoUrl(url);
+      }
+      setIsLoading(true);
+      setSelectedParentCompany(companyId);
+    } catch (err) {
+      console.error("Error al obtener logo:", err);
+      setSelectedParentCompany(companyId);
+    }
   };
 
+      // company que es UserId!
+  
+
+ 
   useEffect(() => {
     if (!user) return;
     if (dayjs().isAfter(dayjs(user.refreshTokenExpiryTime))) return;

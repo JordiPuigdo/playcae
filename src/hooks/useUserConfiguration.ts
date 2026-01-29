@@ -133,6 +133,11 @@ export const useUserConfiguration = () => {
     }
   };
 
+  const getLogoUrl = async (userId: string): Promise<string> => {
+    const data = await userConfigurationService.getLogoUrl(userId);
+    return data.data.url || "";
+  }
+
   return {
     configuration,
     isLoading,
@@ -141,5 +146,6 @@ export const useUserConfiguration = () => {
     uploadLogo,
     updateLogo,
     deleteLogo,
+    getLogoUrl,
   };
 };

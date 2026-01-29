@@ -9,3 +9,7 @@ export interface UserConfiguration extends BaseEntity {
 export interface UserConfigurationUpdate {
   logoUrl?: string | null;
 }
+
+export interface UserLogoGetResponse {
+  url: string;
+}

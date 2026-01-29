@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/interfaces/api-response";
-import { UserConfiguration } from "@/types/userConfiguration";
+import { UserConfiguration, UserLogoGetResponse } from "@/types/userConfiguration";
 import { HttpClient } from "./http-client";
 
 export interface IUserConfigurationService {
@@ -13,6 +13,7 @@ export interface IUserConfigurationService {
     file: File,
   ): Promise<ApiResponse<UserConfiguration>>;
   deleteLogo(userId: string): Promise<ApiResponse<void>>;
+  getLogoUrl(userId: string): Promise<ApiResponse<UserLogoGetResponse>>;
 }
 
 export class UserConfigurationService implements IUserConfigurationService {
@@ -56,5 +57,9 @@ export class UserConfigurationService implements IUserConfigurationService {
 
   async deleteLogo(userId: string): Promise<ApiResponse<void>> {
     return this.httpClient.delete<void>(`${this.baseUrl}/${userId}/logo`);
+  }
+
+  async getLogoUrl(userId: string): Promise<ApiResponse<UserLogoGetResponse>> {
+    return this.httpClient.get<UserLogoGetResponse>(`${this.baseUrl}/${userId}/logo`);
   }
 }

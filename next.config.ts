@@ -17,6 +17,12 @@ const nextConfig = {
         hostname: "stplaycaeprodweu01.blob.core.windows.net",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "localhost",
+        port: "7034",
+        pathname: "/**",
+      },
     ],
   },
 
