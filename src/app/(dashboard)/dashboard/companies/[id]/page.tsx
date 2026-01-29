@@ -247,7 +247,7 @@ const CompanyDetailPage = () => {
             onUpdate={handleUpdateCompany}
             onToggleActive={handleToggleActive}
             onResendWelcomeEmail={resendWelcomeEmail}
-            userRole={UserRole.Admin}
+            userRole={user?.role!}
           />
         </div>
 

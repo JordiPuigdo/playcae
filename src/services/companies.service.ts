@@ -4,6 +4,7 @@ import {
   CompanySimple,
   CompanyStatus,
   CreateSubcontractorData,
+  ParentCompanyInfo,
 } from "@/types/company";
 import { HttpClient } from "./http-client";
 
@@ -118,8 +119,8 @@ export class CompanyService implements ICompanyService {
    */
   async getParentCompanies(
     companyId: string
-  ): Promise<ApiResponse<CompanySimple[]>> {
-    return this.httpClient.get<CompanySimple[]>(
+  ): Promise<ApiResponse<ParentCompanyInfo[]>> {
+    return this.httpClient.get<ParentCompanyInfo[]>(
       `${this.baseUrl}/${companyId}/parent-companies`
     );
   }

@@ -69,9 +69,9 @@ export const ParentCompanySelector = ({
 
       <CardContent className="space-y-4">
         <div className="space-y-2 max-h-64 overflow-y-auto">
-          {companies.map((company) => (
+          {companies.map((company, index) => (
             <button
-              key={company.id}
+              key={company.id || `company-${index}`}
               onClick={() => handleSelect(company.id)}
               className={`w-full p-4 rounded-lg border-2 transition-all text-left flex items-center justify-between gap-3 ${
                 selectedId === company.id

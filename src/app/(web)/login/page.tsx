@@ -71,6 +71,8 @@ export default function LoginPage() {
         pendingParentCompanySelection &&
         user.role === UserRole.Company
       ) {
+        // Ocultar el overlay de "Iniciando sesión" para mostrar el selector
+        setIsLoading(false);
         setIsLoadingCompanies(true);
         try {
           const companyService = new CompanyService(new HttpClient());
@@ -78,11 +80,10 @@ export default function LoginPage() {
             user.companyId,
           );
           if (response?.data) {
-            // Mapear a ParentCompany
+            // Mapear a ParentCompany (backend devuelve userId)
             const companies: ParentCompany[] = response.data.map((c) => ({
-              id: c.id!,
+              id: c.userId,
               name: c.name,
-              taxId: c.taxId,
             }));
             setParentCompanies(companies);
 
@@ -109,6 +110,7 @@ export default function LoginPage() {
 
   // Manejar selección de empresa padre
   const handleParentCompanySelect = (companyId: string) => {
+    setIsLoading(true); // Mostrar loading mientras redirige
     setSelectedParentCompany(companyId);
   };
 

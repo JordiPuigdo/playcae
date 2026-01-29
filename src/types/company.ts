@@ -63,3 +63,9 @@ export interface CompanyFormData {
 export interface CreateSubcontractorData extends CompanyFormData {
   userCompanyId: string; // ID de la empresa del usuario actual
 }
+
+// Tipo simplificado para la respuesta de parent-companies
+export interface ParentCompanyInfo {
+  userId: string;
+  name: string;
+}

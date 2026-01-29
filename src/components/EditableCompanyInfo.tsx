@@ -121,6 +121,7 @@ export const EditableCompanyInfo = ({
   const { toast } = useToast();
 
   const canEdit = true;
+  const isAdmin = userRole === UserRole.Admin || userRole === UserRole.SuperAdmin;
   const isActive = company.active !== false; // Por defecto activo si no está definido
 
   const form = useForm<CompanyFormData>({
@@ -228,29 +229,31 @@ export const EditableCompanyInfo = ({
               </div>
 
               <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsToggleModalOpen(true)}
-                  disabled={isLoading}
-                  className={
-                    isActive
-                      ? "border-red-300 text-red-600 hover:bg-red-50"
-                      : "border-green-300 text-green-600 hover:bg-green-50"
-                  }
-                >
-                  {isActive ? (
-                    <>
-                      <PowerOff className="h-4 w-4 mr-1" />
-                      Desactivar
-                    </>
-                  ) : (
-                    <>
-                      <Power className="h-4 w-4 mr-1" />
-                      Activar
-                    </>
-                  )}
-                </Button>
+                {isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsToggleModalOpen(true)}
+                    disabled={isLoading}
+                    className={
+                      isActive
+                        ? "border-red-300 text-red-600 hover:bg-red-50"
+                        : "border-green-300 text-green-600 hover:bg-green-50"
+                    }
+                  >
+                    {isActive ? (
+                      <>
+                        <PowerOff className="h-4 w-4 mr-1" />
+                        Desactivar
+                      </>
+                    ) : (
+                      <>
+                        <Power className="h-4 w-4 mr-1" />
+                        Activar
+                      </>
+                    )}
+                  </Button>
+                )}
 
                 <Button
                   variant="outline"
@@ -481,29 +484,31 @@ export const EditableCompanyInfo = ({
 
           {canEdit && (
             <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setIsToggleModalOpen(true)}
-                className={
-                  isActive
-                    ? "border-red-300 text-red-600 hover:bg-red-50"
-                    : "border-green-300 text-green-600 hover:bg-green-50"
-                }
-              >
-                {isActive ? (
-                  <>
-                    <PowerOff className="h-4 w-4 mr-1" />
-                    Desactivar
-                  </>
-                ) : (
-                  <>
-                    <Power className="h-4 w-4 mr-1" />
-                    Activar
-                  </>
-                )}
-              </Button>
-              {onResendWelcomeEmail && (
+              {isAdmin && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setIsToggleModalOpen(true)}
+                  className={
+                    isActive
+                      ? "border-red-300 text-red-600 hover:bg-red-50"
+                      : "border-green-300 text-green-600 hover:bg-green-50"
+                  }
+                >
+                  {isActive ? (
+                    <>
+                      <PowerOff className="h-4 w-4 mr-1" />
+                      Desactivar
+                    </>
+                  ) : (
+                    <>
+                      <Power className="h-4 w-4 mr-1" />
+                      Activar
+                    </>
+                  )}
+                </Button>
+              )}
+              {isAdmin && onResendWelcomeEmail && (
                 <Button
                   variant="outline"
                   size="sm"
