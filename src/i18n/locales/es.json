@@ -245,17 +245,39 @@
       "error": "Email o contraseña incorrectos"
     },
     "register": {
-      "title": "Crear cuenta",
-      "name": "Nombre",
-      "email": "Email",
+      "title": "Crear Cuenta",
+      "description": "Registre su empresa para comenzar a usar la plataforma.",
+      "companyName": "Nombre Empresa",
+      "companyNamePlaceholder": "Escriba el nombre de la empresa",
+      "cif": "CIF",
+      "cifPlaceholder": "A12345678",
+      "contactPerson": "Persona de Contacto",
+      "contactPersonPlaceholder": "Nombre de la persona de contacto",
+      "email": "Correo electrónico",
+      "emailPlaceholder": "empresa@correo.com",
+      "phone": "Teléfono",
+      "phonePlaceholder": "+34 600 000 000",
+      "address": "Dirección",
+      "addressPlaceholder": "Escriba la dirección de la empresa",
       "password": "Contraseña",
-      "confirmPassword": "Confirmar contraseña",
-      "company": "Empresa",
-      "submit": "Crear cuenta",
-      "hasAccount": "¿Ya tienes cuenta?",
-      "login": "Inicia sesión",
-      "success": "Cuenta creada correctamente",
-      "passwordMismatch": "Las contraseñas no coinciden"
+      "passwordPlaceholder": "Escriba la contraseña",
+      "confirmPassword": "Confirmar Contraseña",
+      "confirmPasswordPlaceholder": "Repita la contraseña",
+      "submit": "Crear Cuenta",
+      "submitting": "Registrando...",
+      "loadingMessage": "Registrando empresa...",
+      "backToLogin": "Volver al Login",
+      "success": "Registro exitoso",
+      "successDescription": "Su empresa ha sido registrada. Espere la aprobación para acceder.",
+      "errors": {
+        "requiredFields": "Por favor complete todos los campos obligatorios.",
+        "invalidEmail": "Por favor ingrese un correo electrónico válido.",
+        "invalidCif": "Por favor ingrese un CIF válido (letra + 8 dígitos).",
+        "passwordLength": "La contraseña debe tener al menos 6 caracteres.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "duplicateEntry": "Ya existe una empresa registrada con este email o CIF.",
+        "generic": "El registro ha fallado. Intente nuevamente."
+      }
     },
     "forgotPassword": {
       "title": "Recuperar contraseña",
@@ -378,7 +400,28 @@
     "filters": {
       "all": "Todas",
       "active": "Activas",
-      "inactive": "Inactivas"
+      "inactive": "Inactivas",
+      "searchCompany": "Buscar empresa",
+      "searchPlaceholder": "Buscar por nombre o CIF...",
+      "validationStatus": "Estado de validación",
+      "workerStatus": "Estado trabajadores",
+      "companyStatus": "Estado empresa",
+      "allWorkers": "Todos",
+      "approved": "Aptos",
+      "rejected": "No Aptos",
+      "clearFilters": "Limpiar filtros"
+    },
+    "detail": {
+      "parentCompanyFallback": "Empresa padre"
+    },
+    "observations": {
+      "title": "Observaciones de la Empresa",
+      "add": "Añadir",
+      "placeholder": "Escribir observación sobre la empresa...",
+      "save": "Guardar observación",
+      "empty": "No hay observaciones registradas para esta empresa.",
+      "by": "Por",
+      "on": "el"
     }
   },
   "workers": {
@@ -410,7 +453,13 @@
       "all": "Todos",
       "active": "Activos",
       "inactive": "Inactivos",
-      "pending": "Pendientes"
+      "pending": "Pendientes",
+      "searchWorker": "Buscar trabajador",
+      "searchPlaceholder": "Buscar por nombre o DNI...",
+      "status": "Estado",
+      "selectStatus": "Seleccionar estado",
+      "activityStatus": "Estado de actividad",
+      "selectActivity": "Seleccionar actividad"
     }
   },
   "documents": {

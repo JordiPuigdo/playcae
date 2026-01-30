@@ -245,17 +245,39 @@
       "error": "Correu electrònic o contrasenya incorrectes"
     },
     "register": {
-      "title": "Crear compte",
-      "name": "Nom",
+      "title": "Crear Compte",
+      "description": "Registra la teva empresa per començar a fer servir la plataforma.",
+      "companyName": "Nom Empresa",
+      "companyNamePlaceholder": "Escriu el nom de l'empresa",
+      "cif": "CIF",
+      "cifPlaceholder": "A12345678",
+      "contactPerson": "Persona de Contacte",
+      "contactPersonPlaceholder": "Nom de la persona de contacte",
       "email": "Correu electrònic",
+      "emailPlaceholder": "empresa@correu.com",
+      "phone": "Telèfon",
+      "phonePlaceholder": "+34 600 000 000",
+      "address": "Adreça",
+      "addressPlaceholder": "Escriu l'adreça de l'empresa",
       "password": "Contrasenya",
-      "confirmPassword": "Confirmar contrasenya",
-      "company": "Empresa",
-      "submit": "Crear compte",
-      "hasAccount": "Ja tens compte?",
-      "login": "Inicia sessió",
-      "success": "Compte creat correctament",
-      "passwordMismatch": "Les contrasenyes no coincideixen"
+      "passwordPlaceholder": "Escriu la contrasenya",
+      "confirmPassword": "Confirmar Contrasenya",
+      "confirmPasswordPlaceholder": "Repeteix la contrasenya",
+      "submit": "Crear Compte",
+      "submitting": "Registrant...",
+      "loadingMessage": "Registrant empresa...",
+      "backToLogin": "Tornar al Login",
+      "success": "Registre exitós",
+      "successDescription": "La teva empresa ha estat registrada. Espera l'aprovació per accedir.",
+      "errors": {
+        "requiredFields": "Si us plau, completa tots els camps obligatoris.",
+        "invalidEmail": "Si us plau, introdueix un correu electrònic vàlid.",
+        "invalidCif": "Si us plau, introdueix un CIF vàlid (lletra + 8 dígits).",
+        "passwordLength": "La contrasenya ha de tenir almenys 6 caràcters.",
+        "passwordMismatch": "Les contrasenyes no coincideixen.",
+        "duplicateEntry": "Ja existeix una empresa registrada amb aquest email o CIF.",
+        "generic": "El registre ha fallat. Torna-ho a intentar."
+      }
     },
     "forgotPassword": {
       "title": "Recuperar contrasenya",
@@ -378,7 +400,28 @@
     "filters": {
       "all": "Totes",
       "active": "Actives",
-      "inactive": "Inactives"
+      "inactive": "Inactives",
+      "searchCompany": "Buscar empresa",
+      "searchPlaceholder": "Buscar per nom o CIF...",
+      "validationStatus": "Estat de validació",
+      "workerStatus": "Estat treballadors",
+      "companyStatus": "Estat empresa",
+      "allWorkers": "Tots",
+      "approved": "Aptes",
+      "rejected": "No Aptes",
+      "clearFilters": "Netejar filtres"
+    },
+    "detail": {
+      "parentCompanyFallback": "Empresa pare"
+    },
+    "observations": {
+      "title": "Observacions de l'Empresa",
+      "add": "Afegir",
+      "placeholder": "Escriure observació sobre l'empresa...",
+      "save": "Guardar observació",
+      "empty": "No hi ha observacions registrades per a aquesta empresa.",
+      "by": "Per",
+      "on": "el"
     }
   },
   "workers": {
@@ -410,7 +453,13 @@
       "all": "Tots",
       "active": "Actius",
       "inactive": "Inactius",
-      "pending": "Pendents"
+      "pending": "Pendents",
+      "searchWorker": "Buscar treballador",
+      "searchPlaceholder": "Buscar per nom o DNI...",
+      "status": "Estat",
+      "selectStatus": "Seleccionar estat",
+      "activityStatus": "Estat d'activitat",
+      "selectActivity": "Seleccionar activitat"
     }
   },
   "documents": {

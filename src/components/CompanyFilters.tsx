@@ -20,6 +20,7 @@ import {
   getCompanyStatusLabel,
   getCompanyStatusOptions,
 } from "@/app/utils/enum-utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export interface CompanyFiltersState {
   search: string;
@@ -37,6 +38,7 @@ export const CompanyFilters = ({
   initialFilters,
   onFilter,
 }: CompanyFiltersProps) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState(initialFilters?.search || "");
   const [status, setStatus] = useState<Company["status"] | "Todos">(
     initialFilters?.status || "Todos"
@@ -116,12 +118,12 @@ export const CompanyFilters = ({
         <div className="flex flex-col sm:flex-row gap-4 items-end">
           <div className="flex-1 space-y-2">
             <label className="text-sm font-medium text-brand-primary">
-              Buscar empresa
+              {t("companies.filters.searchCompany")}
             </label>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-playBlueLight" />
               <Input
-                placeholder="Buscar por nombre o CIF..."
+                placeholder={t("companies.filters.searchPlaceholder")}
                 value={search}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 className="pl-10 border-playBlueLight focus-visible:ring-brand-primary"
@@ -131,7 +133,7 @@ export const CompanyFilters = ({
 
           <div className="space-y-2 min-w-[200px]">
             <label className="text-sm font-medium text-brand-primary">
-              Estado de validación
+              {t("companies.filters.validationStatus")}
             </label>
 
             <Select
@@ -171,7 +173,7 @@ export const CompanyFilters = ({
 
           <div className="space-y-2 min-w-[180px]">
             <label className="text-sm font-medium text-brand-primary">
-              Estado trabajadores
+              {t("companies.filters.workerStatus")}
             </label>
 
             <Select
@@ -195,19 +197,19 @@ export const CompanyFilters = ({
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Todos"
                 >
-                  Todos
+                  {t("companies.filters.allWorkers")}
                 </SelectItem>
                 <SelectItem
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Approved"
                 >
-                  Aptos
+                  {t("companies.filters.approved")}
                 </SelectItem>
                 <SelectItem
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Rejected"
                 >
-                  No Aptos
+                  {t("companies.filters.rejected")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -215,7 +217,7 @@ export const CompanyFilters = ({
 
           <div className="space-y-2 min-w-[150px]">
             <label className="text-sm font-medium text-brand-primary">
-              Estado empresa
+              {t("companies.filters.companyStatus")}
             </label>
 
             <Select
@@ -235,19 +237,19 @@ export const CompanyFilters = ({
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Todas"
                 >
-                  Todas
+                  {t("companies.filters.all")}
                 </SelectItem>
                 <SelectItem
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Activas"
                 >
-                  Activas
+                  {t("companies.filters.active")}
                 </SelectItem>
                 <SelectItem
                   className="hover:bg-playGrey hover:text-brand-primary"
                   value="Inactivas"
                 >
-                  Inactivas
+                  {t("companies.filters.inactive")}
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -264,7 +266,7 @@ export const CompanyFilters = ({
             }`}
           >
             <X className="h-4 w-4" />
-            Limpiar filtros
+            {t("companies.filters.clearFilters")}
           </Button>
         </div>
       </CardContent>

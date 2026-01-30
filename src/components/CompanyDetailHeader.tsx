@@ -2,6 +2,7 @@ import { ArrowLeft, Building2, ChevronRight, Network } from "lucide-react";
 import { Button } from "./ui/Button";
 import { useRouter } from "next/navigation";
 import { usePermissions } from "@/hooks/usePermissions";
+import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
 import Link from "next/link";
 
@@ -20,6 +21,7 @@ export const CompanyDetailHeader = ({
 }: CompanyDetailHeaderProps) => {
   const router = useRouter();
   const { role } = usePermissions();
+  const { t } = useTranslation();
   const isAdmin = role === UserRole.Admin;
 
   return (
@@ -31,7 +33,7 @@ export const CompanyDetailHeader = ({
             href="/dashboard/companies"
             className="hover:text-playBlueDark transition-colors"
           >
-            Empresas
+            {t("dashboard.sidebar.companies")}
           </Link>
 
           {isSubcontractor && parentCompanyId && (
@@ -42,7 +44,7 @@ export const CompanyDetailHeader = ({
                 className="hover:text-playBlueDark transition-colors flex items-center gap-1"
               >
                 <Building2 className="h-3 w-3" />
-                {parentCompanyName || "Empresa padre"}
+                {parentCompanyName || t("companies.detail.parentCompanyFallback")}
               </Link>
             </>
           )}
@@ -63,7 +65,7 @@ export const CompanyDetailHeader = ({
             visible={isAdmin}
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver
+            {t("common.back")}
           </Button>
           <div className="h-6 w-px bg-border" />
           <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
@@ -75,7 +77,7 @@ export const CompanyDetailHeader = ({
             {companyName}
             {isSubcontractor && (
               <span className="text-sm font-normal px-2 py-1 bg-playOrange/10 text-playOrange rounded-full">
-                Subcontrata
+                {t("companies.subcontractor")}
               </span>
             )}
           </h1>

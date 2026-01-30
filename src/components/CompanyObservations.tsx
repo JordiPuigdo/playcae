@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
 import { MessageSquare, Plus } from "lucide-react";
 import { CompanyObservation } from "@/types/document";
 import { UserRole } from "@/types/user";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface CompanyObservationsProps {
   observations: CompanyObservation[];
@@ -17,6 +18,7 @@ export const CompanyObservations = ({
   userRole,
   onAddObservation,
 }: CompanyObservationsProps) => {
+  const { t } = useTranslation();
   const [newObservation, setNewObservation] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
@@ -42,7 +44,7 @@ export const CompanyObservations = ({
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <MessageSquare className="h-5 w-5" />
-            Observaciones de la Empresa
+            {t("companies.observations.title")}
           </CardTitle>
           {canAddObservations && !isAdding && (
             <Button
@@ -52,7 +54,7 @@ export const CompanyObservations = ({
               className="gap-2"
             >
               <Plus className="h-4 w-4" />
-              Añadir
+              {t("companies.observations.add")}
             </Button>
           )}
         </div>
@@ -66,7 +68,7 @@ export const CompanyObservations = ({
             <Textarea
               value={newObservation}
               onChange={(e) => setNewObservation(e.target.value)}
-              placeholder="Escribir observación sobre la empresa..."
+              placeholder={t("companies.observations.placeholder")}
               required
             />
             <div className="flex justify-end gap-2">
@@ -79,10 +81,10 @@ export const CompanyObservations = ({
                   setNewObservation("");
                 }}
               >
-                Cancelar
+                {t("common.cancel")}
               </Button>
               <Button type="submit" size="sm">
-                Guardar observación
+                {t("companies.observations.save")}
               </Button>
             </div>
           </form>
@@ -90,7 +92,7 @@ export const CompanyObservations = ({
 
         {observations.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
-            No hay observaciones registradas para esta empresa.
+            {t("companies.observations.empty")}
           </div>
         ) : (
           <div className="space-y-3">
@@ -101,7 +103,7 @@ export const CompanyObservations = ({
               >
                 <div className="text-sm mb-2">{observation.observation}</div>
                 <div className="text-xs text-muted-foreground">
-                  Por {observation.createdBy} el{" "}
+                  {t("companies.observations.by")} {observation.createdBy} {t("companies.observations.on")}{" "}
                   {formatDate(observation.createdAt)}
                 </div>
               </div>

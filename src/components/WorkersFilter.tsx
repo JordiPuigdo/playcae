@@ -12,6 +12,7 @@ import {
 import { Search, Filter, Power } from "lucide-react";
 import { WorkerStatus } from "@/types/worker";
 import { getWorkerStatusLabel } from "@/app/utils/enum-utils";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface WorkerFiltersProps {
   onFilter: (filters: {
@@ -22,6 +23,7 @@ interface WorkerFiltersProps {
 }
 
 export const WorkerFilters = ({ onFilter }: WorkerFiltersProps) => {
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<WorkerStatus | "Todos">("Todos");
   const [activeFilter, setActiveFilter] = useState<
@@ -66,11 +68,11 @@ export const WorkerFilters = ({ onFilter }: WorkerFiltersProps) => {
         <div className="flex-1 space-y-2">
           <Label htmlFor="search" className="flex items-center gap-2">
             <Search className="h-4 w-4" />
-            Buscar trabajador
+            {t("workers.filters.searchWorker")}
           </Label>
           <Input
             id="search"
-            placeholder="Buscar por nombre o DNI..."
+            placeholder={t("workers.filters.searchPlaceholder")}
             value={search}
             onChange={(e) => handleSearchChange(e.target.value)}
           />
@@ -80,17 +82,17 @@ export const WorkerFilters = ({ onFilter }: WorkerFiltersProps) => {
         <div className="sm:w-48 space-y-2">
           <Label className="flex items-center gap-2">
             <Filter className="h-4 w-4" />
-            Estado
+            {t("workers.filters.status")}
           </Label>
           <Select
             value={status === "Todos" ? "Todos" : status.toString()}
             onValueChange={handleStatusChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Seleccionar estado" />
+              <SelectValue placeholder={t("workers.filters.selectStatus")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Todos">Todos</SelectItem>
+              <SelectItem value="Todos">{t("workers.filters.all")}</SelectItem>
               {Object.entries(WorkerStatus)
                 .filter(([key]) => isNaN(Number(key)))
                 .map(([key, val]) => (
@@ -106,16 +108,16 @@ export const WorkerFilters = ({ onFilter }: WorkerFiltersProps) => {
         <div className="sm:w-48 space-y-2">
           <Label className="flex items-center gap-2">
             <Power className="h-4 w-4" />
-            Estado de actividad
+            {t("workers.filters.activityStatus")}
           </Label>
           <Select value={activeFilter} onValueChange={handleActiveFilterChange}>
             <SelectTrigger>
-              <SelectValue placeholder="Seleccionar actividad" />
+              <SelectValue placeholder={t("workers.filters.selectActivity")} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Todos">Todos</SelectItem>
-              <SelectItem value="Activos">Activos</SelectItem>
-              <SelectItem value="Inactivos">Inactivos</SelectItem>
+              <SelectItem value="Todos">{t("workers.filters.all")}</SelectItem>
+              <SelectItem value="Activos">{t("workers.filters.active")}</SelectItem>
+              <SelectItem value="Inactivos">{t("workers.filters.inactive")}</SelectItem>
             </SelectContent>
           </Select>
         </div>

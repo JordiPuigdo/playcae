@@ -18,9 +18,11 @@ import { PasswordInput } from "@/components/PasswordInput";
 import { Loader2, Building2 } from "lucide-react";
 import { toast } from "@/hooks/use-Toast";
 import { useLead, LeadOrigin } from "@/hooks/useLead";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [registerData, setRegisterData] = useState({
     companyName: "",
@@ -74,23 +76,23 @@ export default function RegisterPage() {
       !password ||
       !confirmPassword
     ) {
-      setError("Por favor complete todos los campos obligatorios.");
+      setError(t("auth.register.errors.requiredFields"));
       return false;
     }
     if (!validateEmail(email)) {
-      setError("Por favor ingrese un correo electrónico válido.");
+      setError(t("auth.register.errors.invalidEmail"));
       return false;
     }
     if (!validateCIF(cif)) {
-      setError("Por favor ingrese un CIF válido (letra + 8 dígitos).");
+      setError(t("auth.register.errors.invalidCif"));
       return false;
     }
     if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres.");
+      setError(t("auth.register.errors.passwordLength"));
       return false;
     }
     if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden.");
+      setError(t("auth.register.errors.passwordMismatch"));
       return false;
     }
     setError("");
@@ -117,9 +119,8 @@ export default function RegisterPage() {
       });
 
       toast({
-        title: "Registro exitoso",
-        description:
-          "Su empresa ha sido registrada. Espere la aprobación para acceder.",
+        title: t("auth.register.success"),
+        description: t("auth.register.successDescription"),
       });
 
       setRegisterData({
@@ -136,9 +137,9 @@ export default function RegisterPage() {
       router.push("/login");
     } catch (err) {
       if (err instanceof Error && err.message.includes("409")) {
-        setError("Ya existe una empresa registrada con este email o CIF.");
+        setError(t("auth.register.errors.duplicateEntry"));
       } else {
-        setError("El registro ha fallado. Intente nuevamente.");
+        setError(t("auth.register.errors.generic"));
       }
     } finally {
       setIsLoading(false);
@@ -153,7 +154,7 @@ export default function RegisterPage() {
           <div className="flex flex-col items-center space-y-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-sm text-muted-foreground" aria-live="polite">
-              Registrando empresa...
+              {t("auth.register.loadingMessage")}
             </p>
           </div>
         </div>
@@ -162,10 +163,10 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">
-            Crear Cuenta
+            {t("auth.register.title")}
           </CardTitle>
           <CardDescription className="text-center">
-            Registre su empresa para comenzar a usar la plataforma.
+            {t("auth.register.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -177,12 +178,12 @@ export default function RegisterPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="companyName">Nombre Empresa *</Label>
+              <Label htmlFor="companyName">{t("auth.register.companyName")} *</Label>
               <Input
                 id="companyName"
                 name="companyName"
                 type="text"
-                placeholder="Escriba el nombre de la empresa"
+                placeholder={t("auth.register.companyNamePlaceholder")}
                 value={registerData.companyName}
                 onChange={handleRegisterInputChange}
                 required
@@ -191,12 +192,12 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="cif">CIF *</Label>
+              <Label htmlFor="cif">{t("auth.register.cif")} *</Label>
               <Input
                 id="cif"
                 name="cif"
                 type="text"
-                placeholder="A12345678"
+                placeholder={t("auth.register.cifPlaceholder")}
                 value={registerData.cif}
                 onChange={handleRegisterInputChange}
                 required
@@ -204,12 +205,12 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contactPerson">Persona de Contacto *</Label>
+              <Label htmlFor="contactPerson">{t("auth.register.contactPerson")} *</Label>
               <Input
                 id="contactPerson"
                 name="contactPerson"
                 type="text"
-                placeholder="Nombre de la persona de contacto"
+                placeholder={t("auth.register.contactPersonPlaceholder")}
                 value={registerData.contactPerson}
                 onChange={handleRegisterInputChange}
                 required
@@ -217,12 +218,12 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="registerEmail">Correo electrónico *</Label>
+              <Label htmlFor="registerEmail">{t("auth.register.email")} *</Label>
               <Input
                 id="registerEmail"
                 name="email"
                 type="email"
-                placeholder="empresa@correo.com"
+                placeholder={t("auth.register.emailPlaceholder")}
                 value={registerData.email}
                 onChange={handleRegisterInputChange}
                 required
@@ -230,12 +231,12 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Teléfono *</Label>
+              <Label htmlFor="phone">{t("auth.register.phone")} *</Label>
               <Input
                 id="phone"
                 name="phone"
                 type="tel"
-                placeholder="+34 600 000 000"
+                placeholder={t("auth.register.phonePlaceholder")}
                 value={registerData.phone}
                 onChange={handleRegisterInputChange}
                 required
@@ -243,11 +244,11 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="address">Dirección</Label>
+              <Label htmlFor="address">{t("auth.register.address")}</Label>
               <Textarea
                 id="address"
                 name="address"
-                placeholder="Escriba la dirección de la empresa"
+                placeholder={t("auth.register.addressPlaceholder")}
                 value={registerData.address}
                 onChange={handleRegisterInputChange}
                 rows={2}
@@ -257,31 +258,31 @@ export default function RegisterPage() {
             <PasswordInput
               id="registerPassword"
               name="password"
-              label="Contraseña *"
+              label={`${t("auth.register.password")} *`}
               value={registerData.password}
               onChange={handleRegisterInputChange}
-              placeholder="Escriba la contraseña"
+              placeholder={t("auth.register.passwordPlaceholder")}
               required
             />
 
             <PasswordInput
               id="confirmPassword"
               name="confirmPassword"
-              label="Confirmar Contraseña *"
+              label={`${t("auth.register.confirmPassword")} *`}
               value={registerData.confirmPassword}
               onChange={handleRegisterInputChange}
-              placeholder="Repita la contraseña"
+              placeholder={t("auth.register.confirmPasswordPlaceholder")}
               required
             />
 
             <div className="space-y-2">
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? (
-                  "Registrando..."
+                  t("auth.register.submitting")
                 ) : (
                   <>
                     <Building2 className="mr-2 h-4 w-4" />
-                    Crear Cuenta
+                    {t("auth.register.submit")}
                   </>
                 )}
               </Button>
@@ -291,7 +292,7 @@ export default function RegisterPage() {
                 className="w-full"
                 onClick={() => router.push("/login")}
               >
-                Volver al Login
+                {t("auth.register.backToLogin")}
               </Button>
             </div>
           </form>
