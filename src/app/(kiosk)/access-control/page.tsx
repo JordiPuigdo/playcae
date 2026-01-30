@@ -19,6 +19,7 @@ import Image from "next/image";
 import { AccessService } from "@/services/access.service";
 import { AccessValidationResult } from "@/types/accessHistory";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const accessService = new AccessService();
 
@@ -28,6 +29,7 @@ const AccessControlContent = () => {
   const searchParams = useSearchParams();
   const accessCompanyId = searchParams.get("companyId") || "";
   const { user, logoUrl } = useAuthStore();
+  const { t } = useTranslation();
   const adminUserId = user?.userId || "";
 
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -88,7 +90,7 @@ const AccessControlContent = () => {
         setShowModal(true);
       }
     } catch (error: any) {
-      setErrorMessage(error.message || "Error al validar el acceso");
+      setErrorMessage(error.message || t("accessControl.kiosk.errorValidation"));
       setModalState("error");
       setShowModal(true);
     } finally {
@@ -115,7 +117,7 @@ const AccessControlContent = () => {
         resetState();
       }, 3000);
     } catch (error: any) {
-      setErrorMessage(error.message || "Error al registrar entrada");
+      setErrorMessage(error.message || t("accessControl.kiosk.errorCheckIn"));
       setModalState("error");
     } finally {
       setIsLoading(false);
@@ -141,7 +143,7 @@ const AccessControlContent = () => {
         resetState();
       }, 3000);
     } catch (error: any) {
-      setErrorMessage(error.message || "Error al registrar salida");
+      setErrorMessage(error.message || t("accessControl.kiosk.errorCheckOut"));
       setModalState("error");
     } finally {
       setIsLoading(false);
@@ -165,7 +167,7 @@ const AccessControlContent = () => {
         <div className="flex flex-col items-center space-y-6 p-6 text-center">
           <Loader2 className="h-20 w-20 text-blue-500 animate-spin" />
           <DialogTitle className="text-2xl font-bold text-gray-700">
-            Procesando...
+            {t("accessControl.kiosk.processing")}
           </DialogTitle>
         </div>
       );
@@ -189,7 +191,7 @@ const AccessControlContent = () => {
                   validationResult.canAccess ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {validationResult.canAccess ? "Apto para acceso" : "No apto"}
+                {validationResult.canAccess ? t("accessControl.kiosk.accessGranted") : t("accessControl.kiosk.accessDenied")}
               </DialogTitle>
               <p className="text-xl font-semibold text-gray-800">
                 {validationResult.workerName}
@@ -210,7 +212,7 @@ const AccessControlContent = () => {
                     <div className="flex items-center gap-2 mb-2">
                       <AlertTriangle className="h-5 w-5 text-yellow-600" />
                       <span className="font-semibold text-yellow-800">
-                        Problemas documentación
+                        {t("accessControl.kiosk.documentIssues")}
                       </span>
                     </div>
                     <ul className="text-sm text-yellow-700 space-y-1">
@@ -233,7 +235,7 @@ const AccessControlContent = () => {
                     className="flex-1 h-16 text-lg bg-orange-500 hover:bg-orange-600"
                   >
                     <LogOut className="mr-2 h-6 w-6" />
-                    Fichar Salida
+                    {t("accessControl.kiosk.checkOut")}
                   </Button>
                 ) : (
                   <Button
@@ -242,7 +244,7 @@ const AccessControlContent = () => {
                     className="flex-1 h-16 text-lg bg-green-600 hover:bg-green-700"
                   >
                     <LogIn className="mr-2 h-6 w-6" />
-                    Fichar Entrada
+                    {t("accessControl.kiosk.checkIn")}
                   </Button>
                 )}
               </div>
@@ -253,7 +255,7 @@ const AccessControlContent = () => {
               onClick={handleCloseModal}
               className="mt-2"
             >
-              Cerrar
+              {t("accessControl.kiosk.close")}
             </Button>
           </div>
         );
@@ -264,10 +266,10 @@ const AccessControlContent = () => {
             <LogIn className="h-20 w-20 text-green-500" />
             <div className="space-y-2">
               <DialogTitle className="text-3xl font-bold text-green-600">
-                Entrada Registrada
+                {t("accessControl.kiosk.entryRegistered")}
               </DialogTitle>
               <p className="text-lg text-muted-foreground">
-                ¡Bienvenido! Tu entrada ha sido registrada correctamente.
+                {t("accessControl.kiosk.entryRegisteredMessage")}
               </p>
             </div>
           </div>
@@ -279,10 +281,10 @@ const AccessControlContent = () => {
             <LogOut className="h-20 w-20 text-orange-500" />
             <div className="space-y-2">
               <DialogTitle className="text-3xl font-bold text-orange-600">
-                Salida Registrada
+                {t("accessControl.kiosk.exitRegistered")}
               </DialogTitle>
               <p className="text-lg text-muted-foreground">
-                ¡Hasta pronto! Tu salida ha sido registrada correctamente.
+                {t("accessControl.kiosk.exitRegisteredMessage")}
               </p>
             </div>
           </div>
@@ -294,12 +296,12 @@ const AccessControlContent = () => {
             <XCircle className="h-20 w-20 text-red-500" />
             <div className="space-y-2">
               <DialogTitle className="text-3xl font-bold text-red-600">
-                Error
+                {t("accessControl.kiosk.error")}
               </DialogTitle>
               <p className="text-lg text-muted-foreground">{errorMessage}</p>
             </div>
             <Button variant="outline" onClick={handleCloseModal}>
-              Cerrar
+              {t("accessControl.kiosk.close")}
             </Button>
           </div>
         );
@@ -335,7 +337,7 @@ const AccessControlContent = () => {
         <div className="flex flex-col w-full max-w-md space-y-8 text-center items-center">
           <div className="space-y-4">
             <h1 className="text-4xl font-bold text-foreground">
-              Control de Acceso
+              {t("accessControl.kiosk.title")}
             </h1>
             <div className="flex w-full items-center">
               <Image
@@ -350,7 +352,7 @@ const AccessControlContent = () => {
               />
             </div>
             <p className="text-xl text-muted-foreground">
-              Introduce tu DNI para acceder
+              {t("accessControl.kiosk.enterDni")}
             </p>
           </div>
 
@@ -358,7 +360,7 @@ const AccessControlContent = () => {
             <div className="flex space-y-2 w-full">
               <Input
                 type="text"
-                placeholder="DNI"
+                placeholder={t("accessControl.kiosk.dniPlaceholder")}
                 value={dni}
                 onChange={(e) => setDni(e.target.value.toUpperCase())}
                 onKeyPress={handleKeyPress}
@@ -377,10 +379,10 @@ const AccessControlContent = () => {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-6 w-6 animate-spin" />
-                  Verificando...
+                  {t("accessControl.kiosk.verifying")}
                 </>
               ) : (
-                "Verificar"
+                t("accessControl.kiosk.verify")
               )}
             </Button>
           </form>

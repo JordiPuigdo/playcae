@@ -479,7 +479,34 @@
       "totalAccesses": "Total accesos",
       "uniqueWorkers": "Trabajadores únicos",
       "averageTime": "Tiempo medio",
-      "deniedAccesses": "Accesos denegados"
+      "deniedAccesses": "Accesos denegados",
+      "validDocumentation": "Documentación Válida",
+      "accessesToday": "Accesos Hoy",
+      "hoursWorked": "Horas Trabajadas",
+      "failedAccesses": "Accesos Fallidos",
+      "companiesOnSite": "Empresas en Centro"
+    },
+    "kiosk": {
+      "title": "Control de Acceso",
+      "enterDni": "Introduce tu DNI para acceder",
+      "dniPlaceholder": "DNI",
+      "verify": "Verificar",
+      "verifying": "Verificando...",
+      "processing": "Procesando...",
+      "close": "Cerrar",
+      "accessGranted": "Apto para acceso",
+      "accessDenied": "No apto",
+      "documentIssues": "Problemas documentación",
+      "checkIn": "Fichar Entrada",
+      "checkOut": "Fichar Salida",
+      "entryRegistered": "Entrada Registrada",
+      "entryRegisteredMessage": "¡Bienvenido! Tu entrada ha sido registrada correctamente.",
+      "exitRegistered": "Salida Registrada",
+      "exitRegisteredMessage": "¡Hasta pronto! Tu salida ha sido registrada correctamente.",
+      "error": "Error",
+      "errorValidation": "Error al validar el acceso",
+      "errorCheckIn": "Error al registrar entrada",
+      "errorCheckOut": "Error al registrar salida"
     }
   },
   "validation": {

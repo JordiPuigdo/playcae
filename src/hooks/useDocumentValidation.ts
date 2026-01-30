@@ -34,7 +34,6 @@ const VALID_STATUSES_FOR_VALIDATION: EntityStatus[] = [
   EntityStatus.Expired,
   EntityStatus.PendingManualy,
   EntityStatus.ExpiredByAI,
-  EntityStatus.Pending,
 ];
 
 export const useDocumentValidation = ({

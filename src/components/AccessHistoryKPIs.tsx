@@ -6,6 +6,7 @@ import {
   Building2,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface KPIData {
   validDocumentationPercentage: number;
@@ -21,37 +22,39 @@ interface AccessHistoryKPIsProps {
 }
 
 export const AccessHistoryKPIs = ({ data }: AccessHistoryKPIsProps) => {
+  const { t } = useTranslation();
+
   const kpis = [
     {
-      title: "Documentación Válida",
+      title: t("accessControl.kpis.validDocumentation"),
       value: `${data.validDocumentationPercentage}%`,
       icon: CheckCircle2,
       iconColor: "text-playGreen",
       bgColor: "bg-playGreen/10",
     },
     {
-      title: "Accesos Hoy",
+      title: t("accessControl.kpis.accessesToday"),
       value: data.totalAccessesToday.toString(),
       icon: Users,
       iconColor: "text-brand-primary",
       bgColor: "bg-playGrey",
     },
     {
-      title: "Horas Trabajadas",
+      title: t("accessControl.kpis.hoursWorked"),
       value: `${data.hoursWorkedToday}h`,
       icon: Clock,
       iconColor: "text-playBlueLight",
       bgColor: "bg-playBlueLight/10",
     },
     {
-      title: "Accesos Fallidos",
+      title: t("accessControl.kpis.failedAccesses"),
       value: data.failedAccesses.toString(),
       icon: AlertCircle,
       iconColor: "text-brand-secondary",
       bgColor: "bg-brand-secondary/10",
     },
     {
-      title: "Empresas en Centro",
+      title: t("accessControl.kpis.companiesOnSite"),
       value: data.companiesOnSite.toString(),
       icon: Building2,
       iconColor: "text-playYellow",

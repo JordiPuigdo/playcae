@@ -479,7 +479,34 @@
       "totalAccesses": "Total accessos",
       "uniqueWorkers": "Treballadors únics",
       "averageTime": "Temps mitjà",
-      "deniedAccesses": "Accessos denegats"
+      "deniedAccesses": "Accessos denegats",
+      "validDocumentation": "Documentació Vàlida",
+      "accessesToday": "Accessos Avui",
+      "hoursWorked": "Hores Treballades",
+      "failedAccesses": "Accessos Fallits",
+      "companiesOnSite": "Empreses al Centre"
+    },
+    "kiosk": {
+      "title": "Control d'Accés",
+      "enterDni": "Introdueix el teu DNI per accedir",
+      "dniPlaceholder": "DNI",
+      "verify": "Verificar",
+      "verifying": "Verificant...",
+      "processing": "Processant...",
+      "close": "Tancar",
+      "accessGranted": "Apte per accedir",
+      "accessDenied": "No apte",
+      "documentIssues": "Problemes documentació",
+      "checkIn": "Fitxar Entrada",
+      "checkOut": "Fitxar Sortida",
+      "entryRegistered": "Entrada Registrada",
+      "entryRegisteredMessage": "Benvingut! La teva entrada ha estat registrada correctament.",
+      "exitRegistered": "Sortida Registrada",
+      "exitRegisteredMessage": "Fins aviat! La teva sortida ha estat registrada correctament.",
+      "error": "Error",
+      "errorValidation": "Error en validar l'accés",
+      "errorCheckIn": "Error en registrar entrada",
+      "errorCheckOut": "Error en registrar sortida"
     }
   },
   "validation": {
