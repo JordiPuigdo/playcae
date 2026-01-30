@@ -282,18 +282,11 @@ export const WorkersTable = ({
     }
   };
 
-  const canUpload = true;
+  const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
-  const canEdit = true;
+  const canEdit = userRole == UserRole.Company;
 
-  const validStates = [EntityStatus.Approved, EntityStatus.ValidatedByAI];
-  const rejectedStates = [
-    EntityStatus.Rejected,
-    EntityStatus.ExpiredByAI,
-    EntityStatus.PendingManualy,
-  ];
-
-  return (
+   return (
     <>
       <Card className="bg-white border border-playBlueLight/30">
         <CardHeader>
@@ -521,7 +514,7 @@ export const WorkersTable = ({
                                                 document.documentType.id!
                                               }
                                             />
-
+                                          {canUpload && (
                                             <DocumentUpload
                                               documentName={
                                                 document.documentType.name
@@ -535,7 +528,7 @@ export const WorkersTable = ({
                                                   worker.id!
                                                 )
                                               }
-                                            />
+                                            />)}
 
                                             {canValidate && (
                                               <DocumentValidation
