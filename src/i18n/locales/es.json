@@ -28,6 +28,7 @@
     "email": "Email",
     "phone": "Teléfono",
     "address": "Dirección",
+    "error": "Error",
     "consent": {
       "prefix": "He leído y acepto la",
       "and": "y la"

@@ -28,6 +28,7 @@
     "email": "Correu electrònic",
     "phone": "Telèfon",
     "address": "Adreça",
+    "error": "Error",
     "consent": {
       "prefix": "He llegit i accepto la",
       "and": "i la"
