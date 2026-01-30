@@ -26,6 +26,7 @@ import { DocumentUpload } from "./DocumentUpload";
 import { FileCell } from "./FileCell";
 import { DocumentHistory } from "./DocumentHistory";
 import { useTranslation } from "@/hooks/useTranslation";
+import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
 type SortField = "name" | "uploadedDate" | "expirationDate" | "status";
 type SortDirection = "asc" | "desc" | null;
@@ -182,7 +183,7 @@ export const DocumentsTable = ({
               {sortedDocuments.map((document) => (
                 <TableRow key={document.id}>
                   <TableCell className="font-medium text-brand-primary">
-                    {document.documentType.name}
+                    {getDocumentTypeName(document.documentType, t)}
                   </TableCell>
 
                   <TableCell>
@@ -216,7 +217,7 @@ export const DocumentsTable = ({
 
                       {canUpload && (
                         <DocumentUpload
-                          documentName={document.documentType.name}
+                          documentName={getDocumentTypeName(document.documentType, t)}
                           hasFile={!!document.storagePath}
                           onUpload={(data) => onUpload(document.id!, data)}
                           canUpload

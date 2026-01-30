@@ -41,6 +41,25 @@
     "required": "Obligatori",
     "optional": "Opcional"
   },
+  "documentTypes": {
+    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",
+    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificat Corrent AEAT / Hisenda",
+    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificat de Lliurament d'EPIs",
+    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formació Preventiva Article 19 LPRL",
+    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Rebut Bancari del RLC",
+    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Treballador",
+    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Mèdica (Reconeixement mèdic)",
+    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Informació Article 18 LPRL",
+    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Assegurança de Responsabilitat Civil",
+    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Rebut de Liquidació de Cotitzacions (RLC)",
+    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Rebut de l'Assegurança de Responsabilitat Civil",
+    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relació Nominal de Treballadors (RNT)",
+    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificació Preventiva de l'Empresa",
+    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificat Corrent Seguretat Social",
+    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Rebut del Servei de Prevenció Aliè",
+    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Treballadors en Alta (ITA)",
+    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificat de Servei de Prevenció Aliè"
+  },
   "header": {
     "product": "Producte",
     "pricing": "Preus",
@@ -535,6 +554,8 @@
     "uploadDate": "Data de Pujada",
     "noDocuments": "No hi ha documents",
     "requiredDocumentation": "Documentació Requerida",
+    "history": "Historial",
+    "documentHistory": "Historial de Documents",
     "confirmDelete": "Estàs segur que vols eliminar aquest document?",
     "status": {
       "valid": "Vàlid",

@@ -21,6 +21,8 @@ import { History, FileText, Calendar, User } from "lucide-react";
 import { useDocuments } from "@/hooks/useDocuments";
 import { formatDate } from "@/app/utils/date";
 import { FileCell } from "./FileCell";
+import { useTranslation } from "@/hooks/useTranslation";
+import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
 interface DocumentHistoryProps {
   workerId?: string;
@@ -33,6 +35,7 @@ export const DocumentHistory = ({
   companyId,
   documentTypeId,
 }: DocumentHistoryProps) => {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -73,7 +76,7 @@ export const DocumentHistory = ({
           className="gap-1 border-playBlueLight text-brand-primary hover:bg-playGrey"
         >
           <History className="h-3 w-3 text-brand-primary" />
-          Historial
+          {t("documents.history")}
         </Button>
       </DialogTrigger>
 
@@ -81,8 +84,8 @@ export const DocumentHistory = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-brand-primary">
             <FileText className="h-5 w-5 text-brand-primary" />
-            Historial de Documentos -{" "}
-            {historicalDocuments[0]?.documentType.name}
+            {t("documents.documentHistory")} -{" "}
+            {historicalDocuments[0] ? getDocumentTypeName(historicalDocuments[0].documentType, t) : ""}
           </DialogTitle>
         </DialogHeader>
 
@@ -96,10 +99,10 @@ export const DocumentHistory = ({
               <TableHeader>
                 <TableRow className="bg-playGrey">
                   <TableHead className="text-brand-primary">
-                    Documento
+                    {t("documents.document")}
                   </TableHead>
-                  <TableHead className="text-brand-primary">Archivo</TableHead>
-                  <TableHead className="text-brand-primary">Fecha</TableHead>
+                  <TableHead className="text-brand-primary">{t("documents.file")}</TableHead>
+                  <TableHead className="text-brand-primary">{t("common.date")}</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -107,7 +110,7 @@ export const DocumentHistory = ({
                 {historicalDocuments.map((entry) => (
                   <TableRow key={entry.id}>
                     <TableCell className="font-medium text-brand-primary">
-                      {entry.documentType.name}
+                      {getDocumentTypeName(entry.documentType, t)}
                     </TableCell>
 
                     <TableCell>

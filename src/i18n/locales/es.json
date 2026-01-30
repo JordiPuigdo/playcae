@@ -41,6 +41,25 @@
     "required": "Obligatorio",
     "optional": "Opcional"
   },
+  "documentTypes": {
+    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
+    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificado Corriente AEAT / Hacienda",
+    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificado de Entrega de EPIs",
+    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formación Preventiva Artículo 19 LPRL",
+    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Recibo Bancario del RLC",
+    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Trabajador",
+    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Médica (Reconocimiento médico)",
+    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Información Artículo 18 LPRL",
+    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Seguro de Responsabilidad Civil",
+    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Recibo de Liquidación de Cotizaciones (RLC)",
+    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Recibo del Seguro de Responsabilidad Civil",
+    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relación Nominal de Trabajadores (RNT)",
+    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificación Preventiva de la Empresa",
+    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificado Corriente Seguridad Social",
+    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Recibo del Servicio de Prevención Ajeno",
+    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Trabajadores en Alta (ITA)",
+    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificado de Servicio de Prevención Ajeno"
+  },
   "header": {
     "product": "Producto",
     "pricing": "Precios",
@@ -535,6 +554,8 @@
     "uploadDate": "Fecha Subida",
     "noDocuments": "No hay documentos",
     "requiredDocumentation": "Documentación Requerida",
+    "history": "Historial",
+    "documentHistory": "Historial de Documentos",
     "confirmDelete": "¿Estás seguro de que quieres eliminar este documento?",
     "status": {
       "valid": "Válido",

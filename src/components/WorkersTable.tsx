@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { Worker, WorkerFormData, WorkerDocumentFormData } from "@/types/worker";
 import { useTranslation } from "@/hooks/useTranslation";
+import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
 import {
   Users,
@@ -459,7 +460,7 @@ export const WorkersTable = ({
                                     worker.documents.map((document) => (
                                       <TableRow key={document.id}>
                                         <TableCell className="font-medium text-brand-primary">
-                                          {document.documentType.name}
+                                          {getDocumentTypeName(document.documentType, t)}
                                         </TableCell>
 
                                         <TableCell>
@@ -517,7 +518,7 @@ export const WorkersTable = ({
                                           {canUpload && (
                                             <DocumentUpload
                                               documentName={
-                                                document.documentType.name
+                                                getDocumentTypeName(document.documentType, t)
                                               }
                                               hasFile={!!document.storagePath}
                                               canUpload={canUpload}
@@ -533,7 +534,7 @@ export const WorkersTable = ({
                                             {canValidate && (
                                               <DocumentValidation
                                                 documentName={
-                                                  document.documentType.name
+                                                  getDocumentTypeName(document.documentType, t)
                                                 }
                                                 canValidate={canValidate}
                                                 onValidate={(
