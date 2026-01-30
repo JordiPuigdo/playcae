@@ -10,6 +10,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/Alert-Dialog";
 import { AlertTriangle } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface DeleteConfirmationModalProps {
   isOpen: boolean;
@@ -30,6 +31,8 @@ export const DeleteConfirmationModal = ({
   itemName,
   isLoading = false,
 }: DeleteConfirmationModalProps) => {
+  const { t } = useTranslation();
+  
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
@@ -49,13 +52,13 @@ export const DeleteConfirmationModal = ({
           )}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLoading}>Cancelar</AlertDialogCancel>
+          <AlertDialogCancel disabled={isLoading}>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isLoading}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90 text-white"
           >
-            {isLoading ? "Eliminando..." : "Eliminar"}
+            {isLoading ? t("common.deleting") : t("common.delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

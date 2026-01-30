@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   Card,
   CardContent,
@@ -27,6 +28,7 @@ import { useUserConfiguration } from "@/hooks/useUserConfiguration";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -51,7 +53,7 @@ export default function LoginPage() {
     e.preventDefault();
 
     if (!email || !password) {
-      setError("Por favor complete todos los campos.");
+      setError(t("validation.required"));
       return;
     }
 
@@ -158,7 +160,7 @@ export default function LoginPage() {
           <div className="flex flex-col items-center space-y-4">
             <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
             <p className="text-sm text-playBlueLight" aria-live="polite">
-              Iniciando sesión...
+              {t("common.loading")}
             </p>
           </div>
         </div>
@@ -175,10 +177,10 @@ export default function LoginPage() {
         <Card className="w-full max-w-md border border-playBlueLight/30 shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center text-brand-primary">
-              Iniciar Sesión
+              {t("auth.login.title")}
             </CardTitle>
             <CardDescription className="text-center text-playBlueLight">
-              Acceda a su cuenta para continuar.
+              {t("auth.login.noAccount")} {t("auth.login.register")}
             </CardDescription>
           </CardHeader>
 
@@ -194,7 +196,7 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-brand-primary">
-                  Correo electrónico *
+                  {t("auth.login.email")} *
                 </Label>
                 <Input
                   id="email"
@@ -213,10 +215,10 @@ export default function LoginPage() {
               <PasswordInput
                 id="password"
                 name="password"
-                label="Contraseña *"
+                label={`${t("auth.login.password")} *`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Ingrese su contraseña"
+                placeholder={t("auth.login.password")}
                 autoComplete="current-password"
                 required
                 className="border-playBlueLight focus-visible:ring-brand-primary"
@@ -229,7 +231,7 @@ export default function LoginPage() {
                   className="px-0 font-normal text-sm text-playBlueLight hover:text-brand-primary"
                   onClick={() => router.push("/forgot-password")}
                 >
-                  ¿Olvidó su contraseña?
+                  {t("auth.login.forgotPassword")}
                 </Button>
               </div>
 
@@ -239,7 +241,7 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="w-full bg-brand-primary hover:bg-playBlueLight text-white"
               >
-                {isLoading ? "Ingresando..." : "Entrar"}
+                {isLoading ? t("common.loading") : t("auth.login.submit")}
               </Button>
 
               {/* Botón secundario: estilo gris neutro */}
@@ -249,7 +251,7 @@ export default function LoginPage() {
                 className="w-full text-brand-primary hover:bg-playGrey"
                 onClick={() => router.push("/register")}
               >
-                ¿No tiene cuenta? Regístrese
+                {t("auth.login.noAccount")} {t("auth.login.register")}
               </Button>
             </form>
           </CardContent>

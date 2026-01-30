@@ -5,6 +5,7 @@ import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useWorkers } from "@/hooks/useWorkers";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Company, CompanySimple, CompanyStatus } from "@/types/company";
 import { WorkerStatus } from "@/types/worker";
 
@@ -22,6 +23,7 @@ import { useMemo } from "react";
 export default function DashboardPage() {
   const { companies } = useCompanies();
   const { workers } = useWorkers(undefined);
+  const { t } = useTranslation();
 
   // Aplanar empresas + subcontratas en una sola lista (solo activas)
   const allCompanies = useMemo(() => {
@@ -94,7 +96,7 @@ export default function DashboardPage() {
             <div className="flex w-full justify-between">
               <h1 className="text-2xl h-10 font-bold text-brand-primary flex items-center gap-3">
                 <ChartBarStacked className="h-7 w-7 text-brand-primary" />
-                Panel de Control
+                {t("dashboard.title")}
               </h1>
             </div>
           </div>
@@ -107,7 +109,7 @@ export default function DashboardPage() {
           <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-brand-primary">
-                Total Empresas
+                {t("dashboard.stats.totalCompanies")}
               </CardTitle>
               <Users className="h-4 w-4 text-playBlueLight" />
             </CardHeader>
@@ -118,12 +120,12 @@ export default function DashboardPage() {
               <div className="flex items-center gap-3 text-xs text-playBlueLight">
                 <span className="flex items-center gap-1">
                   <Building2 className="h-3 w-3" />
-                  {stats.mainCompanies} principales
+                  {stats.mainCompanies} {t("dashboard.stats.mainCompanies")}
                 </span>
                 {stats.subcontractors > 0 && (
                   <span className="flex items-center gap-1">
                     <Network className="h-3 w-3 text-playOrange" />
-                    {stats.subcontractors} subcontratas
+                    {stats.subcontractors} {t("dashboard.stats.subcontractors")}
                   </span>
                 )}
               </div>
@@ -133,7 +135,7 @@ export default function DashboardPage() {
           <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-brand-primary">
-                Autorizadas
+                {t("dashboard.stats.authorized")}
               </CardTitle>
               <CheckCircle className="h-4 w-4 text-playGreen" />
             </CardHeader>
@@ -145,7 +147,7 @@ export default function DashboardPage() {
                 {stats.total > 0
                   ? Math.round((stats.approved / stats.total) * 100)
                   : 0}
-                % del total
+                {t("dashboard.stats.ofTotal")}
               </p>
             </CardContent>
           </Card>
@@ -153,7 +155,7 @@ export default function DashboardPage() {
           <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-brand-primary">
-                Pendientes
+                {t("dashboard.stats.pending")}
               </CardTitle>
               <Clock className="h-4 w-4 text-playYellow" />
             </CardHeader>
@@ -161,14 +163,14 @@ export default function DashboardPage() {
               <div className="text-2xl font-bold text-playYellow">
                 {stats.pending}
               </div>
-              <p className="text-xs text-playBlueLight">Requieren revisión</p>
+              <p className="text-xs text-playBlueLight">{t("dashboard.stats.requireReview")}</p>
             </CardContent>
           </Card>
 
           <Card className="bg-white border border-playBlueLight/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-brand-primary">
-                No Autorizadas
+                {t("dashboard.stats.notAuthorized")}
               </CardTitle>
               <AlertTriangle className="h-4 w-4 text-brand-secondary" />
             </CardHeader>
@@ -176,7 +178,7 @@ export default function DashboardPage() {
               <div className="text-2xl font-bold text-brand-secondary">
                 {stats.rejected}
               </div>
-              <p className="text-xs text-playBlueLight">Acceso denegado</p>
+              <p className="text-xs text-playBlueLight">{t("dashboard.stats.accessDenied")}</p>
             </CardContent>
           </Card>
         </div>
@@ -188,9 +190,10 @@ export default function DashboardPage() {
             <Alert className="bg-brand-secondary/20 border border-brand-secondary/40 text-brand-primary">
               <AlertTriangle className="h-4 w-4 text-brand-secondary" />
               <AlertDescription>
-                Hay {totalNoAptoWorkers} trabajador
-                {totalNoAptoWorkers > 1 ? "es" : ""} sin autorización para
-                acceder a las instalaciones.
+                {t("dashboard.alerts.workersNoAccess", { 
+                  count: totalNoAptoWorkers.toString(), 
+                  plural: totalNoAptoWorkers > 1 ? "es" : "" 
+                })}
               </AlertDescription>
             </Alert>
           </div>

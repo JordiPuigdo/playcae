@@ -8,6 +8,7 @@ import { Card, CardContent } from "./ui/Card";
 import { Badge } from "./ui/Badge";
 import { StatusBadge } from "./StatusBadge";
 import { WorkerStatusBadge } from "./WorkerStatusBadge";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface SubcontractorsListProps {
   subcontractors: CompanySimple[];
@@ -20,6 +21,7 @@ export const SubcontractorsList = ({
   parentCompanyName,
   onAddSubcontractor,
 }: SubcontractorsListProps) => {
+  const { t } = useTranslation();
   const router = useRouter();
 
   return (
@@ -28,10 +30,10 @@ export const SubcontractorsList = ({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-lg font-semibold text-playBlueDark">
-            Subcontratas de {parentCompanyName}
+            {t("subcontractors.ofCompany", { name: parentCompanyName })}
           </h3>
           <p className="text-sm text-playBlueLight">
-            Empresas que trabajan como subcontratas de este proveedor
+            {t("subcontractors.companiesWorkAs")}
           </p>
         </div>
         <Button
@@ -39,7 +41,7 @@ export const SubcontractorsList = ({
           className="flex items-center gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
         >
           <Plus className="h-4 w-4" />
-          Añadir subcontrata
+          {t("subcontractors.addSubcontractor")}
         </Button>
       </div>
 
@@ -51,18 +53,17 @@ export const SubcontractorsList = ({
               <Network className="h-8 w-8 text-playOrange" />
             </div>
             <h3 className="text-lg font-semibold text-playBlueDark mb-2">
-              Sin subcontratas
+              {t("subcontractors.noSubcontractors")}
             </h3>
             <p className="text-playBlueLight mb-6 max-w-md mx-auto">
-              Esta empresa no tiene subcontratas registradas. Añade una
-              subcontrata para gestionar su documentación CAE.
+              {t("subcontractors.noSubcontractorsDesc")}
             </p>
             <Button
               onClick={onAddSubcontractor}
               className="bg-playOrange hover:bg-playOrange/90 text-white"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Añadir primera subcontrata
+              {t("subcontractors.addFirst")}
             </Button>
           </CardContent>
         </Card>
@@ -99,7 +100,7 @@ export const SubcontractorsList = ({
                     </h4>
                     {!sub.active && (
                       <Badge variant="secondary" className="text-xs">
-                        Inactiva
+                        {t("companies.inactive")}
                       </Badge>
                     )}
                   </div>
@@ -122,7 +123,7 @@ export const SubcontractorsList = ({
                       : "bg-gray-100 text-gray-400"
                   }`}
                 >
-                  Subcontrata
+                  {t("companies.subcontractor")}
                 </span>
 
                 <Button
@@ -134,7 +135,7 @@ export const SubcontractorsList = ({
                     router.push(`/dashboard/companies/${sub.id}`);
                   }}
                 >
-                  Ver detalle →
+                  {t("subcontractors.viewDetails")}
                 </Button>
               </div>
             </div>

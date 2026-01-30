@@ -1,5 +1,8 @@
+"use client";
+
 import { usePermissions } from "@/hooks/usePermissions";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,25 +21,26 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { hasAccess, role } = usePermissions();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
 
   // Links para Admin
   const adminLinks = [
-    { href: "/dashboard", label: "Panel de control", icon: LayoutDashboard },
-    { href: "/dashboard/companies", label: "Empresas", icon: Building2 },
-    { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+    { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
+    { href: "/dashboard/companies", label: t("dashboard.sidebar.companies"), icon: Building2 },
+    { href: "/dashboard/subcontractors", label: t("dashboard.sidebar.subcontractors"), icon: Network },
     {
       href: "/dashboard/access-history",
-      label: "Histórico de Accesos",
+      label: t("dashboard.sidebar.accessHistory"),
       icon: History,
     },
     {
       href: "/access-control",
-      label: "Control de Acceso",
+      label: t("dashboard.sidebar.accessControl"),
       icon: ScanLine,
     },
     {
       href: "/dashboard/configuration",
-      label: "Configuración",
+      label: t("dashboard.sidebar.configuration"),
       icon: Settings,
     },
   ];
@@ -45,13 +49,13 @@ export default function Sidebar() {
   const companyLinks = [
     {
       href: `/dashboard/companies/${user?.companyId}`,
-      label: "Empresa",
+      label: t("dashboard.sidebar.company"),
       icon: Building,
     },
-    { href: "/dashboard/subcontractors", label: "Subcontratas", icon: Network },
+    { href: "/dashboard/subcontractors", label: t("dashboard.sidebar.subcontractors"), icon: Network },
     {
       href: "/access-control",
-      label: "Control de Acceso",
+      label: t("dashboard.sidebar.accessControl"),
       icon: ScanLine,
     },
   ];

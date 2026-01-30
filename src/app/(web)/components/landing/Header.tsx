@@ -4,23 +4,26 @@ import { useState, useRef, useEffect } from "react";
 import { Menu, X, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-
-const productoLinks = [
-  {
-    href: "/servicios/gestion-documentacion-cae",
-    label: "Validación documental IA",
-  },
-  { href: "/servicios/control-accesos-fabrica", label: "Control de accesos" },
-  { href: "/servicios", label: "Ver todos los servicios" },
-];
-
-const recursosLinks = [
-  { href: "/que-es-cae", label: "¿Qué es la CAE?" },
-  { href: "/alternativas-software-cae", label: "Alternativas CAE" },
-  { href: "/blog", label: "Blog" },
-];
+import { useTranslation } from "@/hooks/useTranslation";
+import LanguageSelector from "@/components/LanguageSelector";
 
 export default function Header() {
+  const { t } = useTranslation();
+
+  const productoLinks = [
+    {
+      href: "/servicios/gestion-documentacion-cae",
+      label: t("nav.documentValidation"),
+    },
+    { href: "/servicios/control-accesos-fabrica", label: t("nav.accessControl") },
+    { href: "/servicios", label: t("nav.allServices") },
+  ];
+
+  const recursosLinks = [
+    { href: "/que-es-cae", label: t("nav.whatIsCae") },
+    { href: "/alternativas-software-cae", label: t("nav.caeAlternatives") },
+    { href: "/blog", label: t("nav.blog") },
+  ];
   const [menuOpen, setMenuOpen] = useState(false);
   const [productoOpen, setProductoOpen] = useState(false);
   const [recursosOpen, setRecursosOpen] = useState(false);
@@ -78,7 +81,7 @@ export default function Header() {
               onClick={() => setProductoOpen(!productoOpen)}
               className="flex items-center gap-1 text-gray-700 font-medium transition-colors hover:text-playBlueDark"
             >
-              Producto
+              {t("header.product")}
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${
                   productoOpen ? "rotate-180" : ""
@@ -105,7 +108,7 @@ export default function Header() {
             href="/precios"
             className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
-            Precios
+            {t("header.pricing")}
           </Link>
 
           {/* Recursos dropdown */}
@@ -114,7 +117,7 @@ export default function Header() {
               onClick={() => setRecursosOpen(!recursosOpen)}
               className="flex items-center gap-1 text-gray-700 font-medium transition-colors hover:text-playBlueDark"
             >
-              Recursos
+              {t("header.resources")}
               <ChevronDown
                 className={`h-4 w-4 transition-transform ${
                   recursosOpen ? "rotate-180" : ""
@@ -141,7 +144,7 @@ export default function Header() {
             href="/contacto"
             className="text-gray-700 font-medium transition-colors hover:text-playBlueDark"
           >
-            Contacto
+            {t("header.contact")}
           </Link>
 
           {/* CTA principal */}
@@ -149,7 +152,7 @@ export default function Header() {
             href="/contacto"
             className="rounded-full bg-playOrange px-6 py-2 font-semibold text-white shadow-md transition-all hover:bg-playOrange/90 hover:scale-[1.03]"
           >
-            Agenda una demo
+            {t("header.requestDemo")}
           </Link>
 
           {/* Login */}
@@ -157,8 +160,11 @@ export default function Header() {
             onClick={handleLogin}
             className="rounded-full border border-playBlueDark px-5 py-2 font-semibold text-playBlueDark transition-colors hover:bg-playBlueLight/10"
           >
-            Login
+            {t("header.login")}
           </button>
+
+          {/* Language Selector */}
+          <LanguageSelector variant="minimal" showName={false} />
         </nav>
 
         {/* Mobile menu button */}
@@ -182,10 +188,15 @@ export default function Header() {
             className="flex flex-col space-y-1 px-4 py-6"
             aria-label="Menú móvil"
           >
+            {/* Language Selector Mobile */}
+            <div className="pb-4 border-b border-gray-100 mb-2">
+              <LanguageSelector variant="default" showName={true} className="w-full" />
+            </div>
+
             {/* Producto section */}
             <div className="py-2">
               <p className="text-xs uppercase text-playBlueLight font-semibold mb-2 px-2">
-                Producto
+                {t("header.product")}
               </p>
               {productoLinks.map((link) => (
                 <Link
@@ -206,7 +217,7 @@ export default function Header() {
               className="px-2 py-2 font-medium text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              Precios
+              {t("header.pricing")}
             </Link>
 
             <div className="border-t border-gray-100 my-2" />
@@ -214,7 +225,7 @@ export default function Header() {
             {/* Recursos section */}
             <div className="py-2">
               <p className="text-xs uppercase text-playBlueLight font-semibold mb-2 px-2">
-                Recursos
+                {t("header.resources")}
               </p>
               {recursosLinks.map((link) => (
                 <Link
@@ -235,7 +246,7 @@ export default function Header() {
               className="px-2 py-2 font-medium text-gray-900 hover:text-playBlueDark transition-colors"
               onClick={() => setMenuOpen(false)}
             >
-              Contacto
+              {t("header.contact")}
             </Link>
 
             <div className="pt-4 space-y-3">
@@ -244,14 +255,14 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
                 className="block w-full rounded-full bg-playOrange px-6 py-3 font-semibold text-white shadow-lg hover:bg-playOrange/90 transition-colors text-center"
               >
-                Agenda una demo
+                {t("header.requestDemo")}
               </Link>
 
               <button
                 onClick={handleLogin}
                 className="block w-full rounded-full border border-playBlueDark px-6 py-3 font-semibold text-playBlueDark hover:bg-playBlueLight/10 transition-colors text-center"
               >
-                Login
+                {t("header.login")}
               </button>
             </div>
           </nav>

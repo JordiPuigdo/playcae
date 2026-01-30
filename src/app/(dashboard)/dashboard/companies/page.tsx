@@ -9,6 +9,7 @@ import { DialogHeader } from "@/components/ui/Dialog";
 import { toast } from "@/hooks/use-Toast";
 
 import { useCompanies } from "@/hooks/useCompanies";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import { WorkerStatus } from "@/types/worker";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
@@ -22,9 +23,10 @@ const CompaniesContent = () => {
     companies,
     createCompany,
     updateCompany,
-    deleteCompany,
+    deactivateCompany,
     activateCompany,
   } = useCompanies();
+  const { t } = useTranslation();
 
   // URL Query Params para persistir filtros
   const searchParams = useSearchParams();
@@ -153,7 +155,7 @@ const CompaniesContent = () => {
   const [error, setError] = useState<string | null>(null);
 
   const handleDeleteCompany = async (companyId: string) => {
-    deleteCompany(companyId);
+    deactivateCompany(companyId);
   };
 
   const handleFilter = useCallback(
@@ -195,12 +197,12 @@ const CompaniesContent = () => {
   useEffect(() => {
     if (error != null) {
       toast({
-        title: "Error al crear empresa",
+        title: t("companies.errorCreating"),
         description: error,
         variant: "destructive",
       });
     }
-  }, [error, toast]);
+  }, [error, toast, t]);
 
   const handleCloseForm = () => {
     setIsFormOpen(false);
@@ -210,14 +212,14 @@ const CompaniesContent = () => {
   return (
     <div>
       <div className="border-b bg-playGrey">
-        {isLoading && <Loader text="Creando empresa..." />}
+        {isLoading && <Loader text={t("companies.creatingCompany")} />}
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
             <div className="h-6 w-px bg-playBlueLight" />
             <div className="flex w-full justify-between items-center">
               <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
                 <Building2 className="h-7 w-7 text-brand-primary" />
-                Gestión de Empresas
+                {t("companies.title")}
               </h1>
               <Button
                 onClick={() => setIsFormOpen(true)}
@@ -225,7 +227,7 @@ const CompaniesContent = () => {
                 variant={"submit"}
               >
                 <Plus className="h-4 w-4" />
-                Nueva Empresa
+                {t("companies.addCompany")}
               </Button>
             </div>
           </div>
@@ -260,7 +262,7 @@ const CompaniesContent = () => {
           <DialogContent className="max-w-2xl bg-white border border-playBlueLight/30">
             <DialogHeader>
               <DialogTitle className="text-brand-primary">
-                {editingCompany ? "Editar Empresa" : "Nueva Empresa"}
+                {editingCompany ? t("companies.editCompany") : t("companies.addCompany")}
               </DialogTitle>
             </DialogHeader>
 
@@ -280,8 +282,10 @@ const CompaniesContent = () => {
 
 // Componente principal con Suspense boundary para useSearchParams
 const CompaniesManagement = () => {
+  const { t } = useTranslation();
+  
   return (
-    <Suspense fallback={<Loader text="Cargando..." />}>
+    <Suspense fallback={<Loader text={t("common.loading")} />}>
       <CompaniesContent />
     </Suspense>
   );

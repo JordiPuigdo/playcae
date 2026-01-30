@@ -2,6 +2,7 @@
 
 import { useCompanies } from "@/hooks/useCompanies";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
 import { CompanySimple } from "@/types/company";
 import { useEffect, useState, useRef } from "react";
@@ -28,6 +29,7 @@ export default function SubcontractorsPage() {
     getCompanyById,
   } = useCompanies();
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const isAdmin = user?.role === UserRole.Admin;
 
   const [allSubcontractors, setAllSubcontractors] = useState<
@@ -92,7 +94,7 @@ export default function SubcontractorsPage() {
           subs.forEach((sub) => {
             allSubs.push({
               ...sub,
-              parentCompanyName: parentCompany?.name || "Mi empresa",
+              parentCompanyName: parentCompany?.name || t("subcontractors.myCompany"),
               parentCompanyId: user.companyId,
             });
           });
@@ -107,7 +109,7 @@ export default function SubcontractorsPage() {
     };
 
     loadSubcontractors();
-  }, [companies, companiesLoading, user, isAdmin]);
+  }, [companies, companiesLoading, user, isAdmin, t]);
 
   // Filtrar por búsqueda
   useEffect(() => {
@@ -129,7 +131,7 @@ export default function SubcontractorsPage() {
   if (companiesLoading || isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <Loader text="Cargando subcontratas..." />
+        <Loader text={t("common.loading")} />
       </div>
     );
   }
@@ -141,19 +143,16 @@ export default function SubcontractorsPage() {
         <div>
           <h1 className="text-3xl font-bold text-playBlueDark flex items-center gap-3">
             <Network className="h-8 w-8 text-playOrange" />
-            Subcontratas
+            {t("subcontractors.title")}
           </h1>
           <p className="text-playBlueLight mt-1">
-            {isAdmin
-              ? "Vista global de todas las subcontratas de tus empresas"
-              : "Subcontratas de tu empresa"}
+            {t("subcontractors.description")}
           </p>
         </div>
 
         <div className="flex items-center gap-4">
           <Badge variant="secondary" className="text-lg px-4 py-2">
-            {allSubcontractors.length} subcontrata
-            {allSubcontractors.length !== 1 ? "s" : ""}
+            {allSubcontractors.length} {t("dashboard.sidebar.subcontractors").toLowerCase()}
           </Badge>
         </div>
       </div>
@@ -164,7 +163,7 @@ export default function SubcontractorsPage() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
-              placeholder="Buscar por nombre, CIF o empresa madre..."
+              placeholder={t("subcontractors.search")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -180,17 +179,17 @@ export default function SubcontractorsPage() {
             <Network className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
             <h3 className="text-xl font-semibold text-muted-foreground mb-2">
               {searchTerm
-                ? "No se encontraron resultados"
-                : "No hay subcontratas"}
+                ? t("subcontractors.noResults")
+                : t("subcontractors.noSubcontractors")}
             </h3>
             <p className="text-muted-foreground">
               {searchTerm
-                ? "Intenta con otros términos de búsqueda"
-                : "Añade subcontratas desde el detalle de una empresa"}
+                ? t("common.search")
+                : t("subcontractors.noSubcontractors")}
             </p>
             {!searchTerm && (
               <Button asChild className="mt-4">
-                <Link href="/dashboard/companies">Ver empresas</Link>
+                <Link href="/dashboard/companies">{t("dashboard.sidebar.companies")}</Link>
               </Button>
             )}
           </CardContent>
@@ -226,7 +225,7 @@ export default function SubcontractorsPage() {
                 {/* Empresa padre */}
                 <div className="flex items-center gap-2 text-sm text-playBlueLight">
                   <Building2 className="h-4 w-4" />
-                  <span>Empresa:</span>
+                  <span>{t("subcontractors.parentCompany")}:</span>
                   <Link
                     href={`/dashboard/companies/${sub.parentCompanyId}`}
                     className="font-medium hover:text-playBlueDark hover:underline"
@@ -239,11 +238,11 @@ export default function SubcontractorsPage() {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
-                    <span>{sub.workerCount || 0} trabajadores</span>
+                    <span>{sub.workerCount || 0} {t("subcontractors.workers").toLowerCase()}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <FileText className="h-4 w-4" />
-                    <span>{sub.documentCount || 0} documentos</span>
+                    <span>{sub.documentCount || 0} {t("subcontractors.documents").toLowerCase()}</span>
                   </div>
                 </div>
 
@@ -255,7 +254,7 @@ export default function SubcontractorsPage() {
                     className="w-full justify-between group"
                   >
                     <Link href={`/dashboard/companies/${sub.id}`}>
-                      Ver detalles
+                      {t("subcontractors.viewDetails")}
                       <ChevronRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                   </Button>
@@ -272,7 +271,7 @@ export default function SubcontractorsPage() {
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
               <Building2 className="h-5 w-5 text-playBlueDark" />
-              Resumen por empresa
+              {t("subcontractors.parentCompany")}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -283,7 +282,7 @@ export default function SubcontractorsPage() {
                   const key = sub.parentCompanyId || "unknown";
                   if (!acc[key]) {
                     acc[key] = {
-                      name: sub.parentCompanyName || "Desconocida",
+                      name: sub.parentCompanyName || t("common.none"),
                       id: sub.parentCompanyId,
                       count: 0,
                     };
@@ -303,7 +302,7 @@ export default function SubcontractorsPage() {
                       <span className="font-medium">{data.name}</span>
                     </div>
                     <Badge variant="secondary">
-                      {data.count} subcontrata{data.count !== 1 ? "s" : ""}
+                      {data.count} {t("dashboard.sidebar.subcontractors").toLowerCase()}
                     </Badge>
                   </Link>
                 ));

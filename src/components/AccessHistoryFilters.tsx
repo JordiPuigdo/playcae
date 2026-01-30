@@ -10,6 +10,7 @@ import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
 import { AccessHistoryFilters as Filters } from "@/types/accessHistory";
 import { Label } from "./ui/Label";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface AccessHistoryFiltersProps {
   filters: Filters;
@@ -24,10 +25,12 @@ export const AccessHistoryFilters = ({
   onClearFilters,
   companies,
 }: AccessHistoryFiltersProps) => {
+  const { t } = useTranslation();
+
   return (
     <div className="space-y-4 p-6 bg-white border border-playBlueLight/30 rounded-lg shadow-sm">
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold text-brand-primary">Filtros</h3>
+        <h3 className="text-lg font-semibold text-brand-primary">{t("common.filter")}</h3>
 
         <Button
           variant="ghost"
@@ -36,7 +39,7 @@ export const AccessHistoryFilters = ({
           className="text-playBlueLight hover:text-brand-primary"
         >
           <X className="h-4 w-4 mr-2" />
-          Limpiar
+          {t("dashboard.filters.clear")}
         </Button>
       </div>
 
@@ -44,13 +47,13 @@ export const AccessHistoryFilters = ({
         {/* Buscar técnico */}
         <div className="space-y-2">
           <Label htmlFor="search" className="text-brand-primary">
-            Técnico / DNI / Empresa
+            {t("accessControl.technician")} / {t("workers.dni")} / {t("accessControl.company")}
           </Label>
           <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-playBlueLight" />
             <Input
               id="search"
-              placeholder="Buscar..."
+              placeholder={`${t("common.search")}...`}
               value={filters.searchTechnician}
               onChange={(e) =>
                 onFilterChange({ searchTechnician: e.target.value })
@@ -63,7 +66,7 @@ export const AccessHistoryFilters = ({
         {/* Fecha desde */}
         <div className="space-y-2">
           <Label htmlFor="startDate" className="text-brand-primary">
-            Fecha desde
+            {t("dashboard.filters.dateFrom")}
           </Label>
           <Input
             id="startDate"
@@ -77,7 +80,7 @@ export const AccessHistoryFilters = ({
         {/* Fecha hasta */}
         <div className="space-y-2">
           <Label htmlFor="endDate" className="text-brand-primary">
-            Fecha hasta
+            {t("dashboard.filters.dateTo")}
           </Label>
           <Input
             id="endDate"

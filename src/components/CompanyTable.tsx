@@ -25,6 +25,7 @@ import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { Badge } from "./ui/Badge";
 import { WorkerStatusBadge } from "./WorkerStatusBadge";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type SortField =
   | "name"
@@ -48,6 +49,7 @@ export const CompanyTable = ({
   onDeleteCompany,
   onActivateCompany,
 }: CompanyTableProps) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const [deleteCompany, setDeleteCompany] = useState<Company | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -151,13 +153,13 @@ export const CompanyTable = ({
     try {
       onDeleteCompany(deleteCompany.id!);
       toast({
-        title: "Empresa Eliminada",
-        description: `${deleteCompany.name} ha sido eliminada correctamente.`,
+        title: t("companies.deleted"),
+        description: t("companies.deletedDesc", { name: deleteCompany.name }),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo eliminar la empresa. Inténtalo de nuevo.",
+        title: t("errors.generic"),
+        description: t("companies.deleteError"),
         variant: "destructive",
       });
     } finally {
@@ -182,7 +184,7 @@ export const CompanyTable = ({
       <Card className="bg-white">
         <CardContent className="p-8 text-center">
           <p className="text-muted-foreground">
-            No se encontraron empresas con los filtros aplicados.
+            {t("companies.noResults")}
           </p>
         </CardContent>
       </Card>
@@ -215,7 +217,7 @@ export const CompanyTable = ({
             </span>
             {!company.active && (
               <Badge variant="secondary" className="text-xs">
-                Inactiva
+                {t("companies.inactive")}
               </Badge>
             )}
             {isSubcontractor && (
@@ -223,7 +225,7 @@ export const CompanyTable = ({
                 variant="outline"
                 className="text-xs border-playOrange/50 text-playOrange bg-playOrange/5"
               >
-                Subcontrata
+                {t("companies.subcontractor")}
               </Badge>
             )}
           </div>
@@ -272,7 +274,7 @@ export const CompanyTable = ({
               className="gap-1 text-success hover:text-success"
             >
               <Check className="h-3 w-3" />
-              Activar
+              {t("common.activate")}
             </Button>
           </div>
         )}
@@ -284,10 +286,10 @@ export const CompanyTable = ({
     <Card className="bg-white">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          Empresas Registradas ({totalCount})
+          {t("companies.registered", { count: totalCount })}
           {companies.some((c) => c.subcontractors?.length) && (
             <span className="text-sm font-normal text-muted-foreground">
-              · {companies.filter((c) => !c.isSubcontractor).length} principales
+              · {companies.filter((c) => !c.isSubcontractor).length} {t("companies.main")}
             </span>
           )}
         </CardTitle>
@@ -297,23 +299,23 @@ export const CompanyTable = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <SortableHeader field="name">Nombre</SortableHeader>
-                <SortableHeader field="taxId">CIF</SortableHeader>
-                <SortableHeader field="contactPerson">Contacto</SortableHeader>
-                <SortableHeader field="email">Email</SortableHeader>
+                <SortableHeader field="name">{t("companies.companyName")}</SortableHeader>
+                <SortableHeader field="taxId">{t("companies.cif")}</SortableHeader>
+                <SortableHeader field="contactPerson">{t("companies.contact")}</SortableHeader>
+                <SortableHeader field="email">{t("common.email")}</SortableHeader>
                 <SortableHeader
                   field="status"
                   className="min-w-[140px] text-center"
                 >
-                  Empresa
+                  {t("dashboard.company")}
                 </SortableHeader>
                 <SortableHeader
                   field="workerStatus"
                   className="bg-playBlueLight/20 min-w-[140px]"
                 >
-                  Trabajadores
+                  {t("dashboard.workers")}
                 </SortableHeader>
-                <TableHead className="text-right">Acciones</TableHead>
+                <TableHead className="text-right">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -336,8 +338,8 @@ export const CompanyTable = ({
         isOpen={!!deleteCompany}
         onClose={() => setDeleteCompany(null)}
         onConfirm={handleDeleteCompany}
-        title="Eliminar Empresa"
-        description="¿Estás seguro de que deseas eliminar esta empresa?"
+        title={t("companies.deleteCompany")}
+        description={t("companies.confirmDelete")}
         itemName={deleteCompany ? `${deleteCompany.name} ` : undefined}
         isLoading={isDeleting}
       />

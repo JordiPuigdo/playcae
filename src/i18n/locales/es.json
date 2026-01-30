@@ -1,0 +1,399 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "deleting": "Eliminando...",
+    "edit": "Editar",
+    "create": "Crear",
+    "add": "Añadir",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "back": "Volver",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "close": "Cerrar",
+    "activate": "Activar",
+    "yes": "Sí",
+    "no": "No",
+    "all": "Todos",
+    "none": "Ninguno",
+    "actions": "Acciones",
+    "status": "Estado",
+    "date": "Fecha",
+    "name": "Nombre",
+    "email": "Email",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "description": "Descripción",
+    "observations": "Observaciones",
+    "download": "Descargar",
+    "upload": "Subir",
+    "view": "Ver",
+    "required": "Obligatorio",
+    "optional": "Opcional"
+  },
+  "header": {
+    "product": "Producto",
+    "pricing": "Precios",
+    "resources": "Recursos",
+    "contact": "Contacto",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "requestDemo": "Solicitar demo",
+    "logout": "Cerrar sesión",
+    "myAccount": "Mi cuenta"
+  },
+  "nav": {
+    "documentValidation": "Validación documental IA",
+    "accessControl": "Control de accesos",
+    "allServices": "Ver todos los servicios",
+    "whatIsCae": "¿Qué es la CAE?",
+    "caeAlternatives": "Alternativas CAE",
+    "blog": "Blog"
+  },
+  "footer": {
+    "company": "Empresa",
+    "aboutUs": "Sobre nosotros",
+    "contact": "Contacto",
+    "legal": "Legal",
+    "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
+    "cookiesPolicy": "Política de cookies",
+    "resources": "Recursos",
+    "followUs": "Síguenos",
+    "copyright": "© {year} PlayCAE. Todos los derechos reservados."
+  },
+  "hero": {
+    "title": "Gestión de Documentación CAE con IA",
+    "subtitle": "Automatiza la validación documental PRL con inteligencia artificial. Control de accesos y registro presencial en fábrica.",
+    "cta": "Solicitar demo",
+    "ctaSecondary": "Ver precios",
+    "trustedBy": "Confían en nosotros"
+  },
+  "landing": {
+    "problemSolution": {
+      "title": "¿Cansado de gestionar documentación CAE manualmente?",
+      "problem1": "Pérdida de tiempo revisando documentos",
+      "problem2": "Riesgo de sanciones por incumplimiento",
+      "problem3": "Dificultad para controlar accesos",
+      "solution": "PlayCAE automatiza todo el proceso"
+    },
+    "whyUs": {
+      "title": "¿Por qué elegir PlayCAE?",
+      "feature1Title": "Validación automática con IA",
+      "feature1Desc": "Nuestra IA valida documentos en segundos",
+      "feature2Title": "Control de accesos integrado",
+      "feature2Desc": "Gestiona quién entra a tus instalaciones",
+      "feature3Title": "Alertas de caducidad",
+      "feature3Desc": "Nunca más te pillarán con documentos caducados",
+      "feature4Title": "Cumplimiento normativo",
+      "feature4Desc": "Cumple con el RD 171/2004 sin esfuerzo"
+    },
+    "comparison": {
+      "title": "Compara PlayCAE con otras soluciones",
+      "feature": "Característica",
+      "playcae": "PlayCAE",
+      "others": "Otros"
+    },
+    "documentation": {
+      "title": "Documentación soportada",
+      "subtitle": "Validamos automáticamente todos los documentos necesarios para la CAE"
+    },
+    "contact": {
+      "title": "¿Listo para empezar?",
+      "subtitle": "Contacta con nosotros y te ayudaremos a automatizar tu gestión CAE",
+      "formName": "Nombre",
+      "formEmail": "Email",
+      "formPhone": "Teléfono",
+      "formCompany": "Empresa",
+      "formMessage": "Mensaje",
+      "formSubmit": "Enviar mensaje",
+      "formSuccess": "¡Mensaje enviado correctamente!",
+      "formError": "Error al enviar el mensaje. Inténtalo de nuevo."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sesión",
+      "email": "Email",
+      "password": "Contraseña",
+      "forgotPassword": "¿Olvidaste tu contraseña?",
+      "submit": "Entrar",
+      "noAccount": "¿No tienes cuenta?",
+      "register": "Regístrate",
+      "error": "Email o contraseña incorrectos"
+    },
+    "register": {
+      "title": "Crear cuenta",
+      "name": "Nombre",
+      "email": "Email",
+      "password": "Contraseña",
+      "confirmPassword": "Confirmar contraseña",
+      "company": "Empresa",
+      "submit": "Crear cuenta",
+      "hasAccount": "¿Ya tienes cuenta?",
+      "login": "Inicia sesión",
+      "success": "Cuenta creada correctamente",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    },
+    "forgotPassword": {
+      "title": "Recuperar contraseña",
+      "email": "Email",
+      "submit": "Enviar enlace",
+      "success": "Te hemos enviado un email con instrucciones",
+      "backToLogin": "Volver al login"
+    }
+  },
+  "dashboard": {
+    "title": "Panel de Control",
+    "welcome": "Bienvenido, {name}",
+    "company": "Empresa",
+    "companies": "Empresas",
+    "workers": "Trabajadores",
+    "documents": "Documentos",
+    "accessHistory": "Histórico de Accesos",
+    "settings": "Configuración",
+    "comingSoon": "Próximamente",
+    "sidebar": {
+      "home": "Panel de control",
+      "companies": "Empresas",
+      "company": "Empresa",
+      "subcontractors": "Subcontratas",
+      "workers": "Trabajadores",
+      "documents": "Documentos",
+      "accessControl": "Control de Acceso",
+      "accessHistory": "Histórico de Accesos",
+      "reports": "Informes",
+      "settings": "Configuración",
+      "configuration": "Configuración"
+    },
+    "stats": {
+      "totalCompanies": "Total Empresas",
+      "mainCompanies": "principales",
+      "subcontractors": "subcontratas",
+      "authorized": "Autorizadas",
+      "ofTotal": "% del total",
+      "pending": "Pendientes",
+      "requireReview": "Requieren revisión",
+      "notAuthorized": "No Autorizadas",
+      "accessDenied": "Acceso denegado"
+    },
+    "alerts": {
+      "workersNoAccess": "Hay {count} trabajador{plural} sin autorización para acceder a las instalaciones."
+    },
+    "filters": {
+      "clear": "Limpiar",
+      "dateFrom": "Fecha desde",
+      "dateTo": "Fecha hasta"
+    }
+  },
+  "companies": {
+    "title": "Gestión de Empresas",
+    "registered": "Empresas Registradas ({count})",
+    "main": "principales",
+    "addCompany": "Nueva Empresa",
+    "editCompany": "Editar Empresa",
+    "deleteCompany": "Eliminar Empresa",
+    "companyName": "Nombre",
+    "cif": "CIF",
+    "contact": "Contacto",
+    "parentCompany": "Empresa principal",
+    "subcontractors": "Subcontratas",
+    "subcontractor": "Subcontrata",
+    "inactive": "Inactiva",
+    "noCompanies": "No hay empresas registradas",
+    "noResults": "No se encontraron empresas con los filtros aplicados.",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar esta empresa?",
+    "deleted": "Empresa Eliminada",
+    "deletedDesc": "{name} ha sido eliminada correctamente.",
+    "deleteError": "No se pudo eliminar la empresa. Inténtalo de nuevo.",
+    "creatingCompany": "Creando empresa...",
+    "errorCreating": "Error al crear empresa",
+    "filters": {
+      "all": "Todas",
+      "active": "Activas",
+      "inactive": "Inactivas"
+    }
+  },
+  "workers": {
+    "title": "Trabajadores",
+    "count": "Trabajadores ({count})",
+    "addWorker": "Añadir Trabajador",
+    "editWorker": "Editar trabajador",
+    "deleteWorker": "Eliminar Trabajador",
+    "firstName": "Nombre",
+    "lastName": "Apellidos",
+    "dni": "DNI/NIE",
+    "company": "Empresa",
+    "position": "Puesto",
+    "registrationDate": "Fecha Alta",
+    "noWorkers": "No hay trabajadores registrados",
+    "confirmDelete": "¿Estás seguro de que deseas eliminar este trabajador? Esta acción no se puede deshacer y se perderán todos los documentos asociados.",
+    "workerDeleted": "Trabajador eliminado",
+    "workerDeletedDesc": "{name} ha sido eliminado correctamente.",
+    "deleteError": "No se pudo eliminar el trabajador. Inténtalo de nuevo.",
+    "inactive": "Inactivo",
+    "activate": "Activar",
+    "requiredDocumentation": "Documentación Requerida",
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo",
+      "pending": "Pendiente"
+    },
+    "filters": {
+      "all": "Todos",
+      "active": "Activos",
+      "inactive": "Inactivos",
+      "pending": "Pendientes"
+    }
+  },
+  "documents": {
+    "title": "Documentos",
+    "document": "Documento",
+    "file": "Archivo",
+    "upload": "Subir documento",
+    "validate": "Validar",
+    "download": "Descargar",
+    "delete": "Eliminar",
+    "type": "Tipo de documento",
+    "issueDate": "Fecha Emisión",
+    "expirationDate": "Fecha Caducidad",
+    "uploadDate": "Fecha Subida",
+    "noDocuments": "No hay documentos",
+    "requiredDocumentation": "Documentación Requerida",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar este documento?",
+    "status": {
+      "valid": "Válido",
+      "invalid": "No válido",
+      "pending": "Pendiente de validación",
+      "expired": "Caducado",
+      "expiringSoon": "Próximo a caducar"
+    },
+    "types": {
+      "dni": "DNI/NIE",
+      "contract": "Contrato",
+      "insurance": "Seguro",
+      "aptitude": "Aptitud médica",
+      "training": "Formación",
+      "ppe": "EPIs",
+      "riskAssessment": "Evaluación de riesgos"
+    },
+    "validation": {
+      "title": "Validación de documento",
+      "validating": "Validando documento...",
+      "success": "Documento validado correctamente",
+      "error": "Error al validar el documento",
+      "aiResult": "Resultado de la IA"
+    }
+  },
+  "accessControl": {
+    "title": "Control de accesos",
+    "history": "Histórico de Accesos",
+    "historyDescription": "Registro completo de entradas y salidas de técnicos",
+    "authorizedPersonnel": "Personal autorizado",
+    "entry": "Entrada",
+    "exit": "Salida",
+    "worker": "Trabajador",
+    "technician": "Técnico",
+    "company": "Empresa",
+    "datetime": "Fecha y hora",
+    "duration": "Duración",
+    "inFacility": "En instalación",
+    "noRecords": "No se encontraron registros",
+    "accessRecords": "Registros de acceso",
+    "recordFound": "registro encontrado",
+    "recordsFound": "registros encontrados",
+    "filters": {
+      "today": "Hoy",
+      "thisWeek": "Esta semana",
+      "thisMonth": "Este mes",
+      "custom": "Personalizado"
+    },
+    "kpis": {
+      "totalAccesses": "Total accesos",
+      "uniqueWorkers": "Trabajadores únicos",
+      "averageTime": "Tiempo medio",
+      "deniedAccesses": "Accesos denegados"
+    }
+  },
+  "validation": {
+    "required": "Este campo es obligatorio",
+    "invalidEmail": "Email no válido",
+    "invalidPhone": "Teléfono no válido",
+    "invalidCif": "CIF no válido",
+    "invalidDni": "DNI/NIE no válido",
+    "minLength": "Mínimo {min} caracteres",
+    "maxLength": "Máximo {max} caracteres",
+    "passwordStrength": "La contraseña debe tener al menos 8 caracteres, una mayúscula y un número"
+  },
+  "errors": {
+    "generic": "Ha ocurrido un error. Inténtalo de nuevo.",
+    "notFound": "No encontrado",
+    "unauthorized": "No autorizado",
+    "forbidden": "Acceso denegado",
+    "serverError": "Error del servidor",
+    "networkError": "Error de conexión"
+  },
+  "notifications": {
+    "saveSuccess": "Guardado correctamente",
+    "saveError": "Error al guardar",
+    "deleteSuccess": "Eliminado correctamente",
+    "deleteError": "Error al eliminar",
+    "uploadSuccess": "Subido correctamente",
+    "uploadError": "Error al subir",
+    "workerCreated": "Trabajador creado correctamente",
+    "workerCreatedDesc": "El trabajador se ha registrado correctamente y se ha agregado a la empresa."
+  },
+  "configuration": {
+    "title": "Configuración",
+    "loading": "Cargando configuración...",
+    "noPermission": "No tienes permisos para acceder a esta página. Solo usuarios con rol ADMIN pueden gestionar la configuración."
+  },
+  "subcontractors": {
+    "title": "Gestión de Subcontratas",
+    "description": "Visualiza y gestiona todas las empresas subcontratistas",
+    "ofCompany": "Subcontratas de {name}",
+    "companiesWorkAs": "Empresas que trabajan como subcontratas de este proveedor",
+    "addSubcontractor": "Añadir subcontrata",
+    "addFirst": "Añadir primera subcontrata",
+    "noSubcontractors": "Sin subcontratas",
+    "noSubcontractorsDesc": "Esta empresa no tiene subcontratas registradas. Añade una subcontrata para gestionar su documentación CAE.",
+    "search": "Buscar subcontrata por nombre o CIF...",
+    "parentCompany": "Empresa principal",
+    "myCompany": "Mi empresa",
+    "noResults": "No se encontraron subcontratas que coincidan con la búsqueda",
+    "workers": "Trabajadores",
+    "documents": "Documentos",
+    "viewDetails": "Ver detalle →",
+    "newSubcontractor": "Nueva subcontrata de {name}",
+    "newSubcontractorDesc": "Esta empresa será una subcontrata que trabaja para {name}",
+    "created": "Subcontrata creada",
+    "createdDesc": "{name} ha sido añadida como subcontrata.",
+    "createError": "No se pudo crear la subcontrata."
+  },
+  "pricing": {
+    "title": "Precios",
+    "subtitle": "Elige el plan que mejor se adapte a tu empresa",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "save": "Ahorra un {percent}%",
+    "perMonth": "/mes",
+    "perYear": "/año",
+    "startTrial": "Empezar prueba gratis",
+    "contactSales": "Contactar con ventas",
+    "features": "Características",
+    "included": "Incluido",
+    "notIncluded": "No incluido"
+  },
+  "languages": {
+    "es": "Español",
+    "ca": "Català",
+    "eu": "Euskara",
+    "gl": "Galego",
+    "en": "English"
+  }
+}

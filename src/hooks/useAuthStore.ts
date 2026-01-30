@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { ParentCompany, UserLoginResponse, UserRole } from "@/types/user";
 import { LoginService } from "@/services/login.service";
-import { UserConfigurationService } from "@/services/user-configuration.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
 const AUTH_VERSION = 3; // Incrementado para forzar migración
@@ -69,22 +68,8 @@ export const useAuthStore = create<AuthState>()(
               userData.role === UserRole.Admin ||
               userData.role === UserRole.SuperAdmin;
 
-            // Cargar logo del usuario si es Admin
-            let logoUrl: string | null = null;
-            if (userData.role === UserRole.Admin) {
-              try {
-                const configService = new UserConfigurationService();
-                const configResponse = await configService.getByUserId(
-                  userData.userId,
-                );
-                if (configResponse?.data?.logoUrl) {
-                  logoUrl = configResponse.data.logoUrl;
-                }
-              } catch (err) {
-                // Si no hay configuración o falla, continuar sin logo
-                console.log("No se pudo cargar la configuración del usuario");
-              }
-            }
+            // Usar el logo del admin si viene en la respuesta del login
+            const logoUrl: string | null = userData.adminLogoUrl || null;
 
             if (isAdmin) {
               // Admin: login directo sin selección de empresa
@@ -104,7 +89,7 @@ export const useAuthStore = create<AuthState>()(
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
-                logoUrl: null,
+                logoUrl,
                 selectedParentCompanyId: userData.parentCompanyId,
                 pendingParentCompanySelection: false,
               });
@@ -115,7 +100,7 @@ export const useAuthStore = create<AuthState>()(
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
-                logoUrl: null,
+                logoUrl,
                 pendingParentCompanySelection: true,
                 selectedParentCompanyId: null,
               });

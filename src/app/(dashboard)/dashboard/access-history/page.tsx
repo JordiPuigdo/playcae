@@ -6,6 +6,7 @@ import { AccessHistoryTable } from "@/components/AccessHistoryTable";
 import { AccessHistoryKPIs } from "@/components/AccessHistoryKPIs";
 import { AccessHistoryDetailPanel } from "@/components/AccessHistoryDetailPanel";
 import { useAccessHistory } from "@/hooks/useAccessHistory";
+import { useTranslation } from "@/hooks/useTranslation";
 import { AccessHistoryEntry } from "@/types/accessHistory";
 
 import { History } from "lucide-react";
@@ -20,6 +21,7 @@ import {
 const AccessHistory = () => {
   const { history, filters, updateFilters, clearFilters, companies, kpiData } =
     useAccessHistory();
+  const { t } = useTranslation();
 
   const [selectedEntry, setSelectedEntry] = useState<AccessHistoryEntry | null>(
     null
@@ -45,12 +47,12 @@ const AccessHistory = () => {
             <div className="flex w-full justify-between">
               <h1 className="text-2xl h-10 font-bold text-brand-primary flex items-center gap-3">
                 <History className="h-7 w-7 text-brand-primary" />
-                Histórico de Accesos
+                {t("accessControl.history")}
               </h1>
             </div>
           </div>
           <p className="text-playBlueLight ml-8">
-            Registro completo de entradas y salidas de técnicos
+            {t("accessControl.historyDescription")}
           </p>
         </div>
       </div>
@@ -71,13 +73,13 @@ const AccessHistory = () => {
         <Card className="border border-playBlueLight/30 shadow-sm">
           <CardHeader>
             <CardTitle className="text-brand-primary">
-              Registros de acceso
+              {t("accessControl.accessRecords")}
             </CardTitle>
             <CardDescription className="text-playBlueLight">
               {history.length}{" "}
               {history.length === 1
-                ? "registro encontrado"
-                : "registros encontrados"}
+                ? t("accessControl.recordFound")
+                : t("accessControl.recordsFound")}
             </CardDescription>
           </CardHeader>
 

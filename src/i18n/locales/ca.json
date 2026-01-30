@@ -1,0 +1,399 @@
+{
+  "common": {
+    "loading": "Carregant...",
+    "save": "Desar",
+    "saving": "Desant...",
+    "cancel": "Cancel·lar",
+    "delete": "Eliminar",
+    "deleting": "Eliminant...",
+    "edit": "Editar",
+    "create": "Crear",
+    "add": "Afegir",
+    "search": "Cercar",
+    "filter": "Filtrar",
+    "back": "Tornar",
+    "next": "Següent",
+    "previous": "Anterior",
+    "confirm": "Confirmar",
+    "close": "Tancar",
+    "activate": "Activar",
+    "yes": "Sí",
+    "no": "No",
+    "all": "Tots",
+    "none": "Cap",
+    "actions": "Accions",
+    "status": "Estat",
+    "date": "Data",
+    "name": "Nom",
+    "email": "Correu electrònic",
+    "phone": "Telèfon",
+    "address": "Adreça",
+    "description": "Descripció",
+    "observations": "Observacions",
+    "download": "Descarregar",
+    "upload": "Pujar",
+    "view": "Veure",
+    "required": "Obligatori",
+    "optional": "Opcional"
+  },
+  "header": {
+    "product": "Producte",
+    "pricing": "Preus",
+    "resources": "Recursos",
+    "contact": "Contacte",
+    "login": "Iniciar sessió",
+    "register": "Registrar-se",
+    "requestDemo": "Sol·licitar demo",
+    "logout": "Tancar sessió",
+    "myAccount": "El meu compte"
+  },
+  "nav": {
+    "documentValidation": "Validació documental IA",
+    "accessControl": "Control d'accessos",
+    "allServices": "Veure tots els serveis",
+    "whatIsCae": "Què és la CAE?",
+    "caeAlternatives": "Alternatives CAE",
+    "blog": "Blog"
+  },
+  "footer": {
+    "company": "Empresa",
+    "aboutUs": "Sobre nosaltres",
+    "contact": "Contacte",
+    "legal": "Legal",
+    "privacyPolicy": "Política de privacitat",
+    "termsOfService": "Termes del servei",
+    "cookiesPolicy": "Política de cookies",
+    "resources": "Recursos",
+    "followUs": "Segueix-nos",
+    "copyright": "© {year} PlayCAE. Tots els drets reservats."
+  },
+  "hero": {
+    "title": "Gestió de Documentació CAE amb IA",
+    "subtitle": "Automatitza la validació documental PRL amb intel·ligència artificial. Control d'accessos i registre presencial a fàbrica.",
+    "cta": "Sol·licitar demo",
+    "ctaSecondary": "Veure preus",
+    "trustedBy": "Confien en nosaltres"
+  },
+  "landing": {
+    "problemSolution": {
+      "title": "Cansat de gestionar documentació CAE manualment?",
+      "problem1": "Pèrdua de temps revisant documents",
+      "problem2": "Risc de sancions per incompliment",
+      "problem3": "Dificultat per controlar accessos",
+      "solution": "PlayCAE automatitza tot el procés"
+    },
+    "whyUs": {
+      "title": "Per què triar PlayCAE?",
+      "feature1Title": "Validació automàtica amb IA",
+      "feature1Desc": "La nostra IA valida documents en segons",
+      "feature2Title": "Control d'accessos integrat",
+      "feature2Desc": "Gestiona qui entra a les teves instal·lacions",
+      "feature3Title": "Alertes de caducitat",
+      "feature3Desc": "Mai més et pillaran amb documents caducats",
+      "feature4Title": "Compliment normatiu",
+      "feature4Desc": "Compleix el RD 171/2004 sense esforç"
+    },
+    "comparison": {
+      "title": "Compara PlayCAE amb altres solucions",
+      "feature": "Característica",
+      "playcae": "PlayCAE",
+      "others": "Altres"
+    },
+    "documentation": {
+      "title": "Documentació suportada",
+      "subtitle": "Validem automàticament tots els documents necessaris per a la CAE"
+    },
+    "contact": {
+      "title": "Preparat per començar?",
+      "subtitle": "Contacta amb nosaltres i t'ajudarem a automatitzar la teva gestió CAE",
+      "formName": "Nom",
+      "formEmail": "Correu electrònic",
+      "formPhone": "Telèfon",
+      "formCompany": "Empresa",
+      "formMessage": "Missatge",
+      "formSubmit": "Enviar missatge",
+      "formSuccess": "Missatge enviat correctament!",
+      "formError": "Error en enviar el missatge. Torna-ho a provar."
+    }
+  },
+  "auth": {
+    "login": {
+      "title": "Iniciar sessió",
+      "email": "Correu electrònic",
+      "password": "Contrasenya",
+      "forgotPassword": "Has oblidat la contrasenya?",
+      "submit": "Entrar",
+      "noAccount": "No tens compte?",
+      "register": "Registra't",
+      "error": "Correu electrònic o contrasenya incorrectes"
+    },
+    "register": {
+      "title": "Crear compte",
+      "name": "Nom",
+      "email": "Correu electrònic",
+      "password": "Contrasenya",
+      "confirmPassword": "Confirmar contrasenya",
+      "company": "Empresa",
+      "submit": "Crear compte",
+      "hasAccount": "Ja tens compte?",
+      "login": "Inicia sessió",
+      "success": "Compte creat correctament",
+      "passwordMismatch": "Les contrasenyes no coincideixen"
+    },
+    "forgotPassword": {
+      "title": "Recuperar contrasenya",
+      "email": "Correu electrònic",
+      "submit": "Enviar enllaç",
+      "success": "T'hem enviat un correu amb instruccions",
+      "backToLogin": "Tornar al login"
+    }
+  },
+  "dashboard": {
+    "title": "Panell de Control",
+    "welcome": "Benvingut, {name}",
+    "company": "Empresa",
+    "companies": "Empreses",
+    "workers": "Treballadors",
+    "documents": "Documents",
+    "accessHistory": "Historial d'Accessos",
+    "settings": "Configuració",
+    "comingSoon": "Properament",
+    "sidebar": {
+      "home": "Panell de control",
+      "companies": "Empreses",
+      "company": "Empresa",
+      "subcontractors": "Subcontractes",
+      "workers": "Treballadors",
+      "documents": "Documents",
+      "accessControl": "Control d'Accés",
+      "accessHistory": "Historial d'Accessos",
+      "reports": "Informes",
+      "settings": "Configuració",
+      "configuration": "Configuració"
+    },
+    "stats": {
+      "totalCompanies": "Total Empreses",
+      "mainCompanies": "principals",
+      "subcontractors": "subcontractes",
+      "authorized": "Autoritzades",
+      "ofTotal": "% del total",
+      "pending": "Pendents",
+      "requireReview": "Requereixen revisió",
+      "notAuthorized": "No Autoritzades",
+      "accessDenied": "Accés denegat"
+    },
+    "alerts": {
+      "workersNoAccess": "Hi ha {count} treballador{plural} sense autorització per accedir a les instal·lacions."
+    },
+    "filters": {
+      "clear": "Netejar",
+      "dateFrom": "Data des de",
+      "dateTo": "Data fins"
+    }
+  },
+  "companies": {
+    "title": "Gestió d'Empreses",
+    "registered": "Empreses Registrades ({count})",
+    "main": "principals",
+    "addCompany": "Nova Empresa",
+    "editCompany": "Editar Empresa",
+    "deleteCompany": "Eliminar Empresa",
+    "companyName": "Nom",
+    "cif": "CIF",
+    "contact": "Contacte",
+    "parentCompany": "Empresa principal",
+    "subcontractors": "Subcontractes",
+    "subcontractor": "Subcontracta",
+    "inactive": "Inactiva",
+    "noCompanies": "No hi ha empreses registrades",
+    "noResults": "No s'han trobat empreses amb els filtres aplicats.",
+    "confirmDelete": "Estàs segur que vols eliminar aquesta empresa?",
+    "deleted": "Empresa Eliminada",
+    "deletedDesc": "{name} s'ha eliminat correctament.",
+    "deleteError": "No s'ha pogut eliminar l'empresa. Torna-ho a provar.",
+    "creatingCompany": "Creant empresa...",
+    "errorCreating": "Error en crear empresa",
+    "filters": {
+      "all": "Totes",
+      "active": "Actives",
+      "inactive": "Inactives"
+    }
+  },
+  "workers": {
+    "title": "Treballadors",
+    "count": "Treballadors ({count})",
+    "addWorker": "Afegir Treballador",
+    "editWorker": "Editar treballador",
+    "deleteWorker": "Eliminar Treballador",
+    "firstName": "Nom",
+    "lastName": "Cognoms",
+    "dni": "DNI/NIE",
+    "company": "Empresa",
+    "position": "Lloc",
+    "registrationDate": "Data d'Alta",
+    "noWorkers": "No hi ha treballadors registrats",
+    "confirmDelete": "Estàs segur que vols eliminar aquest treballador? Aquesta acció no es pot desfer i es perdran tots els documents associats.",
+    "workerDeleted": "Treballador eliminat",
+    "workerDeletedDesc": "{name} s'ha eliminat correctament.",
+    "deleteError": "No s'ha pogut eliminar el treballador. Torna-ho a provar.",
+    "inactive": "Inactiu",
+    "activate": "Activar",
+    "requiredDocumentation": "Documentació Requerida",
+    "status": {
+      "active": "Actiu",
+      "inactive": "Inactiu",
+      "pending": "Pendent"
+    },
+    "filters": {
+      "all": "Tots",
+      "active": "Actius",
+      "inactive": "Inactius",
+      "pending": "Pendents"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "document": "Document",
+    "file": "Arxiu",
+    "upload": "Pujar document",
+    "validate": "Validar",
+    "download": "Descarregar",
+    "delete": "Eliminar",
+    "type": "Tipus de document",
+    "issueDate": "Data d'Emissió",
+    "expirationDate": "Data de Caducitat",
+    "uploadDate": "Data de Pujada",
+    "noDocuments": "No hi ha documents",
+    "requiredDocumentation": "Documentació Requerida",
+    "confirmDelete": "Estàs segur que vols eliminar aquest document?",
+    "status": {
+      "valid": "Vàlid",
+      "invalid": "No vàlid",
+      "pending": "Pendent de validació",
+      "expired": "Caducat",
+      "expiringSoon": "Pròxim a caducar"
+    },
+    "types": {
+      "dni": "DNI/NIE",
+      "contract": "Contracte",
+      "insurance": "Assegurança",
+      "aptitude": "Aptitud mèdica",
+      "training": "Formació",
+      "ppe": "EPIs",
+      "riskAssessment": "Avaluació de riscos"
+    },
+    "validation": {
+      "title": "Validació de document",
+      "validating": "Validant document...",
+      "success": "Document validat correctament",
+      "error": "Error en validar el document",
+      "aiResult": "Resultat de la IA"
+    }
+  },
+  "accessControl": {
+    "title": "Control d'accessos",
+    "history": "Historial d'Accessos",
+    "historyDescription": "Registre complet d'entrades i sortides de tècnics",
+    "authorizedPersonnel": "Personal autoritzat",
+    "entry": "Entrada",
+    "exit": "Sortida",
+    "worker": "Treballador",
+    "technician": "Tècnic",
+    "company": "Empresa",
+    "datetime": "Data i hora",
+    "duration": "Durada",
+    "inFacility": "A la instal·lació",
+    "noRecords": "No s'han trobat registres",
+    "accessRecords": "Registres d'accés",
+    "recordFound": "registre trobat",
+    "recordsFound": "registres trobats",
+    "filters": {
+      "today": "Avui",
+      "thisWeek": "Aquesta setmana",
+      "thisMonth": "Aquest mes",
+      "custom": "Personalitzat"
+    },
+    "kpis": {
+      "totalAccesses": "Total accessos",
+      "uniqueWorkers": "Treballadors únics",
+      "averageTime": "Temps mitjà",
+      "deniedAccesses": "Accessos denegats"
+    }
+  },
+  "validation": {
+    "required": "Aquest camp és obligatori",
+    "invalidEmail": "Correu electrònic no vàlid",
+    "invalidPhone": "Telèfon no vàlid",
+    "invalidCif": "CIF no vàlid",
+    "invalidDni": "DNI/NIE no vàlid",
+    "minLength": "Mínim {min} caràcters",
+    "maxLength": "Màxim {max} caràcters",
+    "passwordStrength": "La contrasenya ha de tenir almenys 8 caràcters, una majúscula i un número"
+  },
+  "errors": {
+    "generic": "S'ha produït un error. Torna-ho a provar.",
+    "notFound": "No trobat",
+    "unauthorized": "No autoritzat",
+    "forbidden": "Accés denegat",
+    "serverError": "Error del servidor",
+    "networkError": "Error de connexió"
+  },
+  "notifications": {
+    "saveSuccess": "Desat correctament",
+    "saveError": "Error en desar",
+    "deleteSuccess": "Eliminat correctament",
+    "deleteError": "Error en eliminar",
+    "uploadSuccess": "Pujat correctament",
+    "uploadError": "Error en pujar",
+    "workerCreated": "Treballador creat correctament",
+    "workerCreatedDesc": "El treballador s'ha registrat correctament i s'ha afegit a l'empresa."
+  },
+  "configuration": {
+    "title": "Configuració",
+    "loading": "Carregant configuració...",
+    "noPermission": "No tens permisos per accedir a aquesta pàgina. Només usuaris amb rol ADMIN poden gestionar la configuració."
+  },
+  "subcontractors": {
+    "title": "Gestió de Subcontractes",
+    "description": "Visualitza i gestiona totes les empreses subcontractistes",
+    "ofCompany": "Subcontractes de {name}",
+    "companiesWorkAs": "Empreses que treballen com a subcontractes d'aquest proveïdor",
+    "addSubcontractor": "Afegir subcontracta",
+    "addFirst": "Afegir primera subcontracta",
+    "noSubcontractors": "Sense subcontractes",
+    "noSubcontractorsDesc": "Aquesta empresa no té subcontractes registrades. Afegeix una subcontracta per gestionar la seva documentació CAE.",
+    "search": "Cercar subcontracta per nom o CIF...",
+    "parentCompany": "Empresa principal",
+    "myCompany": "La meva empresa",
+    "noResults": "No s'han trobat subcontractes que coincideixin amb la cerca",
+    "workers": "Treballadors",
+    "documents": "Documents",
+    "viewDetails": "Veure detall →",
+    "newSubcontractor": "Nova subcontracta de {name}",
+    "newSubcontractorDesc": "Aquesta empresa serà una subcontracta que treballa per a {name}",
+    "created": "Subcontracta creada",
+    "createdDesc": "{name} s'ha afegit com a subcontracta.",
+    "createError": "No s'ha pogut crear la subcontracta."
+  },
+  "pricing": {
+    "title": "Preus",
+    "subtitle": "Tria el pla que millor s'adapti a la teva empresa",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "save": "Estalvia un {percent}%",
+    "perMonth": "/mes",
+    "perYear": "/any",
+    "startTrial": "Començar prova gratuïta",
+    "contactSales": "Contactar amb vendes",
+    "features": "Característiques",
+    "included": "Inclòs",
+    "notIncluded": "No inclòs"
+  },
+  "languages": {
+    "es": "Español",
+    "ca": "Català",
+    "eu": "Euskara",
+    "gl": "Galego",
+    "en": "English"
+  }
+}

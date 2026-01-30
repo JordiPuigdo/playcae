@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { Worker, WorkerFormData, WorkerDocumentFormData } from "@/types/worker";
+import { useTranslation } from "@/hooks/useTranslation";
 
 import {
   Users,
@@ -80,6 +81,7 @@ export const WorkersTable = ({
   onOpenDocument,
   onRefresh,
 }: WorkersTableProps) => {
+  const { t } = useTranslation();
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -259,13 +261,13 @@ export const WorkersTable = ({
     try {
       onDeleteWorker(deleteWorker.id!);
       toast({
-        title: "Trabajador eliminado",
-        description: `${deleteWorker.firstName} ${deleteWorker.lastName} ha sido eliminado correctamente.`,
+        title: t("workers.workerDeleted"),
+        description: t("workers.workerDeletedDesc", { name: `${deleteWorker.firstName} ${deleteWorker.lastName}` }),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo eliminar el trabajador. Inténtalo de nuevo.",
+        title: t("errors.generic"),
+        description: t("workers.deleteError"),
         variant: "destructive",
       });
     } finally {
@@ -298,7 +300,7 @@ export const WorkersTable = ({
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2 text-brand-primary">
               <Users className="h-5 w-5 text-brand-primary" />
-              Trabajadores ({workers.length})
+              {t("workers.count", { count: workers.length })}
             </CardTitle>
 
             {canEdit && (
@@ -307,7 +309,7 @@ export const WorkersTable = ({
                 className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
               >
                 <Plus className="h-4 w-4" />
-                Añadir Trabajador
+                {t("workers.addWorker")}
               </Button>
             )}
           </div>
@@ -319,14 +321,14 @@ export const WorkersTable = ({
               <TableHeader>
                 <TableRow className="bg-playGrey">
                   <TableHead className="w-10" />
-                  <SortableHeader field="name">Trabajador</SortableHeader>
-                  <SortableHeader field="cardId">DNI/NIE</SortableHeader>
-                  <SortableHeader field="position">Puesto</SortableHeader>
+                  <SortableHeader field="name">{t("workers.title")}</SortableHeader>
+                  <SortableHeader field="cardId">{t("workers.dni")}</SortableHeader>
+                  <SortableHeader field="position">{t("workers.position")}</SortableHeader>
                   <SortableHeader field="creationDate">
-                    Fecha Alta
+                    {t("workers.registrationDate")}
                   </SortableHeader>
-                  <SortableHeader field="status">Estado</SortableHeader>
-                  <TableHead className="text-brand-primary">Acciones</TableHead>
+                  <SortableHeader field="status">{t("common.status")}</SortableHeader>
+                  <TableHead className="text-brand-primary">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -358,7 +360,7 @@ export const WorkersTable = ({
                                 variant="secondary"
                                 className="text-xs bg-playGrey text-brand-primary"
                               >
-                                Inactivo
+                                {t("workers.inactive")}
                               </Badge>
                             )}
                           </div>
@@ -390,7 +392,7 @@ export const WorkersTable = ({
                                 className="gap-1 border-playBlueLight text-brand-primary hover:bg-playGrey"
                               >
                                 <Edit className="h-3 w-3" />
-                                Editar
+                                {t("common.edit")}
                               </Button>
                             )}
 
@@ -402,7 +404,7 @@ export const WorkersTable = ({
                                 className="gap-1 border-playBlueLight text-brand-secondary hover:bg-playGrey"
                               >
                                 <Trash2 className="h-3 w-3" />
-                                Eliminar
+                                {t("common.delete")}
                               </Button>
                             )}
 
@@ -414,7 +416,7 @@ export const WorkersTable = ({
                                 className="gap-1 border-playGreen text-playGreen hover:bg-playGrey"
                               >
                                 <Check className="h-3 w-3" />
-                                Activar
+                                {t("common.activate")}
                               </Button>
                             )}
                           </div>
@@ -428,7 +430,7 @@ export const WorkersTable = ({
                               <div className="mb-3">
                                 <h4 className="font-medium flex items-center gap-2 text-brand-primary">
                                   <FileText className="h-4 w-4 text-brand-primary" />
-                                  Documentación Requerida
+                                  {t("workers.requiredDocumentation")}
                                 </h4>
                               </div>
 
@@ -436,25 +438,25 @@ export const WorkersTable = ({
                                 <TableHeader>
                                   <TableRow className="bg-playGrey">
                                     <TableHead className="text-brand-primary">
-                                      Documento
+                                      {t("documents.document")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Archivo
+                                      {t("documents.file")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Fecha Subida
+                                      {t("documents.uploadDate")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Fecha Emisión
+                                      {t("documents.issueDate")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Fecha Caducidad
+                                      {t("documents.expirationDate")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Estado
+                                      {t("common.status")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
-                                      Acciones
+                                      {t("common.actions")}
                                     </TableHead>
                                   </TableRow>
                                 </TableHeader>
@@ -588,8 +590,8 @@ export const WorkersTable = ({
         isOpen={!!deleteWorker}
         onClose={() => setDeleteWorker(null)}
         onConfirm={handleDeleteWorker}
-        title="Eliminar Trabajador"
-        description="¿Estás seguro de que deseas eliminar este trabajador? Esta acción no se puede deshacer y se perderán todos los documentos asociados."
+        title={t("workers.deleteWorker")}
+        description={t("workers.confirmDelete")}
         itemName={
           deleteWorker
             ? `${deleteWorker.firstName} ${deleteWorker.lastName}`

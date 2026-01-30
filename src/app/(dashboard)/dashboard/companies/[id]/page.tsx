@@ -23,6 +23,7 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import {
   DocumentFormData,
@@ -38,6 +39,7 @@ import { useCallback, useEffect, useState } from "react";
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
+  const { t } = useTranslation();
   const {
     getCompanyById,
     updateCompany,
@@ -144,9 +146,8 @@ const CompanyDetailPage = () => {
     await createWorker(data);
     await fetchCompany(id);
     toast({
-      title: "Trabajador creado correctamente",
-      description:
-        "El trabajador se ha registrado correctamente y se ha agregado a la empresa.",
+      title: t("notifications.workerCreated"),
+      description: t("notifications.workerCreatedDesc"),
       variant: "default",
     });
 
@@ -205,12 +206,12 @@ const CompanyDetailPage = () => {
   useEffect(() => {
     if (showErrorUpload) {
       toast({
-        title: "Error al subir el documento",
+        title: t("notifications.uploadError"),
         description: showErrorUpload,
         variant: "destructive",
       });
     }
-  }, [showErrorUpload, toast]);
+  }, [showErrorUpload, toast, t]);
 
   if (!company && !isLoading) {
     return (
@@ -218,12 +219,12 @@ const CompanyDetailPage = () => {
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
             <h2 className="text-xl font-semibold mb-2">
-              Empresa no encontrada
+              {t("errors.notFound")}
             </h2>
             <p className="text-muted-foreground mb-4">
-              La empresa que buscas no existe o no tienes permisos para verla.
+              {t("errors.notFound")}
             </p>
-            <Button onClick={() => {}}>Volver al listado</Button>
+            <Button onClick={() => {}}>{t("common.back")}</Button>
           </CardContent>
         </Card>
       </div>
@@ -239,7 +240,7 @@ const CompanyDetailPage = () => {
           parentCompanyName={company?.parentCompanyName}
         />
 
-        {isLoading && <Loader text="Cargando información..." />}
+        {isLoading && <Loader text={t("common.loading")} />}
 
         <div className="container mx-auto px-4 py-8 space-y-8">
           <EditableCompanyInfo
@@ -259,7 +260,7 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <Users className="h-4 w-4" />
-                <span className="hidden sm:inline">Trabajadores</span> (
+                <span className="hidden sm:inline">{t("dashboard.workers")}</span> (
                 {workers.length})
               </TabsTrigger>
 
@@ -268,7 +269,7 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <FileText className="h-4 w-4" />
-                <span className="hidden sm:inline">Documentos</span>
+                <span className="hidden sm:inline">{t("dashboard.documents")}</span>
               </TabsTrigger>
 
               <TabsTrigger
@@ -276,7 +277,7 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playOrange data-[state=active]:text-white"
               >
                 <Network className="h-4 w-4" />
-                <span className="hidden sm:inline">Subcontratas</span> (
+                <span className="hidden sm:inline">{t("dashboard.sidebar.subcontractors")}</span> (
                 {subcontractors.length})
               </TabsTrigger>
 
@@ -285,7 +286,7 @@ const CompanyDetailPage = () => {
                 className="flex items-center gap-2 text-brand-primary data-[state=active]:bg-playBlueLight data-[state=active]:text-white"
               >
                 <MessageSquare className="h-4 w-4" />
-                <span className="hidden sm:inline">Observaciones</span>
+                <span className="hidden sm:inline">{t("common.observations")}</span>
               </TabsTrigger>
             </TabsList>
 
@@ -377,11 +378,10 @@ const CompanyDetailPage = () => {
             <DialogHeader>
               <DialogTitle className="text-brand-primary flex items-center gap-2">
                 <Network className="h-5 w-5 text-playOrange" />
-                Nueva subcontrata de {company.name}
+                {t("subcontractors.newSubcontractor", { name: company.name })}
               </DialogTitle>
               <p className="text-sm text-playBlueLight mt-1">
-                Esta empresa será una subcontrata que trabaja para{" "}
-                {company.name}
+                {t("subcontractors.newSubcontractorDesc", { name: company.name })}
               </p>
             </DialogHeader>
 
@@ -393,8 +393,8 @@ const CompanyDetailPage = () => {
                   setIsLoading(true);
                   await createSubcontractor(id, data);
                   toast({
-                    title: "Subcontrata creada",
-                    description: `${data.name} ha sido añadida como subcontrata.`,
+                    title: t("subcontractors.created"),
+                    description: t("subcontractors.createdDesc", { name: data.name }),
                   });
                   // Refrescar subcontratas
                   const subs = await getSubcontractors(id);
@@ -402,8 +402,8 @@ const CompanyDetailPage = () => {
                   setIsSubcontractorFormOpen(false);
                 } catch (error) {
                   toast({
-                    title: "Error",
-                    description: "No se pudo crear la subcontrata.",
+                    title: t("errors.generic"),
+                    description: t("subcontractors.createError"),
                     variant: "destructive",
                   });
                 } finally {

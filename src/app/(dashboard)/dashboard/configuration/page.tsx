@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useUserConfiguration } from "@/hooks/useUserConfiguration";
+import { useTranslation } from "@/hooks/useTranslation";
 import { LogoUpload } from "@/components/LogoUpload";
 import {
   Card,
@@ -19,6 +20,7 @@ import { Alert, AlertDescription } from "@/components/ui/Alert";
 
 const ConfigurationPage = () => {
   const { user } = useAuthStore();
+  const { t } = useTranslation();
   const {
     configuration,
     isLoading,
@@ -56,8 +58,7 @@ const ConfigurationPage = () => {
         <Alert variant="destructive">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            No tienes permisos para acceder a esta página. Solo usuarios con rol
-            ADMIN pueden gestionar la configuración.
+            {t("configuration.noPermission")}
           </AlertDescription>
         </Alert>
       </div>
@@ -86,7 +87,7 @@ const ConfigurationPage = () => {
   };
 
   if (isLoading && !configuration) {
-    return <Loader text="Cargando configuración..." />;
+    return <Loader text={t("configuration.loading")} />;
   }
 
   return (
@@ -96,7 +97,7 @@ const ConfigurationPage = () => {
         <Settings className="h-8 w-8 text-brand-primary" />
         <div>
           <h1 className="text-3xl font-bold text-brand-primary">
-            Configuración
+            {t("configuration.title")}
           </h1>
           <p className="text-muted-foreground">
             Personaliza la apariencia de tu sistema

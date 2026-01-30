@@ -10,6 +10,7 @@ export interface UserLoginResponse extends User {
   userId: string;
   role: UserRole;
   userName: string;
+  adminLogoUrl?: string | null; // Logo personalizado del admin
 }
 
 export interface ParentCompany {

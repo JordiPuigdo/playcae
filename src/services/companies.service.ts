@@ -15,8 +15,8 @@ export interface ICompanyService {
   update(id: string, company: Partial<Company>): Promise<ApiResponse<Company>>;
   delete(id: string): Promise<ApiResponse<void>>;
   updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
-  activate(id: string): Promise<ApiResponse<void>>;
-  deactivate(id: string): Promise<ApiResponse<void>>;
+  activate(companyId: string, userId: string): Promise<ApiResponse<void>>;
+  deactivate(companyId: string, userId: string): Promise<ApiResponse<void>>;
   getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
   // Subcontratas
   getSubcontractors(companyId: string): Promise<ApiResponse<CompanySimple[]>>;
@@ -65,12 +65,12 @@ export class CompanyService implements ICompanyService {
     return this.httpClient.put(`${this.baseUrl}/${id}/status/${status}`, null);
   }
 
-  async activate(id: string): Promise<ApiResponse<void>> {
-    return this.httpClient.put(`${this.baseUrl}/${id}/activate`, null);
+  async activate(companyId: string, userId: string): Promise<ApiResponse<void>> {
+    return this.httpClient.put(`${this.baseUrl}/${companyId}/activate-relation/${userId}`, null);
   }
 
-  async deactivate(id: string): Promise<ApiResponse<void>> {
-    return this.httpClient.delete(`${this.baseUrl}/${id}`);
+  async deactivate(companyId: string, userId: string): Promise<ApiResponse<void>> {
+    return this.httpClient.put(`${this.baseUrl}/${companyId}/deactivate-relation/${userId}`, null);
   }
 
   async getByUserId(userId: string): Promise<ApiResponse<Company[]>> {

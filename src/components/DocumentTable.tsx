@@ -25,6 +25,7 @@ import { DocumentValidation } from "./DocumentValidation";
 import { DocumentUpload } from "./DocumentUpload";
 import { FileCell } from "./FileCell";
 import { DocumentHistory } from "./DocumentHistory";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type SortField = "name" | "uploadedDate" | "expirationDate" | "status";
 type SortDirection = "asc" | "desc" | null;
@@ -53,6 +54,7 @@ export const DocumentsTable = ({
   companyId,
   onRefresh,
 }: DocumentsTableProps) => {
+  const { t } = useTranslation();
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
@@ -150,7 +152,7 @@ export const DocumentsTable = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-brand-primary">
           <FileText className="h-5 w-5 text-brand-primary" />
-          Documentación Requerida{" "}
+          {t("documents.requiredDocumentation")}{" "}
           {documents.length > 0 &&
             `(${
               documents.filter((x) => x.status == EntityStatus.Pending).length
@@ -163,16 +165,16 @@ export const DocumentsTable = ({
           <Table>
             <TableHeader>
               <TableRow className="bg-playGrey">
-                <SortableHeader field="name">Documento</SortableHeader>
-                <TableHead className="text-brand-primary">Archivo</TableHead>
+                <SortableHeader field="name">{t("documents.document")}</SortableHeader>
+                <TableHead className="text-brand-primary">{t("documents.file")}</TableHead>
                 <SortableHeader field="uploadedDate">
-                  Fecha Subida
+                  {t("documents.uploadDate")}
                 </SortableHeader>
                 <SortableHeader field="expirationDate">
-                  Fecha Caducidad
+                  {t("documents.expirationDate")}
                 </SortableHeader>
-                <SortableHeader field="status">Estado</SortableHeader>
-                <TableHead className="text-brand-primary">Acciones</TableHead>
+                <SortableHeader field="status">{t("common.status")}</SortableHeader>
+                <TableHead className="text-brand-primary">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
 

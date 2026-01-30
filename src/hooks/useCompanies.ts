@@ -132,12 +132,12 @@ export const useCompanies = () => {
   };
 
   const activateCompany = async (id: string) => {
-    await companyService.activate(id);
+    await companyService.activate(id, user!.userId!);
     refreshCompanies();
   };
 
   const deactivateCompany = async (id: string) => {
-    await companyService.deactivate(id);
+    await companyService.deactivate(id, user!.userId!);
     refreshCompanies();
   };
 

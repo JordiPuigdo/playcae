@@ -9,8 +9,9 @@ import {
 } from "@/components/ui/Table";
 import { AccessHistoryEntry } from "@/types/accessHistory";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, ca } from "date-fns/locale";
 import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type SortField =
   | "technicianName"
@@ -31,11 +32,14 @@ export const AccessHistoryTable = ({
   history,
   onSelectEntry,
 }: AccessHistoryTableProps) => {
+  const { t, locale } = useTranslation();
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
 
+  const dateLocale = locale === "ca" ? ca : es;
+
   const formatDateTime = (dateString: string) => {
-    return format(new Date(dateString), "dd/MM/yyyy HH:mm", { locale: es });
+    return format(new Date(dateString), "dd/MM/yyyy HH:mm", { locale: dateLocale });
   };
 
   const calculateDurationMinutes = (entry: AccessHistoryEntry): number => {
@@ -46,7 +50,7 @@ export const AccessHistoryTable = ({
   };
 
   const calculateDuration = (entry: AccessHistoryEntry) => {
-    if (!entry.exitTime) return "En instalación";
+    if (!entry.exitTime) return t("accessControl.inFacility");
 
     const entryTime = new Date(entry.entryTime);
     const exitTime = new Date(entry.exitTime);
@@ -161,13 +165,13 @@ export const AccessHistoryTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-playGrey">
-            <SortableHeader field="technicianName">Técnico</SortableHeader>
-            <SortableHeader field="dni">DNI</SortableHeader>
-            <SortableHeader field="company">Empresa</SortableHeader>
-            <SortableHeader field="entryTime">Entrada</SortableHeader>
-            <SortableHeader field="exitTime">Salida</SortableHeader>
-            <SortableHeader field="duration">Duración</SortableHeader>
-            <SortableHeader field="status">Estado</SortableHeader>
+            <SortableHeader field="technicianName">{t("accessControl.technician")}</SortableHeader>
+            <SortableHeader field="dni">{t("workers.dni")}</SortableHeader>
+            <SortableHeader field="company">{t("accessControl.company")}</SortableHeader>
+            <SortableHeader field="entryTime">{t("accessControl.entry")}</SortableHeader>
+            <SortableHeader field="exitTime">{t("accessControl.exit")}</SortableHeader>
+            <SortableHeader field="duration">{t("accessControl.duration")}</SortableHeader>
+            <SortableHeader field="status">{t("common.status")}</SortableHeader>
           </TableRow>
         </TableHeader>
 
@@ -178,7 +182,7 @@ export const AccessHistoryTable = ({
                 colSpan={7}
                 className="text-center py-8 text-playBlueLight"
               >
-                No se encontraron registros
+                {t("accessControl.noRecords")}
               </TableCell>
             </TableRow>
           ) : (
@@ -209,7 +213,7 @@ export const AccessHistoryTable = ({
                     formatDateTime(entry.exitTime)
                   ) : (
                     <span className="bg-playYellow text-black px-2 py-1 rounded-full border border-playYellow/40 text-xs">
-                      En instalación
+                      {t("accessControl.inFacility")}
                     </span>
                   )}
                 </TableCell>
