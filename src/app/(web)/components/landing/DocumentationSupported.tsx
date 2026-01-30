@@ -1,7 +1,51 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function DocumentationSupported() {
+  const { t } = useTranslation();
+
+  const step2Items = [
+    {
+      icon: "🔍",
+      title: t("landing.documentation.step2Check1Title"),
+      desc: t("landing.documentation.step2Check1Desc"),
+    },
+    {
+      icon: "📅",
+      title: t("landing.documentation.step2Check2Title"),
+      desc: t("landing.documentation.step2Check2Desc"),
+    },
+    {
+      icon: "🛡️",
+      title: t("landing.documentation.step2Check3Title"),
+      desc: t("landing.documentation.step2Check3Desc"),
+    },
+    {
+      icon: "📜",
+      title: t("landing.documentation.step2Check4Title"),
+      desc: t("landing.documentation.step2Check4Desc"),
+    },
+  ];
+
+  const step3Items = [
+    {
+      color: "green",
+      title: t("landing.documentation.step3Valid"),
+      desc: t("landing.documentation.step3ValidDesc"),
+    },
+    {
+      color: "yellow",
+      title: t("landing.documentation.step3Corrections"),
+      desc: t("landing.documentation.step3CorrectionsDesc"),
+    },
+    {
+      color: "red",
+      title: t("landing.documentation.step3Review"),
+      desc: t("landing.documentation.step3ReviewDesc"),
+    },
+  ];
+
   return (
     <section
       id="how-it-works"
@@ -20,11 +64,10 @@ export default function DocumentationSupported() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4">
-            Validación documental PRL automatizada en 3 pasos
+            {t("landing.documentation.title")}
           </h2>
           <p className="text-lg text-playBlueLight max-w-3xl mx-auto">
-            Transforma semanas de gestión CAE manual en minutos con nuestro
-            software de coordinación de actividades empresariales
+            {t("landing.documentation.subtitle")}
           </p>
         </motion.div>
 
@@ -57,7 +100,7 @@ export default function DocumentationSupported() {
                   Subcontrata_EPIs.pdf
                 </div>
                 <div className="text-xs text-gray-400 mt-1">
-                  Documento cargado
+                  {t("landing.documentation.docLoaded")}
                 </div>
               </div>
 
@@ -66,7 +109,7 @@ export default function DocumentationSupported() {
                 <div className="text-center">
                   <div className="animate-spin h-6 w-6 mx-auto mb-2 border-2 border-white border-t-transparent rounded-full"></div>
                   <span className="text-sm font-semibold">
-                    Analizando con IA...
+                    {t("landing.documentation.analyzingAI")}
                   </span>
                 </div>
               </div>
@@ -108,10 +151,10 @@ export default function DocumentationSupported() {
                     <span className="bg-playBlueDark text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       1
                     </span>
-                    Sube documentos
+                    {t("landing.documentation.step1Title")}
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    PDF, imágenes o Word. Soporte OCR para escaneos ilegibles
+                    {t("landing.documentation.step1Desc")}
                   </p>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <div className="flex flex-wrap gap-2">
@@ -141,7 +184,7 @@ export default function DocumentationSupported() {
                           d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span>Hasta 100 documentos simultáneos</span>
+                      <span>{t("landing.documentation.step1Note")}</span>
                     </div>
                   </div>
                 </div>
@@ -159,34 +202,13 @@ export default function DocumentationSupported() {
                     <span className="bg-playOrange text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       2
                     </span>
-                    Validación automática
+                    {t("landing.documentation.step2Title")}
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Nuestro agente IA comprueba en segundos:
+                    {t("landing.documentation.step2Desc")}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {[
-                      {
-                        icon: "🔍",
-                        title: "Coherencia de datos",
-                        desc: "CIF, nombres, fechas",
-                      },
-                      {
-                        icon: "📅",
-                        title: "Vigencia legal",
-                        desc: "LPRL 31/1995, RD 39/1997",
-                      },
-                      {
-                        icon: "🛡️",
-                        title: "Autenticidad",
-                        desc: "Detección de manipulaciones",
-                      },
-                      {
-                        icon: "📜",
-                        title: "Cumplimiento normativo",
-                        desc: "RD 171/2004, Llei 32/2006",
-                      },
-                    ].map((item, idx) => (
+                    {step2Items.map((item, idx) => (
                       <div
                         key={idx}
                         className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
@@ -218,29 +240,13 @@ export default function DocumentationSupported() {
                     <span className="bg-playGreen text-white rounded-full w-8 h-8 inline-flex items-center justify-center mr-2">
                       3
                     </span>
-                    Resultados ejecutables
+                    {t("landing.documentation.step3Title")}
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    Informes claros con acciones específicas para cada caso
+                    {t("landing.documentation.step3Desc")}
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {[
-                      {
-                        color: "green",
-                        title: "Documentos válidos",
-                        desc: "JSON estructurado listo para integración",
-                      },
-                      {
-                        color: "yellow",
-                        title: "Correcciones",
-                        desc: "Alertas con sugerencias específicas",
-                      },
-                      {
-                        color: "red",
-                        title: "Revisión experta",
-                        desc: "Derivación a técnicos PRL",
-                      },
-                    ].map((item, idx) => (
+                    {step3Items.map((item, idx) => (
                       <div
                         key={idx}
                         className={`bg-${item.color}-50 p-4 rounded-lg border border-${item.color}-200`}
@@ -264,7 +270,7 @@ export default function DocumentationSupported() {
             {/* CTA */}
             <div className="mt-12 text-center">
               <button className="bg-gradient-to-r from-playBlueDark to-playBlueLight hover:from-playBlueDark/90 hover:to-playBlueLight/90 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 flex items-center mx-auto">
-                Ver demostración en vivo
+                {t("landing.documentation.cta")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="h-5 w-5 ml-2"
@@ -282,7 +288,7 @@ export default function DocumentationSupported() {
                 <span className="bg-playBlueLight/20 text-playBlueDark px-3 py-1 rounded-full text-sm mr-2">
                   🆕
                 </span>
-                Procesamiento en tiempo real con precisión del 99.2%
+                {t("landing.documentation.ctaTag")}
               </p>
             </div>
           </motion.div>

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslation } from "@/hooks/useTranslation";
 
 type Particle = {
   top: string;
@@ -64,6 +65,7 @@ function Particles({ count = 15 }: { count?: number }) {
 }
 
 export default function Footer() {
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
 
   return (
@@ -85,16 +87,15 @@ export default function Footer() {
               id="footer-title"
               className="mb-6 text-4xl font-bold leading-tight md:text-5xl"
             >
-              Transforma tu gestión PRL: <br />
-              <span className="text-playOrange">Menos Riesgo, Más Control</span>
+              {t("footer.title")} <br />
+              <span className="text-playOrange">{t("footer.titleHighlight")}</span>
             </h2>
 
             <p className="mb-8 max-w-xl text-xl text-playGrey">
-              Obtén el sello{" "}
+              {t("footer.subtitle", { badge: "" })}{" "}
               <span className="rounded-md bg-playBlueLight px-2 py-1 text-white">
-                #Cumplimiento100%
-              </span>{" "}
-              verificable para inspecciones de Trabajo
+                {t("footer.badge")}
+              </span>
             </p>
 
             {/* CTAs: usa Link para navegación */}
@@ -108,7 +109,7 @@ export default function Footer() {
                 className="flex items-center justify-center rounded-full bg-playOrange px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl hover:bg-playOrange/90"
                 aria-label="Crear cuenta gratis en PlayCAE"
               >
-                Prueba Gratis 30 Días
+                {t("footer.cta1")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="ml-2 h-5 w-5"
@@ -129,7 +130,7 @@ export default function Footer() {
                 className="flex items-center justify-center rounded-full border-2 border-playOrange bg-transparent px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:bg-playOrange/20"
                 aria-label="Solicitar demo personalizada de PlayCAE"
               >
-                Solicitar Demo Personalizada
+                {t("footer.cta2")}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className="ml-2 h-5 w-5"
@@ -149,8 +150,7 @@ export default function Footer() {
             {/* Garantía */}
             <div className="border-l-4 border-cyan-400 pl-4 py-2">
               <p className="italic text-blue-200">
-                “De empresas constructoras para el sector: desarrollado en
-                Barcelona con soporte técnico local”
+                {t("footer.testimonial")}
               </p>
               <div className="mt-3 flex items-center">
                 <svg
@@ -167,7 +167,7 @@ export default function Footer() {
                   />
                 </svg>
                 <span className="text-sm text-blue-200">
-                  Soporte técnico en español · Horario peninsular
+                  {t("footer.supportInfo")}
                 </span>
               </div>
             </div>
@@ -195,10 +195,10 @@ export default function Footer() {
                     </div>
                     <div className="mt-4">
                       <span className="block text-xl font-bold text-playOrange">
-                        VALIDADO
+                        {t("footer.validatedBadge")}
                       </span>
                       <span className="text-sm text-white">
-                        por Inteligencia Artificial
+                        {t("footer.validatedByAI")}
                       </span>
                     </div>
                   </div>
@@ -220,7 +220,7 @@ export default function Footer() {
         >
           <div>
             <h3 className="mb-4 text-lg font-semibold text-playOrange">
-              Producto
+              {t("footer.navProduct")}
             </h3>
             <ul className="space-y-2 text-playGrey">
               <li>
@@ -228,7 +228,7 @@ export default function Footer() {
                   href="/servicios/gestion-documentacion-cae"
                   className="hover:underline"
                 >
-                  Validación PRL y CAE
+                  {t("footer.linkValidation")}
                 </Link>
               </li>
               <li>
@@ -236,17 +236,17 @@ export default function Footer() {
                   href="/servicios/control-accesos-fabrica"
                   className="hover:underline"
                 >
-                  Control de accesos
+                  {t("footer.linkAccessControl")}
                 </Link>
               </li>
               <li>
                 <Link href="/precios" className="hover:underline">
-                  Precios
+                  {t("footer.linkPricing")}
                 </Link>
               </li>
               <li>
                 <Link href="/servicios" className="hover:underline">
-                  Todos los servicios
+                  {t("footer.linkAllServices")}
                 </Link>
               </li>
             </ul>
@@ -254,12 +254,12 @@ export default function Footer() {
 
           <div>
             <h3 className="mb-4 text-lg font-semibold text-playOrange">
-              Recursos
+              {t("footer.navResources")}
             </h3>
             <ul className="space-y-2 text-playGrey">
               <li>
                 <Link href="/que-es-cae" className="hover:underline">
-                  ¿Qué es la CAE?
+                  {t("footer.linkWhatIsCAE")}
                 </Link>
               </li>
               <li>
@@ -267,12 +267,12 @@ export default function Footer() {
                   href="/alternativas-software-cae"
                   className="hover:underline"
                 >
-                  Alternativas CAE
+                  {t("footer.linkAlternatives")}
                 </Link>
               </li>
               <li>
                 <Link href="/blog" className="hover:underline">
-                  Blog
+                  {t("footer.linkBlog")}
                 </Link>
               </li>
             </ul>
@@ -280,12 +280,12 @@ export default function Footer() {
 
           <div>
             <h3 className="mb-4 text-lg font-semibold text-playOrange">
-              Compañía
+              {t("footer.navCompany")}
             </h3>
             <ul className="space-y-2 text-playGrey">
               <li>
                 <Link href="/contacto" className="hover:underline">
-                  Contacto
+                  {t("footer.linkContact")}
                 </Link>
               </li>
               <li>
@@ -366,22 +366,22 @@ export default function Footer() {
 
           <div>
             <h3 className="mb-4 text-lg font-semibold text-playOrange">
-              Legal
+              {t("footer.navLegal")}
             </h3>
             <ul className="space-y-2 text-playGrey">
               <li>
                 <Link href="/legal/aviso-legal" className="hover:underline">
-                  Aviso legal
+                  {t("footer.linkLegalNotice")}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/privacidad" className="hover:underline">
-                  Política de privacidad
+                  {t("footer.linkPrivacy")}
                 </Link>
               </li>
               <li>
                 <Link href="/legal/cookies" className="hover:underline">
-                  Política de cookies
+                  {t("footer.linkCookies")}
                 </Link>
               </li>
             </ul>
@@ -390,9 +390,9 @@ export default function Footer() {
 
         {/* Línea inferior */}
         <div className="mt-12 border-t border-white/10 pt-6 text-sm text-playGrey flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {year} PlayCAE. Todos los derechos reservados.</p>
+          <p>{t("footer.copyright", { year })}</p>
           <p className="opacity-90">
-            Operamos en España · Cumplimiento LSSI y RGPD ·{" "}
+            {t("footer.complianceInfo")} ·{" "}
             <Link href="/sitemap.xml" className="underline">
               Sitemap
             </Link>

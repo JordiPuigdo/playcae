@@ -1,6 +1,10 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
+
 export default function ContactForm() {
+  const { t } = useTranslation();
+
   return (
     <form className="space-y-6" noValidate onSubmit={(e) => e.preventDefault()}>
       {/* Honeypot (oculto a usuarios) */}
@@ -19,7 +23,7 @@ export default function ContactForm() {
           htmlFor="name"
           className="mb-1 block text-sm font-medium text-gray-700"
         >
-          Nombre
+          {t("landing.contact.formName")}
         </label>
         <input
           type="text"
@@ -37,7 +41,7 @@ export default function ContactForm() {
           htmlFor="email"
           className="mb-1 block text-sm font-medium text-gray-700"
         >
-          Correo electrónico
+          {t("landing.contact.formEmail")}
         </label>
         <input
           type="email"
@@ -56,7 +60,7 @@ export default function ContactForm() {
           htmlFor="message"
           className="mb-1 block text-sm font-medium text-gray-700"
         >
-          Mensaje
+          {t("landing.contact.formMessage")}
         </label>
         <textarea
           id="message"
@@ -78,13 +82,13 @@ export default function ContactForm() {
           aria-required="true"
         />
         <label htmlFor="consent" className="text-sm text-gray-700">
-          He leído y acepto la{" "}
+          {t("common.consent.prefix")}{" "}
           <a href="/legal/privacidad" className="text-brandSecondary underline">
-            Política de Privacidad
+            {t("footer.linkPrivacy")}
           </a>{" "}
-          y la{" "}
+          {t("common.consent.and")}{" "}
           <a href="/legal/cookies" className="text-brandSecondary underline">
-            Política de Cookies
+            {t("footer.linkCookies")}
           </a>
           .
         </label>
@@ -96,7 +100,7 @@ export default function ContactForm() {
         className="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/50 disabled:opacity-60"
         aria-busy={false}
       >
-        Enviar mensaje
+        {t("landing.contact.formSubmit")}
       </button>
 
       {/* Visual-only: no server errors shown */}

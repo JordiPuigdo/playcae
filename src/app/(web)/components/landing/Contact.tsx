@@ -1,9 +1,12 @@
 "use client";
 
 import React from "react";
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
 const ContactSection: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <section
       id="contact"
@@ -37,11 +40,10 @@ const ContactSection: React.FC = () => {
             id="contact-title"
             className="text-4xl font-bold text-playBlueDark md:text-5xl"
           >
-            Solicita una demo del software CAE
+            {t("landing.contact.title")}
           </h2>
           <p className="mt-4 text-lg text-playBlueLight">
-            Descubre cómo automatizar la coordinación de actividades
-            empresariales y la gestión documental PRL en tu empresa.
+            {t("landing.contact.subtitle")}
           </p>
         </motion.div>
 
@@ -60,7 +62,7 @@ const ContactSection: React.FC = () => {
                 htmlFor="name"
                 className="mb-1 block text-sm font-medium text-gray-700"
               >
-                Nombre
+                {t("landing.contact.formName")}
               </label>
               <input
                 type="text"
@@ -75,7 +77,7 @@ const ContactSection: React.FC = () => {
                 htmlFor="email"
                 className="mb-1 block text-sm font-medium text-gray-700"
               >
-                Correo electrónico
+                {t("landing.contact.formEmail")}
               </label>
               <input
                 type="email"
@@ -90,7 +92,7 @@ const ContactSection: React.FC = () => {
                 htmlFor="message"
                 className="mb-1 block text-sm font-medium text-gray-700"
               >
-                Mensaje
+                {t("landing.contact.formMessage")}
               </label>
               <textarea
                 id="message"
@@ -104,7 +106,7 @@ const ContactSection: React.FC = () => {
               type="submit"
               className="w-full rounded-full bg-gradient-to-r from-playOrange to-playOrange/80 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-playOrange/90 hover:to-playOrange/70 focus:outline-none focus-visible:ring focus-visible:ring-playOrange/50"
             >
-              Enviar mensaje
+              {t("landing.contact.formSubmit")}
             </button>
           </form>
 
@@ -112,10 +114,10 @@ const ContactSection: React.FC = () => {
           <div className="flex flex-col justify-center space-y-8">
             <div>
               <h3 className="text-xl font-semibold text-gray-900">
-                Información de contacto
+                {t("landing.contact.infoTitle")}
               </h3>
               <p className="mt-2 text-gray-600">
-                También puedes escribirnos directamente o llamarnos:
+                {t("landing.contact.infoSubtitle")}
               </p>
             </div>
             <div className="space-y-4">
@@ -160,7 +162,7 @@ const ContactSection: React.FC = () => {
             </div>
             <div>
               <p className="text-gray-600">
-                Responderemos en menos de 24 horas 🚀
+                {t("landing.contact.responseTime")}
               </p>
             </div>
           </div>

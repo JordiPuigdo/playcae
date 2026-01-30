@@ -1,14 +1,17 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
-const STATS = [
-  { value: "99.2%", label: "Precisión validación IA" },
-  { value: "90%", label: "Ahorro de tiempo en CAE" },
-  { value: "0", label: "Sanciones por incumplimiento" },
-];
-
 const HeroStats = () => {
+  const { t } = useTranslation();
+
+  const STATS = [
+    { value: "99.2%", label: t("hero.stats.aiAccuracy") },
+    { value: "90%", label: t("hero.stats.timeSaved") },
+    { value: "0", label: t("hero.stats.sanctions") },
+  ];
+
   return (
     <motion.ul
       className="mt-10 flex flex-wrap gap-6"

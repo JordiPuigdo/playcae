@@ -185,7 +185,7 @@ const CompaniesContent = () => {
       setIsFormOpen(false);
       setEditingCompany(null);
     } catch (error) {
-      setError("Error creando empresa");
+      setError(t("companies.errorCreating"));
       setTimeout(() => {
         setError(null);
       }, 5000);

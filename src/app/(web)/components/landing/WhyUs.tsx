@@ -1,8 +1,22 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
 export default function WhyUs() {
+  const { t } = useTranslation();
+
+  const complianceItems = t("landing.whyUs.complianceItems").split("|");
+
+  const integrations = [
+    { name: "ISO 27001", icon: "🛡️" },
+    { name: "GDPR", icon: "📜" },
+    { name: "SAP", icon: "🔌" },
+    { name: "A3CE", icon: "🏗️" },
+    { name: "Hacienda", icon: "💰" },
+    { name: "BOE", icon: "📰" },
+  ];
+
   return (
     <section className="relative py-16 bg-gradient-to-b from-playGrey to-white overflow-hidden">
       {/* Elementos decorativos */}
@@ -17,11 +31,10 @@ export default function WhyUs() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4">
-            Software CAE diseñado para cumplir normativa PRL
+            {t("landing.whyUs.title")}
           </h2>
           <p className="text-lg text-playBlueLight max-w-3xl mx-auto">
-            Plataforma de coordinación de actividades empresariales con
-            tecnología que garantiza el cumplimiento del RD 171/2004
+            {t("landing.whyUs.subtitle")}
           </p>
         </motion.div>
 
@@ -39,11 +52,10 @@ export default function WhyUs() {
               <span className="text-2xl">🔐</span>
             </div>
             <h3 className="text-xl font-bold text-playBlueDark mb-3">
-              Base legal actualizada automáticamente
+              {t("landing.whyUs.feature1Title")}
             </h3>
             <p className="text-playBlueLight mb-4">
-              Seguimiento automático del BOE, DOGC y EUR-Lex para mantener tu
-              gestión CAE siempre al día
+              {t("landing.whyUs.feature1Desc")}
             </p>
             <div className="flex items-center text-sm text-playBlueDark">
               <svg
@@ -60,7 +72,7 @@ export default function WhyUs() {
                   d="M13 10V3L4 14h7v7l9-11h-7z"
                 />
               </svg>
-              <span>RD 171/2004, LPRL 31/1995 y directivas UE</span>
+              <span>{t("landing.whyUs.feature1Tag")}</span>
             </div>
           </div>
 
@@ -70,11 +82,10 @@ export default function WhyUs() {
               <span className="text-2xl">🛡️</span>
             </div>
             <h3 className="text-xl font-bold text-playBlueDark mb-3">
-              Seguridad certificada ISO 27001
+              {t("landing.whyUs.feature2Title")}
             </h3>
             <p className="text-playBlueLight mb-4">
-              Documentos PRL encriptados con AES-256 y alojados en centros de
-              datos de la UE
+              {t("landing.whyUs.feature2Desc")}
             </p>
             <div className="flex flex-wrap gap-2 mt-3">
               <span className="bg-playGreen/20 text-playGreen text-xs px-2 py-1 rounded-full">
@@ -92,11 +103,10 @@ export default function WhyUs() {
               <span className="text-2xl">📈</span>
             </div>
             <h3 className="text-xl font-bold text-playBlueDark mb-3">
-              Integración con tu software actual
+              {t("landing.whyUs.feature3Title")}
             </h3>
             <p className="text-playBlueLight mb-4">
-              API REST para conectar con SAP, A3CE y otros sistemas de gestión
-              empresarial
+              {t("landing.whyUs.feature3Desc")}
             </p>
             <div className="flex items-center space-x-3 mt-4">
               <div className="bg-playGrey p-2 rounded-lg">
@@ -114,11 +124,10 @@ export default function WhyUs() {
               <span className="text-2xl">🧠</span>
             </div>
             <h3 className="text-xl font-bold text-playBlueDark mb-3">
-              IA entrenada por expertos PRL
+              {t("landing.whyUs.feature4Title")}
             </h3>
             <p className="text-playBlueLight mb-4">
-              Algoritmos desarrollados con técnicos de prevención y abogados
-              laboralistas
+              {t("landing.whyUs.feature4Desc")}
             </p>
             <div className="mt-3">
               <div className="flex items-center text-sm text-playOrange">
@@ -136,7 +145,7 @@ export default function WhyUs() {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span>99.2% precisión en validación documental</span>
+                <span>{t("landing.whyUs.feature4Tag")}</span>
               </div>
             </div>
           </div>
@@ -147,19 +156,13 @@ export default function WhyUs() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-8">
             <div className="md:w-2/5">
               <h3 className="text-2xl font-bold text-playBlueDark mb-4">
-                Cumplimiento normativo CAE garantizado
+                {t("landing.whyUs.complianceTitle")}
               </h3>
               <p className="text-playBlueLight mb-6">
-                Plataforma de gestión documental PRL que cumple con los
-                estándares de seguridad y normativas del sector:
+                {t("landing.whyUs.complianceSubtitle")}
               </p>
               <ul className="space-y-3">
-                {[
-                  "ISO/IEC 27001:2022 - Gestión de seguridad de la información",
-                  "Reglamento GDPR - Protección de datos UE",
-                  "LOPDGDD - Adaptación española al RGPD",
-                  "RD 171/2004 - Coordinación Actividades Empresariales",
-                ].map((item, idx) => (
+                {complianceItems.map((item, idx) => (
                   <li key={idx} className="flex items-start">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -182,17 +185,10 @@ export default function WhyUs() {
             {/* Imagen de integraciones */}
             <div className="md:w-3/5 bg-white p-6 rounded-xl shadow-inner border border-playBlueLight/20">
               <h4 className="font-bold text-center text-playBlueDark mb-6">
-                Integraciones y certificaciones
+                {t("landing.whyUs.integrationsTitle")}
               </h4>
               <div className="grid grid-cols-3 gap-4 items-center justify-items-center">
-                {[
-                  { name: "ISO 27001", icon: "🛡️" },
-                  { name: "GDPR", icon: "📜" },
-                  { name: "SAP", icon: "🔌" },
-                  { name: "A3CE", icon: "🏗️" },
-                  { name: "Hacienda", icon: "💰" },
-                  { name: "BOE", icon: "📰" },
-                ].map((item, idx) => (
+                {integrations.map((item, idx) => (
                   <div
                     key={idx}
                     className="bg-playGrey rounded-lg p-4 w-full text-center border border-playBlueLight/20"
@@ -214,7 +210,7 @@ export default function WhyUs() {
             href="#contact"
             className="bg-playOrange hover:bg-playOrange/90 text-white font-bold py-4 px-8 rounded-full shadow-lg transition-all transform hover:scale-105 inline-flex items-center"
           >
-            Solicitar demo del software CAE
+            {t("landing.whyUs.cta")}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5 ml-2"
@@ -232,7 +228,7 @@ export default function WhyUs() {
             <span className="bg-playGreen/20 text-playGreen px-3 py-1 rounded-full text-sm mr-2">
               ✅
             </span>
-            Cumplimiento 100% verificable para inspecciones de Trabajo
+            {t("landing.whyUs.ctaTag")}
           </p>
         </div>
       </div>

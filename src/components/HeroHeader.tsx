@@ -1,8 +1,11 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 
 const HeroHeader = () => {
+  const { t } = useTranslation();
+
   return (
     <motion.div
       className="mb-12 w-full lg:mb-0 lg:w-1/2"
@@ -13,21 +16,19 @@ const HeroHeader = () => {
       style={{ willChange: "transform, opacity" }}
     >
       <span className="mb-6 inline-flex items-center gap-2 rounded-full bg-playBlueDark/10 px-4 py-1 text-sm font-medium text-playBlueDark">
-        <span aria-hidden>🚀</span> Software CAE con Inteligencia Artificial
+        <span aria-hidden>🚀</span> {t("hero.badge")}
       </span>
 
       <h1
         id="hero-title"
         className="mb-6 text-4xl font-bold leading-tight text-playBlueDark md:text-5xl"
       >
-        Software CAE para gestión documental PRL{" "}
-        <span className="text-playOrange">automatizada con IA</span>
+        {t("hero.title")}{" "}
+        <span className="text-playOrange">{t("hero.titleHighlight")}</span>
       </h1>
 
       <p className="mb-8 max-w-xl text-lg text-playBlueLight md:text-xl">
-        La plataforma de Coordinación de Actividades Empresariales que valida
-        documentación PRL en segundos. Ahorra hasta un 90% de tiempo y evita
-        sanciones de hasta 500.000€.
+        {t("hero.subtitle")}
       </p>
 
       <div className="flex flex-col gap-4 sm:flex-row">
@@ -35,14 +36,14 @@ const HeroHeader = () => {
           href="#contact"
           className="group inline-flex items-center justify-center rounded-full bg-playOrange px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-playOrange/90 hover:scale-[1.02]"
         >
-          Solicitar demo gratuita
+          {t("hero.cta")}
         </a>
 
         <a
           href="/register"
           className="inline-flex items-center justify-center rounded-full border-2 border-playBlueDark bg-white px-8 py-4 font-semibold text-playBlueDark shadow-sm transition-all duration-200 hover:bg-playBlueDark/5 hover:scale-[1.02]"
         >
-          Probar gratis
+          {t("hero.ctaSecondary")}
         </a>
       </div>
     </motion.div>

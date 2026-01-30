@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
 import { ScrollArea } from "@/components/ui/Scroll-Area";
 import { useAvailableHeight } from "@/hooks/useResponsive";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Separator } from "@radix-ui/react-select";
 import { Bot, Loader2, Send, User } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
@@ -25,15 +26,16 @@ interface ChatSession {
   lastActivity: Date;
 }
 
-const documentCategories = [
-  { id: "company-docs", name: "Documentos de Empresa", count: 23 },
-  { id: "worker-docs", name: "Documentos de Trabajadores", count: 156 },
-  { id: "safety-docs", name: "Documentos de Seguridad", count: 45 },
-  { id: "compliance", name: "Cumplimiento Legal", count: 12 },
-];
-
 const AuditPage = () => {
   const availableHeight = useAvailableHeight(120);
+  const { t } = useTranslation();
+
+  const documentCategories = [
+    { id: "company-docs", name: t("dashboard.audit.categories.companyDocs"), count: 23 },
+    { id: "worker-docs", name: t("dashboard.audit.categories.workerDocs"), count: 156 },
+    { id: "safety-docs", name: t("dashboard.audit.categories.safetyDocs"), count: 45 },
+    { id: "compliance", name: t("dashboard.audit.categories.compliance"), count: 12 },
+  ];
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -118,7 +120,7 @@ const AuditPage = () => {
       const newSession: ChatSession = {
         id: Date.now().toString(),
         title:
-          messages[0]?.content.slice(0, 30) + "..." || "Nueva conversación",
+          messages[0]?.content.slice(0, 30) + "..." || t("dashboard.audit.newConversation"),
         messages: [...messages],
         lastActivity: new Date(),
       };
@@ -141,13 +143,13 @@ const AuditPage = () => {
       {/* Sidebar */}
       <div className="w-80 border-r bg-card flex flex-col">
         <div className="p-4 border-b">
-          <h2 className="text-lg font-semibold mb-4">Asistente IA CAE</h2>
+          <h2 className="text-lg font-semibold mb-4">{t("dashboard.audit.sidebarTitle")}</h2>
           <Button
             onClick={startNewChat}
             className="w-full mb-4"
             variant="outline"
           >
-            Nueva Conversación
+            {t("dashboard.audit.newConversation")}
           </Button>
         </div>
 
@@ -156,7 +158,7 @@ const AuditPage = () => {
             {/* Document Categories */}
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                Categorías de Documentos
+                {t("dashboard.audit.documentCategories")}
               </h3>
               <div className="space-y-2">
                 {documentCategories.map((category) => (
@@ -181,7 +183,7 @@ const AuditPage = () => {
             {chatSessions.length > 0 && (
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                  Conversaciones Anteriores
+                  {t("dashboard.audit.previousChats")}
                 </h3>
                 <div className="space-y-2">
                   {chatSessions.map((session) => (
@@ -211,9 +213,9 @@ const AuditPage = () => {
       <div className="flex-1 flex flex-col">
         {/* Header */}
         <div className="border-b bg-card p-4">
-          <h1 className="text-xl font-semibold">Asistente IA - Sistema CAE</h1>
+          <h1 className="text-xl font-semibold">{t("dashboard.audit.title")}</h1>
           <p className="text-sm text-muted-foreground">
-            Pregúntame sobre empresas, trabajadores, documentos y más
+            {t("dashboard.audit.subtitle")}
           </p>
         </div>
 
@@ -224,11 +226,10 @@ const AuditPage = () => {
               <div className="text-center py-12">
                 <Bot className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <h3 className="text-lg font-medium mb-2">
-                  ¡Hola! Soy tu asistente IA
+                  {t("dashboard.audit.greeting")}
                 </h3>
                 <p className="text-muted-foreground">
-                  Puedo ayudarte con información sobre empresas, trabajadores,
-                  documentos y cumplimiento legal. ¿En qué puedo asistirte hoy?
+                  {t("dashboard.audit.greetingMessage")}
                 </p>
               </div>
             )}
@@ -281,7 +282,7 @@ const AuditPage = () => {
                   </p>
                   <div className="flex items-center gap-1 mt-2">
                     <Loader2 className="h-3 w-3 animate-spin" />
-                    <span className="text-xs opacity-70">Escribiendo...</span>
+                    <span className="text-xs opacity-70">{t("dashboard.audit.typing")}</span>
                   </div>
                 </Card>
               </div>
@@ -300,7 +301,7 @@ const AuditPage = () => {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Escribe tu mensaje aquí..."
+                placeholder={t("dashboard.audit.inputPlaceholder")}
                 disabled={isLoading}
                 className="flex-1"
               />
@@ -317,7 +318,7 @@ const AuditPage = () => {
               </Button>
             </div>
             <p className="text-xs text-muted-foreground mt-2 text-center">
-              Presiona Enter para enviar • Shift + Enter para nueva línea
+              {t("dashboard.audit.inputHint")}
             </p>
           </div>
         </div>

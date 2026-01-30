@@ -1,7 +1,9 @@
 "use client";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ProblemSolutionSection() {
+  const { t } = useTranslation();
   return (
     <section className="container mx-auto px-4 py-16">
       <motion.h2
@@ -11,7 +13,7 @@ export default function ProblemSolutionSection() {
         viewport={{ once: true }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        Gestión documental PRL: el coste oculto que frena a tu empresa
+        {t("landing.problemSolution.sectionTitle")}
       </motion.h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
@@ -42,7 +44,7 @@ export default function ProblemSolutionSection() {
                 </svg>
               </div>
               <h4 className="text-2xl font-bold text-red-800">
-                Desafíos actuales en la gestión PRL
+                {t("landing.problemSolution.challengesTitle")}
               </h4>
             </div>
 
@@ -66,11 +68,10 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div className="ml-4">
                   <h5 className="font-bold text-lg">
-                    Pérdida de tiempo valioso
+                    {t("landing.problemSolution.problem1Title")}
                   </h5>
                   <p className="text-gray-600">
-                    Hasta 15 horas semanales dedicadas a revisiones manuales de
-                    documentación PRL
+                    {t("landing.problemSolution.problem1Desc")}
                   </p>
                 </div>
               </div>
@@ -94,11 +95,10 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div className="ml-4">
                   <h5 className="font-bold text-lg">
-                    Riesgo de sanciones elevadas
+                    {t("landing.problemSolution.problem2Title")}
                   </h5>
                   <p className="text-gray-600">
-                    Hasta 500.000€ por incumplimiento del RD 171/2004 sobre
-                    Coordinación de Actividades Empresariales
+                    {t("landing.problemSolution.problem2Desc")}
                   </p>
                 </div>
               </div>
@@ -121,10 +121,9 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">Documentación caducada</h5>
+                  <h5 className="font-bold text-lg">{t("landing.problemSolution.problem3Title")}</h5>
                   <p className="text-gray-600">
-                    El 43% de las auditorías CAE detectan documentos caducados
-                    que ponen en riesgo el cumplimiento legal
+                    {t("landing.problemSolution.problem3Desc")}
                   </p>
                 </div>
               </div>
@@ -148,11 +147,10 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div className="ml-4">
                   <h5 className="font-bold text-lg">
-                    Incoherencias en la documentación
+                    {t("landing.problemSolution.problem4Title")}
                   </h5>
                   <p className="text-gray-600">
-                    Datos contradictorios entre documentos que pasan
-                    desapercibidos en revisiones manuales
+                    {t("landing.problemSolution.problem4Desc")}
                   </p>
                 </div>
               </div>
@@ -170,7 +168,7 @@ export default function ProblemSolutionSection() {
           <div className="relative bg-gradient-to-br from-playGrey to-playBlueLight/10 p-8 pt-16 md:pt-8 rounded-2xl border border-playBlueLight/30 shadow-sm">
             <div className="absolute top-6 right-6">
               <div className="bg-playGreen text-white px-4 py-1 rounded-full text-sm font-bold">
-                SOLUCIÓN
+                {t("landing.problemSolution.solutionBadge")}
               </div>
             </div>
 
@@ -192,7 +190,7 @@ export default function ProblemSolutionSection() {
                 </svg>
               </div>
               <h4 className="text-2xl font-bold text-playBlueDark">
-                Nuestra solución inteligente
+                {t("landing.problemSolution.solutionTitle")}
               </h4>
             </div>
             <div className="space-y-4 mb-8">
@@ -215,12 +213,10 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div className="ml-4">
                   <h5 className="font-bold text-lg">
-                    Agente IA especializado en PRL/CAE
+                    {t("landing.problemSolution.solution1Title")}
                   </h5>
                   <p className="text-gray-700">
-                    Entrenado con 50.000 casos reales para detectar
-                    incoherencias, caducidades y fraudes documentales con 99,2%
-                    de precisión
+                    {t("landing.problemSolution.solution1Desc")}
                   </p>
                 </div>
               </div>
@@ -244,12 +240,10 @@ export default function ProblemSolutionSection() {
                 </div>
                 <div className="ml-4">
                   <h5 className="font-bold text-lg">
-                    Validación automática integral
+                    {t("landing.problemSolution.solution2Title")}
                   </h5>
                   <p className="text-gray-700">
-                    Comprobación de 32 tipos de documentos en segundos:
-                    coherencia de datos, vigencia legal, autenticidad y
-                    cumplimiento normativo
+                    {t("landing.problemSolution.solution2Desc")}
                   </p>
                 </div>
               </div>
@@ -272,10 +266,9 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">Alertas preventivas</h5>
+                  <h5 className="font-bold text-lg">{t("landing.problemSolution.solution3Title")}</h5>
                   <p className="text-gray-700">
-                    Notificaciones automáticas 30 días antes de caducidades y
-                    reportes de cumplimiento en tiempo real
+                    {t("landing.problemSolution.solution3Desc")}
                   </p>
                 </div>
               </div>
@@ -298,8 +291,7 @@ export default function ProblemSolutionSection() {
                   />
                 </svg>
                 <p className="font-bold">
-                  Resultado comprobado: 70% menos tiempo en gestión documental y
-                  reducción del 100% de sanciones por PRL
+                  {t("landing.problemSolution.resultTitle")}
                 </p>
               </div>
             </div>
@@ -310,10 +302,10 @@ export default function ProblemSolutionSection() {
               className="bg-gradient-to-r from-playOrange to-playOrange/80 hover:from-playOrange/90 hover:to-playOrange/70 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-all transform hover:scale-105"
               onClick={() => window.open("/register", "_blank")}
             >
-              Probar validación gratuita
+              {t("landing.problemSolution.cta")}
             </button>
             <p className="mt-2 text-sm text-gray-500">
-              Sin tarjeta de crédito - Resultados en minutos
+              {t("landing.problemSolution.ctaSubtitle")}
             </p>
           </div>
         </motion.div>

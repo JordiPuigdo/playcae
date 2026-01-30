@@ -100,7 +100,7 @@ const ConfigurationPage = () => {
             {t("configuration.title")}
           </h1>
           <p className="text-muted-foreground">
-            Personaliza la apariencia de tu sistema
+            {t("configuration.subtitle")}
           </p>
         </div>
       </div>
@@ -110,11 +110,10 @@ const ConfigurationPage = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-brand-primary">
             <ImageIcon className="h-5 w-5" />
-            Logo personalizado
+            {t("configuration.logo.title")}
           </CardTitle>
           <CardDescription>
-            El logo se mostrará en el header del dashboard y en la pantalla de
-            control de acceso
+            {t("configuration.logo.description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -123,10 +122,10 @@ const ConfigurationPage = () => {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-medium text-brand-primary">
-                  Logo actual
+                  {t("configuration.logo.current")}
                 </h3>
                 <span className="text-xs text-muted-foreground">
-                  Actualizado:{" "}
+                  {t("configuration.logo.updated")}{" "}
                   {new Date(configuration.updatedAt).toLocaleDateString(
                     "es-ES",
                     {
@@ -153,16 +152,14 @@ const ConfigurationPage = () => {
             <Alert variant="destructive">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                Error al cargar la imagen. El archivo podría no existir o estar
-                corrupto.
+                {t("configuration.logo.loadError")}
               </AlertDescription>
             </Alert>
           ) : (
             <Alert>
               <ImageIcon className="h-4 w-4" />
               <AlertDescription>
-                No tienes un logo personalizado. Se está mostrando el logo por
-                defecto de Play CAE.
+                {t("configuration.logo.noLogo")}
               </AlertDescription>
             </Alert>
           )}
@@ -171,7 +168,7 @@ const ConfigurationPage = () => {
           {(!configuration?.logoUrl || imageError) && (
             <div className="space-y-3">
               <h3 className="text-sm font-medium text-brand-primary">
-                Logo por defecto
+                {t("configuration.logo.default")}
               </h3>
               <div className="border border-playBlueLight/30 rounded-lg p-6 bg-gray-50 flex items-center justify-center">
                 <Image
@@ -200,23 +197,19 @@ const ConfigurationPage = () => {
 
           {/* Información adicional */}
           <div className="bg-blue-50 p-4 rounded-lg text-sm text-blue-900 space-y-2">
-            <p className="font-medium">Información sobre el logo:</p>
+            <p className="font-medium">{t("configuration.logo.info")}</p>
             <ul className="list-disc list-inside space-y-1 text-xs">
               <li>
-                El logo se mostrará en el header del dashboard (esquina superior
-                izquierda)
+                {t("configuration.logo.infoItems.header")}
               </li>
               <li>
-                También aparecerá en la pantalla de control de acceso para
-                visitantes/trabajadores
+                {t("configuration.logo.infoItems.accessControl")}
               </li>
               <li>
-                Si eliminas el logo, se mostrará automáticamente el logo por
-                defecto de Play CAE
+                {t("configuration.logo.infoItems.delete")}
               </li>
               <li>
-                Los cambios se aplicarán inmediatamente en todas las sesiones
-                activas
+                {t("configuration.logo.infoItems.immediate")}
               </li>
             </ul>
           </div>
@@ -228,10 +221,10 @@ const ConfigurationPage = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-brand-primary">
             <Settings className="h-5 w-5" />
-            Más configuraciones (Próximamente)
+            {t("configuration.moreSettings.title")}
           </CardTitle>
           <CardDescription>
-            En el futuro podrás personalizar colores, temas y otras opciones
+            {t("configuration.moreSettings.description")}
           </CardDescription>
         </CardHeader>
       </Card>

@@ -28,6 +28,10 @@
     "email": "Email",
     "phone": "Teléfono",
     "address": "Dirección",
+    "consent": {
+      "prefix": "He leído y acepto la",
+      "and": "y la"
+    },
     "description": "Descripción",
     "observations": "Observaciones",
     "download": "Descargar",
@@ -55,66 +59,179 @@
     "caeAlternatives": "Alternativas CAE",
     "blog": "Blog"
   },
-  "footer": {
-    "company": "Empresa",
-    "aboutUs": "Sobre nosotros",
-    "contact": "Contacto",
-    "legal": "Legal",
-    "privacyPolicy": "Política de privacidad",
-    "termsOfService": "Términos de servicio",
-    "cookiesPolicy": "Política de cookies",
-    "resources": "Recursos",
-    "followUs": "Síguenos",
-    "copyright": "© {year} PlayCAE. Todos los derechos reservados."
-  },
   "hero": {
-    "title": "Gestión de Documentación CAE con IA",
-    "subtitle": "Automatiza la validación documental PRL con inteligencia artificial. Control de accesos y registro presencial en fábrica.",
-    "cta": "Solicitar demo",
-    "ctaSecondary": "Ver precios",
-    "trustedBy": "Confían en nosotros"
+    "badge": "Software CAE con Inteligencia Artificial",
+    "title": "Software CAE para gestión documental PRL",
+    "titleHighlight": "automatizada con IA",
+    "subtitle": "La plataforma de Coordinación de Actividades Empresariales que valida documentación PRL en segundos. Ahorra hasta un 90% de tiempo y evita sanciones de hasta 500.000€.",
+    "cta": "Solicitar demo gratuita",
+    "ctaSecondary": "Probar gratis",
+    "trustedBy": "Confían en nosotros",
+    "stats": {
+      "aiAccuracy": "Precisión validación IA",
+      "timeSaved": "Ahorro de tiempo en CAE",
+      "sanctions": "Sanciones por incumplimiento"
+    }
   },
   "landing": {
     "problemSolution": {
-      "title": "¿Cansado de gestionar documentación CAE manualmente?",
-      "problem1": "Pérdida de tiempo revisando documentos",
-      "problem2": "Riesgo de sanciones por incumplimiento",
-      "problem3": "Dificultad para controlar accesos",
-      "solution": "PlayCAE automatiza todo el proceso"
+      "sectionTitle": "Gestión documental PRL: el coste oculto que frena a tu empresa",
+      "challengesTitle": "Desafíos actuales en la gestión PRL",
+      "problem1Title": "Pérdida de tiempo valioso",
+      "problem1Desc": "Hasta 15 horas semanales dedicadas a revisiones manuales de documentación PRL",
+      "problem2Title": "Riesgo de sanciones elevadas",
+      "problem2Desc": "Hasta 500.000€ por incumplimiento del RD 171/2004 sobre Coordinación de Actividades Empresariales",
+      "problem3Title": "Documentación caducada",
+      "problem3Desc": "El 43% de las auditorías CAE detectan documentos caducados que ponen en riesgo el cumplimiento legal",
+      "problem4Title": "Incoherencias en la documentación",
+      "problem4Desc": "Datos contradictorios entre documentos que pasan desapercibidos en revisiones manuales",
+      "solutionBadge": "SOLUCIÓN",
+      "solutionTitle": "Nuestra solución inteligente",
+      "solution1Title": "Agente IA especializado en PRL/CAE",
+      "solution1Desc": "Entrenado con 50.000 casos reales para detectar incoherencias, caducidades y fraudes documentales con 99,2% de precisión",
+      "solution2Title": "Validación automática integral",
+      "solution2Desc": "Comprobación de 32 tipos de documentos en segundos: coherencia de datos, vigencia legal, autenticidad y cumplimiento normativo",
+      "solution3Title": "Alertas preventivas",
+      "solution3Desc": "Notificaciones automáticas 30 días antes de caducidades y reportes de cumplimiento en tiempo real",
+      "resultTitle": "Resultado comprobado: 70% menos tiempo en gestión documental y reducción del 100% de sanciones por PRL",
+      "cta": "Probar validación gratuita",
+      "ctaSubtitle": "Sin tarjeta de crédito - Resultados en minutos"
     },
     "whyUs": {
-      "title": "¿Por qué elegir PlayCAE?",
-      "feature1Title": "Validación automática con IA",
-      "feature1Desc": "Nuestra IA valida documentos en segundos",
-      "feature2Title": "Control de accesos integrado",
-      "feature2Desc": "Gestiona quién entra a tus instalaciones",
-      "feature3Title": "Alertas de caducidad",
-      "feature3Desc": "Nunca más te pillarán con documentos caducados",
-      "feature4Title": "Cumplimiento normativo",
-      "feature4Desc": "Cumple con el RD 171/2004 sin esfuerzo"
+      "title": "Software CAE diseñado para cumplir normativa PRL",
+      "subtitle": "Plataforma de coordinación de actividades empresariales con tecnología que garantiza el cumplimiento del RD 171/2004",
+      "feature1Title": "Base legal actualizada automáticamente",
+      "feature1Desc": "Seguimiento automático del BOE, DOGC y EUR-Lex para mantener tu gestión CAE siempre al día",
+      "feature1Tag": "RD 171/2004, LPRL 31/1995 y directivas UE",
+      "feature2Title": "Seguridad certificada ISO 27001",
+      "feature2Desc": "Documentos PRL encriptados con AES-256 y alojados en centros de datos de la UE",
+      "feature3Title": "Integración con tu software actual",
+      "feature3Desc": "API REST para conectar con SAP, A3CE y otros sistemas de gestión empresarial",
+      "feature4Title": "IA entrenada por expertos PRL",
+      "feature4Desc": "Algoritmos desarrollados con técnicos de prevención y abogados laboralistas",
+      "feature4Tag": "99.2% precisión en validación documental",
+      "complianceTitle": "Cumplimiento normativo CAE garantizado",
+      "complianceSubtitle": "Plataforma de gestión documental PRL que cumple con los estándares de seguridad y normativas del sector:",
+      "complianceItems": "ISO/IEC 27001:2022 - Gestión de seguridad de la información|Reglamento GDPR - Protección de datos UE|LOPDGDD - Adaptación española al RGPD|RD 171/2004 - Coordinación Actividades Empresariales",
+      "integrationsTitle": "Integraciones y certificaciones",
+      "cta": "Solicitar demo del software CAE",
+      "ctaTag": "Cumplimiento 100% verificable para inspecciones de Trabajo"
     },
     "comparison": {
-      "title": "Compara PlayCAE con otras soluciones",
-      "feature": "Característica",
+      "title": "¿Por qué elegir PlayCAE frente a otras plataformas CAE?",
+      "subtitle": "No todas las plataformas de coordinación de actividades empresariales son iguales. Compara y decide con información real.",
+      "feature": "Funcionalidad",
       "playcae": "PlayCAE",
-      "others": "Otros"
+      "others": "Otras plataformas",
+      "disclaimer": "* Comparativa basada en características públicas de plataformas CAE del mercado español.",
+      "diff1Title": "Implementación en días, no meses",
+      "diff1Desc": "Mientras otras plataformas CAE requieren proyectos de implementación largos, con PlayCAE puedes estar operativo en menos de una semana.",
+      "diff2Title": "Precio transparente y predecible",
+      "diff2Desc": "Sin costes por contrata, sin tarifas por trabajador, sin sorpresas. Sabes exactamente lo que vas a pagar desde el primer día.",
+      "diff3Title": "IA que trabaja por ti 24/7",
+      "diff3Desc": "Nuestra inteligencia artificial valida documentos automáticamente mientras tú te centras en lo importante. 99.2% de precisión.",
+      "diff4Title": "Soporte real, no tickets",
+      "diff4Desc": "Acceso directo a nuestro equipo de expertos en CAE y PRL. Sin esperas de días ni respuestas automáticas.",
+      "features": {
+        "aiValidation": "Validación documental con IA",
+        "implementationTime": "Tiempo de implementación",
+        "costPerWorker": "Coste por contrata/trabajador",
+        "support": "Soporte técnico",
+        "accessControl": "Control de accesos integrado",
+        "expiryAlerts": "Alertas de caducidad automáticas",
+        "intuitiveUI": "Interfaz intuitiva para contratas",
+        "openApi": "API abierta para integraciones"
+      },
+      "playcaeValues": {
+        "days": "Días",
+        "noCosts": "Sin costes ocultos",
+        "personalizedSupport": "Personalizado incluido"
+      },
+      "othersValues": {
+        "manual": "Manual o semi-automática",
+        "months": "Meses",
+        "payPerVolume": "Pago por volumen",
+        "paidLimited": "De pago o limitado",
+        "additionalModule": "Módulo adicional",
+        "highLearningCurve": "Curva de aprendizaje alta",
+        "limitedPaid": "Limitada o de pago"
+      },
+      "migrationQuestion": "¿Vienes de otra plataforma CAE?",
+      "migrationCta": "Te ayudamos con la migración gratuita"
     },
     "documentation": {
-      "title": "Documentación soportada",
-      "subtitle": "Validamos automáticamente todos los documentos necesarios para la CAE"
+      "title": "Validación documental PRL automatizada en 3 pasos",
+      "subtitle": "Transforma semanas de gestión CAE manual en minutos con nuestro software de coordinación de actividades empresariales",
+      "docLoaded": "Documento cargado",
+      "analyzingAI": "Analizando con IA...",
+      "step1Title": "Sube documentos",
+      "step1Desc": "PDF, imágenes o Word. Soporte OCR para escaneos ilegibles",
+      "step1Note": "Hasta 100 documentos simultáneos",
+      "step2Title": "Validación automática",
+      "step2Desc": "Nuestro agente IA comprueba en segundos:",
+      "step2Check1Title": "Coherencia de datos",
+      "step2Check1Desc": "CIF, nombres, fechas",
+      "step2Check2Title": "Vigencia legal",
+      "step2Check2Desc": "LPRL 31/1995, RD 39/1997",
+      "step2Check3Title": "Autenticidad",
+      "step2Check3Desc": "Detección de manipulaciones",
+      "step2Check4Title": "Cumplimiento normativo",
+      "step2Check4Desc": "RD 171/2004, Llei 32/2006",
+      "step3Title": "Resultados ejecutables",
+      "step3Desc": "Informes claros con acciones específicas para cada caso",
+      "step3Valid": "Documentos válidos",
+      "step3ValidDesc": "JSON estructurado listo para integración",
+      "step3Corrections": "Correcciones",
+      "step3CorrectionsDesc": "Alertas con sugerencias específicas",
+      "step3Review": "Revisión experta",
+      "step3ReviewDesc": "Derivación a técnicos PRL",
+      "cta": "Ver demostración en vivo",
+      "ctaTag": "Procesamiento en tiempo real con precisión del 99.2%"
     },
     "contact": {
-      "title": "¿Listo para empezar?",
-      "subtitle": "Contacta con nosotros y te ayudaremos a automatizar tu gestión CAE",
+      "title": "Solicita una demo del software CAE",
+      "subtitle": "Descubre cómo automatizar la coordinación de actividades empresariales y la gestión documental PRL en tu empresa.",
       "formName": "Nombre",
-      "formEmail": "Email",
+      "formEmail": "Correo electrónico",
       "formPhone": "Teléfono",
       "formCompany": "Empresa",
       "formMessage": "Mensaje",
       "formSubmit": "Enviar mensaje",
       "formSuccess": "¡Mensaje enviado correctamente!",
-      "formError": "Error al enviar el mensaje. Inténtalo de nuevo."
+      "formError": "Error al enviar el mensaje. Inténtalo de nuevo.",
+      "infoTitle": "Información de contacto",
+      "infoSubtitle": "También puedes escribirnos directamente o llamarnos:",
+      "responseTime": "Responderemos en menos de 24 horas 🚀"
     }
+  },
+  "footer": {
+    "title": "Transforma tu gestión PRL:",
+    "titleHighlight": "Menos Riesgo, Más Control",
+    "subtitle": "Obtén el sello {badge} verificable para inspecciones de Trabajo",
+    "badge": "#Cumplimiento100%",
+    "cta1": "Prueba Gratis 30 Días",
+    "cta2": "Solicitar Demo Personalizada",
+    "testimonial": "\"De empresas constructoras para el sector: desarrollado en Barcelona con soporte técnico local\"",
+    "supportInfo": "Soporte técnico en español · Horario peninsular",
+    "validatedBadge": "VALIDADO",
+    "validatedByAI": "por Inteligencia Artificial",
+    "navProduct": "Producto",
+    "navResources": "Recursos",
+    "navCompany": "Compañía",
+    "navLegal": "Legal",
+    "linkValidation": "Validación PRL y CAE",
+    "linkAccessControl": "Control de accesos",
+    "linkPricing": "Precios",
+    "linkAllServices": "Todos los servicios",
+    "linkWhatIsCAE": "¿Qué es la CAE?",
+    "linkAlternatives": "Alternativas CAE",
+    "linkBlog": "Blog",
+    "linkContact": "Contacto",
+    "linkLegalNotice": "Aviso legal",
+    "linkPrivacy": "Política de privacidad",
+    "linkCookies": "Política de cookies",
+    "copyright": "© {year} PlayCAE. Todos los derechos reservados.",
+    "complianceInfo": "Operamos en España · Cumplimiento LSSI y RGPD"
   },
   "auth": {
     "login": {
@@ -189,6 +306,51 @@
       "clear": "Limpiar",
       "dateFrom": "Fecha desde",
       "dateTo": "Fecha hasta"
+    },
+    "audit": {
+      "title": "Asistente IA - Sistema CAE",
+      "sidebarTitle": "Asistente IA CAE",
+      "newConversation": "Nueva Conversación",
+      "documentCategories": "Categorías de Documentos",
+      "previousChats": "Conversaciones Anteriores",
+      "subtitle": "Pregúntame sobre empresas, trabajadores, documentos y más",
+      "greeting": "¡Hola! Soy tu asistente IA",
+      "greetingMessage": "Puedo ayudarte con información sobre empresas, trabajadores, documentos y cumplimiento legal. ¿En qué puedo asistirte hoy?",
+      "typing": "Escribiendo...",
+      "inputPlaceholder": "Escribe tu mensaje aquí...",
+      "inputHint": "Presiona Enter para enviar • Shift + Enter para nueva línea",
+      "categories": {
+        "companyDocs": "Documentos de Empresa",
+        "workerDocs": "Documentos de Trabajadores",
+        "safetyDocs": "Documentos de Seguridad",
+        "compliance": "Cumplimiento Legal"
+      }
+    }
+  },
+  "configuration": {
+    "title": "Configuración",
+    "loading": "Cargando configuración...",
+    "noPermission": "No tienes permisos para acceder a esta página. Solo usuarios con rol ADMIN pueden gestionar la configuración.",
+    "subtitle": "Personaliza la apariencia de tu sistema",
+    "logo": {
+      "title": "Logo personalizado",
+      "description": "El logo se mostrará en el header del dashboard y en la pantalla de control de acceso",
+      "current": "Logo actual",
+      "updated": "Actualizado:",
+      "loadError": "Error al cargar la imagen. El archivo podría no existir o estar corrupto.",
+      "noLogo": "No tienes un logo personalizado. Se está mostrando el logo por defecto de Play CAE.",
+      "default": "Logo por defecto",
+      "info": "Información sobre el logo:",
+      "infoItems": {
+        "header": "El logo se mostrará en el header del dashboard (esquina superior izquierda)",
+        "accessControl": "También aparecerá en la pantalla de control de acceso para visitantes/trabajadores",
+        "delete": "Si eliminas el logo, se mostrará automáticamente el logo por defecto de Play CAE",
+        "immediate": "Los cambios se aplicarán inmediatamente en todas las sesiones activas"
+      }
+    },
+    "moreSettings": {
+      "title": "Más configuraciones (Próximamente)",
+      "description": "En el futuro podrás personalizar colores, temas y otras opciones"
     }
   },
   "companies": {
@@ -348,11 +510,6 @@
     "workerCreated": "Trabajador creado correctamente",
     "workerCreatedDesc": "El trabajador se ha registrado correctamente y se ha agregado a la empresa."
   },
-  "configuration": {
-    "title": "Configuración",
-    "loading": "Cargando configuración...",
-    "noPermission": "No tienes permisos para acceder a esta página. Solo usuarios con rol ADMIN pueden gestionar la configuración."
-  },
   "subcontractors": {
     "title": "Gestión de Subcontratas",
     "description": "Visualiza y gestiona todas las empresas subcontratistas",
@@ -376,18 +533,92 @@
     "createError": "No se pudo crear la subcontrata."
   },
   "pricing": {
-    "title": "Precios",
-    "subtitle": "Elige el plan que mejor se adapte a tu empresa",
-    "monthly": "Mensual",
-    "yearly": "Anual",
-    "save": "Ahorra un {percent}%",
+    "meta": {
+      "title": "Precios Software CAE | Tarifas Transparentes | PlayCAE",
+      "description": "Precios claros y sin costes ocultos para tu software CAE. Sin tarifas por contrata ni por trabajador. Descubre nuestros planes para pymes y empresas."
+    },
+    "hero": {
+      "title": "Precios",
+      "titleHighlight": "transparentes",
+      "subtitle": "Sin costes ocultos, sin tarifas por contrata, sin sorpresas. Elige el plan que mejor se adapte a tu empresa.",
+      "badge": "14 días de prueba gratis en todos los planes"
+    },
+    "plans": {
+      "starter": {
+        "name": "Starter",
+        "description": "Para empresas que empiezan con CAE",
+        "price": "199",
+        "features": "Hasta 10 contratas activas|Validación documental con IA|Alertas de caducidad|Panel de control básico|Soporte por email|1 usuario administrador",
+        "cta": "Empezar gratis"
+      },
+      "professional": {
+        "name": "Professional",
+        "description": "Para empresas con gestión CAE activa",
+        "price": "399",
+        "badge": "Más popular",
+        "features": "Contratas ilimitadas|Validación documental con IA|Control de accesos integrado|Alertas y notificaciones avanzadas|Histórico y trazabilidad completa|API para integraciones|Soporte prioritario|5 usuarios administradores",
+        "cta": "Solicitar demo"
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Para grandes empresas y corporaciones",
+        "price": "Personalizado",
+        "features": "Todo lo de Professional|Usuarios ilimitados|Integración SAP/ERP|SSO y gestión de identidades|SLA garantizado|Account manager dedicado|Formación in-company|Despliegue on-premise opcional",
+        "cta": "Contactar ventas"
+      }
+    },
     "perMonth": "/mes",
-    "perYear": "/año",
-    "startTrial": "Empezar prueba gratis",
-    "contactSales": "Contactar con ventas",
-    "features": "Características",
-    "included": "Incluido",
-    "notIncluded": "No incluido"
+    "includedInAll": {
+      "title": "Incluido en todos los planes",
+      "subtitle": "Funcionalidades esenciales disponibles desde el primer día",
+      "items": "Validación documental con IA|Alertas automáticas de caducidad|Cumplimiento RD 171/2004 garantizado|Soporte técnico incluido|Implementación en menos de 1 semana|Migración gratuita desde otra plataforma"
+    },
+    "comparison": {
+      "title": "¿Por qué nuestros precios son diferentes?",
+      "traditional": {
+        "title": "Plataformas CAE tradicionales",
+        "items": "Coste por contrata activa|Coste por trabajador registrado|Coste por documento validado|Módulos adicionales de pago|Implementación facturada aparte|Formación con coste extra"
+      },
+      "playcae": {
+        "title": "PlayCAE",
+        "items": "Tarifa plana mensual|Contratas ilimitadas (plan Pro)|Documentos ilimitados|Todas las funcionalidades incluidas|Implementación gratuita|Formación incluida"
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes sobre precios",
+      "items": [
+        {
+          "question": "¿Hay costes adicionales por contrata o trabajador?",
+          "answer": "No. PlayCAE tiene tarifas planas. No cobramos por contrata, por trabajador ni por documento validado. Sabes exactamente lo que pagas."
+        },
+        {
+          "question": "¿Qué incluye la migración gratuita?",
+          "answer": "Importamos todas tus empresas, trabajadores y documentos desde tu plataforma actual. También incluye formación para tu equipo sin coste adicional."
+        },
+        {
+          "question": "¿Puedo cambiar de plan en cualquier momento?",
+          "answer": "Sí. Puedes subir o bajar de plan cuando lo necesites. Los cambios se aplican en el siguiente ciclo de facturación."
+        },
+        {
+          "question": "¿Hay período de prueba?",
+          "answer": "Ofrecemos 14 días de prueba gratuita en el plan Starter y Professional. Sin tarjeta de crédito requerida."
+        },
+        {
+          "question": "¿Qué formas de pago aceptáis?",
+          "answer": "Aceptamos tarjeta de crédito, transferencia bancaria y domiciliación SEPA. Facturación mensual o anual (con 2 meses gratis)."
+        }
+      ]
+    },
+    "cta": {
+      "title": "¿Tienes dudas sobre qué plan elegir?",
+      "subtitle": "Cuéntanos tu caso y te recomendamos la mejor opción. Sin compromiso.",
+      "talkToSales": "Hablar con ventas",
+      "tryFree": "Probar gratis 14 días"
+    },
+    "breadcrumbs": {
+      "home": "Inicio",
+      "pricing": "Precios"
+    }
   },
   "languages": {
     "es": "Español",

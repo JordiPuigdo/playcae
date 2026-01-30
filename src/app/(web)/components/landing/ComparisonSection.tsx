@@ -2,86 +2,85 @@
 
 import { motion } from "framer-motion";
 import { Check, X, Zap, Clock, Users, CreditCard } from "lucide-react";
-
-const comparisonPoints = [
-  {
-    feature: "Validación documental con IA",
-    playcae: true,
-    others: "Manual o semi-automática",
-    highlight: true,
-  },
-  {
-    feature: "Tiempo de implementación",
-    playcae: "Días",
-    others: "Meses",
-    highlight: true,
-  },
-  {
-    feature: "Coste por contrata/trabajador",
-    playcae: "Sin costes ocultos",
-    others: "Pago por volumen",
-    highlight: true,
-  },
-  {
-    feature: "Soporte técnico",
-    playcae: "Personalizado incluido",
-    others: "De pago o limitado",
-    highlight: false,
-  },
-  {
-    feature: "Control de accesos integrado",
-    playcae: true,
-    others: "Módulo adicional",
-    highlight: false,
-  },
-  {
-    feature: "Alertas de caducidad automáticas",
-    playcae: true,
-    others: true,
-    highlight: false,
-  },
-  {
-    feature: "Interfaz intuitiva para contratas",
-    playcae: true,
-    others: "Curva de aprendizaje alta",
-    highlight: true,
-  },
-  {
-    feature: "API abierta para integraciones",
-    playcae: true,
-    others: "Limitada o de pago",
-    highlight: false,
-  },
-];
-
-const differentiators = [
-  {
-    icon: Zap,
-    title: "Implementación en días, no meses",
-    description:
-      "Mientras otras plataformas CAE requieren proyectos de implementación largos, con PlayCAE puedes estar operativo en menos de una semana.",
-  },
-  {
-    icon: CreditCard,
-    title: "Precio transparente y predecible",
-    description:
-      "Sin costes por contrata, sin tarifas por trabajador, sin sorpresas. Sabes exactamente lo que vas a pagar desde el primer día.",
-  },
-  {
-    icon: Clock,
-    title: "IA que trabaja por ti 24/7",
-    description:
-      "Nuestra inteligencia artificial valida documentos automáticamente mientras tú te centras en lo importante. 99.2% de precisión.",
-  },
-  {
-    icon: Users,
-    title: "Soporte real, no tickets",
-    description:
-      "Acceso directo a nuestro equipo de expertos en CAE y PRL. Sin esperas de días ni respuestas automáticas.",
-  },
-];
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ComparisonSection() {
+  const { t } = useTranslation();
+
+  const comparisonPoints = [
+    {
+      feature: t("landing.comparison.features.aiValidation"),
+      playcae: true,
+      others: t("landing.comparison.othersValues.manual"),
+      highlight: true,
+    },
+    {
+      feature: t("landing.comparison.features.implementationTime"),
+      playcae: t("landing.comparison.playcaeValues.days"),
+      others: t("landing.comparison.othersValues.months"),
+      highlight: true,
+    },
+    {
+      feature: t("landing.comparison.features.costPerWorker"),
+      playcae: t("landing.comparison.playcaeValues.noCosts"),
+      others: t("landing.comparison.othersValues.payPerVolume"),
+      highlight: true,
+    },
+    {
+      feature: t("landing.comparison.features.support"),
+      playcae: t("landing.comparison.playcaeValues.personalizedSupport"),
+      others: t("landing.comparison.othersValues.paidLimited"),
+      highlight: false,
+    },
+    {
+      feature: t("landing.comparison.features.accessControl"),
+      playcae: true,
+      others: t("landing.comparison.othersValues.additionalModule"),
+      highlight: false,
+    },
+    {
+      feature: t("landing.comparison.features.expiryAlerts"),
+      playcae: true,
+      others: true,
+      highlight: false,
+    },
+    {
+      feature: t("landing.comparison.features.intuitiveUI"),
+      playcae: true,
+      others: t("landing.comparison.othersValues.highLearningCurve"),
+      highlight: true,
+    },
+    {
+      feature: t("landing.comparison.features.openApi"),
+      playcae: true,
+      others: t("landing.comparison.othersValues.limitedPaid"),
+      highlight: false,
+    },
+  ];
+
+  const differentiators = [
+    {
+      icon: Zap,
+      title: t("landing.comparison.diff1Title"),
+      description: t("landing.comparison.diff1Desc"),
+    },
+    {
+      icon: CreditCard,
+      title: t("landing.comparison.diff2Title"),
+      description: t("landing.comparison.diff2Desc"),
+    },
+    {
+      icon: Clock,
+      title: t("landing.comparison.diff3Title"),
+      description: t("landing.comparison.diff3Desc"),
+    },
+    {
+      icon: Users,
+      title: t("landing.comparison.diff4Title"),
+      description: t("landing.comparison.diff4Desc"),
+    },
+  ];
+
   return (
     <section className="py-16 lg:py-24 bg-white" id="comparativa">
       <div className="container mx-auto px-4">
@@ -94,11 +93,10 @@ export default function ComparisonSection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4">
-            ¿Por qué elegir PlayCAE frente a otras plataformas CAE?
+            {t("landing.comparison.title")}
           </h2>
           <p className="text-lg text-playBlueLight max-w-3xl mx-auto">
-            No todas las plataformas de coordinación de actividades
-            empresariales son iguales. Compara y decide con información real.
+            {t("landing.comparison.subtitle")}
           </p>
         </motion.div>
 
@@ -137,12 +135,12 @@ export default function ComparisonSection() {
           <div className="bg-playGrey rounded-2xl border border-playBlueLight/20 overflow-hidden">
             {/* Table Header */}
             <div className="grid grid-cols-3 bg-playBlueDark text-white">
-              <div className="p-4 font-semibold">Funcionalidad</div>
+              <div className="p-4 font-semibold">{t("landing.comparison.feature")}</div>
               <div className="p-4 font-semibold text-center bg-playOrange">
-                PlayCAE
+                {t("landing.comparison.playcae")}
               </div>
               <div className="p-4 font-semibold text-center">
-                Otras plataformas
+                {t("landing.comparison.others")}
               </div>
             </div>
 
@@ -189,8 +187,7 @@ export default function ComparisonSection() {
 
           {/* Disclaimer */}
           <p className="text-center text-sm text-playBlueLight mt-4">
-            * Comparativa basada en características públicas de plataformas CAE
-            del mercado español.
+            {t("landing.comparison.disclaimer")}
           </p>
         </motion.div>
 
@@ -203,13 +200,13 @@ export default function ComparisonSection() {
           transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
         >
           <p className="text-playBlueDark font-medium mb-4">
-            ¿Vienes de otra plataforma CAE?
+            {t("landing.comparison.migrationQuestion")}
           </p>
           <a
             href="/contacto"
             className="inline-flex items-center justify-center rounded-full bg-playOrange px-8 py-4 font-semibold text-white shadow-lg transition-all duration-200 hover:bg-playOrange/90 hover:scale-[1.02]"
           >
-            Te ayudamos con la migración gratuita
+            {t("landing.comparison.migrationCta")}
           </a>
         </motion.div>
       </div>
