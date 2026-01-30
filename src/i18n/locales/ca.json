@@ -422,6 +422,64 @@
       "empty": "No hi ha observacions registrades per a aquesta empresa.",
       "by": "Per",
       "on": "el"
+    },
+    "form": {
+      "editTitle": "Editar Informació de l'Empresa",
+      "viewTitle": "Informació de l'Empresa",
+      "companyName": "Nom de l'Empresa",
+      "companyNamePlaceholder": "Nom de l'empresa",
+      "cifNif": "CIF/NIF",
+      "cifPlaceholder": "B12345678",
+      "contactPerson": "Persona de Contacte",
+      "contactPlaceholder": "Nom complet",
+      "email": "Email",
+      "emailPlaceholder": "email@empresa.com",
+      "phoneOptional": "Telèfon (Opcional)",
+      "phonePlaceholder": "666 123 456",
+      "status": "Estat",
+      "statusAutoUpdate": "L'estat s'actualitza automàticament",
+      "active": "Actiu",
+      "name": "Nom",
+      "cif": "CIF",
+      "contact": "Contacte",
+      "phone": "Telèfon",
+      "yes": "Sí",
+      "no": "No"
+    },
+    "actions": {
+      "edit": "Editar",
+      "save": "Guardar",
+      "activate": "Activar",
+      "deactivate": "Desactivar",
+      "activating": "Activant...",
+      "deactivating": "Desactivant...",
+      "resendEmail": "Reenviar correu",
+      "sending": "Enviant..."
+    },
+    "toggle": {
+      "activateTitle": "Activar Empresa",
+      "deactivateTitle": "Desactivar Empresa",
+      "activateConfirm": "Vols activar l'empresa \"{name}\"? L'empresa podrà tornar a accedir al sistema.",
+      "deactivateConfirm": "Estàs segur que vols desactivar l'empresa \"{name}\"? L'empresa i els seus treballadors no podran accedir al sistema."
+    },
+    "toast": {
+      "activated": "Empresa activada",
+      "activatedDesc": "L'empresa s'ha activat correctament.",
+      "deactivated": "Empresa desactivada",
+      "deactivatedDesc": "L'empresa s'ha desactivat correctament.",
+      "toggleError": "No s'ha pogut {action} l'empresa.",
+      "updated": "Empresa actualitzada",
+      "updatedDesc": "La informació s'ha guardat correctament.",
+      "updateError": "No s'ha pogut guardar la informació.",
+      "emailSent": "Correu enviat",
+      "emailSentDesc": "El correu de benvinguda s'ha reenviat correctament.",
+      "emailError": "No s'ha pogut reenviar el correu de benvinguda."
+    },
+    "validation": {
+      "nameMin": "El nom ha de tenir almenys 2 caràcters",
+      "invalidTaxId": "Format de CIF/NIF invàlid",
+      "contactMin": "El nom de contacte ha de tenir almenys 2 caràcters",
+      "invalidEmail": "Email invàlid"
     }
   },
   "workers": {

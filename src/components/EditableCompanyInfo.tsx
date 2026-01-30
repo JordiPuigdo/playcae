@@ -44,6 +44,7 @@ import {
 import { useToast } from "@/hooks/use-Toast";
 import { useForm } from "react-hook-form";
 import { UserRole } from "@/types/user";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface EditableCompanyInfoProps {
   company: Company;
@@ -53,7 +54,6 @@ interface EditableCompanyInfoProps {
   userRole?: UserRole;
 }
 
-// Spanish NIF/CIF validation
 const validateSpanishTaxId = (value: string): boolean => {
   const cleanValue = value.replace(/\s/g, "").toUpperCase();
   const cifRegex = /^[ABCDEFGHJNPQRSUVW]\d{8}[0-9A-J]$/;
@@ -94,17 +94,6 @@ const validateSpanishTaxId = (value: string): boolean => {
   return false;
 };
 
-const companySchema = z.object({
-  name: z.string().min(2, "El nombre debe tener al menos 2 caracteres"),
-  taxId: z.string().refine(validateSpanishTaxId, {
-    message: "Formato de CIF/NIF inválido",
-  }),
-  contactPerson: z
-    .string()
-    .min(2, "El nombre de contacto debe tener al menos 2 caracteres"),
-  email: z.string().email("Email inválido"),
-  phone: z.string().optional(),
-});
 
 export const EditableCompanyInfo = ({
   company,
@@ -113,6 +102,7 @@ export const EditableCompanyInfo = ({
   onResendWelcomeEmail,
   userRole = UserRole.Admin,
 }: EditableCompanyInfoProps) => {
+  const { t } = useTranslation();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
@@ -123,6 +113,16 @@ export const EditableCompanyInfo = ({
   const canEdit = true;
   const isAdmin = userRole === UserRole.Admin || userRole === UserRole.SuperAdmin;
   const isActive = company.active !== false; // Por defecto activo si no está definido
+
+  const companySchema = z.object({
+    name: z.string().min(2, t("companies.validation.nameMin")),
+    taxId: z.string().refine(validateSpanishTaxId, {
+      message: t("companies.validation.invalidTaxId"),
+    }),
+    contactPerson: z.string().min(2, t("companies.validation.contactMin")),
+    email: z.string().email(t("companies.validation.invalidEmail")),
+    phone: z.string().optional(),
+  });
 
   const form = useForm<CompanyFormData>({
     resolver: zodResolver(companySchema),
@@ -153,17 +153,15 @@ export const EditableCompanyInfo = ({
       await onToggleActive(company.id!, !isActive);
       setIsToggleModalOpen(false);
       toast({
-        title: isActive ? "Empresa desactivada" : "Empresa activada",
+        title: isActive ? t("companies.toast.deactivated") : t("companies.toast.activated"),
         description: isActive
-          ? "La empresa ha sido desactivada correctamente."
-          : "La empresa ha sido activada correctamente.",
+          ? t("companies.toast.deactivatedDesc")
+          : t("companies.toast.activatedDesc"),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: `No se pudo ${
-          isActive ? "desactivar" : "activar"
-        } la empresa.`,
+        title: t("common.error") || "Error",
+        description: t("companies.toast.toggleError", { action: isActive ? t("companies.actions.deactivate").toLowerCase() : t("companies.actions.activate").toLowerCase() }),
         variant: "destructive",
       });
     } finally {
@@ -178,13 +176,13 @@ export const EditableCompanyInfo = ({
     try {
       await onResendWelcomeEmail(company.id!);
       toast({
-        title: "Correo enviado",
-        description: "El correo de bienvenida ha sido reenviado correctamente.",
+        title: t("companies.toast.emailSent"),
+        description: t("companies.toast.emailSentDesc"),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo reenviar el correo de bienvenida.",
+        title: t("common.error") || "Error",
+        description: t("companies.toast.emailError"),
         variant: "destructive",
       });
     } finally {
@@ -200,13 +198,13 @@ export const EditableCompanyInfo = ({
       setIsEditing(false);
 
       toast({
-        title: "Empresa actualizada",
-        description: "La información se ha guardado correctamente.",
+        title: t("companies.toast.updated"),
+        description: t("companies.toast.updatedDesc"),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "No se pudo guardar la información.",
+        title: t("common.error") || "Error",
+        description: t("companies.toast.updateError"),
         variant: "destructive",
       });
     } finally {
@@ -225,7 +223,7 @@ export const EditableCompanyInfo = ({
             <CardTitle className="flex items-center justify-between text-brand-primary">
               <div className="flex items-center gap-2">
                 <Building2 className="h-5 w-5 text-brand-primary" />
-                Editar Información de la Empresa
+                {t("companies.form.editTitle")}
               </div>
 
               <div className="flex items-center gap-2">
@@ -244,12 +242,12 @@ export const EditableCompanyInfo = ({
                     {isActive ? (
                       <>
                         <PowerOff className="h-4 w-4 mr-1" />
-                        Desactivar
+                        {t("companies.actions.deactivate")}
                       </>
                     ) : (
                       <>
                         <Power className="h-4 w-4 mr-1" />
-                        Activar
+                        {t("companies.actions.activate")}
                       </>
                     )}
                   </Button>
@@ -263,7 +261,7 @@ export const EditableCompanyInfo = ({
                   className="border-brand.accent text-brand-primary hover:bg-brand.neutral"
                 >
                   <X className="h-4 w-4 mr-1" />
-                  Cancelar
+                  {t("common.cancel")}
                 </Button>
 
                 <Button
@@ -277,7 +275,7 @@ export const EditableCompanyInfo = ({
                   ) : (
                     <Save className="h-4 w-4 mr-1" />
                   )}
-                  Guardar
+                  {t("companies.actions.save")}
                 </Button>
               </div>
             </CardTitle>
@@ -295,12 +293,12 @@ export const EditableCompanyInfo = ({
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-brand-primary">
                           <Building2 className="h-4 w-4 text-brand-primary" />
-                          Nombre de la Empresa
+                          {t("companies.form.companyName")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Nombre de la empresa"
+                            placeholder={t("companies.form.companyNamePlaceholder")}
                             className="border-brand.accent focus-visible:ring-brand-primary"
                           />
                         </FormControl>
@@ -317,12 +315,12 @@ export const EditableCompanyInfo = ({
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-brand-primary">
                           <FileText className="h-4 w-4 text-brand-primary" />
-                          CIF/NIF
+                          {t("companies.form.cifNif")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="B12345678"
+                            placeholder={t("companies.form.cifPlaceholder")}
                             className="font-mono border-brand.accent focus-visible:ring-brand-primary"
                           />
                         </FormControl>
@@ -339,12 +337,12 @@ export const EditableCompanyInfo = ({
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-brand-primary">
                           <User className="h-4 w-4 text-brand-primary" />
-                          Persona de Contacto
+                          {t("companies.form.contactPerson")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Nombre completo"
+                            placeholder={t("companies.form.contactPlaceholder")}
                             className="border-brand.accent focus-visible:ring-brand-primary"
                           />
                         </FormControl>
@@ -361,13 +359,13 @@ export const EditableCompanyInfo = ({
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-brand-primary">
                           <Mail className="h-4 w-4 text-brand-primary" />
-                          Email
+                          {t("companies.form.email")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             type="email"
-                            placeholder="email@empresa.com"
+                            placeholder={t("companies.form.emailPlaceholder")}
                             className="border-brand.accent focus-visible:ring-brand-primary"
                           />
                         </FormControl>
@@ -384,12 +382,12 @@ export const EditableCompanyInfo = ({
                       <FormItem>
                         <FormLabel className="flex items-center gap-2 text-brand-primary">
                           <Phone className="h-4 w-4 text-brand-primary" />
-                          Teléfono (Opcional)
+                          {t("companies.form.phoneOptional")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="666 123 456"
+                            placeholder={t("companies.form.phonePlaceholder")}
                             className="border-brand.accent focus-visible:ring-brand-primary"
                           />
                         </FormControl>
@@ -401,11 +399,11 @@ export const EditableCompanyInfo = ({
                   {/* STATUS */}
                   <div className="space-y-2">
                     <Label className="text-sm font-medium text-brand.accent">
-                      Estado
+                      {t("companies.form.status")}
                     </Label>
                     <StatusBadge status={company.status} />
                     <p className="text-xs text-brand.accent">
-                      El estado se actualiza automáticamente
+                      {t("companies.form.statusAutoUpdate")}
                     </p>
                   </div>
                 </div>
@@ -427,17 +425,17 @@ export const EditableCompanyInfo = ({
                 ) : (
                   <CheckCircle className="h-5 w-5 text-green-500" />
                 )}
-                {isActive ? "Desactivar Empresa" : "Activar Empresa"}
+                {isActive ? t("companies.toggle.deactivateTitle") : t("companies.toggle.activateTitle")}
               </AlertDialogTitle>
               <AlertDialogDescription className="text-left">
                 {isActive
-                  ? `¿Estás seguro de que deseas desactivar la empresa "${company.name}"? La empresa y sus trabajadores no podrán acceder al sistema.`
-                  : `¿Deseas activar la empresa "${company.name}"? La empresa podrá volver a acceder al sistema.`}
+                  ? t("companies.toggle.deactivateConfirm", { name: company.name })
+                  : t("companies.toggle.activateConfirm", { name: company.name })}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel disabled={isTogglingActive}>
-                Cancelar
+                {t("common.cancel")}
               </AlertDialogCancel>
               <AlertDialogAction
                 onClick={handleToggleActive}
@@ -457,11 +455,11 @@ export const EditableCompanyInfo = ({
                 )}
                 {isTogglingActive
                   ? isActive
-                    ? "Desactivando..."
-                    : "Activando..."
+                    ? t("companies.actions.deactivating")
+                    : t("companies.actions.activating")
                   : isActive
-                  ? "Desactivar"
-                  : "Activar"}
+                  ? t("companies.actions.deactivate")
+                  : t("companies.actions.activate")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -479,7 +477,7 @@ export const EditableCompanyInfo = ({
         <CardTitle className="flex items-center justify-between text-brand-primary">
           <div className="flex items-center gap-2">
             <Building2 className="h-5 w-5 text-brand-primary" />
-            Información de la Empresa
+            {t("companies.form.viewTitle")}
           </div>
 
           {canEdit && (
@@ -498,12 +496,12 @@ export const EditableCompanyInfo = ({
                   {isActive ? (
                     <>
                       <PowerOff className="h-4 w-4 mr-1" />
-                      Desactivar
+                      {t("companies.actions.deactivate")}
                     </>
                   ) : (
                     <>
                       <Power className="h-4 w-4 mr-1" />
-                      Activar
+                      {t("companies.actions.activate")}
                     </>
                   )}
                 </Button>
@@ -521,7 +519,7 @@ export const EditableCompanyInfo = ({
                   ) : (
                     <Send className="h-4 w-4 mr-1" />
                   )}
-                  {isSendingEmail ? "Enviando..." : "Reenviar correo"}
+                  {isSendingEmail ? t("companies.actions.sending") : t("companies.actions.resendEmail")}
                 </Button>
               )}
               <Button
@@ -531,7 +529,7 @@ export const EditableCompanyInfo = ({
                 className="border-brand.accent text-brand-primary hover:bg-brand.neutral"
               >
                 <Edit className="h-4 w-4 mr-1" />
-                Editar
+                {t("companies.actions.edit")}
               </Button>
             </div>
           )}
@@ -543,7 +541,7 @@ export const EditableCompanyInfo = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
               <Building2 className="h-4 w-4" />
-              Nombre
+              {t("companies.form.name")}
             </div>
             <div className="font-semibold text-brand-primary">
               {company.name}
@@ -553,7 +551,7 @@ export const EditableCompanyInfo = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
               <FileText className="h-4 w-4" />
-              CIF
+              {t("companies.form.cif")}
             </div>
             <div className="font-mono text-sm text-brand-primary">
               {company.taxId}
@@ -563,7 +561,7 @@ export const EditableCompanyInfo = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
               <User className="h-4 w-4" />
-              Contacto
+              {t("companies.form.contact")}
             </div>
             <div className="text-brand-primary">{company.contactPerson}</div>
           </div>
@@ -571,7 +569,7 @@ export const EditableCompanyInfo = ({
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
               <Mail className="h-4 w-4" />
-              Email
+              {t("companies.form.email")}
             </div>
             <div className="text-sm text-brand-primary">{company.email}</div>
           </div>
@@ -580,20 +578,20 @@ export const EditableCompanyInfo = ({
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
                 <Phone className="h-4 w-4" />
-                Teléfono
+                {t("companies.form.phone")}
               </div>
               <div className="text-sm text-brand-primary">{company.phone}</div>
             </div>
           )}
 
           <div className="space-y-2">
-            <div className="text-sm font-medium text-brand.accent">Estado</div>
+            <div className="text-sm font-medium text-brand.accent">{t("companies.form.status")}</div>
             <StatusBadge status={company.status} />
           </div>
 
           {/* Indicador de Activo/Inactivo */}
           <div className="space-y-2">
-            <div className="text-sm font-medium text-brand.accent">Activo</div>
+            <div className="text-sm font-medium text-brand.accent">{t("companies.form.active")}</div>
             <div
               className={`flex items-center gap-2 text-sm font-medium ${
                 isActive ? "text-green-600" : "text-red-600"
@@ -602,12 +600,12 @@ export const EditableCompanyInfo = ({
               {isActive ? (
                 <>
                   <CheckCircle className="h-4 w-4" />
-                  Sí
+                  {t("companies.form.yes")}
                 </>
               ) : (
                 <>
                   <PowerOff className="h-4 w-4" />
-                  No
+                  {t("companies.form.no")}
                 </>
               )}
             </div>
@@ -625,17 +623,17 @@ export const EditableCompanyInfo = ({
               ) : (
                 <CheckCircle className="h-5 w-5 text-green-500" />
               )}
-              {isActive ? "Desactivar Empresa" : "Activar Empresa"}
+              {isActive ? t("companies.toggle.deactivateTitle") : t("companies.toggle.activateTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
               {isActive
-                ? `¿Estás seguro de que deseas desactivar la empresa "${company.name}"? La empresa y sus trabajadores no podrán acceder al sistema.`
-                : `¿Deseas activar la empresa "${company.name}"? La empresa podrá volver a acceder al sistema.`}
+                ? t("companies.toggle.deactivateConfirm", { name: company.name })
+                : t("companies.toggle.activateConfirm", { name: company.name })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel disabled={isTogglingActive}>
-              Cancelar
+              {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleToggleActive}
@@ -655,11 +653,11 @@ export const EditableCompanyInfo = ({
               )}
               {isTogglingActive
                 ? isActive
-                  ? "Desactivando..."
-                  : "Activando..."
+                  ? t("companies.actions.deactivating")
+                  : t("companies.actions.activating")
                 : isActive
-                ? "Desactivar"
-                : "Activar"}
+                ? t("companies.actions.deactivate")
+                : t("companies.actions.activate")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
