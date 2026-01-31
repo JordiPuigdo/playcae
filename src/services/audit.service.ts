@@ -21,17 +21,12 @@ export class AdminAuditService implements IAdminAuditService {
 
   private buildQueryString(params: AuditLogsParams): string {
     const searchParams = new URLSearchParams();
-    
     if (params.from) {
       searchParams.append("from", params.from);
     }
     if (params.to) {
       searchParams.append("to", params.to);
     }
-    if (params.userId) {
-      searchParams.append("userId", params.userId);
-    }
-    
     const queryString = searchParams.toString();
     return queryString ? `?${queryString}` : "";
   }
@@ -43,7 +38,10 @@ export class AdminAuditService implements IAdminAuditService {
 
   async getDocumentNotifications(params: AuditLogsParams = {}): Promise<ApiResponse<DocumentNotification[]>> {
     const queryString = this.buildQueryString(params);
-    return this.httpClient.get<DocumentNotification[]>(`${this.baseUrl}/document-notifications${queryString}`);
+    if (!params.userId) {
+      throw new Error("userId is required for getDocumentNotifications");
+    }
+    return this.httpClient.get<DocumentNotification[]>(`${this.baseUrl}/document-notifications/by-affected-user/${params.userId}${queryString}`);
   }
 
   async getEmailRegistry(params: AuditLogsParams = {}): Promise<ApiResponse<EmailRegistry[]>> {
