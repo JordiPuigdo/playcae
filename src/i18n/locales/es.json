@@ -40,7 +40,10 @@
     "view": "Ver",
     "refresh": "Actualizar",
     "required": "Obligatorio",
-    "optional": "Opcional"
+    "optional": "Opcional",
+    "showing": "Mostrando",
+    "of": "de",
+    "clear": "Limpiar"
   },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
@@ -858,7 +861,18 @@
     },
     "system": "Sistema",
     "dateRange": "Rango de fechas",
+    "dateFrom": "Desde",
+    "dateTo": "Hasta",
     "applyFilter": "Aplicar filtro",
-    "noData": "No hay datos disponibles para el rango seleccionado"
+    "noData": "No hay datos disponibles para el rango seleccionado",
+    "presets": {
+      "today": "Hoy",
+      "last7Days": "Últimos 7 días",
+      "last30Days": "Últimos 30 días",
+      "thisMonth": "Este mes",
+      "lastMonth": "Mes anterior",
+      "last3Months": "Últimos 3 meses",
+      "thisYear": "Este año"
+    }
   }
 }

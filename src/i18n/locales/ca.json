@@ -40,7 +40,10 @@
     "view": "Veure",
     "refresh": "Actualitzar",
     "required": "Obligatori",
-    "optional": "Opcional"
+    "optional": "Opcional",
+    "showing": "Mostrant",
+    "of": "de",
+    "clear": "Netejar"
   },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",
@@ -858,7 +861,18 @@
     },
     "system": "Sistema",
     "dateRange": "Rang de dates",
+    "dateFrom": "Des de",
+    "dateTo": "Fins a",
     "applyFilter": "Aplicar filtre",
-    "noData": "No hi ha dades disponibles per al rang seleccionat"
+    "noData": "No hi ha dades disponibles per al rang seleccionat",
+    "presets": {
+      "today": "Avui",
+      "last7Days": "Últims 7 dies",
+      "last30Days": "Últims 30 dies",
+      "thisMonth": "Aquest mes",
+      "lastMonth": "Mes anterior",
+      "last3Months": "Últims 3 mesos",
+      "thisYear": "Aquest any"
+    }
   }
 }

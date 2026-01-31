@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/Select";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAudit } from "@/hooks/useAudit";
+import { DateRangePicker, DateRange } from "@/components/ui/DateRangePicker";
 import {
   ClipboardList,
   Bell,
@@ -39,6 +40,10 @@ import {
   Users,
   Calendar,
   Loader2,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
 } from "lucide-react";
 import {
   AuditActionType,
@@ -85,9 +90,75 @@ export default function SystemAuditPage() {
   const [activeTab, setActiveTab] = useState<TabType>("auditLogs");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Local date inputs
-  const [fromDate, setFromDate] = useState(dateRange.from);
-  const [toDate, setToDate] = useState(dateRange.to);
+  // Local date range state
+  const [localDateRange, setLocalDateRange] = useState<DateRange>({
+    from: dateRange.from,
+    to: dateRange.to,
+  });
+
+  // Translated presets for DateRangePicker
+  const datePresets = useMemo(() => {
+    const today = new Date();
+    const formatDate = (date: Date) => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    };
+
+    return [
+      {
+        label: t("systemAudit.presets.today"),
+        getValue: () => ({ from: formatDate(today), to: formatDate(today) }),
+      },
+      {
+        label: t("systemAudit.presets.last7Days"),
+        getValue: () => {
+          const from = new Date(today);
+          from.setDate(from.getDate() - 7);
+          return { from: formatDate(from), to: formatDate(today) };
+        },
+      },
+      {
+        label: t("systemAudit.presets.last30Days"),
+        getValue: () => {
+          const from = new Date(today);
+          from.setDate(from.getDate() - 30);
+          return { from: formatDate(from), to: formatDate(today) };
+        },
+      },
+      {
+        label: t("systemAudit.presets.thisMonth"),
+        getValue: () => {
+          const from = new Date(today.getFullYear(), today.getMonth(), 1);
+          return { from: formatDate(from), to: formatDate(today) };
+        },
+      },
+      {
+        label: t("systemAudit.presets.lastMonth"),
+        getValue: () => {
+          const from = new Date(today.getFullYear(), today.getMonth() - 1, 1);
+          const to = new Date(today.getFullYear(), today.getMonth(), 0);
+          return { from: formatDate(from), to: formatDate(to) };
+        },
+      },
+      {
+        label: t("systemAudit.presets.last3Months"),
+        getValue: () => {
+          const from = new Date(today);
+          from.setMonth(from.getMonth() - 3);
+          return { from: formatDate(from), to: formatDate(today) };
+        },
+      },
+      {
+        label: t("systemAudit.presets.thisYear"),
+        getValue: () => {
+          const from = new Date(today.getFullYear(), 0, 1);
+          return { from: formatDate(from), to: formatDate(today) };
+        },
+      },
+    ];
+  }, [t]);
 
   // Filters for each tab
   const [auditActionFilter, setAuditActionFilter] = useState<string>("all");
@@ -95,15 +166,35 @@ export default function SystemAuditPage() {
   const [notificationTypeFilter, setNotificationTypeFilter] = useState<string>("all");
   const [emailStatusFilter, setEmailStatusFilter] = useState<string>("all");
 
+  // Pagination
+  const ITEMS_PER_PAGE = 15;
+  const [auditLogsPage, setAuditLogsPage] = useState(1);
+  const [notificationsPage, setNotificationsPage] = useState(1);
+  const [emailsPage, setEmailsPage] = useState(1);
+
+  // Reset pagination when filters change
+  useEffect(() => {
+    setAuditLogsPage(1);
+  }, [searchTerm, auditActionFilter, auditResultFilter]);
+
+  useEffect(() => {
+    setNotificationsPage(1);
+  }, [searchTerm, notificationTypeFilter]);
+
+  useEffect(() => {
+    setEmailsPage(1);
+  }, [searchTerm, emailStatusFilter]);
+
   // Initial load
   useEffect(() => {
     fetchAll();
   }, []);
 
-  // Handle date range change
-  const handleApplyDateRange = () => {
-    setDateRange(fromDate, toDate);
-    fetchAll({ from: fromDate, to: toDate });
+  // Handle date range apply from DateRangePicker
+  const handleApplyDateRange = (range: DateRange) => {
+    setLocalDateRange(range);
+    setDateRange(range.from, range.to);
+    fetchAll({ from: range.from, to: range.to });
   };
 
   // Handle refresh
@@ -356,6 +447,155 @@ export default function SystemAuditPage() {
     });
   }, [emailRegistry, searchTerm, emailStatusFilter]);
 
+  // ============ PAGINATED DATA ============
+
+  const paginatedAuditLogs = useMemo(() => {
+    const startIndex = (auditLogsPage - 1) * ITEMS_PER_PAGE;
+    return filteredAuditLogs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredAuditLogs, auditLogsPage]);
+
+  const paginatedNotifications = useMemo(() => {
+    const startIndex = (notificationsPage - 1) * ITEMS_PER_PAGE;
+    return filteredNotifications.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredNotifications, notificationsPage]);
+
+  const paginatedEmails = useMemo(() => {
+    const startIndex = (emailsPage - 1) * ITEMS_PER_PAGE;
+    return filteredEmails.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredEmails, emailsPage]);
+
+  // ============ PAGINATION HELPERS ============
+
+  const getTotalPages = (totalItems: number) => Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+  const renderPagination = (
+    currentPage: number,
+    totalItems: number,
+    setPage: (page: number) => void
+  ) => {
+    const totalPages = getTotalPages(totalItems);
+    if (totalPages <= 1) return null;
+
+    const startItem = (currentPage - 1) * ITEMS_PER_PAGE + 1;
+    const endItem = Math.min(currentPage * ITEMS_PER_PAGE, totalItems);
+
+    // Generate page numbers to show
+    const getPageNumbers = () => {
+      const pages: (number | string)[] = [];
+      const maxVisiblePages = 5;
+      
+      if (totalPages <= maxVisiblePages + 2) {
+        // Show all pages if there are few
+        for (let i = 1; i <= totalPages; i++) {
+          pages.push(i);
+        }
+      } else {
+        // Always show first page
+        pages.push(1);
+        
+        if (currentPage > 3) {
+          pages.push("...");
+        }
+        
+        // Show pages around current
+        const start = Math.max(2, currentPage - 1);
+        const end = Math.min(totalPages - 1, currentPage + 1);
+        
+        for (let i = start; i <= end; i++) {
+          pages.push(i);
+        }
+        
+        if (currentPage < totalPages - 2) {
+          pages.push("...");
+        }
+        
+        // Always show last page
+        pages.push(totalPages);
+      }
+      
+      return pages;
+    };
+
+    return (
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-4 pt-4 border-t border-playBlueLight/20">
+        <div className="text-sm text-playBlueLight">
+          {t("common.showing")} <span className="font-medium text-brand-primary">{startItem}</span> - <span className="font-medium text-brand-primary">{endItem}</span> {t("common.of")} <span className="font-medium text-brand-primary">{totalItems}</span>
+        </div>
+        
+        <div className="flex items-center gap-1">
+          {/* First page */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(1)}
+            disabled={currentPage === 1}
+            className="h-8 w-8 p-0 border-playBlueLight/50 hover:bg-playGrey disabled:opacity-40"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+          
+          {/* Previous page */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="h-8 w-8 p-0 border-playBlueLight/50 hover:bg-playGrey disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          
+          {/* Page numbers */}
+          <div className="flex items-center gap-1 mx-1">
+            {getPageNumbers().map((page, index) => (
+              typeof page === "string" ? (
+                <span key={`ellipsis-${index}`} className="px-2 text-playBlueLight">
+                  {page}
+                </span>
+              ) : (
+                <Button
+                  key={page}
+                  variant={currentPage === page ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setPage(page)}
+                  className={`h-8 w-8 p-0 ${
+                    currentPage === page
+                      ? "bg-playOrange hover:bg-playOrange/90 text-white border-playOrange"
+                      : "border-playBlueLight/50 hover:bg-playGrey text-brand-primary"
+                  }`}
+                >
+                  {page}
+                </Button>
+              )
+            ))}
+          </div>
+          
+          {/* Next page */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="h-8 w-8 p-0 border-playBlueLight/50 hover:bg-playGrey disabled:opacity-40"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          
+          {/* Last page */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setPage(totalPages)}
+            disabled={currentPage === totalPages}
+            className="h-8 w-8 p-0 border-playBlueLight/50 hover:bg-playGrey disabled:opacity-40"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    );
+  };
+
   // ============ RENDER ============
 
   return (
@@ -386,43 +626,20 @@ export default function SystemAuditPage() {
       </div>
 
       {/* Date Range Filter */}
-      <Card className="bg-white border border-playBlueLight/30">
-        <CardContent className="pt-4">
-          <div className="flex flex-wrap gap-4 items-center">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-playBlueLight" />
-              <span className="text-sm text-brand-primary font-medium">
-                {t("systemAudit.dateRange")}:
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Input
-                type="date"
-                value={fromDate}
-                onChange={(e) => setFromDate(e.target.value)}
-                className="w-[160px] border-playBlueLight/50"
-              />
-              <span className="text-playBlueLight">-</span>
-              <Input
-                type="date"
-                value={toDate}
-                onChange={(e) => setToDate(e.target.value)}
-                className="w-[160px] border-playBlueLight/50"
-              />
-            </div>
-            <Button
-              onClick={handleApplyDateRange}
-              disabled={isLoading}
-              className="bg-playOrange hover:bg-playOrange/90 text-white"
-            >
-              {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
-              ) : null}
-              {t("systemAudit.applyFilter")}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <DateRangePicker
+        value={localDateRange}
+        onChange={setLocalDateRange}
+        onApply={handleApplyDateRange}
+        presets={datePresets}
+        disabled={isLoading}
+        labels={{
+          from: t("systemAudit.dateFrom"),
+          to: t("systemAudit.dateTo"),
+          apply: t("systemAudit.applyFilter"),
+          clear: t("common.clear"),
+          presets: t("systemAudit.dateRange"),
+        }}
+      />
 
       {/* Tabs */}
       <div className="flex gap-2 border-b border-playBlueLight/30 pb-2">
@@ -605,6 +822,7 @@ export default function SystemAuditPage() {
                     {t("systemAudit.noData")}
                   </div>
                 ) : (
+                  <>
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-playGrey">
@@ -629,7 +847,7 @@ export default function SystemAuditPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredAuditLogs.map((log) => (
+                      {paginatedAuditLogs.map((log) => (
                         <TableRow key={log.id} className="hover:bg-playGrey/30">
                           <TableCell className="text-brand-primary whitespace-nowrap">
                             {formatDate(log.timestamp)}
@@ -677,6 +895,8 @@ export default function SystemAuditPage() {
                       ))}
                     </TableBody>
                   </Table>
+                  {renderPagination(auditLogsPage, filteredAuditLogs.length, setAuditLogsPage)}
+                  </>
                 )}
               </>
             )}
@@ -693,7 +913,8 @@ export default function SystemAuditPage() {
                     {t("systemAudit.noData")}
                   </div>
                 ) : (
-                  <Table>
+                  <>
+                    <Table>
                     <TableHeader>
                       <TableRow className="bg-playGrey">
                         <TableHead className="text-brand-primary">
@@ -714,7 +935,7 @@ export default function SystemAuditPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredNotifications.map((notification) => (
+                      {paginatedNotifications.map((notification) => (
                         <TableRow key={notification.id} className="hover:bg-playGrey/30">
                           <TableCell className="text-brand-primary whitespace-nowrap">
                             {formatDate(notification.sentDate)}
@@ -757,6 +978,8 @@ export default function SystemAuditPage() {
                       ))}
                     </TableBody>
                   </Table>
+                  {renderPagination(notificationsPage, filteredNotifications.length, setNotificationsPage)}
+                  </>
                 )}
               </>
             )}
@@ -773,7 +996,8 @@ export default function SystemAuditPage() {
                     {t("systemAudit.noData")}
                   </div>
                 ) : (
-                  <Table>
+                  <>
+                    <Table>
                     <TableHeader>
                       <TableRow className="bg-playGrey">
                         <TableHead className="text-brand-primary">
@@ -797,7 +1021,7 @@ export default function SystemAuditPage() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {filteredEmails.map((email) => (
+                      {paginatedEmails.map((email) => (
                         <TableRow key={email.id} className="hover:bg-playGrey/30">
                           <TableCell className="text-brand-primary whitespace-nowrap">
                             {formatDate(email.sentAt)}
@@ -843,6 +1067,8 @@ export default function SystemAuditPage() {
                       ))}
                     </TableBody>
                   </Table>
+                  {renderPagination(emailsPage, filteredEmails.length, setEmailsPage)}
+                  </>
                 )}
               </>
             )}
