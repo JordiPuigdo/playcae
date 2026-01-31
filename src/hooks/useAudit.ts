@@ -5,6 +5,7 @@ import { AuditLog, DocumentNotification, EmailRegistry } from "@/types/audit";
 import { AdminAuditService, AuditLogsParams } from "@/services/audit.service";
 import { HttpClient } from "@/services/http-client";
 import { ApiError } from "@/interfaces/api-response";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 interface UseAuditReturn {
   // Data
@@ -35,6 +36,8 @@ interface UseAuditReturn {
 
 export const useAudit = (): UseAuditReturn => {
   const auditService = new AdminAuditService(new HttpClient());
+  const user = useAuthStore((s) => s.user);
+  const userId = user?.userId;
 
   // Data states
   const [auditLogs, setAuditLogs] = useState<AuditLog[]>([]);
@@ -79,7 +82,11 @@ export const useAudit = (): UseAuditReturn => {
     setAuditLogsError(null);
     
     try {
-      const queryParams = params || { from: dateRange.from, to: dateRange.to };
+      const queryParams: AuditLogsParams = {
+        from: params?.from || dateRange.from,
+        to: params?.to || dateRange.to,
+        userId: params?.userId || userId,
+      };
       const response = await auditService.getAuditLogs(queryParams);
       setAuditLogs(response.data || []);
     } catch (err) {
@@ -89,14 +96,18 @@ export const useAudit = (): UseAuditReturn => {
     } finally {
       setIsLoadingAuditLogs(false);
     }
-  }, [dateRange]);
+  }, [dateRange, userId]);
 
   const fetchDocumentNotifications = useCallback(async (params?: AuditLogsParams) => {
     setIsLoadingNotifications(true);
     setNotificationsError(null);
     
     try {
-      const queryParams = params || { from: dateRange.from, to: dateRange.to };
+      const queryParams: AuditLogsParams = {
+        from: params?.from || dateRange.from,
+        to: params?.to || dateRange.to,
+        userId: params?.userId || userId,
+      };
       const response = await auditService.getDocumentNotifications(queryParams);
       setDocumentNotifications(response.data || []);
     } catch (err) {
@@ -106,14 +117,18 @@ export const useAudit = (): UseAuditReturn => {
     } finally {
       setIsLoadingNotifications(false);
     }
-  }, [dateRange]);
+  }, [dateRange, userId]);
 
   const fetchEmailRegistry = useCallback(async (params?: AuditLogsParams) => {
     setIsLoadingEmails(true);
     setEmailsError(null);
     
     try {
-      const queryParams = params || { from: dateRange.from, to: dateRange.to };
+      const queryParams: AuditLogsParams = {
+        from: params?.from || dateRange.from,
+        to: params?.to || dateRange.to,
+        // Email registry no necesita userId según la API
+      };
       const response = await auditService.getEmailRegistry(queryParams);
       setEmailRegistry(response.data || []);
     } catch (err) {
@@ -126,14 +141,18 @@ export const useAudit = (): UseAuditReturn => {
   }, [dateRange]);
 
   const fetchAll = useCallback(async (params?: AuditLogsParams) => {
-    const queryParams = params || { from: dateRange.from, to: dateRange.to };
+    const queryParams: AuditLogsParams = {
+      from: params?.from || dateRange.from,
+      to: params?.to || dateRange.to,
+      userId: params?.userId || userId,
+    };
     
     await Promise.all([
       fetchAuditLogs(queryParams),
       fetchDocumentNotifications(queryParams),
-      fetchEmailRegistry(queryParams),
+      fetchEmailRegistry({ from: queryParams.from, to: queryParams.to }),
     ]);
-  }, [dateRange, fetchAuditLogs, fetchDocumentNotifications, fetchEmailRegistry]);
+  }, [dateRange, userId, fetchAuditLogs, fetchDocumentNotifications, fetchEmailRegistry]);
 
   return {
     // Data

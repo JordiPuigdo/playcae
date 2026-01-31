@@ -5,6 +5,7 @@ import { HttpClient } from "./http-client";
 export interface AuditLogsParams {
   from?: string;
   to?: string;
+  userId?: string;
 }
 
 export interface IAdminAuditService {
@@ -26,6 +27,9 @@ export class AdminAuditService implements IAdminAuditService {
     }
     if (params.to) {
       searchParams.append("to", params.to);
+    }
+    if (params.userId) {
+      searchParams.append("userId", params.userId);
     }
     
     const queryString = searchParams.toString();
