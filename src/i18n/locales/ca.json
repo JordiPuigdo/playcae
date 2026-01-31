@@ -38,6 +38,7 @@
     "download": "Descarregar",
     "upload": "Pujar",
     "view": "Veure",
+    "refresh": "Actualitzar",
     "required": "Obligatori",
     "optional": "Opcional"
   },
@@ -326,6 +327,7 @@
       "documents": "Documents",
       "accessControl": "Control d'Accés",
       "accessHistory": "Historial d'Accessos",
+      "systemAudit": "Auditoria",
       "reports": "Informes",
       "settings": "Configuració",
       "configuration": "Configuració"
@@ -782,5 +784,81 @@
     "eu": "Euskara",
     "gl": "Galego",
     "en": "English"
+  },
+  "systemAudit": {
+    "title": "Auditoria del Sistema",
+    "description": "Registre d'activitats, notificacions i correus del sistema",
+    "tabs": {
+      "auditLogs": "Registre d'Activitat",
+      "documentNotifications": "Notificacions de Documents",
+      "emailRegistry": "Registre de Correus"
+    },
+    "columns": {
+      "timestamp": "Data i Hora",
+      "user": "Usuari",
+      "action": "Acció",
+      "entity": "Entitat",
+      "result": "Resultat",
+      "ip": "IP",
+      "sentDate": "Data Enviament",
+      "document": "Document",
+      "type": "Tipus",
+      "recipient": "Destinatari",
+      "emailType": "Tipus de Correu",
+      "subject": "Assumpte",
+      "retries": "Reintents"
+    },
+    "filters": {
+      "action": "Filtrar per acció",
+      "result": "Filtrar per resultat",
+      "type": "Filtrar per tipus"
+    },
+    "actions": {
+      "create": "Crear",
+      "update": "Actualitzar",
+      "delete": "Eliminar",
+      "login": "Iniciar sessió",
+      "logout": "Tancar sessió",
+      "upload": "Pujar",
+      "download": "Descarregar",
+      "validate": "Validar",
+      "reject": "Rebutjar",
+      "export": "Exportar",
+      "import": "Importar",
+      "sendEmail": "Enviar correu",
+      "changeStatus": "Canviar estat",
+      "accessGranted": "Accés permès",
+      "accessDenied": "Accés denegat"
+    },
+    "results": {
+      "success": "Èxit",
+      "failure": "Error",
+      "partial": "Parcial"
+    },
+    "notificationTypes": {
+      "sevenDays": "Avís 7 dies",
+      "expired": "Caducat"
+    },
+    "emailTypes": {
+      "welcome": "Benvinguda",
+      "passwordReset": "Restablir contrasenya",
+      "documentExpiring": "Document per caducar",
+      "documentExpired": "Document caducat",
+      "documentValidated": "Document validat",
+      "documentRejected": "Document rebutjat",
+      "accessGranted": "Accés permès",
+      "accessDenied": "Accés denegat",
+      "notification": "Notificació"
+    },
+    "emailStatus": {
+      "sent": "Enviat",
+      "failed": "Fallat",
+      "pending": "Pendent",
+      "retrying": "Reintentant"
+    },
+    "system": "Sistema",
+    "dateRange": "Rang de dates",
+    "applyFilter": "Aplicar filtre",
+    "noData": "No hi ha dades disponibles per al rang seleccionat"
   }
 }

@@ -38,6 +38,7 @@
     "download": "Descargar",
     "upload": "Subir",
     "view": "Ver",
+    "refresh": "Actualizar",
     "required": "Obligatorio",
     "optional": "Opcional"
   },
@@ -326,6 +327,7 @@
       "documents": "Documentos",
       "accessControl": "Control de Acceso",
       "accessHistory": "Histórico de Accesos",
+      "systemAudit": "Auditoría",
       "reports": "Informes",
       "settings": "Configuración",
       "configuration": "Configuración"
@@ -782,5 +784,81 @@
     "eu": "Euskara",
     "gl": "Galego",
     "en": "English"
+  },
+  "systemAudit": {
+    "title": "Auditoría del Sistema",
+    "description": "Registro de actividades, notificaciones y emails del sistema",
+    "tabs": {
+      "auditLogs": "Registro de Actividad",
+      "documentNotifications": "Notificaciones de Documentos",
+      "emailRegistry": "Registro de Emails"
+    },
+    "columns": {
+      "timestamp": "Fecha y Hora",
+      "user": "Usuario",
+      "action": "Acción",
+      "entity": "Entidad",
+      "result": "Resultado",
+      "ip": "IP",
+      "sentDate": "Fecha Envío",
+      "document": "Documento",
+      "type": "Tipo",
+      "recipient": "Destinatario",
+      "emailType": "Tipo de Email",
+      "subject": "Asunto",
+      "retries": "Reintentos"
+    },
+    "filters": {
+      "action": "Filtrar por acción",
+      "result": "Filtrar por resultado",
+      "type": "Filtrar por tipo"
+    },
+    "actions": {
+      "create": "Crear",
+      "update": "Actualizar",
+      "delete": "Eliminar",
+      "login": "Iniciar sesión",
+      "logout": "Cerrar sesión",
+      "upload": "Subir",
+      "download": "Descargar",
+      "validate": "Validar",
+      "reject": "Rechazar",
+      "export": "Exportar",
+      "import": "Importar",
+      "sendEmail": "Enviar email",
+      "changeStatus": "Cambiar estado",
+      "accessGranted": "Acceso permitido",
+      "accessDenied": "Acceso denegado"
+    },
+    "results": {
+      "success": "Éxito",
+      "failure": "Error",
+      "partial": "Parcial"
+    },
+    "notificationTypes": {
+      "sevenDays": "Aviso 7 días",
+      "expired": "Caducado"
+    },
+    "emailTypes": {
+      "welcome": "Bienvenida",
+      "passwordReset": "Restablecer contraseña",
+      "documentExpiring": "Documento por caducar",
+      "documentExpired": "Documento caducado",
+      "documentValidated": "Documento validado",
+      "documentRejected": "Documento rechazado",
+      "accessGranted": "Acceso permitido",
+      "accessDenied": "Acceso denegado",
+      "notification": "Notificación"
+    },
+    "emailStatus": {
+      "sent": "Enviado",
+      "failed": "Fallido",
+      "pending": "Pendiente",
+      "retrying": "Reintentando"
+    },
+    "system": "Sistema",
+    "dateRange": "Rango de fechas",
+    "applyFilter": "Aplicar filtro",
+    "noData": "No hay datos disponibles para el rango seleccionado"
   }
 }

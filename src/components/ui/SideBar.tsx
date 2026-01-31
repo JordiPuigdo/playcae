@@ -15,6 +15,7 @@ import {
   History,
   ScanLine,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -37,6 +38,11 @@ export default function Sidebar() {
       href: "/access-control",
       label: t("dashboard.sidebar.accessControl"),
       icon: ScanLine,
+    },
+    {
+      href: "/dashboard/system-audit",
+      label: t("dashboard.sidebar.systemAudit"),
+      icon: ShieldCheck,
     },
     {
       href: "/dashboard/configuration",
