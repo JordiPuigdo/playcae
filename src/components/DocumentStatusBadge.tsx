@@ -23,9 +23,15 @@ export const DocumentStatusBadge = ({ status }: DocumentStatusBadgeProps) => {
     }
   };
 
+  const getStatusName = (status: EntityStatus): string => {
+    return EntityStatus[status];
+  };
+
   return (
-    <span
-      className={`inline-block w-6 h-6 rounded-full border shadow-sm ${getColor(
+    <a
+      href={`#${getStatusName(status)}`}
+      onClick={(e) => e.preventDefault()}
+      className={`inline-block w-6 h-6 rounded-full border shadow-sm cursor-default ${getColor(
         status
       )}`}
     />
