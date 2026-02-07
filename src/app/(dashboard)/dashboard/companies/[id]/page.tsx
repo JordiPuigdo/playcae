@@ -240,7 +240,7 @@ const CompanyDetailPage = () => {
           parentCompanyName={company?.parentCompanyName}
         />
 
-        {isLoading && <Loader text={t("common.loading")} />}
+        {isLoading && <Loader />}
 
         <div className="container mx-auto px-4 py-8 space-y-8">
           <EditableCompanyInfo

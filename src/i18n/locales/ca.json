@@ -45,6 +45,12 @@
     "of": "de",
     "clear": "Netejar"
   },
+  "loading": {
+    "message1": "Carregant",
+    "message2": "Sembla la Renfe😄",
+    "message3": "Qui dia pasa any empeny ⏳",
+    "message4": "Com la cuina, a foc lent 🍲"
+  },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",
     "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificat Corrent AEAT / Hisenda",

@@ -45,6 +45,12 @@
     "of": "de",
     "clear": "Limpiar"
   },
+  "loading": {
+    "message1": "Cargando",
+    "message2": "No es el AVE, pero ahí vamos😄",
+    "message3": "Parece que tarda un poco 🐢",
+    "message4": "Un café, nunca viene mal ☕"
+  },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
     "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificado Corriente AEAT / Hacienda",
