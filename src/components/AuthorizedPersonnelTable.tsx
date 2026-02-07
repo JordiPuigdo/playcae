@@ -11,6 +11,7 @@ import {
   Table,
 } from "./ui/Table";
 import { WorkerStatusBadge } from "./WorkerStatusBadge";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface AuthorizedPersonnelTableProps {
   workers: Array<
@@ -26,6 +27,8 @@ export const AuthorizedPersonnelTable = ({
   workers,
   onViewWorker,
 }: AuthorizedPersonnelTableProps) => {
+  const { t } = useTranslation();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("es-ES");
   };
@@ -59,7 +62,7 @@ export const AuthorizedPersonnelTable = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Users className="h-5 w-5" />
-          Personal No Autorizado ({workers.length})
+          {t("workers.unauthorizedPersonnel")} ({workers.length})
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -67,14 +70,14 @@ export const AuthorizedPersonnelTable = ({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Trabajador</TableHead>
-                <TableHead>DNI/NIE</TableHead>
-                <TableHead>Empresa</TableHead>
-                <TableHead>Puesto</TableHead>
-                <TableHead>Fecha Alta</TableHead>
-                <TableHead>Estado</TableHead>
-                <TableHead>Próximo Vencimiento</TableHead>
-                <TableHead>Acciones</TableHead>
+                <TableHead>{t("workers.firstName")}</TableHead>
+                <TableHead>{t("workers.dni")}</TableHead>
+                <TableHead>{t("workers.company")}</TableHead>
+                <TableHead>{t("workers.position")}</TableHead>
+                <TableHead>{t("workers.registrationDate")}</TableHead>
+                <TableHead>{t("common.status")}</TableHead>
+                <TableHead>{t("workers.nextExpiry")}</TableHead>
+                <TableHead>{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -84,7 +87,7 @@ export const AuthorizedPersonnelTable = ({
                     colSpan={8}
                     className="text-center py-8 text-muted-foreground"
                   >
-                    No se encontraron trabajadores con los filtros aplicados
+                    {t("workers.noWorkersFiltered")}
                   </TableCell>
                 </TableRow>
               ) : (
@@ -113,13 +116,13 @@ export const AuthorizedPersonnelTable = ({
                       <div className="flex items-center gap-2">
                         <span className="text-sm">{worker.nextExpiryDate}</span>
                         {isExpired(worker.nextExpiryDate) && (
-                          <span title="Documento caducado">
+                          <span title={t("workers.documentExpired")}>
                             <AlertTriangle className="h-4 w-4 text-destructive" />
                           </span>
                         )}
                         {isExpiringSoon(worker.nextExpiryDate) &&
                           !isExpired(worker.nextExpiryDate) && (
-                            <span title="Caduca pronto (menos de 30 días)">
+                            <span title={t("workers.expiringSoon")}>
                               <AlertTriangle className="h-4 w-4 text-pending" />
                             </span>
                           )}
@@ -133,7 +136,7 @@ export const AuthorizedPersonnelTable = ({
                         className="gap-2"
                       >
                         <Eye className="h-3 w-3" />
-                        Ver Ficha
+                        {t("workers.viewCard")}
                       </Button>
                     </TableCell>
                   </TableRow>

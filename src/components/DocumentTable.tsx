@@ -199,10 +199,9 @@ export const DocumentsTable = ({
                       {formatDate(document.expirationDate)}
 
                       {isExpired(document.expirationDate) && (
-                        <AlertTriangle
-                          className="h-4 w-4 text-brand-secondary"
-                          title="Documento caducado"
-                        />
+                        <span title="Documento caducado">
+                          <AlertTriangle className="h-4 w-4 text-brand-secondary" />
+                        </span>
                       )}
                     </div>
                   </TableCell>
