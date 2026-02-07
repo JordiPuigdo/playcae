@@ -13,7 +13,6 @@ export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
           className:
             "bg-playGreen text-white border border-playGreen/40 shadow-sm",
           text: "Apto",
-          enumName: "WorkerStatus.Approved",
         };
 
       case WorkerStatus.Rejected:
@@ -21,7 +20,6 @@ export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
           className:
             "bg-securityRed text-white border border-securityRed/40 shadow-sm hover:bg-securityRed/80",
           text: "No apto",
-          enumName: "WorkerStatus.Rejected",
         };
 
       default:
@@ -29,12 +27,11 @@ export const WorkerStatusBadge = ({ status }: WorkerStatusBadgeProps) => {
           className:
             "bg-playYellow text-black border border-playYellow/40 shadow-sm",
           text: "Pendiente",
-          enumName: "WorkerStatus.Pending",
         };
     }
   };
 
   const config = getStatusConfig(status);
 
-  return <Badge className={config.className} title={config.enumName}>{config.text}</Badge>;
+  return <Badge className={config.className}>{config.text}</Badge>;
 };

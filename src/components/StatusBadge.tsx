@@ -14,7 +14,6 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           className:
             "bg-playGreen text-white shadow-sm border border-playGreen/40",
           text: "Apta",
-          enumName: "CompanyStatus.Approved",
         };
       case CompanyStatus.Rejected:
         return {
@@ -22,7 +21,6 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           className:
             "bg-brand-secondary text-white shadow-sm border border-brand-secondary/40",
           text: "No apta",
-          enumName: "CompanyStatus.Rejected",
         };
       case CompanyStatus.Pending:
       default:
@@ -31,7 +29,6 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
           className:
             "bg-playYellow text-black shadow-sm border border-playYellow/40",
           text: "Pendiente",
-          enumName: "CompanyStatus.Pending",
         };
     }
   };
@@ -39,7 +36,7 @@ export const StatusBadge = ({ status }: StatusBadgeProps) => {
   const config = getStatusConfig(status);
 
   return (
-    <Badge variant={config.variant} className={config.className} title={config.enumName}>
+    <Badge variant={config.variant} className={config.className}>
       {config.text}
     </Badge>
   );
