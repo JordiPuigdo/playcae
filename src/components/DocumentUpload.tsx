@@ -16,6 +16,7 @@ import { InfoTooltip } from "./ui/InfoToolTip";
 
 interface DocumentUploadProps {
   documentName: string;
+  documentTypeId: string;
   onUpload: (data: WorkerDocumentFormData) => void;
   hasFile: boolean;
   canUpload: boolean;
@@ -25,6 +26,7 @@ const MAX_FILE_SIZE_MB = 20;
 
 export const DocumentUpload = ({
   documentName,
+  documentTypeId,
   onUpload,
   hasFile,
   canUpload,
@@ -36,6 +38,8 @@ export const DocumentUpload = ({
   const [forceValidation, setForceValidation] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  
+  const attemptedDocumentsRef = useRef<Set<string>>(new Set());
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -63,6 +67,8 @@ export const DocumentUpload = ({
     e.preventDefault();
     if (!selectedFile) return;
 
+    attemptedDocumentsRef.current.add(documentTypeId);
+
     onUpload({
       file: selectedFile,
       issueDate: issueDate || undefined,
@@ -88,6 +94,11 @@ export const DocumentUpload = ({
       open={isOpen}
       onOpenChange={(open) => {
         setIsOpen(open);
+        if (open) {
+          if (attemptedDocumentsRef.current.has(documentTypeId)) {
+            setForceValidation(true);
+          }
+        }
         if (!open) resetForm();
       }}
     >

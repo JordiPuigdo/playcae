@@ -221,6 +221,7 @@ export const DocumentsTable = ({
                       {canUpload && (
                         <DocumentUpload
                           documentName={getDocumentTypeName(document.documentType, t)}
+                          documentTypeId={document.documentType.id!}
                           hasFile={!!document.storagePath}
                           onUpload={(data) => onUpload(document.id!, data)}
                           canUpload

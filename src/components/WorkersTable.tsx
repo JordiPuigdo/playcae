@@ -520,6 +520,7 @@ export const WorkersTable = ({
                                               documentName={
                                                 getDocumentTypeName(document.documentType, t)
                                               }
+                                              documentTypeId={document.documentType.id!}
                                               hasFile={!!document.storagePath}
                                               canUpload={canUpload}
                                               onUpload={(data) =>
