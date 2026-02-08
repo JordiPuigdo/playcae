@@ -227,8 +227,11 @@
       "formCompany": "Empresa",
       "formMessage": "Missatge",
       "formSubmit": "Enviar missatge",
+      "formSending": "Enviant...",
       "formSuccess": "Missatge enviat correctament!",
       "formError": "Error en enviar el missatge. Torna-ho a provar.",
+      "errorRequired": "Tots els camps són obligatoris",
+      "errorGeneric": "Error en enviar el missatge. Torna-ho a provar.",
       "infoTitle": "Informació de contacte",
       "infoSubtitle": "També pots escriure'ns directament o trucar-nos:",
       "responseTime": "Respondrem en menys de 24 hores 🚀"

@@ -1,12 +1,62 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function ContactForm() {
   const { t } = useTranslation();
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    // Check honeypot
+    if (formData.get("company")) {
+      return; // Bot detected
+    }
+
+    const name = formData.get("name") as string;
+    const email = formData.get("email") as string;
+    const message = formData.get("message") as string;
+    const consent = formData.get("consent");
+
+    if (!name || !email || !message || !consent) {
+      setError(t("landing.contact.errorRequired"));
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || t("landing.contact.errorGeneric"));
+      }
+
+      // Redirect to thank you page
+      router.push("/contacto/gracias");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("landing.contact.errorGeneric"));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
-    <form className="space-y-6" noValidate onSubmit={(e) => e.preventDefault()}>
+    <form className="space-y-6" noValidate onSubmit={handleSubmit}>
       {/* Honeypot (oculto a usuarios) */}
       <div className="hidden">
         <label htmlFor="company">Company</label>
@@ -94,16 +144,20 @@ export default function ContactForm() {
         </label>
       </div>
 
+      {error && (
+        <div className="rounded-lg bg-red-50 border border-red-200 p-4 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       <button
         type="submit"
-        disabled={false}
-        className="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/50 disabled:opacity-60"
-        aria-busy={false}
+        disabled={isSubmitting}
+        className="w-full rounded-full bg-gradient-to-r from-blue-600 to-cyan-600 px-6 py-3 font-semibold text-white shadow-lg transition-transform hover:scale-[1.02] hover:from-blue-700 hover:to-cyan-700 focus:outline-none focus-visible:ring focus-visible:ring-cyan-500/50 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+        aria-busy={isSubmitting}
       >
-        {t("landing.contact.formSubmit")}
+        {isSubmitting ? t("landing.contact.formSending") : t("landing.contact.formSubmit")}
       </button>
-
-      {/* Visual-only: no server errors shown */}
     </form>
   );
 }

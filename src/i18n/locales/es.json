@@ -227,8 +227,11 @@
       "formCompany": "Empresa",
       "formMessage": "Mensaje",
       "formSubmit": "Enviar mensaje",
+      "formSending": "Enviando...",
       "formSuccess": "¡Mensaje enviado correctamente!",
       "formError": "Error al enviar el mensaje. Inténtalo de nuevo.",
+      "errorRequired": "Todos los campos son obligatorios",
+      "errorGeneric": "Error al enviar el mensaje. Inténtalo de nuevo.",
       "infoTitle": "Información de contacto",
       "infoSubtitle": "También puedes escribirnos directamente o llamarnos:",
       "responseTime": "Responderemos en menos de 24 horas 🚀"
