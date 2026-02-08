@@ -6,8 +6,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api", "/admin", "/privacy-preview"],
+      disallow: ["/api", "/dashboard", "/onboarding", "/access-control"],
     },
-    sitemap: "https://playcae.com/sitemap.xml",
+    sitemap: "https://www.playcae.com/sitemap.xml",
   };
 }

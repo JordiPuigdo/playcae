@@ -26,6 +26,23 @@ const nextConfig = {
     ],
   },
 
+  // Redirecciones para normalizar el dominio
+  async redirects() {
+    return [
+      {
+        source: '/:path*',
+        has: [
+          {
+            type: 'host',
+            value: 'playcae.com',
+          },
+        ],
+        destination: 'https://www.playcae.com/:path*',
+        permanent: true,
+      },
+    ];
+  },
+
   // Headers de seguridad y SEO
   async headers() {
     return [
