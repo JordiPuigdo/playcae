@@ -47,9 +47,9 @@
   },
   "loading": {
     "message1": "Carregant",
-    "message2": "Sembla la Renfe😄",
-    "message3": "Qui dia pasa any empeny ⏳",
-    "message4": "Com la cuina, a foc lent 🍲"
+    "message2": "La validació pot trigar uns segons ⏳",
+    "message3": "Estem revisant cada detall 🔍",
+    "message4": "La validació està trigant una mica més de l'habitual 🕒"
   },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",

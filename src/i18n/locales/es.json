@@ -47,9 +47,9 @@
   },
   "loading": {
     "message1": "Cargando",
-    "message2": "No es el AVE, pero ahí vamos😄",
-    "message3": "Parece que tarda un poco 🐢",
-    "message4": "Un café, nunca viene mal ☕"
+    "message2": "La validación puede tardar unos segundos ⏳",
+    "message3": "Estamos revisando cada detalle 🔍",
+    "message4": "La validación está tardando un poco más de lo habitual 🕒"
   },
   "documentTypes": {
     "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
