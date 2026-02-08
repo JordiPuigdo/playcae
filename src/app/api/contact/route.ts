@@ -7,9 +7,6 @@ interface ContactFormData {
   message: string;
 }
 
-// Inicializar Resend
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: NextRequest) {
   try {
     const body: ContactFormData = await request.json();
@@ -31,6 +28,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    // Inicializar Resend
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
     // Enviar email con Resend
     const { data, error } = await resend.emails.send({
