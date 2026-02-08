@@ -77,18 +77,26 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("Error de Resend:", error);
+      console.error("Detalles completos del error:", JSON.stringify(error, null, 2));
       return NextResponse.json(
         { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
         { status: 500 }
       );
     }
 
+    console.log("Email enviado exitosamente:", data);
     return NextResponse.json(
       { success: true, message: "Mensaje enviado correctamente", data },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error enviando email:", error);
+    console.error("Tipo de error:", typeof error);
+    console.error("Error completo:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    if (error instanceof Error) {
+      console.error("Error.message:", error.message);
+      console.error("Error.stack:", error.stack);
+    }
     return NextResponse.json(
       { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
       { status: 500 }
