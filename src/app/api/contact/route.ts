@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 
 interface ContactFormData {
   name: string;
@@ -7,16 +7,8 @@ interface ContactFormData {
   message: string;
 }
 
-// Configuración del transporter SMTP
-const transporter = nodemailer.createTransport({
-  host: "smtp.dondominio.com",
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
+// Inicializar Resend
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,21 +32,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Enviar email
-    await transporter.sendMail({
-      from: `"PlayCAE Web" <noreply@playcae.com>`,
-      to: "soporte@playcae.com",
+    // Enviar email con Resend
+    const { data, error } = await resend.emails.send({
+      from: "PlayCAE <onboarding@resend.dev>",
+      to: "playcae2025@gmail.com",
       replyTo: email,
       subject: `[Contacto Web] Mensaje de ${name}`,
-      text: `
-Nuevo mensaje de contacto desde la web:
-
-Nombre: ${name}
-Email: ${email}
-
-Mensaje:
-${message}
-      `.trim(),
       html: `
 <!DOCTYPE html>
 <html>
@@ -92,8 +75,16 @@ ${message}
       `.trim(),
     });
 
+    if (error) {
+      console.error("Error de Resend:", error);
+      return NextResponse.json(
+        { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { success: true, message: "Mensaje enviado correctamente" },
+      { success: true, message: "Mensaje enviado correctamente", data },
       { status: 200 }
     );
   } catch (error) {
