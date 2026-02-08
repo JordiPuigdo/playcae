@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Inicializar Resend
-    const resend = new Resend(process.env.RESEND_API_KEY);
+    const resend = new Resend('re_XfRtYMUA_BtNGuY7NBETjLzk1raRCng4L');
 
     // Enviar email con Resend
     const { data, error } = await resend.emails.send({
