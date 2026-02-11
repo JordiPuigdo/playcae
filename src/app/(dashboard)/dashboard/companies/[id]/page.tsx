@@ -115,6 +115,7 @@ const CompanyDetailPage = () => {
     try {
       setIsLoading(true);
       await validateDocument(documentId, isValid, comment, expiryDate);
+      await fetchCompany(id);
     } catch (err) {
       throw err;
     } finally {
