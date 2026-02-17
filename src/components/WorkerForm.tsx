@@ -11,6 +11,7 @@ import {
 
 import { Worker, WorkerFormData } from "@/types/worker";
 import { User, IdCard } from "lucide-react";
+import { validatePersonId } from "@/app/utils/tax-id-validation";
 
 interface WorkerFormProps {
   isOpen: boolean;
@@ -63,11 +64,7 @@ export const WorkerForm = ({
     setErrors({});
   }, [worker, mode, isOpen]);
 
-  const validateDNI = (dni: string) => {
-    const dniRegex = /^[0-9]{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
-    const nieRegex = /^[XYZ][0-9]{7}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
-    return dniRegex.test(dni) || nieRegex.test(dni);
-  };
+  const validateDNI = (dni: string) => validatePersonId(dni);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

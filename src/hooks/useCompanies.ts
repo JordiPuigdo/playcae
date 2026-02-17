@@ -80,7 +80,11 @@ export const useCompanies = () => {
     company: Partial<CompanyFormData>
   ): Promise<Company> => {
     try {
-      const response = await companyService.update(id, company);
+      const response = await companyService.update(id, {
+        ...company,
+        userId: user!.userId!,
+      });
+      await mutate();
       return response.data;
     } catch (err) {
       mutate(companies, false);

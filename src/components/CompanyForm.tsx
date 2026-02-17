@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import { CompanyFormData, Company } from "@/types/company";
+import { validateCompanyTaxId } from "@/app/utils/tax-id-validation";
 import {
   Dialog,
   DialogContent,
@@ -43,6 +44,10 @@ export const CompanyForm = ({
 
     if (!formData.name.trim()) {
       newErrors.name = "El nombre de la empresa es obligatorio";
+    }
+
+    if (formData.taxId && formData.taxId.trim() && !validateCompanyTaxId(formData.taxId)) {
+      newErrors.taxId = "CIF no válido. Formato: Letra + 7 dígitos + control (ej: B12345678)";
     }
 
     if (!formData.email.trim()) {

@@ -178,7 +178,7 @@ const CompaniesContent = () => {
     try {
       setIsLoading(true);
       if (editingCompany && editingCompany.id) {
-        updateCompany(editingCompany.id, data);
+        await updateCompany(editingCompany.id, data);
       } else {
         await createCompany(data);
       }

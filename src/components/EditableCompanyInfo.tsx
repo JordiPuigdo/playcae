@@ -45,6 +45,7 @@ import { useToast } from "@/hooks/use-Toast";
 import { useForm } from "react-hook-form";
 import { UserRole } from "@/types/user";
 import { useTranslation } from "@/hooks/useTranslation";
+import { validateCompanyTaxId } from "@/app/utils/tax-id-validation";
 
 interface EditableCompanyInfoProps {
   company: Company;
@@ -54,45 +55,7 @@ interface EditableCompanyInfoProps {
   userRole?: UserRole;
 }
 
-const validateSpanishTaxId = (value: string): boolean => {
-  const cleanValue = value.replace(/\s/g, "").toUpperCase();
-  const cifRegex = /^[ABCDEFGHJNPQRSUVW]\d{8}[0-9A-J]$/;
-  const nifRegex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/;
 
-  if (cifRegex.test(cleanValue)) {
-    const letter = cleanValue[0];
-    const numbers = cleanValue.substring(1, 9);
-    const controlChar = cleanValue[9];
-
-    let sum = 0;
-    for (let i = 0; i < numbers.length; i++) {
-      let digit = parseInt(numbers[i]);
-      if (i % 2 === 1) {
-        digit *= 2;
-        if (digit > 9) digit = Math.floor(digit / 10) + (digit % 10);
-      }
-      sum += digit;
-    }
-
-    const control = (10 - (sum % 10)) % 10;
-    const controlLetter = "JABCDEFGHI"[control];
-    const numericControlTypes = ["A", "B", "E", "H"];
-
-    const expectedControl = numericControlTypes.includes(letter)
-      ? control.toString()
-      : controlLetter;
-
-    return controlChar === expectedControl;
-  } else if (nifRegex.test(cleanValue)) {
-    const numbers = cleanValue.substring(0, 8);
-    const controlLetter = cleanValue[8];
-    const letters = "TRWAGMYFPDXBNJZSQVHLCKE";
-    const expectedLetter = letters[parseInt(numbers) % 23];
-    return controlLetter === expectedLetter;
-  }
-
-  return false;
-};
 
 
 export const EditableCompanyInfo = ({
@@ -116,7 +79,7 @@ export const EditableCompanyInfo = ({
 
   const companySchema = z.object({
     name: z.string().min(2, t("companies.validation.nameMin")),
-    taxId: z.string().refine(validateSpanishTaxId, {
+    taxId: z.string().refine(validateCompanyTaxId, {
       message: t("companies.validation.invalidTaxId"),
     }),
     contactPerson: z.string().min(2, t("companies.validation.contactMin")),
