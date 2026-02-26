@@ -32,7 +32,7 @@ import {
   CheckCircle,
   Send,
 } from "lucide-react";
-import { Company, CompanyFormData } from "@/types/company";
+import { Company, CompanyFormData, CompanyType } from "@/types/company";
 import {
   Form,
   FormControl,
@@ -45,7 +45,6 @@ import { useToast } from "@/hooks/use-Toast";
 import { useForm } from "react-hook-form";
 import { UserRole } from "@/types/user";
 import { useTranslation } from "@/hooks/useTranslation";
-import { validateCompanyTaxId } from "@/app/utils/tax-id-validation";
 
 interface EditableCompanyInfoProps {
   company: Company;
@@ -79,10 +78,12 @@ export const EditableCompanyInfo = ({
 
   const companySchema = z.object({
     name: z.string().min(2, t("companies.validation.nameMin")),
-    taxId: z.string().optional(),
-    contactPerson: z.string().optional(),
+    taxId: z.string(),
+    contactPerson: z.string(),
     email: z.string().email(t("companies.validation.invalidEmail")),
     phone: z.string().optional(),
+    type: z.nativeEnum(CompanyType).optional(),
+    hasInternalPreventionService: z.boolean().optional(),
   });
 
   const form = useForm<CompanyFormData>({
