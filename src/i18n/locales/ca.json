@@ -598,7 +598,24 @@
       "validating": "Validant document...",
       "success": "Document validat correctament",
       "error": "Error en validar el document",
-      "aiResult": "Resultat de la IA"
+      "aiResult": "Resultat de la IA",
+      "validateButton": "Validar",
+      "validateTitle": "Validar {name}",
+      "expiryDateLabel": "Data de caducitat",
+      "expiryDatePlaceholder": "Selecciona data de caducitat",
+      "validationResult": "Resultat de la validació:",
+      "rejectButton": "Rebutjar",
+      "commentOptional": "Comentari (opcional)",
+      "rejectionReason": "Motiu del rebuig",
+      "commentPlaceholder": "Afegir comentaris sobre la validació...",
+      "rejectionPlaceholder": "Especificar per què es rebutja el document...",
+      "cancel": "Cancel·lar",
+      "processing": "Processant...",
+      "validateDocument": "Validar document",
+      "rejectDocument": "Rebutjar document",
+      "modifyButton": "Modificar",
+      "modifyTitle": "Modificar validació de {name}",
+      "modifyDocument": "Modificar document"
     }
   },
   "accessControl": {

@@ -598,7 +598,24 @@
       "validating": "Validando documento...",
       "success": "Documento validado correctamente",
       "error": "Error al validar el documento",
-      "aiResult": "Resultado de la IA"
+      "aiResult": "Resultado de la IA",
+      "validateButton": "Validar",
+      "validateTitle": "Validar {name}",
+      "expiryDateLabel": "Fecha de caducidad",
+      "expiryDatePlaceholder": "Selecciona fecha de caducidad",
+      "validationResult": "Resultado de la validación:",
+      "rejectButton": "Rechazar",
+      "commentOptional": "Comentario (opcional)",
+      "rejectionReason": "Motivo del rechazo",
+      "commentPlaceholder": "Agregar comentarios sobre la validación...",
+      "rejectionPlaceholder": "Especificar por qué se rechaza el documento...",
+      "cancel": "Cancelar",
+      "processing": "Procesando...",
+      "validateDocument": "Validar documento",
+      "rejectDocument": "Rechazar documento",
+      "modifyButton": "Modificar",
+      "modifyTitle": "Modificar validación de {name}",
+      "modifyDocument": "Modificar documento"
     }
   },
   "accessControl": {

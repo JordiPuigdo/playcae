@@ -19,6 +19,7 @@ interface UseDocumentValidationReturn {
   expiryDate: Date | null;
   comment: string;
   isValidStatusForValidation: boolean;
+  isModifying: boolean;
   canSubmit: boolean;
   openDialog: () => void;
   closeDialog: () => void;
@@ -36,6 +37,11 @@ const VALID_STATUSES_FOR_VALIDATION: EntityStatus[] = [
   EntityStatus.ExpiredByAI,
 ];
 
+const ALREADY_VALIDATED_STATUSES: EntityStatus[] = [
+  EntityStatus.Approved,
+  EntityStatus.ValidatedByAI,
+];
+
 export const useDocumentValidation = ({
   document,
   onValidate,
@@ -47,9 +53,10 @@ export const useDocumentValidation = ({
   const [expiryDate, setExpiryDate] = useState<Date | null>(null);
   const [comment, setComment] = useState("");
 
-  const isValidStatusForValidation = VALID_STATUSES_FOR_VALIDATION.includes(
-    document.status
-  );
+  const isModifying = ALREADY_VALIDATED_STATUSES.includes(document.status);
+
+  const isValidStatusForValidation =
+    VALID_STATUSES_FOR_VALIDATION.includes(document.status) || isModifying;
 
   const canSubmit = isValidating !== null;
 
@@ -61,8 +68,11 @@ export const useDocumentValidation = ({
 
   const openDialog = useCallback(() => {
     if (!isValidStatusForValidation) return;
+    if (document.expirationDate) {
+      setExpiryDate(dayjs(document.expirationDate).toDate());
+    }
     setIsOpen(true);
-  }, [isValidStatusForValidation]);
+  }, [isValidStatusForValidation, document.expirationDate]);
 
   const closeDialog = useCallback(() => {
     setIsOpen(false);
@@ -112,6 +122,7 @@ export const useDocumentValidation = ({
     expiryDate,
     comment,
     isValidStatusForValidation,
+    isModifying,
     canSubmit,
     openDialog,
     closeDialog,

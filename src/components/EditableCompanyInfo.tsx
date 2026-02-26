@@ -79,10 +79,8 @@ export const EditableCompanyInfo = ({
 
   const companySchema = z.object({
     name: z.string().min(2, t("companies.validation.nameMin")),
-    taxId: z.string().refine(validateCompanyTaxId, {
-      message: t("companies.validation.invalidTaxId"),
-    }),
-    contactPerson: z.string().min(2, t("companies.validation.contactMin")),
+    taxId: z.string().optional(),
+    contactPerson: z.string().optional(),
     email: z.string().email(t("companies.validation.invalidEmail")),
     phone: z.string().optional(),
   });

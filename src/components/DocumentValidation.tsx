@@ -12,6 +12,7 @@ import { Document } from "@/types/document";
 import { Label } from "./ui/Label";
 import { DatePicker } from "./ui/DatePicker";
 import { useDocumentValidation } from "@/hooks/useDocumentValidation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface DocumentValidationProps {
   documentName: string;
@@ -32,6 +33,8 @@ export const DocumentValidation = ({
   document,
   onSuccess,
 }: DocumentValidationProps) => {
+  const { t } = useTranslation();
+
   const {
     isOpen,
     isValidating,
@@ -39,6 +42,7 @@ export const DocumentValidation = ({
     expiryDate,
     comment,
     isValidStatusForValidation,
+    isModifying,
     canSubmit,
     openDialog,
     closeDialog,
@@ -76,14 +80,18 @@ export const DocumentValidation = ({
           disabled={!isValidStatusForValidation}
         >
           <CheckCircle className="h-4 w-4 text-brand-primary" />
-          Validar
+          {isModifying
+            ? t("documents.validation.modifyButton")
+            : t("documents.validation.validateButton")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-md bg-white border border-playBlueLight/30">
         <DialogHeader>
           <DialogTitle className="text-brand-primary">
-            Validar {documentName}
+            {isModifying
+              ? t("documents.validation.modifyTitle", { name: documentName })
+              : t("documents.validation.validateTitle", { name: documentName })}
           </DialogTitle>
         </DialogHeader>
 
@@ -95,19 +103,19 @@ export const DocumentValidation = ({
                 className="flex items-center gap-2 text-brand-primary"
               >
                 <Calendar className="h-4 w-4 text-brand-primary" />
-                Fecha de caducidad
+                {t("documents.validation.expiryDateLabel")}
               </Label>
               <DatePicker
                 id="expiryDate"
                 value={expiryDate}
                 onChange={setExpiryDate}
-                placeholder="Selecciona fecha de caducidad"
+                placeholder={t("documents.validation.expiryDatePlaceholder")}
                 className="border-playBlueLight focus-visible:ring-brand-primary"
               />
             </div>
 
             <div className="text-sm font-medium text-brand-primary">
-              Resultado de la validación:
+              {t("documents.validation.validationResult")}
             </div>
 
             <div className="flex space-x-2">
@@ -122,7 +130,7 @@ export const DocumentValidation = ({
                 onClick={() => setIsValidating(true)}
               >
                 <CheckCircle className="h-4 w-4" />
-                Validar
+                {t("documents.validation.validateButton")}
               </Button>
 
               <Button
@@ -136,7 +144,7 @@ export const DocumentValidation = ({
                 onClick={() => setIsValidating(false)}
               >
                 <XCircle className="h-4 w-4" />
-                Rechazar
+                {t("documents.validation.rejectButton")}
               </Button>
             </div>
           </div>
@@ -144,15 +152,15 @@ export const DocumentValidation = ({
           {isValidating !== null && (
             <div className="space-y-2">
               <Label className="text-sm font-medium text-brand-primary">
-                {isValidating ? "Comentario (opcional)" : "Motivo del rechazo"}
+                {isValidating ? t("documents.validation.commentOptional") : t("documents.validation.rejectionReason")}
               </Label>
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 placeholder={
                   isValidating
-                    ? "Agregar comentarios sobre la validación..."
-                    : "Especificar por qué se rechaza el documento..."
+                    ? t("documents.validation.commentPlaceholder")
+                    : t("documents.validation.rejectionPlaceholder")
                 }
                 required={!isValidating}
                 className="border-playBlueLight focus-visible:ring-brand-primary"
@@ -167,7 +175,7 @@ export const DocumentValidation = ({
               onClick={closeDialog}
               className="border-playBlueLight text-brand-primary hover:bg-playGrey"
             >
-              Cancelar
+              {t("documents.validation.cancel")}
             </Button>
 
             <Button
@@ -182,12 +190,14 @@ export const DocumentValidation = ({
               {isLoading ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Procesando...
+                  {t("documents.validation.processing")}
                 </>
               ) : isValidating ? (
-                "Validar documento"
+                isModifying
+                  ? t("documents.validation.modifyDocument")
+                  : t("documents.validation.validateDocument")
               ) : (
-                "Rechazar documento"
+                t("documents.validation.rejectDocument")
               )}
             </Button>
           </div>
