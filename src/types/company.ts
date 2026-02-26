@@ -23,6 +23,8 @@ export interface CompanySimple extends BaseEntity {
   // Contadores (opcionales, para estadísticas)
   workerCount?: number;
   documentCount?: number;
+  totalWorkers?: number;
+  approvedWorkers?: number;
 }
 
 // Versión completa (con documentos y subcontratas)

@@ -24,7 +24,7 @@ import { useRouter } from "next/navigation";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { Badge } from "./ui/Badge";
-import { WorkerStatusBadge } from "./WorkerStatusBadge";
+import { WorkerCountBadge } from "./WorkerCountBadge";
 import { useTranslation } from "@/hooks/useTranslation";
 
 type SortField =
@@ -242,8 +242,8 @@ export const CompanyTable = ({
       <TableCell className="text-center">
         <StatusBadge status={company.status} />
       </TableCell>
-      <TableCell className="text-center bg-playBlueLight/20 min-w-[140px]">
-        <WorkerStatusBadge status={company.workerStatus} />
+      <TableCell className="text-center min-w-[140px]">
+        <WorkerCountBadge approvedWorkers={company.approvedWorkers} totalWorkers={company.totalWorkers} />
       </TableCell>
       <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
         {company.active ? (
@@ -311,7 +311,7 @@ export const CompanyTable = ({
                 </SortableHeader>
                 <SortableHeader
                   field="workerStatus"
-                  className="bg-playBlueLight/20 min-w-[140px]"
+                  className="min-w-[140px]"
                 >
                   {t("dashboard.workers")}
                 </SortableHeader>
