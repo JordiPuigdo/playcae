@@ -87,6 +87,7 @@ export const EditableCompanyInfo = ({
 
   const canEdit = true;
   const isAdmin = userRole === UserRole.Admin || userRole === UserRole.SuperAdmin;
+  const canEditCompanySettings = isAdmin || userRole === UserRole.Company;
   const isActive = company.active !== false; // Por defecto activo si no está definido
 
   const companySchema = z.object({
@@ -445,7 +446,7 @@ export const EditableCompanyInfo = ({
                   </div>
 
                   {/* TIPO DE EMPRESA */}
-                  {isAdmin && onUpdateType && (
+                  {canEditCompanySettings && onUpdateType && (
                     <div className="space-y-2">
                       <Label className="flex items-center gap-2 text-sm font-medium text-brand.accent">
                         <Briefcase className="h-4 w-4" />
@@ -481,7 +482,7 @@ export const EditableCompanyInfo = ({
                   )}
 
                   {/* PREVENCIÓN INTERNA */}
-                  {isAdmin && onToggleInternalPrevention && (
+                  {canEditCompanySettings && onToggleInternalPrevention && (
                     <div className="space-y-2">
                       <Label className="flex items-center gap-2 text-sm font-medium text-brand.accent">
                         <ShieldCheck className="h-4 w-4" />
@@ -800,7 +801,7 @@ export const EditableCompanyInfo = ({
               <Briefcase className="h-4 w-4" />
               {t("companies.form.companyType")}
             </div>
-            {isAdmin && onUpdateType ? (
+            {canEditCompanySettings && onUpdateType ? (
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -848,7 +849,7 @@ export const EditableCompanyInfo = ({
               <ShieldCheck className="h-4 w-4" />
               {t("companies.form.internalPrevention")}
             </div>
-            {isAdmin && onToggleInternalPrevention ? (
+            {canEditCompanySettings && onToggleInternalPrevention ? (
               <Button
                 size="sm"
                 variant="outline"
