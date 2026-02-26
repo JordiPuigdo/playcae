@@ -3,6 +3,7 @@ import {
   Company,
   CompanySimple,
   CompanyStatus,
+  CompanyType,
   CreateSubcontractorData,
   ParentCompanyInfo,
 } from "@/types/company";
@@ -17,6 +18,8 @@ export interface ICompanyService {
   updateStatus(id: string, status: CompanyStatus): Promise<ApiResponse<void>>;
   activate(companyId: string, userId: string): Promise<ApiResponse<void>>;
   deactivate(companyId: string, userId: string): Promise<ApiResponse<void>>;
+  updateType(id: string, type: CompanyType): Promise<ApiResponse<void>>;
+  toggleInternalPrevention(id: string, hasInternalPrevention: boolean): Promise<ApiResponse<void>>;
   getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
   // Subcontratas
   getSubcontractors(companyId: string): Promise<ApiResponse<CompanySimple[]>>;
@@ -131,6 +134,24 @@ export class CompanyService implements ICompanyService {
   async resendWelcomeEmail(companyId: string): Promise<ApiResponse<void>> {
     return this.httpClient.post<void>(
       `${this.baseUrl}/${companyId}/resend-welcome-email`,
+      null
+    );
+  }
+
+  /**
+   * Actualiza el tipo de empresa (Empresa / Autónomo)
+   */
+  async updateType(id: string, type: CompanyType): Promise<ApiResponse<void>> {
+    return this.httpClient.put(`${this.baseUrl}/${id}/type/${type}`, null);
+  }
+
+  /**
+   * Activa o desactiva el servicio de prevención interna.
+   * Reconcilia documentos automáticamente en el backend.
+   */
+  async toggleInternalPrevention(id: string, hasInternalPrevention: boolean): Promise<ApiResponse<void>> {
+    return this.httpClient.put(
+      `${this.baseUrl}/${id}/internal-prevention/${hasInternalPrevention}`,
       null
     );
   }

@@ -225,6 +225,30 @@ export const useCompanies = () => {
     }
   };
 
+  /**
+   * Actualiza el tipo de empresa (Empresa / Autónomo)
+   */
+  const updateCompanyType = async (id: string, type: CompanyType): Promise<void> => {
+    try {
+      await companyService.updateType(id, type);
+      await mutate();
+    } catch (err) {
+      throw handleError(err);
+    }
+  };
+
+  /**
+   * Activa o desactiva el servicio de prevención interna
+   */
+  const toggleInternalPrevention = async (id: string, hasInternalPrevention: boolean): Promise<void> => {
+    try {
+      await companyService.toggleInternalPrevention(id, hasInternalPrevention);
+      await mutate();
+    } catch (err) {
+      throw handleError(err);
+    }
+  };
+
   return {
     companies,
     loading: isValidating,
@@ -245,6 +269,9 @@ export const useCompanies = () => {
     createSubcontractor,
     // Correo de bienvenida
     resendWelcomeEmail,
+    // Tipo y prevención interna
+    updateCompanyType,
+    toggleInternalPrevention,
   };
 };
 

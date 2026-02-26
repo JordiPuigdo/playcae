@@ -478,7 +478,12 @@
       "contact": "Contacto",
       "phone": "Teléfono",
       "yes": "Sí",
-      "no": "No"
+      "no": "No",
+      "companyType": "Tipo de empresa",
+      "company": "Empresa",
+      "selfEmployed": "Autónomo",
+      "internalPrevention": "Prevención interna",
+      "internalPreventionDesc": "Servicio de prevención ajeno"
     },
     "actions": {
       "edit": "Editar",
@@ -494,7 +499,14 @@
       "activateTitle": "Activar Empresa",
       "deactivateTitle": "Desactivar Empresa",
       "activateConfirm": "¿Deseas activar la empresa \"{name}\"? La empresa podrá volver a acceder al sistema.",
-      "deactivateConfirm": "¿Estás seguro de que deseas desactivar la empresa \"{name}\"? La empresa y sus trabajadores no podrán acceder al sistema."
+      "deactivateConfirm": "¿Estás seguro de que deseas desactivar la empresa \"{name}\"? La empresa y sus trabajadores no podrán acceder al sistema.",
+      "changeTypeTitle": "Cambiar tipo de empresa",
+      "changeTypeToCompany": "¿Deseas cambiar \"{name}\" a tipo Empresa? Esto puede afectar a la documentación requerida.",
+      "changeTypeToSelfEmployed": "¿Deseas cambiar \"{name}\" a tipo Autónomo? Esto puede afectar a la documentación requerida.",
+      "enablePreventionTitle": "Activar prevención interna",
+      "disablePreventionTitle": "Desactivar prevención interna",
+      "enablePreventionConfirm": "¿Deseas activar el servicio de prevención interna para \"{name}\"? Se actualizará la documentación requerida automáticamente.",
+      "disablePreventionConfirm": "¿Deseas desactivar el servicio de prevención interna para \"{name}\"? Se actualizará la documentación requerida automáticamente."
     },
     "toast": {
       "activated": "Empresa activada",
@@ -507,7 +519,16 @@
       "updateError": "No se pudo guardar la información.",
       "emailSent": "Correo enviado",
       "emailSentDesc": "El correo de bienvenida ha sido reenviado correctamente.",
-      "emailError": "No se pudo reenviar el correo de bienvenida."
+      "emailError": "No se pudo reenviar el correo de bienvenida.",
+      "typeUpdated": "Tipo actualizado",
+      "typeUpdatedCompany": "La empresa se ha configurado como Empresa.",
+      "typeUpdatedSelfEmployed": "La empresa se ha configurado como Autónomo.",
+      "typeError": "No se pudo cambiar el tipo de empresa.",
+      "preventionEnabled": "Prevención interna activada",
+      "preventionEnabledDesc": "Se ha activado el servicio de prevención interna. La documentación se ha actualizado.",
+      "preventionDisabled": "Prevención interna desactivada",
+      "preventionDisabledDesc": "Se ha desactivado el servicio de prevención interna. La documentación se ha actualizado.",
+      "preventionError": "No se pudo cambiar el servicio de prevención interna."
     },
     "validation": {
       "nameMin": "El nombre debe tener al menos 2 caracteres",

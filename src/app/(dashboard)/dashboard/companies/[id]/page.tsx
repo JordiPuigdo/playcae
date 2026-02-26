@@ -24,7 +24,7 @@ import { useCompanies } from "@/hooks/useCompanies";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Company, CompanyFormData, CompanySimple } from "@/types/company";
+import { Company, CompanyFormData, CompanySimple, CompanyType } from "@/types/company";
 import {
   DocumentFormData,
   EntityStatus,
@@ -47,6 +47,8 @@ const CompanyDetailPage = () => {
     createSubcontractor,
     toggleCompanyActive,
     resendWelcomeEmail,
+    updateCompanyType,
+    toggleInternalPrevention,
   } = useCompanies();
   const {
     createWorker,
@@ -137,6 +139,32 @@ const CompanyDetailPage = () => {
       await fetchCompany(id);
     } catch (error) {
       // El error ya se maneja en EditableCompanyInfo con toast
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleUpdateType = async (companyId: string, type: CompanyType) => {
+    setIsLoading(true);
+    try {
+      await updateCompanyType(companyId, type);
+      await fetchCompany(id);
+      await refreshDocuments();
+    } catch (error) {
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleToggleInternalPrevention = async (companyId: string, hasInternalPrevention: boolean) => {
+    setIsLoading(true);
+    try {
+      await toggleInternalPrevention(companyId, hasInternalPrevention);
+      await fetchCompany(id);
+      await refreshDocuments();
+    } catch (error) {
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -249,6 +277,8 @@ const CompanyDetailPage = () => {
             onUpdate={handleUpdateCompany}
             onToggleActive={handleToggleActive}
             onResendWelcomeEmail={resendWelcomeEmail}
+            onUpdateType={handleUpdateType}
+            onToggleInternalPrevention={handleToggleInternalPrevention}
             userRole={user?.role!}
           />
         </div>

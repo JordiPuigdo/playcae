@@ -478,7 +478,12 @@
       "contact": "Contacte",
       "phone": "Telèfon",
       "yes": "Sí",
-      "no": "No"
+      "no": "No",
+      "companyType": "Tipus d'empresa",
+      "company": "Empresa",
+      "selfEmployed": "Autònom",
+      "internalPrevention": "Prevenció interna",
+      "internalPreventionDesc": "Servei de prevenció aliè"
     },
     "actions": {
       "edit": "Editar",
@@ -494,7 +499,14 @@
       "activateTitle": "Activar Empresa",
       "deactivateTitle": "Desactivar Empresa",
       "activateConfirm": "Vols activar l'empresa \"{name}\"? L'empresa podrà tornar a accedir al sistema.",
-      "deactivateConfirm": "Estàs segur que vols desactivar l'empresa \"{name}\"? L'empresa i els seus treballadors no podran accedir al sistema."
+      "deactivateConfirm": "Estàs segur que vols desactivar l'empresa \"{name}\"? L'empresa i els seus treballadors no podran accedir al sistema.",
+      "changeTypeTitle": "Canviar tipus d'empresa",
+      "changeTypeToCompany": "Vols canviar \"{name}\" a tipus Empresa? Això pot afectar la documentació requerida.",
+      "changeTypeToSelfEmployed": "Vols canviar \"{name}\" a tipus Autònom? Això pot afectar la documentació requerida.",
+      "enablePreventionTitle": "Activar prevenció interna",
+      "disablePreventionTitle": "Desactivar prevenció interna",
+      "enablePreventionConfirm": "Vols activar el servei de prevenció interna per a \"{name}\"? S'actualitzarà la documentació requerida automàticament.",
+      "disablePreventionConfirm": "Vols desactivar el servei de prevenció interna per a \"{name}\"? S'actualitzarà la documentació requerida automàticament."
     },
     "toast": {
       "activated": "Empresa activada",
@@ -507,7 +519,16 @@
       "updateError": "No s'ha pogut guardar la informació.",
       "emailSent": "Correu enviat",
       "emailSentDesc": "El correu de benvinguda s'ha reenviat correctament.",
-      "emailError": "No s'ha pogut reenviar el correu de benvinguda."
+      "emailError": "No s'ha pogut reenviar el correu de benvinguda.",
+      "typeUpdated": "Tipus actualitzat",
+      "typeUpdatedCompany": "L'empresa s'ha configurat com a Empresa.",
+      "typeUpdatedSelfEmployed": "L'empresa s'ha configurat com a Autònom.",
+      "typeError": "No s'ha pogut canviar el tipus d'empresa.",
+      "preventionEnabled": "Prevenció interna activada",
+      "preventionEnabledDesc": "S'ha activat el servei de prevenció interna. La documentació s'ha actualitzat.",
+      "preventionDisabled": "Prevenció interna desactivada",
+      "preventionDisabledDesc": "S'ha desactivat el servei de prevenció interna. La documentació s'ha actualitzat.",
+      "preventionError": "No s'ha pogut canviar el servei de prevenció interna."
     },
     "validation": {
       "nameMin": "El nom ha de tenir almenys 2 caràcters",

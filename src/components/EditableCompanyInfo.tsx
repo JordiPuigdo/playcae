@@ -31,6 +31,10 @@ import {
   AlertTriangle,
   CheckCircle,
   Send,
+  Building,
+  Briefcase,
+  ShieldCheck,
+  ShieldOff,
 } from "lucide-react";
 import { Company, CompanyFormData, CompanyType } from "@/types/company";
 import {
@@ -51,6 +55,8 @@ interface EditableCompanyInfoProps {
   onUpdate: (id: string, data: CompanyFormData) => void;
   onToggleActive?: (id: string, activate: boolean) => Promise<void>;
   onResendWelcomeEmail?: (id: string) => Promise<void>;
+  onUpdateType?: (id: string, type: CompanyType) => Promise<void>;
+  onToggleInternalPrevention?: (id: string, hasInternalPrevention: boolean) => Promise<void>;
   userRole?: UserRole;
 }
 
@@ -62,6 +68,8 @@ export const EditableCompanyInfo = ({
   onUpdate,
   onToggleActive,
   onResendWelcomeEmail,
+  onUpdateType,
+  onToggleInternalPrevention,
   userRole = UserRole.Admin,
 }: EditableCompanyInfoProps) => {
   const { t } = useTranslation();
@@ -70,6 +78,11 @@ export const EditableCompanyInfo = ({
   const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
   const [isTogglingActive, setIsTogglingActive] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
+  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
+  const [pendingType, setPendingType] = useState<CompanyType | null>(null);
+  const [isChangingType, setIsChangingType] = useState(false);
+  const [isPreventionModalOpen, setIsPreventionModalOpen] = useState(false);
+  const [isChangingPrevention, setIsChangingPrevention] = useState(false);
   const { toast } = useToast();
 
   const canEdit = true;
@@ -149,6 +162,68 @@ export const EditableCompanyInfo = ({
       });
     } finally {
       setIsSendingEmail(false);
+    }
+  };
+
+  const handleChangeType = (newType: CompanyType) => {
+    if (newType === company.type) return;
+    setPendingType(newType);
+    setIsTypeModalOpen(true);
+  };
+
+  const handleConfirmChangeType = async () => {
+    if (!onUpdateType || pendingType === null) return;
+
+    setIsChangingType(true);
+    try {
+      await onUpdateType(company.id!, pendingType);
+      setIsTypeModalOpen(false);
+      toast({
+        title: t("companies.toast.typeUpdated"),
+        description: pendingType === CompanyType.Company
+          ? t("companies.toast.typeUpdatedCompany")
+          : t("companies.toast.typeUpdatedSelfEmployed"),
+      });
+    } catch (error) {
+      toast({
+        title: t("common.error") || "Error",
+        description: t("companies.toast.typeError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsChangingType(false);
+      setPendingType(null);
+    }
+  };
+
+  const handleTogglePrevention = () => {
+    setIsPreventionModalOpen(true);
+  };
+
+  const handleConfirmTogglePrevention = async () => {
+    if (!onToggleInternalPrevention) return;
+
+    const newValue = !company.hasInternalPreventionService;
+    setIsChangingPrevention(true);
+    try {
+      await onToggleInternalPrevention(company.id!, newValue);
+      setIsPreventionModalOpen(false);
+      toast({
+        title: newValue
+          ? t("companies.toast.preventionEnabled")
+          : t("companies.toast.preventionDisabled"),
+        description: newValue
+          ? t("companies.toast.preventionEnabledDesc")
+          : t("companies.toast.preventionDisabledDesc"),
+      });
+    } catch (error) {
+      toast({
+        title: t("common.error") || "Error",
+        description: t("companies.toast.preventionError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsChangingPrevention(false);
     }
   };
 
@@ -368,6 +443,76 @@ export const EditableCompanyInfo = ({
                       {t("companies.form.statusAutoUpdate")}
                     </p>
                   </div>
+
+                  {/* TIPO DE EMPRESA */}
+                  {isAdmin && onUpdateType && (
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium text-brand.accent">
+                        <Briefcase className="h-4 w-4" />
+                        {t("companies.form.companyType")}
+                      </Label>
+                      <div className="flex gap-2">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={company.type === CompanyType.Company ? "default" : "outline"}
+                          onClick={() => handleChangeType(CompanyType.Company)}
+                          className={company.type === CompanyType.Company
+                            ? "bg-brand-secondary text-white"
+                            : "border-brand.accent text-brand-primary"}
+                        >
+                          <Building className="h-4 w-4 mr-1" />
+                          {t("companies.form.company")}
+                        </Button>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant={company.type === CompanyType.SelfEmployed ? "default" : "outline"}
+                          onClick={() => handleChangeType(CompanyType.SelfEmployed)}
+                          className={company.type === CompanyType.SelfEmployed
+                            ? "bg-brand-secondary text-white"
+                            : "border-brand.accent text-brand-primary"}
+                        >
+                          <Briefcase className="h-4 w-4 mr-1" />
+                          {t("companies.form.selfEmployed")}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* PREVENCIÓN INTERNA */}
+                  {isAdmin && onToggleInternalPrevention && (
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-sm font-medium text-brand.accent">
+                        <ShieldCheck className="h-4 w-4" />
+                        {t("companies.form.internalPrevention")}
+                      </Label>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={handleTogglePrevention}
+                        className={company.hasInternalPreventionService
+                          ? "border-green-300 text-green-600 hover:bg-green-50"
+                          : "border-red-300 text-red-600 hover:bg-red-50"}
+                      >
+                        {company.hasInternalPreventionService ? (
+                          <>
+                            <ShieldCheck className="h-4 w-4 mr-1" />
+                            {t("companies.form.yes")}
+                          </>
+                        ) : (
+                          <>
+                            <ShieldOff className="h-4 w-4 mr-1" />
+                            {t("companies.form.no")}
+                          </>
+                        )}
+                      </Button>
+                      <p className="text-xs text-brand.accent">
+                        {t("companies.form.internalPreventionDesc")}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </form>
             </Form>
@@ -422,6 +567,82 @@ export const EditableCompanyInfo = ({
                   : isActive
                   ? t("companies.actions.deactivate")
                   : t("companies.actions.activate")}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Modal de confirmación para cambiar tipo de empresa */}
+        <AlertDialog open={isTypeModalOpen} onOpenChange={setIsTypeModalOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                {t("companies.toggle.changeTypeTitle")}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-left">
+                {pendingType === CompanyType.SelfEmployed
+                  ? t("companies.toggle.changeTypeToSelfEmployed", { name: company.name })
+                  : t("companies.toggle.changeTypeToCompany", { name: company.name })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isChangingType}>
+                {t("common.cancel")}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmChangeType}
+                disabled={isChangingType}
+                className="bg-brand-secondary text-white hover:bg-brand-secondary/90"
+              >
+                {isChangingType ? (
+                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                ) : (
+                  <CheckCircle className="h-4 w-4 mr-1" />
+                )}
+                {isChangingType ? t("common.loading") || "..." : t("common.confirm") || "Confirmar"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Modal de confirmación para prevención interna */}
+        <AlertDialog open={isPreventionModalOpen} onOpenChange={setIsPreventionModalOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-amber-500" />
+                {company.hasInternalPreventionService
+                  ? t("companies.toggle.disablePreventionTitle")
+                  : t("companies.toggle.enablePreventionTitle")}
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-left">
+                {company.hasInternalPreventionService
+                  ? t("companies.toggle.disablePreventionConfirm", { name: company.name })
+                  : t("companies.toggle.enablePreventionConfirm", { name: company.name })}
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel disabled={isChangingPrevention}>
+                {t("common.cancel")}
+              </AlertDialogCancel>
+              <AlertDialogAction
+                onClick={handleConfirmTogglePrevention}
+                disabled={isChangingPrevention}
+                className={company.hasInternalPreventionService
+                  ? "bg-red-600 text-white hover:bg-red-700"
+                  : "bg-green-600 text-white hover:bg-green-700"}
+              >
+                {isChangingPrevention ? (
+                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+                ) : company.hasInternalPreventionService ? (
+                  <ShieldOff className="h-4 w-4 mr-1" />
+                ) : (
+                  <ShieldCheck className="h-4 w-4 mr-1" />
+                )}
+                {isChangingPrevention
+                  ? t("common.loading") || "..."
+                  : t("common.confirm") || "Confirmar"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -572,6 +793,100 @@ export const EditableCompanyInfo = ({
               )}
             </div>
           </div>
+
+          {/* Tipo de empresa */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
+              <Briefcase className="h-4 w-4" />
+              {t("companies.form.companyType")}
+            </div>
+            {isAdmin && onUpdateType ? (
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  variant={company.type === CompanyType.Company ? "default" : "outline"}
+                  onClick={() => handleChangeType(CompanyType.Company)}
+                  className={company.type === CompanyType.Company
+                    ? "bg-brand-secondary text-white"
+                    : "border-brand.accent text-brand-primary"}
+                >
+                  <Building className="h-4 w-4 mr-1" />
+                  {t("companies.form.company")}
+                </Button>
+                <Button
+                  size="sm"
+                  variant={company.type === CompanyType.SelfEmployed ? "default" : "outline"}
+                  onClick={() => handleChangeType(CompanyType.SelfEmployed)}
+                  className={company.type === CompanyType.SelfEmployed
+                    ? "bg-brand-secondary text-white"
+                    : "border-brand.accent text-brand-primary"}
+                >
+                  <Briefcase className="h-4 w-4 mr-1" />
+                  {t("companies.form.selfEmployed")}
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 text-sm font-medium text-brand-primary">
+                {company.type === CompanyType.SelfEmployed ? (
+                  <>
+                    <Briefcase className="h-4 w-4" />
+                    {t("companies.form.selfEmployed")}
+                  </>
+                ) : (
+                  <>
+                    <Building className="h-4 w-4" />
+                    {t("companies.form.company")}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Prevención interna */}
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
+              <ShieldCheck className="h-4 w-4" />
+              {t("companies.form.internalPrevention")}
+            </div>
+            {isAdmin && onToggleInternalPrevention ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={handleTogglePrevention}
+                className={company.hasInternalPreventionService
+                  ? "border-green-300 text-green-600 hover:bg-green-50"
+                  : "border-red-300 text-red-600 hover:bg-red-50"}
+              >
+                {company.hasInternalPreventionService ? (
+                  <>
+                    <ShieldCheck className="h-4 w-4 mr-1" />
+                    {t("companies.form.yes")}
+                  </>
+                ) : (
+                  <>
+                    <ShieldOff className="h-4 w-4 mr-1" />
+                    {t("companies.form.no")}
+                  </>
+                )}
+              </Button>
+            ) : (
+              <div className={`flex items-center gap-2 text-sm font-medium ${
+                company.hasInternalPreventionService ? "text-green-600" : "text-red-600"
+              }`}>
+                {company.hasInternalPreventionService ? (
+                  <>
+                    <ShieldCheck className="h-4 w-4" />
+                    {t("companies.form.yes")}
+                  </>
+                ) : (
+                  <>
+                    <ShieldOff className="h-4 w-4" />
+                    {t("companies.form.no")}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </CardContent>
 
@@ -620,6 +935,82 @@ export const EditableCompanyInfo = ({
                 : isActive
                 ? t("companies.actions.deactivate")
                 : t("companies.actions.activate")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Modal de confirmación para cambiar tipo de empresa */}
+      <AlertDialog open={isTypeModalOpen} onOpenChange={setIsTypeModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              {t("companies.toggle.changeTypeTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left">
+              {pendingType === CompanyType.SelfEmployed
+                ? t("companies.toggle.changeTypeToSelfEmployed", { name: company.name })
+                : t("companies.toggle.changeTypeToCompany", { name: company.name })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isChangingType}>
+              {t("common.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmChangeType}
+              disabled={isChangingType}
+              className="bg-brand-secondary text-white hover:bg-brand-secondary/90"
+            >
+              {isChangingType ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : (
+                <CheckCircle className="h-4 w-4 mr-1" />
+              )}
+              {isChangingType ? t("common.loading") || "..." : t("common.confirm") || "Confirmar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Modal de confirmación para prevención interna */}
+      <AlertDialog open={isPreventionModalOpen} onOpenChange={setIsPreventionModalOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              {company.hasInternalPreventionService
+                ? t("companies.toggle.disablePreventionTitle")
+                : t("companies.toggle.enablePreventionTitle")}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-left">
+              {company.hasInternalPreventionService
+                ? t("companies.toggle.disablePreventionConfirm", { name: company.name })
+                : t("companies.toggle.enablePreventionConfirm", { name: company.name })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isChangingPrevention}>
+              {t("common.cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmTogglePrevention}
+              disabled={isChangingPrevention}
+              className={company.hasInternalPreventionService
+                ? "bg-red-600 text-white hover:bg-red-700"
+                : "bg-green-600 text-white hover:bg-green-700"}
+            >
+              {isChangingPrevention ? (
+                <Loader2 className="h-4 w-4 mr-1 animate-spin" />
+              ) : company.hasInternalPreventionService ? (
+                <ShieldOff className="h-4 w-4 mr-1" />
+              ) : (
+                <ShieldCheck className="h-4 w-4 mr-1" />
+              )}
+              {isChangingPrevention
+                ? t("common.loading") || "..."
+                : t("common.confirm") || "Confirmar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
