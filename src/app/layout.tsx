@@ -44,6 +44,28 @@ export const metadata: Metadata = {
 };
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "PlayCAE",
+  url: "https://www.playcae.com",
+  logo: "https://www.playcae.com/assets/playcae.png",
+  description:
+    "Plataforma CAE con IA para gestion documental de contratas y subcontratas. Cumplimiento RD 171/2004.",
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: "+34-628-735-826",
+    contactType: "customer service",
+    availableLanguage: "Spanish",
+    areaServed: "ES",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "ES",
+    addressLocality: "Barcelona",
+  },
+  sameAs: [],
+};
 
 export default function RootLayout({
   children,
@@ -58,6 +80,9 @@ export default function RootLayout({
       />
 
       <body suppressHydrationWarning className="min-h-screen bg-gray-100">
+        <Script id="ld-organization" type="application/ld+json">
+          {JSON.stringify(organizationSchema)}
+        </Script>
         {children}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}

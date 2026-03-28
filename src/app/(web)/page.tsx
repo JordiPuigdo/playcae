@@ -77,30 +77,42 @@ export default function LandingPage() {
           description: "Prueba gratuita disponible",
         },
         featureList: [
-          "ValidaciÃ³n documental con IA",
-          "GestiÃ³n de contratistas y subcontratistas",
+          "Validacion documental con IA",
+          "Gestion de contratistas y subcontratistas",
           "Control de accesos integrado",
-          "Alertas de caducidad automÃ¡ticas",
+          "Alertas de caducidad automaticas",
           "Cumplimiento RD 171/2004",
           "API REST para integraciones",
         ],
       },
       {
-        "@type": "Organization",
-        name: "PlayCAE",
-        url: "https://www.playcae.com",
-        logo: "https://www.playcae.com/assets/playcae.png",
-        contactPoint: {
-          "@type": "ContactPoint",
-          telephone: "+34-628-735-826",
-          contactType: "customer service",
-          availableLanguage: "Spanish",
-        },
-        address: {
-          "@type": "PostalAddress",
-          addressCountry: "ES",
-          addressLocality: "Barcelona",
-        },
+        "@type": "FAQPage",
+        mainEntity: [
+          {
+            "@type": "Question",
+            name: "Que es una plataforma CAE?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Una plataforma CAE digitaliza la coordinacion de actividades empresariales y la documentacion PRL entre empresa titular, contratas y subcontratas para cumplir el RD 171/2004.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Cuanto tiempo se ahorra con PlayCAE?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "PlayCAE reduce hasta un 90% el tiempo dedicado a perseguir, validar y renovar documentacion de contratas gracias a procesos automaticos y alertas continuas.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Que documentos PRL puede gestionar PlayCAE?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "PlayCAE gestiona documentos PRL de empresas y trabajadores, incluyendo formacion, aptitud medica, seguros, evaluaciones de riesgo, EPIs y certificados de Seguridad Social.",
+            },
+          },
+        ],
       },
     ],
   };

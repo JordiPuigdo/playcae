@@ -227,6 +227,31 @@ export default function ControlAccesosPage() {
     ],
   };
 
+  const softwareApplicationLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PlayCAE - Control de Accesos",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description:
+      "Software para control de accesos en fabrica vinculado al estado documental PRL de cada trabajador.",
+    url: "https://www.playcae.com/servicios/control-accesos-fabrica",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      description: "Prueba gratuita disponible",
+    },
+    featureList: [
+      "Control de accesos vinculado a PRL",
+      "Verificacion en menos de 1 segundo",
+      "Bloqueo automatico por incumplimiento documental",
+      "Registro horario y trazabilidad",
+      "Alertas de seguridad 24/7",
+      "Integracion con tornos y lectores",
+    ],
+  };
+
   return (
     <main className="relative overflow-hidden">
       {/* Hero Section */}
@@ -575,6 +600,13 @@ export default function ControlAccesosPage() {
       </section>
 
       {/* JSON-LD */}
+      <Script
+        id="ld-software-application"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareApplicationLd),
+        }}
+      />
       <Script
         id="ld-service"
         type="application/ld+json"

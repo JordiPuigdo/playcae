@@ -207,6 +207,31 @@ export default function ServicioCAE() {
     ],
   };
 
+  const softwareApplicationLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PlayCAE - Software CAE con IA",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description:
+      "Software CAE con inteligencia artificial para validar documentacion PRL de contratas y subcontratas.",
+    url: "https://www.playcae.com/servicios/gestion-documentacion-cae",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      description: "Prueba gratuita 30 dias",
+    },
+    featureList: [
+      "Validacion documental automatica PRL",
+      "Solicitud automatica a contratas",
+      "Deteccion de documentos caducados",
+      "Alertas preventivas",
+      "Cumplimiento RD 171/2004",
+      "Trazabilidad para auditorias",
+    ],
+  };
+
   return (
     <main className="relative overflow-hidden">
       {/* Hero Section */}
@@ -492,6 +517,13 @@ export default function ServicioCAE() {
       </section>
 
       {/* JSON-LD */}
+      <Script
+        id="ld-software-application"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareApplicationLd),
+        }}
+      />
       <Script
         id="ld-service"
         type="application/ld+json"

@@ -174,6 +174,37 @@ export default function GestionTrabajadoresInternosPage() {
     },
   };
 
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: [
+      {
+        "@type": "Question",
+        name: "Que documentos internos puede gestionar PlayCAE?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "PlayCAE centraliza DNI/NIE, formacion PRL, reconocimientos medicos, contratos, altas de Seguridad Social y registros de jornada de trabajadores internos.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Como ayuda PlayCAE a RRHH con las caducidades?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "El sistema envia alertas automaticas antes de cada vencimiento para evitar documentos caducados y reducir riesgos en auditorias e inspecciones.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "Se puede integrar con sistemas de RRHH existentes?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Si. Puedes dar de alta trabajadores manualmente o importar datos desde tu sistema de RRHH y mantener la documentacion sincronizada.",
+        },
+      },
+    ],
+  };
+
   return (
     <main className="relative overflow-hidden">
       {/* Hero Section */}
@@ -470,6 +501,11 @@ export default function GestionTrabajadoresInternosPage() {
         id="ld-software-application"
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationLd) }}
+      />
+      <Script
+        id="ld-faq"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
     </main>
   );

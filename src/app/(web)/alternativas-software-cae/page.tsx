@@ -195,6 +195,31 @@ export default function AlternativasCAEPage() {
     ],
   };
 
+  const softwareApplicationLd = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "PlayCAE - Plataforma CAE",
+    applicationCategory: "BusinessApplication",
+    operatingSystem: "Web",
+    description:
+      "Plataforma CAE para gestion documental de contratas y comparativa frente a otras alternativas del mercado.",
+    url: "https://www.playcae.com/alternativas-software-cae",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "EUR",
+      description: "Migracion y prueba gratuita",
+    },
+    featureList: [
+      "Validacion documental con IA",
+      "Implementacion en menos de una semana",
+      "Tarifa plana sin costes ocultos",
+      "Soporte con expertos CAE",
+      "Control de accesos integrado",
+      "Migracion asistida",
+    ],
+  };
+
   return (
     <main className="relative overflow-hidden">
       {/* Hero */}
@@ -430,6 +455,13 @@ export default function AlternativasCAEPage() {
       </section>
 
       {/* JSON-LD */}
+      <Script
+        id="ld-software-application"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareApplicationLd),
+        }}
+      />
       <Script
         id="ld-breadcrumbs"
         type="application/ld+json"
