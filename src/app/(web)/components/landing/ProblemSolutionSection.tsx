@@ -67,9 +67,9 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">
+                  <h3 className="font-bold text-lg">
                     {t("landing.problemSolution.problem1Title")}
-                  </h5>
+                  </h3>
                   <p className="text-gray-600">
                     {t("landing.problemSolution.problem1Desc")}
                   </p>
@@ -94,9 +94,9 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">
+                  <h3 className="font-bold text-lg">
                     {t("landing.problemSolution.problem2Title")}
-                  </h5>
+                  </h3>
                   <p className="text-gray-600">
                     {t("landing.problemSolution.problem2Desc")}
                   </p>
@@ -121,7 +121,7 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">{t("landing.problemSolution.problem3Title")}</h5>
+                  <h3 className="font-bold text-lg">{t("landing.problemSolution.problem3Title")}</h3>
                   <p className="text-gray-600">
                     {t("landing.problemSolution.problem3Desc")}
                   </p>
@@ -146,9 +146,9 @@ export default function ProblemSolutionSection() {
                   </svg>
                 </div>
                 <div className="ml-4">
-                  <h5 className="font-bold text-lg">
+                  <h3 className="font-bold text-lg">
                     {t("landing.problemSolution.problem4Title")}
-                  </h5>
+                  </h3>
                   <p className="text-gray-600">
                     {t("landing.problemSolution.problem4Desc")}
                   </p>
@@ -189,9 +189,9 @@ export default function ProblemSolutionSection() {
                   />
                 </svg>
               </div>
-              <h4 className="text-2xl font-bold text-playBlueDark">
+              <h2 className="text-2xl font-bold text-playBlueDark">
                 {t("landing.problemSolution.solutionTitle")}
-              </h4>
+              </h2>
             </div>
             <div className="space-y-4 mb-8">
               <div className="flex">

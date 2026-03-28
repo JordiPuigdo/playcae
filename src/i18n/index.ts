@@ -30,7 +30,11 @@ export function interpolate(
   variables: Record<string, string | number>
 ): string {
   return text.replace(/{(\w+)}/g, (_, key) => {
-    return variables[key]?.toString() || `{${key}}`;
+    if (Object.prototype.hasOwnProperty.call(variables, key)) {
+      const value = variables[key];
+      return value == null ? `{${key}}` : String(value);
+    }
+    return `{${key}}`;
   });
 }
 

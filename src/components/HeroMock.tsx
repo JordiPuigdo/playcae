@@ -1,13 +1,7 @@
 "use client";
 
+import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
-
-const DOCS = [
-  { name: "Evaluación de riesgos", status: "Validado", color: "green" },
-  { name: "Formación PRL básica", status: "Pendiente", color: "yellow" },
-  { name: "Certificado SS", status: "Validado", color: "green" },
-  { name: "Contrato SPA", status: "Revisión", color: "red" },
-];
 
 const colorMap = {
   green: { dot: "bg-green-500", text: "text-green-600" },
@@ -16,6 +10,31 @@ const colorMap = {
 };
 
 const HeroMock = () => {
+  const { t } = useTranslation();
+
+  const docs = [
+    {
+      name: t("hero.mock.docs.riskAssessment.name"),
+      status: t("hero.mock.docs.riskAssessment.status"),
+      color: "green",
+    },
+    {
+      name: t("hero.mock.docs.basicTraining.name"),
+      status: t("hero.mock.docs.basicTraining.status"),
+      color: "yellow",
+    },
+    {
+      name: t("hero.mock.docs.socialSecurity.name"),
+      status: t("hero.mock.docs.socialSecurity.status"),
+      color: "green",
+    },
+    {
+      name: t("hero.mock.docs.spaContract.name"),
+      status: t("hero.mock.docs.spaContract.status"),
+      color: "red",
+    },
+  ] as const;
+
   return (
     <motion.div
       className="flex w-full justify-center lg:w-1/2"
@@ -46,16 +65,16 @@ const HeroMock = () => {
                 />
               </svg>
             </div>
-            <span className="font-semibold text-gray-800">PlayCae AI</span>
+            <span className="font-semibold text-gray-800">PlayCae</span>
           </div>
-          <div className="text-sm text-gray-500">Dashboard PRL</div>
+          <div className="text-sm text-gray-500">{t("hero.mock.dashboardTitle")}</div>
         </div>
 
         {/* Progress */}
         <div className="space-y-4">
           <div>
             <div className="mb-1 flex justify-between text-sm">
-              <span className="text-gray-600">Documentos validados</span>
+              <span className="text-gray-600">{t("hero.mock.validatedDocuments")}</span>
               <span className="font-medium">87%</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-gray-200">
@@ -68,7 +87,7 @@ const HeroMock = () => {
 
           {/* Docs */}
           <div className="space-y-3">
-            {DOCS.map((doc, i) => (
+            {docs.map((doc, i) => (
               <div
                 key={i}
                 className="flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3"
@@ -92,15 +111,16 @@ const HeroMock = () => {
             ))}
           </div>
 
-          <div className="w-full inline-flex items-center justify-center rounded-lg border border-blue-100 bg-blue-50 py-2 font-medium text-blue-600">
-            + Añadir más documentos
+          <div className="inline-flex w-full items-center justify-center rounded-lg border border-blue-100 bg-blue-50 py-2 font-medium text-blue-600">
+            + {t("hero.mock.addDocuments")}
           </div>
         </div>
 
         {/* Badge */}
         <div className="pointer-events-none absolute -right-4 -top-4 rotate-12 rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 p-2 text-white shadow-lg">
           <div className="flex items-center">
-            ✅ <span className="ml-1 font-bold">Cumplimiento 100%</span>
+            {"\u2705"}{" "}
+            <span className="ml-1 font-bold">{t("hero.mock.complianceBadge")}</span>
           </div>
         </div>
       </div>

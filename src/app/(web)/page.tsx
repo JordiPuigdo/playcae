@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-import Script from "next/script";
+﻿import type { Metadata } from "next";
 import ContactSection from "./components/landing/Contact";
 import DocumentationSupported from "./components/landing/DocumentationSupported";
 import Hero from "./components/landing/Hero";
@@ -8,122 +7,99 @@ import WhyUs from "./components/landing/WhyUs";
 import ComparisonSection from "./components/landing/ComparisonSection";
 
 export const metadata: Metadata = {
-  title: "Software CAE y Gestión Documental PRL con IA | PlayCAE",
+  title: {
+    default:
+      "Plataforma CAE | Gestión Documental de Contratas | PlayCAE",
+    absolute:
+      "Plataforma CAE | Gestión Documental de Contratas | PlayCAE",
+  },
   description:
-    "Plataforma CAE con validación documental PRL automatizada. Ahorra 15h/semana, evita sanciones y cumple RD 171/2004. Alternativa ágil para pymes.",
+    "Plataforma CAE para gestionar la documentación PRL de tus contratas. Valida documentos automáticamente, evita sanciones del RD 171/2004 y ahorra hasta un 90% del tiempo. Prueba gratis.",
   keywords: [
     "software CAE",
     "plataforma CAE",
-    "software coordinación actividades empresariales",
+    "coordinación de actividades empresariales",
     "gestión documental PRL",
-    "validación documentos PRL",
     "software PRL",
-    "coordinación actividades empresariales",
-    "CAE online",
-    "plataforma gestión CAE",
+    "gestión contratistas",
+    "validación documental automática",
+    "RD 171/2004",
+    "CAE con IA",
   ],
-  alternates: { canonical: "https://playcae.com" },
+  alternates: { canonical: "https://www.playcae.com" },
   openGraph: {
-    type: "website",
-    url: "https://playcae.com",
-    title: "Software CAE y Gestión Documental PRL | PlayCAE",
+    title: "Plataforma CAE para gestión documental de contratas | PlayCAE",
     description:
-      "La plataforma CAE con IA que automatiza la validación documental PRL. Control de accesos, alertas de caducidad y cumplimiento normativo.",
+      "¿Pasas horas persiguiendo documentos a tus contratas? PlayCAE lo automatiza. Valida documentación PRL, evita sanciones y controla accesos desde una sola plataforma.",
+    url: "https://www.playcae.com",
     siteName: "PlayCAE",
+    locale: "es_ES",
+    type: "website",
     images: [
       {
-        url: "https://playcae.com/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "PlayCAE - Software CAE y Gestión Documental PRL",
+        url: "https://www.playcae.com/assets/playcaeDashboard.png",
+        alt: "Dashboard de PlayCAE para gestión documental PRL",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Software CAE y Gestión Documental PRL | PlayCAE",
+    title: "Plataforma CAE | Gestión documental de contratas | PlayCAE",
     description:
-      "Plataforma CAE con validación documental PRL automatizada mediante IA. Ahorra tiempo y evita sanciones.",
+      "Automatiza la documentación PRL de tus subcontratas. Evita sanciones del RD 171/2004 sin perder horas en papeleo.",
+    images: ["https://www.playcae.com/assets/playcaeDashboard.png"],
   },
-  robots: { index: true, follow: true },
-};
-
-export default function LandingPage() {
-  const org = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "PlayCAE",
-    url: "https://www.playcae.com",
-    logo: "https://www.playcae.com/og-logo.png",
-    sameAs: [
-      "https://www.facebook.com/profile.php?id=61585276397164",
-      "https://www.instagram.com/playcae",
-      "https://www.linkedin.com/company/playcae",
-    ],
-    contactPoint: [
-      {
-        "@type": "ContactPoint",
-        contactType: "sales",
-        areaServed: "ES",
-        availableLanguage: ["es"],
-      },
-    ],
-  };
-
-  const webSite = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    url: "https://playcae.com",
-    name: "PlayCAE",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: "https://playcae.com/buscar?q={search_term_string}",
-      "query-input": "required name=search_term_string",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
     },
-  };
-
-  const faqs = {
+  },
+};
+export default function LandingPage() {
+  const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
+    "@graph": [
       {
-        "@type": "Question",
-        name: "¿Qué es un software CAE y para qué sirve?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Un software CAE (Coordinación de Actividades Empresariales) es una plataforma que automatiza la gestión documental PRL entre empresas y subcontratas. Permite validar documentación, controlar accesos y cumplir con el RD 171/2004.",
+        "@type": "SoftwareApplication",
+        name: "PlayCAE",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        description:
+          "Plataforma CAE para gestión documental PRL y coordinación de actividades empresariales. Validación automática de documentos con 99.2% de precisión.",
+        url: "https://www.playcae.com",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "EUR",
+          description: "Prueba gratuita disponible",
         },
+        featureList: [
+          "ValidaciÃ³n documental con IA",
+          "GestiÃ³n de contratistas y subcontratistas",
+          "Control de accesos integrado",
+          "Alertas de caducidad automÃ¡ticas",
+          "Cumplimiento RD 171/2004",
+          "API REST para integraciones",
+        ],
       },
       {
-        "@type": "Question",
-        name: "¿Qué es la CAE y por qué afecta a mi empresa?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "La Coordinación de Actividades Empresariales (CAE) obliga a las empresas a gestionar y validar la documentación PRL de contratas y trabajadores según el RD 171/2004. El incumplimiento puede suponer sanciones de hasta 500.000€.",
+        "@type": "Organization",
+        name: "PlayCAE",
+        url: "https://www.playcae.com",
+        logo: "https://www.playcae.com/assets/playcae.png",
+        contactPoint: {
+          "@type": "ContactPoint",
+          telephone: "+34-628-735-826",
+          contactType: "customer service",
+          availableLanguage: "Spanish",
         },
-      },
-      {
-        "@type": "Question",
-        name: "¿Cómo me ayuda PlayCAE con el control de accesos?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "PlayCAE registra en tiempo real quién está dentro de la fábrica y vincula el acceso al estado de la documentación PRL. Si un trabajador tiene documentos caducados, se bloquea automáticamente su acceso.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿En qué se diferencia PlayCAE de otras plataformas CAE?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "PlayCAE utiliza IA especializada para validar documentos PRL en segundos con 99.2% de precisión. Además ofrece implementación en días (no meses), precio transparente sin costes por contrata y soporte personalizado.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "¿Cuánto tiempo se tarda en implementar un software CAE?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Con PlayCAE puedes estar operativo en menos de una semana. La configuración inicial es sencilla y no requiere integraciones complejas. Otras plataformas pueden tardar meses en implementarse.",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "ES",
+          addressLocality: "Barcelona",
         },
       },
     ],
@@ -138,21 +114,11 @@ export default function LandingPage() {
       <WhyUs />
       <ContactSection />
 
-      <Script
-        id="ld-org"
+      <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(org) }}
-      />
-      <Script
-        id="ld-website"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(webSite) }}
-      />
-      <Script
-        id="ld-faq"
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqs) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
     </div>
   );
 }
+

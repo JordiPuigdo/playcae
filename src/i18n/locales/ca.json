@@ -87,7 +87,50 @@
     "allServices": "Veure tots els serveis",
     "whatIsCae": "Què és la CAE?",
     "caeAlternatives": "Alternatives CAE",
-    "blog": "Blog"
+    "blog": "Blog",
+    "productMenu": {
+      "modulesLabel": "Mòduls",
+      "featuresLabel": "Funcionalitats",
+      "footerQuestion": "Tens dubtes?",
+      "footerCta": "Parla amb nosaltres",
+      "modules": {
+        "platform": {
+          "title": "Plataforma CAE",
+          "subtitle": "Gestió documental de contractes i subcontractes"
+        },
+        "access": {
+          "title": "Control d'accessos",
+          "subtitle": "Qui entra i surt de les teves instal·lacions"
+        },
+        "workers": {
+          "title": "Treballadors interns",
+          "subtitle": "DNI, formacions i reconeixements mèdics",
+          "badge": "Nou"
+        }
+      },
+      "features": {
+        "validation": {
+          "title": "Validació documental automàtica",
+          "subtitle": "Revisió intel·ligent de PRL en segons"
+        },
+        "access": {
+          "title": "Control d'accessos integrat",
+          "subtitle": "Accessos vinculats a l'estat documental"
+        },
+        "compliance": {
+          "title": "Compliment i traçabilitat",
+          "subtitle": "Panell en temps real per a auditories"
+        }
+      }
+    },
+    "resourcesMenu": {
+      "label": "Recursos",
+      "whatIsCaeSubtitle": "Guia pràctica per entendre la Coordinació d'Activitats Empresarials",
+      "caeAlternativesSubtitle": "Compara plataformes CAE i troba la millor opció per a la teva empresa",
+      "blogSubtitle": "Articles, casos reals i novetats sobre PRL i CAE",
+      "footerQuestion": "Necessites orientació?",
+      "footerCta": "Parla amb un expert"
+    }
   },
   "hero": {
     "badge": "Programari CAE amb Intel·ligència Artificial",
@@ -101,6 +144,30 @@
       "aiAccuracy": "Precisió validació IA",
       "timeSaved": "Estalvi de temps en CAE",
       "sanctions": "Sancions per incompliment"
+    },
+    "mock": {
+      "dashboardTitle": "Dashboard PRL",
+      "validatedDocuments": "Documents validats",
+      "addDocuments": "Afegir més documents",
+      "complianceBadge": "Compliment 100%",
+      "docs": {
+        "riskAssessment": {
+          "name": "Avaluació de riscos",
+          "status": "Validat"
+        },
+        "basicTraining": {
+          "name": "Formació PRL bàsica",
+          "status": "Pendent"
+        },
+        "socialSecurity": {
+          "name": "Certificat SS",
+          "status": "Validat"
+        },
+        "spaContract": {
+          "name": "Contracte SPA",
+          "status": "Revisió"
+        }
+      }
     }
   },
   "landing": {
@@ -124,18 +191,18 @@
       "solution3Title": "Alertes preventives",
       "solution3Desc": "Notificacions automàtiques 30 dies abans de caducitats i informes de compliment en temps real",
       "resultTitle": "Resultat comprovat: 70% menys temps en gestió documental i reducció del 100% de sancions per PRL",
-      "cta": "Provar validació gratuïta",
+      "cta": "Prova gratuïta",
       "ctaSubtitle": "Sense targeta de crèdit - Resultats en minuts"
     },
     "whyUs": {
-      "title": "Programari CAE dissenyat per complir normativa PRL",
+      "title": "Programa CAE dissenyat per complir normativa PRL",
       "subtitle": "Plataforma de coordinació d'activitats empresarials amb tecnologia que garanteix el compliment del RD 171/2004",
       "feature1Title": "Base legal actualitzada automàticament",
       "feature1Desc": "Seguiment automàtic del BOE, DOGC i EUR-Lex per mantenir la teva gestió CAE sempre al dia",
       "feature1Tag": "RD 171/2004, LPRL 31/1995 i directives UE",
       "feature2Title": "Seguretat certificada ISO 27001",
       "feature2Desc": "Documents PRL encriptats amb AES-256 i allotjats en centres de dades de la UE",
-      "feature3Title": "Integració amb el teu programari actual",
+      "feature3Title": "Integració amb el teu programa actual",
       "feature3Desc": "API REST per connectar amb SAP, A3CE i altres sistemes de gestió empresarial",
       "feature4Title": "IA entrenada per experts PRL",
       "feature4Desc": "Algoritmes desenvolupats amb tècnics de prevenció i advocats laboralistes",
@@ -144,7 +211,7 @@
       "complianceSubtitle": "Plataforma de gestió documental PRL que compleix amb els estàndards de seguretat i normatives del sector:",
       "complianceItems": "ISO/IEC 27001:2022 - Gestió de seguretat de la informació|Reglament GDPR - Protecció de dades UE|LOPDGDD - Adaptació espanyola al RGPD|RD 171/2004 - Coordinació Activitats Empresarials",
       "integrationsTitle": "Integracions i certificacions",
-      "cta": "Sol·licitar demo del programari CAE",
+      "cta": "Sol·licitar demo del programa CAE",
       "ctaTag": "Compliment 100% verificable per a inspeccions de Treball"
     },
     "comparison": {
@@ -191,7 +258,7 @@
     },
     "documentation": {
       "title": "Validació documental PRL automatitzada en 3 passos",
-      "subtitle": "Transforma setmanes de gestió CAE manual en minuts amb el nostre programari de coordinació d'activitats empresarials",
+      "subtitle": "Transforma setmanes de gestió CAE manual en minuts amb el nostre programa de coordinació d'activitats empresarials",
       "docLoaded": "Document carregat",
       "analyzingAI": "Analitzant amb IA...",
       "step1Title": "Puja documents",
@@ -219,7 +286,7 @@
       "ctaTag": "Processament en temps real amb precisió del 99.2%"
     },
     "contact": {
-      "title": "Sol·licita una demo del programari CAE",
+      "title": "Sol·licita una demo del programa CAE",
       "subtitle": "Descobreix com automatitzar la coordinació d'activitats empresarials i la gestió documental PRL a la teva empresa.",
       "formName": "Nom",
       "formEmail": "Correu electrònic",

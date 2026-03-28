@@ -87,13 +87,56 @@
     "allServices": "Ver todos los servicios",
     "whatIsCae": "¿Qué es la CAE?",
     "caeAlternatives": "Alternativas CAE",
-    "blog": "Blog"
+    "blog": "Blog",
+    "productMenu": {
+      "modulesLabel": "Módulos",
+      "featuresLabel": "Funcionalidades",
+      "footerQuestion": "¿Tienes dudas?",
+      "footerCta": "Habla con nosotros",
+      "modules": {
+        "platform": {
+          "title": "Plataforma CAE",
+          "subtitle": "Gestión documental de contratas y subcontratas"
+        },
+        "access": {
+          "title": "Control de accesos",
+          "subtitle": "Quién entra y sale de tus instalaciones"
+        },
+        "workers": {
+          "title": "Trabajadores internos",
+          "subtitle": "DNI, formaciones y reconocimientos médicos",
+          "badge": "Nuevo"
+        }
+      },
+      "features": {
+        "validation": {
+          "title": "Validación documental automática",
+          "subtitle": "Revisión inteligente de PRL en segundos"
+        },
+        "access": {
+          "title": "Control de accesos integrado",
+          "subtitle": "Accesos vinculados al estado documental"
+        },
+        "compliance": {
+          "title": "Cumplimiento y trazabilidad",
+          "subtitle": "Panel en tiempo real para auditorías"
+        }
+      }
+    },
+    "resourcesMenu": {
+      "label": "Recursos",
+      "whatIsCaeSubtitle": "Guía práctica para entender la Coordinación de Actividades Empresariales",
+      "caeAlternativesSubtitle": "Compara plataformas CAE y encuentra la mejor opción para tu empresa",
+      "blogSubtitle": "Artículos, casos reales y novedades sobre PRL y CAE",
+      "footerQuestion": "¿Necesitas orientación?",
+      "footerCta": "Habla con un experto"
+    }
   },
   "hero": {
-    "badge": "Software CAE con Inteligencia Artificial",
-    "title": "Software CAE para gestión documental PRL",
-    "titleHighlight": "automatizada con IA",
-    "subtitle": "La plataforma de Coordinación de Actividades Empresariales que valida documentación PRL en segundos. Ahorra hasta un 90% de tiempo y evita sanciones de hasta 500.000€.",
+    "badge": "Plataforma CAE para contratas",
+    "title": "La plataforma CAE que gestiona la documentación de todas tus contratas",
+    "titleHighlight": "automatizada",
+    "subtitle": "Deja de perseguir documentos a tus contratas. PlayCAE solicita, valida y alerta automáticamente. Sin inspecciones sorpresa, sin sanciones, sin papeleo.",
     "cta": "Solicitar demo gratuita",
     "ctaSecondary": "Probar gratis",
     "trustedBy": "Confían en nosotros",
@@ -101,22 +144,46 @@
       "aiAccuracy": "Precisión validación IA",
       "timeSaved": "Ahorro de tiempo en CAE",
       "sanctions": "Sanciones por incumplimiento"
+    },
+    "mock": {
+      "dashboardTitle": "Dashboard PRL",
+      "validatedDocuments": "Documentos validados",
+      "addDocuments": "Añadir más documentos",
+      "complianceBadge": "Cumplimiento 100%",
+      "docs": {
+        "riskAssessment": {
+          "name": "Evaluación de riesgos",
+          "status": "Validado"
+        },
+        "basicTraining": {
+          "name": "Formación PRL básica",
+          "status": "Pendiente"
+        },
+        "socialSecurity": {
+          "name": "Certificado SS",
+          "status": "Validado"
+        },
+        "spaContract": {
+          "name": "Contrato SPA",
+          "status": "Revisión"
+        }
+      }
     }
   },
   "landing": {
     "problemSolution": {
-      "sectionTitle": "Gestión documental PRL: el coste oculto que frena a tu empresa",
+      "sectionTitle": "¿Cuánto te cuesta gestionar la documentación PRL sin software CAE?",
       "challengesTitle": "Desafíos actuales en la gestión PRL",
-      "problem1Title": "Pérdida de tiempo valioso",
+      "problem1Title": "15 horas semanales perdidas en revisión manual de documentación CAE",
       "problem1Desc": "Hasta 15 horas semanales dedicadas a revisiones manuales de documentación PRL",
-      "problem2Title": "Riesgo de sanciones elevadas",
+      "problem2Title": "Hasta 500.000€ en sanciones por incumplimiento del RD 171/2004",
       "problem2Desc": "Hasta 500.000€ por incumplimiento del RD 171/2004 sobre Coordinación de Actividades Empresariales",
-      "problem3Title": "Documentación caducada",
+      "problem3Title": "El 43% de las auditorías CAE detectan documentación PRL caducada",
       "problem3Desc": "El 43% de las auditorías CAE detectan documentos caducados que ponen en riesgo el cumplimiento legal",
-      "problem4Title": "Incoherencias en la documentación",
+      "problem4Title": "Errores en documentación PRL que ninguna revisión manual detecta",
       "problem4Desc": "Datos contradictorios entre documentos que pasan desapercibidos en revisiones manuales",
       "solutionBadge": "SOLUCIÓN",
-      "solutionTitle": "Nuestra solución inteligente",
+      "solutionTitle": "Plataforma CAE con IA: validación documental automática en segundos",
       "solution1Title": "Agente IA especializado en PRL/CAE",
       "solution1Desc": "Entrenado con 50.000 casos reales para detectar incoherencias, caducidades y fraudes documentales con 99,2% de precisión",
       "solution2Title": "Validación automática integral",
@@ -128,7 +195,7 @@
       "ctaSubtitle": "Sin tarjeta de crédito - Resultados en minutos"
     },
     "whyUs": {
-      "title": "Software CAE diseñado para cumplir normativa PRL",
+      "title": "Software CAE certificado: cumplimiento RD 171/2004 y LPRL 31/1995 garantizado",
       "subtitle": "Plataforma de coordinación de actividades empresariales con tecnología que garantiza el cumplimiento del RD 171/2004",
       "feature1Title": "Base legal actualizada automáticamente",
       "feature1Desc": "Seguimiento automático del BOE, DOGC y EUR-Lex para mantener tu gestión CAE siempre al día",
@@ -148,7 +215,7 @@
       "ctaTag": "Cumplimiento 100% verificable para inspecciones de Trabajo"
     },
     "comparison": {
-      "title": "¿Por qué elegir PlayCAE frente a otras plataformas CAE?",
+      "title": "PlayCAE vs otras plataformas CAE: la diferencia que importa",
       "subtitle": "No todas las plataformas de coordinación de actividades empresariales son iguales. Compara y decide con información real.",
       "feature": "Funcionalidad",
       "playcae": "PlayCAE",
@@ -191,7 +258,7 @@
     },
     "documentation": {
       "title": "Validación documental PRL automatizada en 3 pasos",
-      "subtitle": "Transforma semanas de gestión CAE manual en minutos con nuestro software de coordinación de actividades empresariales",
+      "subtitle": "Transforma semanas de gestión CAE manual en minutos con nuestro software CAE para coordinación de actividades empresariales",
       "docLoaded": "Documento cargado",
       "analyzingAI": "Analizando con IA...",
       "step1Title": "Sube documentos",

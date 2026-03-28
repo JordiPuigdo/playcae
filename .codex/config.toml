@@ -1,0 +1,37 @@
+# Modelo y comportamiento base
+model = "codex-mini-latest"
+approval = "on-request"
+
+[features]
+hooks = true
+codex_hooks = true
+
+# Instrucciones adicionales inyectadas en cada sesión
+[instructions]
+additional = """
+Always read AGENTS.md and .codex/ context files before starting any task.
+Stack: Next.js 14 (frontend) 
+Assume 20 concurrent users minimum. Before any solution, evaluate what
+happens with 100 simultaneous users.
+Never modify auth-related files without explicit user confirmation.
+Always propose approach with trade-offs BEFORE writing any code.
+"""
+
+# Subagentes especializados
+[agents.performance-reviewer]
+description = "Reviews code for performance and scalability issues"
+instructions = """
+You are a performance specialist. Your only job is to detect:
+- Bad Performance
+Report issues with severity: critical / important / suggestion.
+Never modify code — only analyze and report.
+"""
+
+[agents.refactor-guard]
+description = "Safely refactors code without breaking other modules"
+instructions = """
+Before any change: list all modules that use the code being refactored.
+Never change a public method signature without explicit warning.
+Always propose refactor in small steps, not one big change.
+At the end: list what tests to update and what modules to verify manually.
+"""
