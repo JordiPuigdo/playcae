@@ -38,7 +38,6 @@ export const metadata: Metadata = {
     description:
       "Automatiza PRL y CAE. Registro y control de accesos en fábrica.",
   },
-  robots: { index: true, follow: true },
   icons: { icon: "/favicon.ico" },
 };
 

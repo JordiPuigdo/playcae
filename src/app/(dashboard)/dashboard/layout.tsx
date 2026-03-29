@@ -17,6 +17,12 @@ export default function DashboardLayout({
 }) {
   const { user, logoUrl, setLogoUrl } = useAuthStore();
   const { getLogoUrl } = useUserConfiguration();
+  const noIndexHead = (
+    <>
+      <meta name="robots" content="noindex, nofollow" />
+      <meta name="googlebot" content="noindex, nofollow" />
+    </>
+  );
 
   // Cargar logo si el usuario está autenticado pero el logo no está en el store
   useEffect(() => {
@@ -44,21 +50,29 @@ export default function DashboardLayout({
   }, [user, logoUrl]);
 
   if (user === null) {
-    return <Loader text={""} />;
+    return (
+      <>
+        {noIndexHead}
+        <Loader text={""} />
+      </>
+    );
   }
 
   if (!user) {
-    return null;
+    return <>{noIndexHead}</>;
   }
   return (
-    <div className="flex h-screen w-full bg-gray-100 overflow-hidden">
-      <Sidebar />
-      <div className="flex flex-col flex-1 ml-64 h-full overflow-hidden">
-        <Header />
-        <main className="flex-1 p-6 overflow-y-auto">{children}</main>
-        {/*user && <SupportChat />*/}
-        <Toaster />
+    <>
+      {noIndexHead}
+      <div className="flex h-screen w-full bg-gray-100 overflow-hidden">
+        <Sidebar />
+        <div className="flex flex-col flex-1 ml-64 h-full overflow-hidden">
+          <Header />
+          <main className="flex-1 p-6 overflow-y-auto">{children}</main>
+          {/*user && <SupportChat />*/}
+          <Toaster />
+        </div>
       </div>
-    </div>
+    </>
   );
 }

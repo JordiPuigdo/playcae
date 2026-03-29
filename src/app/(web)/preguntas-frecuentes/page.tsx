@@ -19,6 +19,9 @@ export async function generateMetadata(): Promise<Metadata> {
     alternates: {
       canonical: FAQ_CANONICAL_URL,
     },
+    openGraph: {
+      url: FAQ_CANONICAL_URL,
+    },
   };
 }
 
