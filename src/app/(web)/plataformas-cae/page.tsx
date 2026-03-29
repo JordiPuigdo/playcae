@@ -1,4 +1,4 @@
-﻿// app/(web)/plataformas-cae/page.tsx
+// app/(web)/plataformas-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -158,16 +158,16 @@ const industries = [
 
 export default function PlataformasCAEPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-playGrey">
       {/* Hero Section */}
       <section className="px-4 py-16 md:py-24">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center">
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-playBlueDark md:text-5xl lg:text-6xl">
               Plataformas CAE: Guía Completa
-              <span className="block text-blue-600">para Elegir la Mejor</span>
+              <span className="block text-playBlueDark">para Elegir la Mejor</span>
             </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-lg text-gray-600 md:text-xl">
+            <p className="mx-auto mb-8 max-w-3xl text-lg text-playBlueLight md:text-xl">
               Comparativa actualizada de plataformas CAE para{" "}
               <strong>Coordinación de Actividades Empresariales</strong>.
               Descubre funcionalidades clave, precios y cómo elegir la solución
@@ -176,14 +176,14 @@ export default function PlataformasCAEPage() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="group inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white transition-all hover:bg-blue-700"
+                className="group inline-flex items-center gap-2 rounded-lg bg-playOrange px-6 py-3 text-white transition-all hover:bg-playBlueLight"
               >
                 Prueba PlayCAE Gratis
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/precios"
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 transition-all hover:border-gray-400"
+                className="inline-flex items-center gap-2 rounded-lg border border-playBlueLight/30 bg-white px-6 py-3 text-playBlueLight transition-all hover:border-playBlueLight/50"
               >
                 Ver Precios
               </Link>
@@ -196,10 +196,10 @@ export default function PlataformasCAEPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="rounded-2xl bg-white p-8 shadow-xl md:p-12">
-            <h2 className="mb-6 text-3xl font-bold text-gray-900">
+            <h2 className="mb-6 text-3xl font-bold text-playBlueDark">
               ¿Qué es una Plataforma CAE?
             </h2>
-            <p className="mb-4 text-lg text-gray-700">
+            <p className="mb-4 text-lg text-playBlueLight">
               Una <strong>plataforma CAE</strong> es un software especializado
               que ayuda a las empresas a cumplir con la{" "}
               <strong>Coordinación de Actividades Empresariales</strong>{" "}
@@ -207,7 +207,7 @@ export default function PlataformasCAEPage() {
               documental PRL, controlan el acceso de contratas y trabajadores, y
               reducen riesgos legales.
             </p>
-            <p className="text-lg text-gray-700">
+            <p className="text-lg text-playBlueLight">
               Las mejores plataformas CAE combinan{" "}
               <strong>validación automática</strong> de documentación,{" "}
               <strong>control de accesos</strong> en tiempo real y{" "}
@@ -222,10 +222,10 @@ export default function PlataformasCAEPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Funcionalidades Clave de las Plataformas CAE
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               No todas las plataformas ofrecen lo mismo. Estas son las
               funcionalidades esenciales que debes buscar:
             </p>
@@ -235,22 +235,22 @@ export default function PlataformasCAEPage() {
             {platformFeatures.map((feature, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-6 transition-all hover:border-playBlueLight/50 hover:shadow-lg"
               >
                 <div className="mb-4 flex items-start justify-between">
-                  <div className="rounded-lg bg-blue-100 p-3">
-                    <feature.icon className="h-6 w-6 text-blue-600" />
+                  <div className="rounded-lg bg-playBlueLight/15 p-3">
+                    <feature.icon className="h-6 w-6 text-playBlueDark" />
                   </div>
                   {feature.mustHave && (
-                    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    <span className="rounded-full bg-playGreen/20 px-3 py-1 text-xs font-semibold text-playGreen">
                       Imprescindible
                     </span>
                   )}
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                <h3 className="mb-2 text-xl font-semibold text-playBlueDark">
                   {feature.title}
                 </h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <p className="text-playBlueLight">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -258,13 +258,13 @@ export default function PlataformasCAEPage() {
       </section>
 
       {/* Criterios para Elegir */}
-      <section className="bg-gray-50 px-4 py-16">
+      <section className="bg-playGrey px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Cómo Elegir la Plataforma CAE Correcta
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               5 criterios esenciales para tomar la decisión correcta
             </p>
           </div>
@@ -273,17 +273,17 @@ export default function PlataformasCAEPage() {
             {comparisonCriteria.map((criteria, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-6 transition-all hover:border-playBlueLight/50"
               >
                 <div className="flex items-start gap-4">
-                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-white font-bold">
+                  <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-playBlueDark text-white font-bold">
                     {index + 1}
                   </div>
                   <div>
-                    <h3 className="mb-2 text-xl font-semibold text-gray-900">
+                    <h3 className="mb-2 text-xl font-semibold text-playBlueDark">
                       {criteria.title}
                     </h3>
-                    <p className="text-gray-600">{criteria.description}</p>
+                    <p className="text-playBlueLight">{criteria.description}</p>
                   </div>
                 </div>
               </div>
@@ -296,10 +296,10 @@ export default function PlataformasCAEPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Plataformas CAE por Industria
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               Cada sector tiene retos específicos en CAE. Encuentra la solución
               para tu industria:
             </p>
@@ -309,25 +309,25 @@ export default function PlataformasCAEPage() {
             {industries.map((industry, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-8"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-8"
               >
                 <div className="mb-4 flex items-center gap-3">
-                  <Building2 className="h-8 w-8 text-blue-600" />
-                  <h3 className="text-2xl font-semibold text-gray-900">
+                  <Building2 className="h-8 w-8 text-playBlueDark" />
+                  <h3 className="text-2xl font-semibold text-playBlueDark">
                     {industry.name}
                   </h3>
                 </div>
                 <div className="mb-4">
-                  <h4 className="mb-2 font-semibold text-gray-700">
+                  <h4 className="mb-2 font-semibold text-playBlueLight">
                     Retos típicos:
                   </h4>
-                  <p className="text-gray-600">{industry.challenges}</p>
+                  <p className="text-playBlueLight">{industry.challenges}</p>
                 </div>
                 <div>
-                  <h4 className="mb-2 font-semibold text-gray-700">
+                  <h4 className="mb-2 font-semibold text-playBlueLight">
                     Solución ideal:
                   </h4>
-                  <p className="text-gray-600">{industry.solution}</p>
+                  <p className="text-playBlueLight">{industry.solution}</p>
                 </div>
               </div>
             ))}
@@ -336,13 +336,13 @@ export default function PlataformasCAEPage() {
       </section>
 
       {/* Por qué PlayCAE */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-16">
+      <section className="bg-gradient-to-br from-playBlueDark to-playBlueLight px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center text-white">
             <h2 className="mb-6 text-3xl font-bold md:text-4xl">
               PlayCAE: La Plataforma CAE Moderna
             </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-blue-100">
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-playGrey">
               Implementación en menos de 1 semana. IA real que valida
               documentación automáticamente. Precio transparente sin sorpresas.
             </p>
@@ -350,22 +350,22 @@ export default function PlataformasCAEPage() {
             <div className="mb-12 grid gap-8 md:grid-cols-3">
               <div>
                 <div className="mb-2 text-4xl font-bold">{"<1"} semana</div>
-                <div className="text-blue-100">Tiempo de implementación</div>
+                <div className="text-playGrey">Tiempo de implementación</div>
               </div>
               <div>
                 <div className="mb-2 text-4xl font-bold">100%</div>
-                <div className="text-blue-100">Validación automática con IA</div>
+                <div className="text-playGrey">Validación automática con IA</div>
               </div>
               <div>
                 <div className="mb-2 text-4xl font-bold">0€</div>
-                <div className="text-blue-100">Costes ocultos</div>
+                <div className="text-playGrey">Costes ocultos</div>
               </div>
             </div>
 
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="group inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-all hover:bg-blue-50"
+                className="group inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-playBlueDark transition-all hover:bg-playBlueLight/10"
               >
                 Prueba Gratis 14 Días
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />

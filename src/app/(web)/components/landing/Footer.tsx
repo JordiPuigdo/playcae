@@ -272,6 +272,29 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link
+                  href="/plataformas-gestion-documental"
+                  className="hover:underline"
+                >
+                  {t("footer.linkPlatformsDocumental")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/plataformas-prl" className="hover:underline">
+                  {t("footer.linkPlatformsPrl")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/plataformas-cae" className="hover:underline">
+                  {t("footer.linkPlatformsCae")}
+                </Link>
+              </li>
+              <li>
+                <Link href="/prl-trabajos-altura" className="hover:underline">
+                  {t("footer.linkPrlHeightWork")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/preguntas-frecuentes" className="hover:underline">
                   {t("footer.linkFaq")}
                 </Link>

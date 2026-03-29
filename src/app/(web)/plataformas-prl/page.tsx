@@ -1,4 +1,4 @@
-﻿// app/(web)/plataformas-prl/page.tsx
+// app/(web)/plataformas-prl/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -247,18 +247,18 @@ const pricingModels = [
 
 export default function PlataformasPRLPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-playGrey">
       {/* Hero Section */}
       <section className="px-4 py-16 md:py-24">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center">
             <div className="mb-6 flex items-center justify-center gap-3">
-              <Shield className="h-12 w-12 text-blue-600" />
-              <h1 className="text-4xl font-bold tracking-tight text-gray-900 md:text-5xl lg:text-6xl">
+              <Shield className="h-12 w-12 text-playBlueDark" />
+              <h1 className="text-4xl font-bold tracking-tight text-playBlueDark md:text-5xl lg:text-6xl">
                 Plataformas PRL
               </h1>
             </div>
-            <p className="mx-auto mb-8 max-w-3xl text-lg text-gray-600 md:text-xl">
+            <p className="mx-auto mb-8 max-w-3xl text-lg text-playBlueLight md:text-xl">
               Guía completa para elegir la mejor{" "}
               <strong>plataforma de Prevención de Riesgos Laborales</strong>.
               Comparativa de software PRL, funcionalidades, precios y cómo
@@ -267,14 +267,14 @@ export default function PlataformasPRLPage() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="group inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-white transition-all hover:bg-blue-700"
+                className="group inline-flex items-center gap-2 rounded-lg bg-playOrange px-6 py-3 text-white transition-all hover:bg-playBlueLight"
               >
                 Prueba PlayCAE Gratis
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-6 py-3 text-gray-700 transition-all hover:border-gray-400"
+                className="inline-flex items-center gap-2 rounded-lg border border-playBlueLight/30 bg-white px-6 py-3 text-playBlueLight transition-all hover:border-playBlueLight/50"
               >
                 Hablar con Experto
               </Link>
@@ -287,10 +287,10 @@ export default function PlataformasPRLPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Tipos de Plataformas PRL
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               No todas las plataformas PRL son iguales. Estas son las categorías
               principales:
             </p>
@@ -300,26 +300,26 @@ export default function PlataformasPRLPage() {
             {platformTypes.map((type, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-6 transition-all hover:border-blue-300 hover:shadow-lg"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-6 transition-all hover:border-playBlueLight/50 hover:shadow-lg"
               >
-                <div className="mb-4 rounded-lg bg-blue-100 p-3 w-fit">
-                  <type.icon className="h-8 w-8 text-blue-600" />
+                <div className="mb-4 rounded-lg bg-playBlueLight/15 p-3 w-fit">
+                  <type.icon className="h-8 w-8 text-playBlueDark" />
                 </div>
-                <h3 className="mb-2 text-2xl font-semibold text-gray-900">
+                <h3 className="mb-2 text-2xl font-semibold text-playBlueDark">
                   {type.title}
                 </h3>
-                <p className="mb-4 text-gray-700">{type.description}</p>
+                <p className="mb-4 text-playBlueLight">{type.description}</p>
                 <div className="space-y-2">
                   <div className="flex items-start gap-2">
-                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-green-600" />
+                    <CheckCircle className="h-5 w-5 flex-shrink-0 text-playGreen" />
                     <div>
-                      <span className="font-semibold text-gray-700">
+                      <span className="font-semibold text-playBlueLight">
                         Ideal para:
                       </span>{" "}
-                      <span className="text-gray-600">{type.ideal}</span>
+                      <span className="text-playBlueLight">{type.ideal}</span>
                     </div>
                   </div>
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-playBlueLight/80">
                     Ejemplos: {type.example}
                   </div>
                 </div>
@@ -330,13 +330,13 @@ export default function PlataformasPRLPage() {
       </section>
 
       {/* Funcionalidades Core */}
-      <section className="bg-gray-50 px-4 py-16">
+      <section className="bg-playGrey px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Funcionalidades Clave de las Plataformas PRL
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               Qué debe ofrecer una buena plataforma de prevención de riesgos
               laborales:
             </p>
@@ -346,25 +346,25 @@ export default function PlataformasPRLPage() {
             {coreFunctionalities.map((func, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-6"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-6"
               >
                 <div className="mb-3 flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-gray-900">
+                  <h3 className="text-lg font-semibold text-playBlueDark">
                     {func.title}
                   </h3>
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       func.priority === "Alta"
-                        ? "bg-red-100 text-red-700"
+                        ? "bg-securityRed/15 text-securityRed"
                         : func.priority === "Media"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-playYellow/20 text-playBlueDark"
+                          : "bg-playGrey text-playBlueLight"
                     }`}
                   >
                     Prioridad {func.priority}
                   </span>
                 </div>
-                <p className="text-gray-600">{func.description}</p>
+                <p className="text-playBlueLight">{func.description}</p>
               </div>
             ))}
           </div>
@@ -375,10 +375,10 @@ export default function PlataformasPRLPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Cómo Elegir la Plataforma PRL Correcta
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               5 criterios esenciales para tomar la decisión correcta:
             </p>
           </div>
@@ -387,32 +387,32 @@ export default function PlataformasPRLPage() {
             {selectionCriteria.map((criteria, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-8"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-8"
               >
                 <div className="mb-4 flex items-start gap-4">
-                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-blue-600 text-xl font-bold text-white">
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-playBlueDark text-xl font-bold text-white">
                     {index + 1}
                   </div>
                   <div className="flex-1">
-                    <h3 className="mb-3 text-2xl font-semibold text-gray-900">
+                    <h3 className="mb-3 text-2xl font-semibold text-playBlueDark">
                       {criteria.title}
                     </h3>
                     <div className="mb-4 space-y-2">
                       {criteria.questions.map((question, qIndex) => (
                         <div key={qIndex} className="flex items-start gap-2">
-                          <span className="text-blue-600">✓</span>
-                          <span className="text-gray-700">{question}</span>
+                          <span className="text-playBlueDark">✓</span>
+                          <span className="text-playBlueLight">{question}</span>
                         </div>
                       ))}
                     </div>
-                    <div className="rounded-lg bg-blue-50 p-4">
+                    <div className="rounded-lg bg-playBlueLight/10 p-4">
                       <div className="flex items-start gap-2">
-                        <Zap className="h-5 w-5 flex-shrink-0 text-blue-600" />
+                        <Zap className="h-5 w-5 flex-shrink-0 text-playBlueDark" />
                         <div>
-                          <span className="font-semibold text-blue-900">
+                          <span className="font-semibold text-playBlueDark">
                             Consejo:
                           </span>{" "}
-                          <span className="text-blue-800">{criteria.tip}</span>
+                          <span className="text-playBlueDark">{criteria.tip}</span>
                         </div>
                       </div>
                     </div>
@@ -425,13 +425,13 @@ export default function PlataformasPRLPage() {
       </section>
 
       {/* Modelos de Precios */}
-      <section className="bg-gray-50 px-4 py-16">
+      <section className="bg-playGrey px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Modelos de Precios en Plataformas PRL
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               Entiende cómo cobran las plataformas y elige el modelo correcto:
             </p>
           </div>
@@ -442,35 +442,35 @@ export default function PlataformasPRLPage() {
                 key={index}
                 className={`rounded-xl border-2 bg-white p-6 ${
                   pricing.recommended
-                    ? "border-green-300 shadow-lg"
-                    : "border-gray-200"
+                    ? "border-playGreen/40 shadow-lg"
+                    : "border-playBlueLight/20"
                 }`}
               >
                 <div className="mb-4 flex items-start justify-between">
-                  <h3 className="text-xl font-semibold text-gray-900">
+                  <h3 className="text-xl font-semibold text-playBlueDark">
                     {pricing.model}
                   </h3>
                   {pricing.recommended && (
-                    <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-semibold text-green-700">
+                    <span className="rounded-full bg-playGreen/20 px-3 py-1 text-xs font-semibold text-playGreen">
                       Recomendado
                     </span>
                   )}
                 </div>
-                <p className="mb-4 text-gray-600">{pricing.description}</p>
+                <p className="mb-4 text-playBlueLight">{pricing.description}</p>
                 <div className="space-y-3">
                   <div>
                     <div className="mb-1 flex items-center gap-2">
-                      <CheckCircle className="h-4 w-4 text-green-600" />
-                      <span className="font-semibold text-gray-700">Pros:</span>
+                      <CheckCircle className="h-4 w-4 text-playGreen" />
+                      <span className="font-semibold text-playBlueLight">Pros:</span>
                     </div>
-                    <p className="text-sm text-gray-600">{pricing.pros}</p>
+                    <p className="text-sm text-playBlueLight">{pricing.pros}</p>
                   </div>
                   <div>
                     <div className="mb-1 flex items-center gap-2">
-                      <AlertTriangle className="h-4 w-4 text-orange-600" />
-                      <span className="font-semibold text-gray-700">Contras:</span>
+                      <AlertTriangle className="h-4 w-4 text-playOrange" />
+                      <span className="font-semibold text-playBlueLight">Contras:</span>
                     </div>
-                    <p className="text-sm text-gray-600">{pricing.cons}</p>
+                    <p className="text-sm text-playBlueLight">{pricing.cons}</p>
                   </div>
                 </div>
               </div>
@@ -483,10 +483,10 @@ export default function PlataformasPRLPage() {
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="mb-12 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
               Plataformas PRL por Industria
             </h2>
-            <p className="mx-auto max-w-2xl text-lg text-gray-600">
+            <p className="mx-auto max-w-2xl text-lg text-playBlueLight">
               Cada sector tiene necesidades específicas en PRL:
             </p>
           </div>
@@ -495,23 +495,23 @@ export default function PlataformasPRLPage() {
             {industries.map((industry, index) => (
               <div
                 key={index}
-                className="rounded-xl border border-gray-200 bg-white p-8"
+                className="rounded-xl border border-playBlueLight/20 bg-white p-8"
               >
                 <div className="mb-4 flex items-center gap-3">
-                  <Building2 className="h-8 w-8 text-blue-600" />
-                  <h3 className="text-2xl font-semibold text-gray-900">
+                  <Building2 className="h-8 w-8 text-playBlueDark" />
+                  <h3 className="text-2xl font-semibold text-playBlueDark">
                     {industry.name}
                   </h3>
                 </div>
                 <div className="mb-4">
-                  <h4 className="mb-2 font-semibold text-gray-700">Retos:</h4>
-                  <p className="text-gray-600">{industry.challenges}</p>
+                  <h4 className="mb-2 font-semibold text-playBlueLight">Retos:</h4>
+                  <p className="text-playBlueLight">{industry.challenges}</p>
                 </div>
-                <div className="rounded-lg bg-green-50 p-4">
-                  <h4 className="mb-2 font-semibold text-green-900">
+                <div className="rounded-lg bg-playGreen/10 p-4">
+                  <h4 className="mb-2 font-semibold text-playBlueDark">
                     Solución ideal:
                   </h4>
-                  <p className="text-green-800">{industry.solution}</p>
+                  <p className="text-playGreen">{industry.solution}</p>
                 </div>
               </div>
             ))}
@@ -520,13 +520,13 @@ export default function PlataformasPRLPage() {
       </section>
 
       {/* PlayCAE */}
-      <section className="bg-gradient-to-br from-blue-600 to-blue-700 px-4 py-16">
+      <section className="bg-gradient-to-br from-playBlueDark to-playBlueLight px-4 py-16">
         <div className="container mx-auto max-w-6xl">
           <div className="text-center text-white">
             <h2 className="mb-6 text-3xl font-bold md:text-4xl">
               PlayCAE: Plataforma PRL Moderna y Automatizada
             </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-lg text-blue-100">
+            <p className="mx-auto mb-8 max-w-2xl text-lg text-playGrey">
               Especializada en gestión documental CAE con IA real. Validación
               automática, control de accesos y cumplimiento garantizado.
             </p>
@@ -535,21 +535,21 @@ export default function PlataformasPRLPage() {
               <div className="rounded-xl bg-white/10 backdrop-blur-sm p-6">
                 <Brain className="mx-auto mb-3 h-12 w-12 text-white" />
                 <div className="mb-2 font-semibold">IA Real</div>
-                <div className="text-sm text-blue-100">
+                <div className="text-sm text-playGrey">
                   Extrae datos de documentos automáticamente
                 </div>
               </div>
               <div className="rounded-xl bg-white/10 backdrop-blur-sm p-6">
                 <Clock className="mx-auto mb-3 h-12 w-12 text-white" />
                 <div className="mb-2 font-semibold">{"<1"} Semana</div>
-                <div className="text-sm text-blue-100">
+                <div className="text-sm text-playGrey">
                   Tiempo de implementación
                 </div>
               </div>
               <div className="rounded-xl bg-white/10 backdrop-blur-sm p-6">
                 <CheckCircle className="mx-auto mb-3 h-12 w-12 text-white" />
                 <div className="mb-2 font-semibold">Tarifa Plana</div>
-                <div className="text-sm text-blue-100">
+                <div className="text-sm text-playGrey">
                   Sin costes ocultos por volumen
                 </div>
               </div>
@@ -558,7 +558,7 @@ export default function PlataformasPRLPage() {
             <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
               <Link
                 href="/register"
-                className="group inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-blue-600 transition-all hover:bg-blue-50"
+                className="group inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-playBlueDark transition-all hover:bg-playBlueLight/10"
               >
                 Prueba Gratis 14 Días
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -577,17 +577,17 @@ export default function PlataformasPRLPage() {
       {/* CTA Final */}
       <section className="px-4 py-16">
         <div className="container mx-auto max-w-4xl">
-          <div className="rounded-2xl border-2 border-blue-200 bg-blue-50 p-8 text-center md:p-12">
-            <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
+          <div className="rounded-2xl border-2 border-playBlueLight/30 bg-playBlueLight/10 p-8 text-center md:p-12">
+            <h2 className="mb-4 text-2xl font-bold text-playBlueDark md:text-3xl">
               ¿No sabes qué plataforma PRL elegir?
             </h2>
-            <p className="mx-auto mb-6 max-w-2xl text-gray-700">
+            <p className="mx-auto mb-6 max-w-2xl text-playBlueLight">
               Habla con nuestros expertos en PRL y CAE. Te ayudamos a encontrar
               la solución correcta para tu empresa.
             </p>
             <Link
               href="/contacto"
-              className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-blue-700"
+              className="inline-flex items-center gap-2 rounded-lg bg-playBlueDark px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-playBlueLight"
             >
               Consulta Gratuita
               <ArrowRight className="h-5 w-5" />
