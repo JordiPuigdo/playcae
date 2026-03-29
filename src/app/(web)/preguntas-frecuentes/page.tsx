@@ -28,6 +28,13 @@ export async function generateMetadata(): Promise<Metadata> {
         },
       ],
     },
+    twitter: {
+      card: "summary_large_image",
+      site: "@PlayCae",
+      title: t.faq.page.meta_title,
+      description: t.faq.page.meta_description,
+      images: ["https://www.playcae.com/og-logo.png"],
+    },
   };
 }
 

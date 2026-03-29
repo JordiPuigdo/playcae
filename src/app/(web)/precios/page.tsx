@@ -33,6 +33,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Precios Software CAE | PlayCAE",
+    description:
+      "Tarifas transparentes para gestión CAE. Sin costes por contrata. Planes adaptados a tu empresa.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

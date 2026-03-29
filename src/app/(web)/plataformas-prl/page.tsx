@@ -43,6 +43,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Plataformas PRL: Las Mejores Soluciones 2026 | PlayCAE",
+    description:
+      "Comparativa de plataformas PRL para prevención de riesgos laborales. Funcionalidades y precios.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

@@ -42,6 +42,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Plataformas de Gestión Documental CAE | PlayCAE",
+    description:
+      "Comparativa de plataformas de gestión documental para CAE. Automatización, IA y cumplimiento PRL.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@PlayCae",
     title: "Gestión de Documentación CAE con IA | PlayCAE",
     description:
       "Automatiza PRL y CAE. Registro y control de accesos en fábrica.",

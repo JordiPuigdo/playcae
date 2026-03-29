@@ -50,6 +50,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Gestión Documental de Trabajadores Internos | PlayCAE",
+    description:
+      "Automatiza la documentación PRL de tu plantilla. DNI, formaciones y reconocimientos médicos en una sola plataforma.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

@@ -39,6 +39,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Control de Accesos y Registro en Fábrica | PlayCAE",
+    description:
+      "Controla quién está en planta en tiempo real. Vincula acceso al estado documental PRL.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

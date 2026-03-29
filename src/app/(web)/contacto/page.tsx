@@ -22,6 +22,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Contacto | PlayCAE",
+    description:
+      "Agenda una demo o consulta cómo automatizar CAE y PRL en tu fábrica.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
 };
 
 export default function ContactoPage() {

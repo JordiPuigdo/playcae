@@ -42,6 +42,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "PRL Trabajos en Altura: Guía Completa 2026 | PlayCAE",
+    description:
+      "Prevención de riesgos en trabajos en altura. Normativa, formación y documentación requerida.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

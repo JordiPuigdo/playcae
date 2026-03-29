@@ -40,6 +40,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    site: "@PlayCae",
     title: "Plataforma CAE | Gestión documental de contratas | PlayCAE",
     description:
       "Automatiza la documentación PRL de tus subcontratas. Evita sanciones del RD 171/2004 sin perder horas en papeleo.",

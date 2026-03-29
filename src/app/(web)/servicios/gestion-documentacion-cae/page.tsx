@@ -37,6 +37,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Validación Documental PRL y CAE con IA | PlayCAE",
+    description:
+      "Valida documentación PRL con IA. Alertas de caducidad y trazabilidad para auditorías.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

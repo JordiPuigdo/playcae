@@ -34,6 +34,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "¿Qué es la CAE? Guía Completa 2025 | PlayCAE",
+    description:
+      "Todo sobre Coordinación de Actividades Empresariales: normativa, obligaciones y RD 171/2004.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

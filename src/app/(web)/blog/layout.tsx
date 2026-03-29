@@ -22,6 +22,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Blog | PlayCAE",
+    description:
+      "Contenido práctico sobre CAE, PRL y control de accesos para pymes manufactureras.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 

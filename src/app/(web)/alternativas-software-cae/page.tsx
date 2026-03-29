@@ -35,6 +35,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+  twitter: {
+    card: "summary_large_image",
+    site: "@PlayCae",
+    title: "Alternativas a Plataformas CAE | PlayCAE",
+    description:
+      "Comparativa de plataformas CAE 2025. Descubre por qué empresas migran a PlayCAE.",
+    images: ["https://www.playcae.com/og-logo.png"],
+  },
   robots: { index: true, follow: true },
 };
 
