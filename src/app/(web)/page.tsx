@@ -7,12 +7,7 @@ import WhyUs from "./components/landing/WhyUs";
 import ComparisonSection from "./components/landing/ComparisonSection";
 
 export const metadata: Metadata = {
-  title: {
-    default:
-      "Plataforma CAE | Gestión Documental de Contratas | PlayCAE",
-    absolute:
-      "Plataforma CAE | Gestión Documental de Contratas | PlayCAE",
-  },
+  title: "Plataforma CAE | Gestión Documental de Contratas",
   description:
     "Plataforma CAE para gestionar la documentación PRL de tus contratas. Valida documentos automáticamente, evita sanciones del RD 171/2004 y ahorra hasta un 90% del tiempo. Prueba gratis.",
   keywords: [
