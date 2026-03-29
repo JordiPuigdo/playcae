@@ -2,6 +2,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
+import FaqSection from "@/components/FaqSection";
 import {
   FileCheck,
   Clock,
@@ -449,6 +450,8 @@ export default function ServicioCAE() {
           </div>
         </div>
       </section>
+
+      <FaqSection mode="compact" categoryKey="software" showCta={true} />
 
       {/* Document Types */}
       <section className="bg-playBlueDark py-16 lg:py-24">

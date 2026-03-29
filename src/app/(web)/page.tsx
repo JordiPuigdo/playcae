@@ -5,6 +5,7 @@ import Hero from "./components/landing/Hero";
 import ProblemSolutionSection from "./components/landing/ProblemSolutionSection";
 import WhyUs from "./components/landing/WhyUs";
 import ComparisonSection from "./components/landing/ComparisonSection";
+import FaqSection from "@/components/FaqSection";
 
 export const metadata: Metadata = {
   title: "Plataforma CAE | Gestión Documental de Contratas",
@@ -119,6 +120,7 @@ export default function LandingPage() {
       <DocumentationSupported />
       <ComparisonSection />
       <WhyUs />
+      <FaqSection mode="compact" showCta={true} />
       <ContactSection />
 
       <script

@@ -325,6 +325,7 @@
     "linkAllServices": "Tots els serveis",
     "linkWhatIsCAE": "Què és la CAE?",
     "linkAlternatives": "Alternatives CAE",
+    "linkFaq": "Preguntes frequents",
     "linkBlog": "Blog",
     "linkContact": "Contacte",
     "linkLegalNotice": "Avís legal",
@@ -993,6 +994,127 @@
       "lastMonth": "Mes anterior",
       "last3Months": "Últims 3 mesos",
       "thisYear": "Aquest any"
+    }
+  },
+  "faq": {
+    "page": {
+      "title": "Preguntes frequents sobre CAE i gestio documental PRL",
+      "subtitle": "Tot el que necessites saber sobre la Coordinacio d'Activitats Empresarials i com PlayCAE t'ajuda a complir la normativa",
+      "badge": "Preguntes frequents",
+      "meta_title": "Preguntes Frequents sobre CAE i PRL | PlayCAE",
+      "meta_description": "Resol tots els teus dubtes sobre Coordinacio d'Activitats Empresarials, gestio documental PRL i com PlayCAE automatitza el compliment del RD 171/2004.",
+      "quick_links": {
+        "cae": "Sobre la CAE",
+        "software": "Sobre el programari",
+        "playcae": "Sobre PlayCAE"
+      },
+      "contact_cta_title": "No trobes el que busques? Parla amb nosaltres",
+      "contact_cta_button": "Contactar"
+    },
+    "categories": {
+      "cae": {
+        "title": "Sobre la CAE i la normativa",
+        "anchor": "sobre-la-cae",
+        "questions": [
+          {
+            "q": "Que es la Coordinacio d'Activitats Empresarials (CAE)?",
+            "a": "La CAE es l'obligacio legal que tenen les empreses de coordinar-se en materia de prevencio de riscos laborals quan comparteixen un centre de treball. Esta regulada pel Reial decret 171/2004 i la Llei 31/1995 de Prevencio de Riscos Laborals."
+          },
+          {
+            "q": "Que obliga el RD 171/2004?",
+            "a": "El RD 171/2004 obliga l'empresa titular a informar les contractes sobre els riscos del centre de treball, exigir documentacio PRL actualitzada i coordinar les activitats preventives. L'incompliment pot derivar en sancions de fins a 500.000 EUR."
+          },
+          {
+            "q": "Quins documents he de demanar a les meves contractes?",
+            "a": "Els documents basics son: avaluacio de riscos, pla de prevencio, formacio PRL dels treballadors, reconeixement medic, asseguranca de responsabilitat civil, certificat d'estar al corrent amb la Seguretat Social i lliurament d'EPI."
+          },
+          {
+            "q": "Que passa si no tinc la documentacio de les meves contractes al dia?",
+            "a": "L'empresa titular es responsable subsidiaria davant de qualsevol accident laboral d'una contracta. Sense documentacio en regla, la Inspeccio de Treball pot sancionar amb multes d'entre 2.046 EUR i 500.000 EUR segons la gravetat de l'incompliment."
+          },
+          {
+            "q": "De quant pot ser la sancio per incompliment de la CAE?",
+            "a": "Les sancions van de 2.046 EUR per infraccions lleus fins a 500.000 EUR per infraccions molt greus. A mes, en cas d'accident laboral, l'empresa pot tenir responsabilitat penal si es demostra negligencia en la coordinacio."
+          },
+          {
+            "q": "La CAE tambe aplica a autonoms?",
+            "a": "Si. Els treballadors autonoms que desenvolupin activitats al centre de treball d'una altra empresa tambe estan subjectes a la CAE i han d'aportar la seva documentacio PRL corresponent."
+          }
+        ]
+      },
+      "software": {
+        "title": "Sobre el programari CAE",
+        "anchor": "sobre-el-software",
+        "questions": [
+          {
+            "q": "Que es una plataforma CAE?",
+            "a": "Una plataforma CAE es un programari que digitalitza i automatitza la gestio documental entre empresa titular i contractes, substituint el paper manual, els correus electronics i els fulls de calcul per un sistema centralitzat i automatitzat."
+          },
+          {
+            "q": "Com funciona la validacio automatica de documents amb IA?",
+            "a": "L'agent d'IA de PlayCAE analitza cada document en menys de 30 segons: verifica el tipus de document, les dates de validesa, les signatures i segells, la coherencia de dades com el CIF i els noms, i el compliment de la normativa vigent."
+          },
+          {
+            "q": "Quant de temps cal per implementar un programari CAE?",
+            "a": "Amb PlayCAE pots estar operatiu en menys d'una setmana. Incloem migracio gratuita des del teu sistema actual i suport tecnic personalitzat durant tot el proces d'implementacio."
+          },
+          {
+            "q": "Quant costa una plataforma CAE?",
+            "a": "PlayCAE ofereix preu transparent sense costos per contracta ni per treballador. A diferencia d'altres plataformes, saps exactament que pagues des del primer dia. Prova gratuita de 30 dies disponible sense targeta de credit."
+          },
+          {
+            "q": "Quina diferencia hi ha entre PlayCAE i Dokify o CTAIMA?",
+            "a": "PlayCAE es l'unica plataforma CAE amb IA que valida documentacio automaticament amb un 99,2% de precisio. A diferencia de Dokify i CTAIMA, no cobra per contracta ni per treballador, i la implementacio es completa en dies, no en mesos."
+          },
+          {
+            "q": "Es pot gestionar la CAE amb Excel?",
+            "a": "Tecnicament si, pero amb riscos elevats: documentacio caducada sense detectar, sense tracabilitat davant inspeccions, sense alertes automatiques i amb un cost de fins a 15 hores setmanals de gestio manual. Una plataforma CAE elimina tots aquests riscos."
+          }
+        ]
+      },
+      "playcae": {
+        "title": "Sobre PlayCAE",
+        "anchor": "sobre-playcae",
+        "questions": [
+          {
+            "q": "Hi ha prova gratuita?",
+            "a": "Si. PlayCAE ofereix 30 dies de prova gratuita sense targeta de credit. Pots configurar el teu compte, convidar les teves contractes i validar documents reals des del primer dia."
+          },
+          {
+            "q": "Quins documents PRL valida la IA de PlayCAE?",
+            "a": "Validem tots els documents requerits pel RD 171/2004: avaluacio de riscos, pla de prevencio, formacio PRL basica i especifica, reconeixement medic, asseguranca de responsabilitat civil, certificat de Seguretat Social, lliurament d'EPI i autoritzacio d'equips."
+          },
+          {
+            "q": "S'integra amb SAP, A3CE o altres sistemes?",
+            "a": "Si. PlayCAE disposa d'API REST per connectar amb SAP, A3CE i altres sistemes de gestio empresarial, evitant la duplicacio de dades i automatitzant la sincronitzacio d'informacio."
+          },
+          {
+            "q": "Que passa amb les meves contractes que no tenen ordinador?",
+            "a": "Les contractes poden accedir a PlayCAE des de qualsevol dispositiu amb connexio a internet, inclos el mobil. El proces de pujada de documents esta dissenyat per ser simple i intuitiu, sense necessitat de formacio tecnica."
+          },
+          {
+            "q": "PlayCAE compleix el RGPD i la LOPDGDD?",
+            "a": "Si. PlayCAE compleix el Reglament General de Proteccio de Dades (RGPD) i la LOPDGDD espanyola. Els documents estan xifrats amb AES-256 i allotjats en servidors dins de la Unio Europea. Comptem amb certificacio ISO 27001."
+          },
+          {
+            "q": "PlayCAE te suport en espanyol?",
+            "a": "Si. El nostre equip de suport tecnic es a Barcelona i aten en espanyol en horari peninsular. Acces directe a experts en CAE i PRL, sense tiquets ni respostes automatiques."
+          }
+        ]
+      }
+    },
+    "component": {
+      "title": "Preguntes frequents",
+      "subtitle": "Els dubtes mes habituals sobre gestio documental CAE",
+      "cta_text": "Veure totes les preguntes",
+      "cta_url": "/preguntas-frecuentes",
+      "top_questions": [
+        0,
+        2,
+        4,
+        6,
+        10
+      ]
     }
   }
 }

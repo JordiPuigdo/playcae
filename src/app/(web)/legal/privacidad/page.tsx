@@ -27,20 +27,20 @@ export default function PrivacidadPage() {
         1. Identidad del responsable del tratamiento
       </h2>
       <p>
-        <strong>Responsable:</strong> PlayCae
+        <strong>Responsable:</strong> OCTOSOFT S.L.
         <br />
         <strong>Nombre comercial:</strong> PlayCAE
         <br />
-        <strong>NIF:</strong> BXXXXXXXX
+        <strong>NIF:</strong> B25929381
         <br />
-        <strong>Domicilio social:</strong> [Dirección completa]
+        <strong>Domicilio social:</strong> CALLE UNIO EUROPEA, 3 - PTA 2
         <br />
         <strong>Correo electrónico:</strong>{" "}
         <a
-          href="mailto:info@playcae.com"
+          href="mailto:soporte@playcae.com"
           className="text-brandSecondary hover:underline"
         >
-          info@playcae.com
+          soporte@playcae.com
         </a>
         <br />
         <strong>Sitio web:</strong>{" "}
@@ -173,10 +173,10 @@ export default function PrivacidadPage() {
       <p>
         Para ejercer estos derechos, puedes contactar con nosotros en{" "}
         <a
-          href="mailto:info@playcae.com"
+          href="mailto:soporte@playcae.com"
           className="text-brandSecondary hover:underline"
         >
-          info@playcae.com
+          soporte@playcae.com
         </a>{" "}
         indicando el derecho que deseas ejercer y adjuntando copia de tu
         documento de identidad.

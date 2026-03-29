@@ -28,18 +28,18 @@ export default function AvisoLegalPage() {
       <p>
         <strong>Nombre comercial:</strong> PlayCAE
         <br />
-        <strong>Denominación social:</strong> PlayCae SL
+        <strong>Denominación social:</strong> OCTOSOFT S.L.
         <br />
-        <strong>NIF:</strong> BXXXXXXXX
+        <strong>NIF:</strong> B25929381
         <br />
-        <strong>Domicilio social:</strong> [Dirección completa]
+        <strong>Domicilio social:</strong> CALLE UNIO EUROPEA, 3 - PTA 2
         <br />
         <strong>Correo electrónico de contacto:</strong>{" "}
         <a
-          href="mailto:info@playcae.com"
+          href="mailto:soporte@playcae.com"
           className="text-brandSecondary hover:underline"
         >
-          info@playcae.com
+          soporte@playcae.com
         </a>{" "}
         <br />
         <strong>Dominio web:</strong>{" "}
@@ -147,7 +147,7 @@ export default function AvisoLegalPage() {
       <p>
         El presente Aviso Legal se rige por la legislación española. Para la
         resolución de conflictos o reclamaciones, las partes se someten a los
-        Juzgados y Tribunales de [Ciudad del domicilio social], renunciando
+        Juzgados y Tribunales del domicilio social del titular, renunciando
         expresamente a cualquier otro fuero que pudiera corresponderles.
       </p>
 
@@ -158,10 +158,10 @@ export default function AvisoLegalPage() {
         Si tienes cualquier duda o comentario sobre este Aviso Legal, puedes
         ponerte en contacto con nosotros en el correo{" "}
         <a
-          href="mailto:info@playcae.com"
+          href="mailto:soporte@playcae.com"
           className="text-brandSecondary hover:underline"
         >
-          info@playcae.com
+          soporte@playcae.com
         </a>
         .
       </p>

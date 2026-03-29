@@ -271,6 +271,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/preguntas-frecuentes" className="hover:underline">
+                  {t("footer.linkFaq")}
+                </Link>
+              </li>
+              <li>
                 <Link href="/blog" className="hover:underline">
                   {t("footer.linkBlog")}
                 </Link>

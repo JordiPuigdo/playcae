@@ -23,6 +23,27 @@ export default function CookiesPage() {
       </p>
 
       <h2 className="text-2xl font-semibold mt-10 text-brandPrimary">
+        Responsable del sitio web
+      </h2>
+      <p>
+        <strong>Nombre comercial:</strong> PlayCAE
+        <br />
+        <strong>Denominación social:</strong> OCTOSOFT S.L.
+        <br />
+        <strong>NIF:</strong> B25929381
+        <br />
+        <strong>Domicilio social:</strong> CALLE UNIO EUROPEA, 3 - PTA 2
+        <br />
+        <strong>Correo electrónico de contacto:</strong>{" "}
+        <a
+          href="mailto:soporte@playcae.com"
+          className="text-brandSecondary hover:underline"
+        >
+          soporte@playcae.com
+        </a>
+      </p>
+
+      <h2 className="text-2xl font-semibold mt-10 text-brandPrimary">
         1. ¿Qué son las cookies?
       </h2>
       <p>
