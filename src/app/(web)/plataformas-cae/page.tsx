@@ -34,6 +34,12 @@ export const metadata: Metadata = {
     description:
       "Todo lo que necesitas saber para elegir la mejor plataforma CAE. Comparativa, funcionalidades y precios.",
     url: "https://www.playcae.com/plataformas-cae",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

@@ -27,6 +27,12 @@ export const metadata: Metadata = {
     description:
       "Todo sobre la Coordinación de Actividades Empresariales: normativa, obligaciones y cómo cumplir con el RD 171/2004.",
     url: "https://www.playcae.com/que-es-cae",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };
@@ -134,7 +140,7 @@ export default function QueEsCAEPage() {
       name: "PlayCAE",
       logo: {
         "@type": "ImageObject",
-        url: "https://www.playcae.com/og-logo.png",
+        url: "https://www.playcae.com/assets/playcae.png",
       },
     },
     datePublished: "2025-01-01",

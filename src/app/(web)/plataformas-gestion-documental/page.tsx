@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     description:
       "Comparativa de plataformas de gestión documental para CAE. Automatización, IA y control de cumplimiento PRL.",
     url: "https://www.playcae.com/plataformas-gestion-documental",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

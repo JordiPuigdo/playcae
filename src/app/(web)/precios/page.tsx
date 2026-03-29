@@ -26,6 +26,12 @@ export const metadata: Metadata = {
     description:
       "Tarifas transparentes para gestión CAE. Sin costes por contrata. Planes adaptados a tu empresa.",
     url: "https://www.playcae.com/precios",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

@@ -32,6 +32,12 @@ export const metadata: Metadata = {
     description:
       "Sabe quién está en planta en tiempo real. Vincula el acceso al estado documental PRL de cada trabajador.",
     url: "https://www.playcae.com/servicios/control-accesos-fabrica",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

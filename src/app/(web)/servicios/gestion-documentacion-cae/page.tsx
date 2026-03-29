@@ -30,6 +30,12 @@ export const metadata: Metadata = {
     description:
       "Valida documentación PRL automáticamente con IA. Alertas de caducidad, trazabilidad para auditorías y cumplimiento normativo.",
     url: "https://www.playcae.com/servicios/gestion-documentacion-cae",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

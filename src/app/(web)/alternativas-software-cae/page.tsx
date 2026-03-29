@@ -28,6 +28,12 @@ export const metadata: Metadata = {
     description:
       "Comparativa de plataformas CAE 2025. Descubre por qué empresas migran a PlayCAE desde otras soluciones.",
     url: "https://www.playcae.com/alternativas-software-cae",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

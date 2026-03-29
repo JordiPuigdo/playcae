@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     title: "Blog | PlayCAE",
     description:
       "Contenido práctico sobre CAE, PRL y control de accesos para pymes manufactureras.",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

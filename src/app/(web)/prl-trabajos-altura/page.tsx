@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     description:
       "Todo sobre prevención de riesgos laborales en trabajos en altura. Normativa, formación obligatoria y documentación requerida.",
     url: "https://www.playcae.com/prl-trabajos-altura",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

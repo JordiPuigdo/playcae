@@ -15,6 +15,12 @@ export const metadata: Metadata = {
     title: "Contacto | PlayCAE",
     description:
       "Agenda una demo o consulta cómo automatizar CAE y PRL en tu fábrica.",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
 };
 
@@ -24,7 +30,7 @@ export default function ContactoPage() {
     "@type": "Organization",
     name: "PlayCAE",
     url: "https://www.playcae.com",
-    logo: "https://www.playcae.com/og-logo.png",
+    logo: "https://www.playcae.com/assets/playcae.png",
     contactPoint: [
       {
         "@type": "ContactPoint",

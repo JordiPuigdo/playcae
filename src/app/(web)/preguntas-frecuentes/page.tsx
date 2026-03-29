@@ -21,6 +21,12 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     openGraph: {
       url: FAQ_CANONICAL_URL,
+      images: [
+        {
+          url: "https://www.playcae.com/og-logo.png",
+          alt: "PlayCAE – Plataforma CAE con IA",
+        },
+      ],
     },
   };
 }

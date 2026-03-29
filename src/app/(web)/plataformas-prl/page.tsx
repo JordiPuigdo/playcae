@@ -36,6 +36,12 @@ export const metadata: Metadata = {
     description:
       "Descubre las mejores plataformas PRL para gestión de prevención de riesgos laborales. Comparativa, funcionalidades y precios.",
     url: "https://www.playcae.com/plataformas-prl",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

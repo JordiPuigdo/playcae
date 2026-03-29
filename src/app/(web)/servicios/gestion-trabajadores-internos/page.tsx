@@ -43,6 +43,12 @@ export const metadata: Metadata = {
     siteName: "PlayCAE",
     locale: "es_ES",
     type: "website",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };

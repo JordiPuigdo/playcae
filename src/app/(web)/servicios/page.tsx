@@ -14,6 +14,12 @@ export const metadata: Metadata = {
     title: "Servicios | PlayCAE",
     description:
       "Validación documental PRL y control de accesos vinculados a CAE. Ahorra tiempo y cumple normativa.",
+    images: [
+      {
+        url: "https://www.playcae.com/og-logo.png",
+        alt: "PlayCAE – Plataforma CAE con IA",
+      },
+    ],
   },
   robots: { index: true, follow: true },
 };
