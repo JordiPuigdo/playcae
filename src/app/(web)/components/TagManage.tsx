@@ -1,12 +1,35 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Script from "next/script";
+import {
+  COOKIE_CONSENT_UPDATED_EVENT,
+  getStoredCookieConsent,
+} from "@/lib/cookie-consent";
 
 export default function TagManager() {
   const GOOGLE_ID = "GTM-W3STV2NX";
+  const [enabled, setEnabled] = useState(false);
+
+  useEffect(() => {
+    const syncConsent = () => {
+      setEnabled(Boolean(getStoredCookieConsent()?.analytics));
+    };
+
+    syncConsent();
+    window.addEventListener(COOKIE_CONSENT_UPDATED_EVENT, syncConsent);
+    window.addEventListener("storage", syncConsent);
+
+    return () => {
+      window.removeEventListener(COOKIE_CONSENT_UPDATED_EVENT, syncConsent);
+      window.removeEventListener("storage", syncConsent);
+    };
+  }, []);
+
+  if (!enabled) return null;
+
   return (
     <>
-      {" "}
       <noscript>
         <iframe
           src={`https://www.googletagmanager.com/ns.html?id=${GOOGLE_ID}`}

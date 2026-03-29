@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "@/hooks/useTranslation";
+import { openCookiePreferences } from "@/lib/cookie-consent";
 
 type Particle = {
   top: string;
@@ -105,7 +106,7 @@ export default function Footer() {
               aria-label="Acciones principales"
             >
               <Link
-                href="/signup"
+                href="/register"
                 className="flex items-center justify-center rounded-full bg-playOrange px-8 py-4 font-bold text-white shadow-lg transition-transform hover:scale-105 hover:shadow-xl hover:bg-playOrange/90"
                 aria-label="Crear cuenta gratis en PlayCAE"
               >
@@ -388,6 +389,15 @@ export default function Footer() {
                 <Link href="/legal/cookies" className="hover:underline">
                   {t("footer.linkCookies")}
                 </Link>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  onClick={openCookiePreferences}
+                  className="hover:underline text-left"
+                >
+                  Configurar cookies
+                </button>
               </li>
             </ul>
           </div>

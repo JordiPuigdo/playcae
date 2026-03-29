@@ -123,7 +123,7 @@ export default function CookiesPage() {
             </td>
           </tr>
           <tr className="border-t">
-            <td className="p-2">cookie_consent</td>
+            <td className="p-2">playcae-cookie-consent</td>
             <td className="p-2">Técnica</td>
             <td className="p-2">1 año</td>
             <td className="p-2">
@@ -203,11 +203,9 @@ export default function CookiesPage() {
         Cuando accedes por primera vez a nuestro sitio web, se muestra un banner
         o ventana emergente que te permite aceptar o rechazar las cookies no
         esenciales. Puedes modificar tu consentimiento en cualquier momento
-        desde el{" "}
-        <a href="#" className="text-brandSecondary hover:underline">
-          Centro de preferencias de cookies
-        </a>{" "}
-        (próximamente disponible).
+        desde el botón{" "}
+        <strong>&quot;Configurar cookies&quot;</strong>{" "}
+        disponible en el pie de página.
       </p>
 
       <h2 className="text-2xl font-semibold mt-10 text-brandPrimary">
@@ -220,7 +218,7 @@ export default function CookiesPage() {
       </p>
 
       <p className="text-sm text-muted-foreground mt-10">
-        Última actualización: Octubre de 2025
+        Última actualización: Marzo de 2026
       </p>
     </main>
   );

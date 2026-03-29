@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./../styles/global.css";
 import { Toaster } from "@/components/ui/Toaster";
 import Script from "next/script";
+import ConsentAwareGoogleAnalytics from "@/components/ConsentAwareGoogleAnalytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,7 +42,6 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 const organizationSchema = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -82,18 +82,7 @@ export default function RootLayout({
           {JSON.stringify(organizationSchema)}
         </Script>
         {children}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}');
-          `}
-        </Script>
+        <ConsentAwareGoogleAnalytics />
         <Toaster />
       </body>
     </html>
