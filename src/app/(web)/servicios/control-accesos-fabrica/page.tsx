@@ -1,4 +1,4 @@
-// app/servicios/control-accesos-fabrica/page.tsx
+﻿// app/servicios/control-accesos-fabrica/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Control de Accesos y Registro en Fábrica | PlayCAE",
+  title: "Control de Accesos y Registro en Fábrica",
   description:
     "Controla en tiempo real quién está dentro de tu fábrica. Bloqueo automático por incumplimiento PRL, registro horario y trazabilidad para auditorías.",
   alternates: { canonical: "/servicios/control-accesos-fabrica" },
@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     title: "Control de Accesos y Registro en Fábrica | PlayCAE",
     description:
       "Sabe quién está en planta en tiempo real. Vincula el acceso al estado documental PRL de cada trabajador.",
-    url: "https://playcae.com/servicios/control-accesos-fabrica",
+    url: "https://www.playcae.com/servicios/control-accesos-fabrica",
   },
   robots: { index: true, follow: true },
 };
@@ -158,7 +158,7 @@ export default function ControlAccesosPage() {
     provider: {
       "@type": "Organization",
       name: "PlayCAE",
-      url: "https://playcae.com",
+      url: "https://www.playcae.com",
     },
     areaServed: {
       "@type": "Country",
@@ -179,19 +179,19 @@ export default function ControlAccesosPage() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Servicios",
-        item: "https://playcae.com/servicios",
+        item: "https://www.playcae.com/servicios",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "Control de Accesos",
-        item: "https://playcae.com/servicios/control-accesos-fabrica",
+        item: "https://www.playcae.com/servicios/control-accesos-fabrica",
       },
     ],
   };
@@ -625,3 +625,6 @@ export default function ControlAccesosPage() {
     </main>
   );
 }
+
+
+

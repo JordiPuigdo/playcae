@@ -1,4 +1,4 @@
-// app/(web)/alternativas-software-cae/page.tsx
+﻿// app/(web)/alternativas-software-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Alternativas a Plataformas CAE: Comparativa 2025 | PlayCAE",
+  title: "Alternativas a Plataformas CAE: Comparativa 2025",
   description:
     "Buscas alternativas a tu software CAE actual? Compara funcionalidades, precios y tiempos de implementación. PlayCAE: IA, precio transparente y soporte real.",
   alternates: { canonical: "/alternativas-software-cae" },
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     title: "Alternativas a Plataformas CAE | PlayCAE",
     description:
       "Comparativa de plataformas CAE 2025. Descubre por qué empresas migran a PlayCAE desde otras soluciones.",
-    url: "https://playcae.com/alternativas-software-cae",
+    url: "https://www.playcae.com/alternativas-software-cae",
   },
   robots: { index: true, follow: true },
 };
@@ -153,13 +153,13 @@ export default function AlternativasCAEPage() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Alternativas Software CAE",
-        item: "https://playcae.com/alternativas-software-cae",
+        item: "https://www.playcae.com/alternativas-software-cae",
       },
     ],
   };
@@ -475,3 +475,6 @@ export default function AlternativasCAEPage() {
     </main>
   );
 }
+
+
+

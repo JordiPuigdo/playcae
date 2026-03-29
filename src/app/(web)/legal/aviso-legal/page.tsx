@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Aviso Legal | PlayCAE",
+  title: "Aviso Legal",
   description:
     "Aviso legal de PlayCAE, plataforma de gestión documental CAE y PRL con Inteligencia Artificial. Información sobre propiedad, condiciones de uso y responsabilidades.",
   alternates: { canonical: "/legal/aviso-legal" },
@@ -44,7 +44,7 @@ export default function AvisoLegalPage() {
         <br />
         <strong>Dominio web:</strong>{" "}
         <a
-          href="https://playcae.com"
+          href="https://www.playcae.com"
           className="text-brandSecondary hover:underline"
         >
           www.playcae.com
@@ -172,3 +172,7 @@ export default function AvisoLegalPage() {
     </main>
   );
 }
+
+
+
+

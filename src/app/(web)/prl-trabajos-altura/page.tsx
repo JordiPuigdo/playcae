@@ -1,4 +1,4 @@
-// app/(web)/prl-trabajos-altura/page.tsx
+﻿// app/(web)/prl-trabajos-altura/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -18,8 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "PRL Trabajos en Altura: Normativa, Formación y Prevención 2026 | PlayCAE",
+  title: "PRL Trabajos en Altura: Normativa, Formación y Prevención 2026",
   description:
     "Guía completa sobre PRL en trabajos en altura: normativa RD 2177/2004, formación obligatoria, EPIs, medidas preventivas y cómo gestionar la documentación CAE.",
   keywords: [
@@ -558,3 +557,6 @@ export default function PRLTrabajosAlturaPage() {
     </div>
   );
 }
+
+
+

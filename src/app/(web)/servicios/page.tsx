@@ -1,16 +1,16 @@
-// app/(web)/servicios/page.tsx
+﻿// app/(web)/servicios/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 
 export const metadata: Metadata = {
-  title: "Servicios | PlayCAE",
+  title: "Servicios",
   description:
     "Servicios de PlayCAE para gestionar CAE y PRL con IA: validación documental y control de accesos en fábrica. Pensado para pymes manufactureras en España.",
   alternates: { canonical: "/servicios" },
   openGraph: {
     type: "website",
-    url: "https://playcae.com/servicios",
+    url: "https://www.playcae.com/servicios",
     title: "Servicios | PlayCAE",
     description:
       "Validación documental PRL y control de accesos vinculados a CAE. Ahorra tiempo y cumple normativa.",
@@ -51,7 +51,7 @@ export default function ServiciosIndexPage() {
     itemListElement: services.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
-      url: `https://playcae.com/servicios/${s.slug}`,
+      url: `https://www.playcae.com/servicios/${s.slug}`,
       name: s.title,
     })),
   };
@@ -64,13 +64,13 @@ export default function ServiciosIndexPage() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Servicios",
-        item: "https://playcae.com/servicios",
+        item: "https://www.playcae.com/servicios",
       },
     ],
   };
@@ -155,3 +155,6 @@ export default function ServiciosIndexPage() {
     </main>
   );
 }
+
+
+

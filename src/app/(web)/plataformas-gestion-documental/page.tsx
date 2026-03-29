@@ -1,4 +1,4 @@
-// app/(web)/plataformas-gestion-documental/page.tsx
+﻿// app/(web)/plataformas-gestion-documental/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -18,8 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "Plataformas de Gestión Documental CAE: Comparativa 2026 | PlayCAE",
+  title: "Plataformas de Gestión Documental CAE: Comparativa 2026",
   description:
     "Descubre las mejores plataformas de gestión documental para CAE y PRL. Automatiza validación de documentos, control de caducidades y cumplimiento normativo.",
   keywords: [
@@ -584,3 +583,6 @@ export default function PlataformasGestionDocumentalPage() {
     </div>
   );
 }
+
+
+

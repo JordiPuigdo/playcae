@@ -1,4 +1,4 @@
-// app/blog/layout.tsx
+﻿// app/blog/layout.tsx
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
   openGraph: {
     type: "website",
-    url: "https://playcae.com/blog",
+    url: "https://www.playcae.com/blog",
     title: "Blog | PlayCAE",
     description:
       "Contenido práctico sobre CAE, PRL y control de accesos para pymes manufactureras.",
@@ -26,3 +26,5 @@ export default function BlogLayout({
 }) {
   return <main className="container mx-auto px-4 py-16">{children}</main>;
 }
+
+

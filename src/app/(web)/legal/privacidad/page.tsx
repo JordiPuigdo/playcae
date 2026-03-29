@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidad | PlayCAE",
+  title: "Política de Privacidad",
   description:
     "Política de privacidad de PlayCAE. Conoce cómo tratamos tus datos personales conforme al RGPD y la LOPDGDD. Transparencia, seguridad y cumplimiento normativo.",
   alternates: { canonical: "/legal/privacidad" },
@@ -45,7 +45,7 @@ export default function PrivacidadPage() {
         <br />
         <strong>Sitio web:</strong>{" "}
         <a
-          href="https://playcae.com"
+          href="https://www.playcae.com"
           className="text-brandSecondary hover:underline"
         >
           www.playcae.com
@@ -233,3 +233,7 @@ export default function PrivacidadPage() {
     </main>
   );
 }
+
+
+
+

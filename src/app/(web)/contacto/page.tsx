@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Script from "next/script";
 import Link from "next/link";
 import ContactForm from "../components/ContactForm";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
   openGraph: {
     type: "website",
-    url: "https://playcae.com/contacto",
+    url: "https://www.playcae.com/contacto",
     title: "Contacto | PlayCAE",
     description:
       "Agenda una demo o consulta cómo automatizar CAE y PRL en tu fábrica.",
@@ -23,8 +23,8 @@ export default function ContactoPage() {
     "@context": "https://schema.org",
     "@type": "Organization",
     name: "PlayCAE",
-    url: "https://playcae.com",
-    logo: "https://playcae.com/og-logo.png",
+    url: "https://www.playcae.com",
+    logo: "https://www.playcae.com/og-logo.png",
     contactPoint: [
       {
         "@type": "ContactPoint",
@@ -41,7 +41,7 @@ export default function ContactoPage() {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     name: "Contacto | PlayCAE",
-    url: "https://playcae.com/contacto",
+    url: "https://www.playcae.com/contacto",
     description:
       "Agenda una demo o envía tus dudas sobre CAE y PRL con IA. Respuesta en menos de 24h.",
   };
@@ -54,13 +54,13 @@ export default function ContactoPage() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Contacto",
-        item: "https://playcae.com/contacto",
+        item: "https://www.playcae.com/contacto",
       },
     ],
   };
@@ -207,3 +207,6 @@ export default function ContactoPage() {
     </main>
   );
 }
+
+
+

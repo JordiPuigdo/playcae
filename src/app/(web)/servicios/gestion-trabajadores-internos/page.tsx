@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import {
@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Gestión Documental de Trabajadores Internos | PlayCAE",
+  title: "Gestión Documental de Trabajadores Internos",
   description:
     "Centraliza y automatiza la documentación PRL de tus trabajadores internos. DNI, formaciones, reconocimientos médicos y control de entradas y salidas. Cumple normativa sin esfuerzo.",
   keywords: [
@@ -160,7 +160,7 @@ export default function GestionTrabajadoresInternosPage() {
   const softwareApplicationLd = {
     "@context": "https://schema.org",
     "@type": "SoftwareApplication",
-    name: "PlayCAE — Gestión Trabajadores Internos",
+    name: "PlayCAE - Gestión Trabajadores Internos",
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     description:
@@ -510,3 +510,6 @@ export default function GestionTrabajadoresInternosPage() {
     </main>
   );
 }
+
+
+

@@ -1,4 +1,4 @@
-// app/(web)/plataformas-cae/page.tsx
+﻿// app/(web)/plataformas-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -17,8 +17,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "Plataformas CAE: Guía Completa para Elegir tu Software 2026 | PlayCAE",
+  title: "Plataformas CAE: Guía Completa para Elegir tu Software 2026",
   description:
     "Comparativa de plataformas CAE para Coordinación de Actividades Empresariales. Funcionalidades clave, precios y cómo elegir la mejor plataforma CAE para tu empresa.",
   keywords: [
@@ -407,3 +406,6 @@ export default function PlataformasCAEPage() {
     </div>
   );
 }
+
+
+

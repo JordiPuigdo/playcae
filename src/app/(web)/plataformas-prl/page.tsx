@@ -1,4 +1,4 @@
-// app/(web)/plataformas-prl/page.tsx
+﻿// app/(web)/plataformas-prl/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
@@ -19,8 +19,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "Plataformas PRL: Mejores Soluciones de Prevención de Riesgos 2026 | PlayCAE",
+  title: "Plataformas PRL: Mejores Soluciones de Prevención de Riesgos 2026",
   description:
     "Comparativa de plataformas PRL para gestión de prevención de riesgos laborales. Software CAE, control documental, formaciones, accidentes y cumplimiento normativo.",
   keywords: [
@@ -387,7 +386,7 @@ export default function PlataformasPRLPage() {
                     <div className="mb-4 space-y-2">
                       {criteria.questions.map((question, qIndex) => (
                         <div key={qIndex} className="flex items-start gap-2">
-                          <span className="text-blue-600">•</span>
+                          <span className="text-blue-600">✓</span>
                           <span className="text-gray-700">{question}</span>
                         </div>
                       ))}
@@ -622,3 +621,6 @@ export default function PlataformasPRLPage() {
     </div>
   );
 }
+
+
+

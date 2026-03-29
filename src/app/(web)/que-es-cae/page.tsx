@@ -1,4 +1,4 @@
-// app/(web)/que-es-cae/page.tsx
+﻿// app/(web)/que-es-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -17,8 +17,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title:
-    "¿Qué es la CAE? Guía Completa Coordinación Actividades Empresariales | PlayCAE",
+  title: "¿Qué es la CAE? Guía Completa Coordinación Actividades Empresariales",
   description:
     "Guía completa sobre CAE (Coordinación de Actividades Empresariales). Qué es, normativa RD 171/2004, obligaciones, sanciones y cómo automatizar la gestión documental PRL.",
   alternates: { canonical: "/que-es-cae" },
@@ -27,7 +26,7 @@ export const metadata: Metadata = {
     title: "¿Qué es la CAE? Guía Completa 2025 | PlayCAE",
     description:
       "Todo sobre la Coordinación de Actividades Empresariales: normativa, obligaciones y cómo cumplir con el RD 171/2004.",
-    url: "https://playcae.com/que-es-cae",
+    url: "https://www.playcae.com/que-es-cae",
   },
   robots: { index: true, follow: true },
 };
@@ -128,14 +127,14 @@ export default function QueEsCAEPage() {
     author: {
       "@type": "Organization",
       name: "PlayCAE",
-      url: "https://playcae.com",
+      url: "https://www.playcae.com",
     },
     publisher: {
       "@type": "Organization",
       name: "PlayCAE",
       logo: {
         "@type": "ImageObject",
-        url: "https://playcae.com/og-logo.png",
+        url: "https://www.playcae.com/og-logo.png",
       },
     },
     datePublished: "2025-01-01",
@@ -150,13 +149,13 @@ export default function QueEsCAEPage() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "¿Qué es la CAE?",
-        item: "https://playcae.com/que-es-cae",
+        item: "https://www.playcae.com/que-es-cae",
       },
     ],
   };
@@ -510,3 +509,7 @@ export default function QueEsCAEPage() {
     </main>
   );
 }
+
+
+
+

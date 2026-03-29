@@ -1,4 +1,4 @@
-// app/(web)/precios/page.tsx
+﻿// app/(web)/precios/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -16,7 +16,7 @@ import {
 import { getServerTranslations } from "@/i18n/server";
 
 export const metadata: Metadata = {
-  title: "Precios Software CAE | Tarifas Transparentes | PlayCAE",
+  title: "Precios Software CAE | Tarifas Transparentes",
   description:
     "Precios claros y sin costes ocultos para tu software CAE. Sin tarifas por contrata ni por trabajador. Descubre nuestros planes para pymes y empresas.",
   alternates: { canonical: "/precios" },
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     title: "Precios Software CAE | PlayCAE",
     description:
       "Tarifas transparentes para gestión CAE. Sin costes por contrata. Planes adaptados a tu empresa.",
-    url: "https://playcae.com/precios",
+    url: "https://www.playcae.com/precios",
   },
   robots: { index: true, follow: true },
 };
@@ -67,13 +67,13 @@ export default async function PreciosPage() {
         "@type": "ListItem",
         position: 1,
         name: t.pricing.breadcrumbs.home,
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: t.pricing.breadcrumbs.pricing,
-        item: "https://playcae.com/precios",
+        item: "https://www.playcae.com/precios",
       },
     ],
   };
@@ -277,7 +277,7 @@ export default async function PreciosPage() {
                       key={idx}
                       className="flex items-center gap-2 text-red-700"
                     >
-                      <span className="text-red-500">✗</span>
+                      <span className="text-red-500">✕</span>
                       {item}
                     </li>
                   ))}
@@ -372,3 +372,7 @@ export default async function PreciosPage() {
     </main>
   );
 }
+
+
+
+

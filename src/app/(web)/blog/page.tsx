@@ -1,4 +1,4 @@
-// app/blog/page.tsx
+﻿// app/blog/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -15,7 +15,7 @@ export default function BlogIndex() {
     "@context": "https://schema.org",
     "@type": "Blog",
     name: "Blog PlayCAE",
-    url: "https://playcae.com/blog",
+    url: "https://www.playcae.com/blog",
     description:
       "Guías y recursos sobre CAE, PRL y control de accesos para pymes manufactureras en España.",
   };
@@ -45,3 +45,5 @@ export default function BlogIndex() {
     </>
   );
 }
+
+

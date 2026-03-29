@@ -1,4 +1,4 @@
-// app/servicios/gestion-documentacion-cae/page.tsx
+﻿// app/servicios/gestion-documentacion-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Validación Documental PRL y CAE con IA | PlayCAE",
+  title: "Validación Documental PRL y CAE con IA",
   description:
     "Automatiza la solicitud y validación de documentación PRL con inteligencia artificial. Ahorra hasta 15h semanales, evita sanciones de hasta 500.000€ y cumple el RD 171/2004.",
   alternates: { canonical: "/servicios/gestion-documentacion-cae" },
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     title: "Validación Documental PRL y CAE con IA | PlayCAE",
     description:
       "Valida documentación PRL automáticamente con IA. Alertas de caducidad, trazabilidad para auditorías y cumplimiento normativo.",
-    url: "https://playcae.com/servicios/gestion-documentacion-cae",
+    url: "https://www.playcae.com/servicios/gestion-documentacion-cae",
   },
   robots: { index: true, follow: true },
 };
@@ -125,7 +125,7 @@ export default function ServicioCAE() {
     provider: {
       "@type": "Organization",
       name: "PlayCAE",
-      url: "https://playcae.com",
+      url: "https://www.playcae.com",
     },
     areaServed: {
       "@type": "Country",
@@ -159,19 +159,19 @@ export default function ServicioCAE() {
         "@type": "ListItem",
         position: 1,
         name: "Inicio",
-        item: "https://playcae.com/",
+        item: "https://www.playcae.com/",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Servicios",
-        item: "https://playcae.com/servicios",
+        item: "https://www.playcae.com/servicios",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: "Validación Documental PRL",
-        item: "https://playcae.com/servicios/gestion-documentacion-cae",
+        item: "https://www.playcae.com/servicios/gestion-documentacion-cae",
       },
     ],
   };
@@ -542,3 +542,7 @@ export default function ServicioCAE() {
     </main>
   );
 }
+
+
+
+

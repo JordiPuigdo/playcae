@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Política de Cookies | PlayCAE",
+  title: "Política de Cookies",
   description:
     "Política de cookies de PlayCAE. Conoce qué cookies utilizamos para mejorar tu experiencia, analizar el tráfico y ofrecerte un servicio personalizado conforme al RGPD y la LSSI.",
   alternates: { canonical: "/legal/cookies" },
@@ -204,3 +204,6 @@ export default function CookiesPage() {
     </main>
   );
 }
+
+
+
