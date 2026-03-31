@@ -492,6 +492,7 @@
       "expiredByAI": "Caducado por IA"
     },
     "actions": {
+      "openDocument": "Abrir documento",
       "goToCompany": "Ir a empresa"
     }
   },
