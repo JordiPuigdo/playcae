@@ -16,6 +16,7 @@ import {
   ScanLine,
   Settings,
   ShieldCheck,
+  FileCheck2,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -29,6 +30,11 @@ export default function Sidebar() {
     { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
     { href: "/dashboard/companies", label: t("dashboard.sidebar.companies"), icon: Building2 },
     { href: "/dashboard/subcontractors", label: t("dashboard.sidebar.subcontractors"), icon: Network },
+    {
+      href: "/dashboard/documents",
+      label: t("dashboard.sidebar.pendingValidation"),
+      icon: FileCheck2,
+    },
     {
       href: "/dashboard/access-history",
       label: t("dashboard.sidebar.accessHistory"),

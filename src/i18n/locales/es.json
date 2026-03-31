@@ -414,7 +414,8 @@
       "systemAudit": "Auditoría",
       "reports": "Informes",
       "settings": "Configuración",
-      "configuration": "Configuración"
+      "configuration": "Configuración",
+      "pendingValidation": "Pendientes de validar"
     },
     "stats": {
       "totalCompanies": "Total Empresas",
@@ -453,6 +454,45 @@
         "safetyDocs": "Documentos de Seguridad",
         "compliance": "Cumplimiento Legal"
       }
+    }
+  },
+  "pendingValidation": {
+    "title": "Documentacion pendiente de validar",
+    "subtitle": "Consulta en una sola vista los documentos pendientes de tus empresas asignadas.",
+    "tableTitle": "Cola de validacion",
+    "noPermission": "No tienes permisos para acceder a esta pagina.",
+    "empty": "No hay documentos pendientes con los filtros actuales.",
+    "columns": {
+      "company": "Empresa",
+      "owner": "Titular",
+      "documentType": "Tipo de documento",
+      "status": "Estado",
+      "uploadedDate": "Fecha de subida",
+      "expirationDate": "Fecha de caducidad",
+      "actions": "Acciones"
+    },
+    "filters": {
+      "searchPlaceholder": "Buscar por empresa, trabajador o tipo de documento...",
+      "company": "Empresa",
+      "status": "Estado",
+      "ownerType": "Tipo de titular",
+      "allCompanies": "Todas las empresas",
+      "allStatuses": "Todos los estados",
+      "allOwnerTypes": "Todos los tipos"
+    },
+    "owner": {
+      "company": "Empresa",
+      "worker": "Trabajador"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "pendingManualy": "Pendiente de validacion manual",
+      "rejected": "Rechazado",
+      "expired": "Caducado",
+      "expiredByAI": "Caducado por IA"
+    },
+    "actions": {
+      "goToCompany": "Ir a empresa"
     }
   },
   "configuration": {

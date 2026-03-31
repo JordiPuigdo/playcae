@@ -414,7 +414,8 @@
       "systemAudit": "Auditoria",
       "reports": "Informes",
       "settings": "Configuració",
-      "configuration": "Configuració"
+      "configuration": "Configuració",
+      "pendingValidation": "Pendents de validar"
     },
     "stats": {
       "totalCompanies": "Total Empreses",
@@ -453,6 +454,45 @@
         "safetyDocs": "Documents de Seguretat",
         "compliance": "Compliment Legal"
       }
+    }
+  },
+  "pendingValidation": {
+    "title": "Documentacio pendent de validar",
+    "subtitle": "Consulta en una sola vista els documents pendents de les teves empreses assignades.",
+    "tableTitle": "Cua de validacio",
+    "noPermission": "No tens permisos per accedir a aquesta pagina.",
+    "empty": "No hi ha documents pendents amb els filtres actuals.",
+    "columns": {
+      "company": "Empresa",
+      "owner": "Titular",
+      "documentType": "Tipus de document",
+      "status": "Estat",
+      "uploadedDate": "Data de pujada",
+      "expirationDate": "Data de caducitat",
+      "actions": "Accions"
+    },
+    "filters": {
+      "searchPlaceholder": "Cerca per empresa, treballador o tipus de document...",
+      "company": "Empresa",
+      "status": "Estat",
+      "ownerType": "Tipus de titular",
+      "allCompanies": "Totes les empreses",
+      "allStatuses": "Tots els estats",
+      "allOwnerTypes": "Tots els tipus"
+    },
+    "owner": {
+      "company": "Empresa",
+      "worker": "Treballador"
+    },
+    "status": {
+      "pending": "Pendent",
+      "pendingManualy": "Pendent de validacio manual",
+      "rejected": "Rebutjat",
+      "expired": "Caducat",
+      "expiredByAI": "Caducat per IA"
+    },
+    "actions": {
+      "goToCompany": "Anar a empresa"
     }
   },
   "configuration": {
