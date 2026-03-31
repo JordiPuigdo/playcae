@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { AlertCircle, Building2, FileCheck2, FileText, Loader2, Search } from "lucide-react";
+import { AlertCircle, Building2, FileCheck2, Loader2, Search } from "lucide-react";
 import Link from "next/link";
 import { Alert, AlertDescription } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
@@ -257,7 +257,16 @@ export default function DocumentsManagementPage() {
                         ? t("pendingValidation.owner.company")
                         : item.workerFullName || "-"}
                     </TableCell>
-                    <TableCell className="text-brand-primary">{item.documentTypeName}</TableCell>
+                    <TableCell className="text-brand-primary">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenDocument(item.documentId)}
+                        title={item.documentTypeName}
+                        className="text-left hover:underline focus:underline focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-md"
+                      >
+                        {item.documentTypeName}
+                      </button>
+                    </TableCell>
                     <TableCell>
                       <DocumentStatusBadge status={item.status as EntityStatus} />
                     </TableCell>
@@ -269,14 +278,6 @@ export default function DocumentsManagementPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleOpenDocument(item.documentId)}
-                        >
-                          <FileText className="h-4 w-4 mr-1" />
-                          {t("pendingValidation.actions.openDocument")}
-                        </Button>
                         <DocumentValidation
                           documentName={item.documentTypeName}
                           canValidate={isAdmin}
