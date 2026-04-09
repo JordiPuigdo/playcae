@@ -23,6 +23,15 @@ const statusVariant: Record<
   Archived: "destructive",
 };
 
+const statusTranslationKey: Record<
+  BlogStatus,
+  "blog.status.draft" | "blog.status.published" | "blog.status.archived"
+> = {
+  Draft: "blog.status.draft",
+  Published: "blog.status.published",
+  Archived: "blog.status.archived",
+};
+
 export function BlogTable({
   posts,
   onEdit,
@@ -73,7 +82,7 @@ export function BlogTable({
               </td>
               <td className="px-6 py-4">
                 <Badge variant={statusVariant[post.status]}>
-                  {t(`blog.status.${post.status.toLowerCase()}`)}
+                  {t(statusTranslationKey[post.status])}
                 </Badge>
               </td>
               <td className="px-6 py-4">

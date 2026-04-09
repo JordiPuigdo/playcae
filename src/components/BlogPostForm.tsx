@@ -43,7 +43,7 @@ export function BlogPostForm({
   const [description, setDescription] = useState(post?.description ?? "");
   const [content, setContent] = useState(post?.content ?? "");
   const [author, setAuthor] = useState(
-    post?.author ?? user?.name ?? "PlayCAE"
+    post?.author ?? user?.userName ?? "PlayCAE"
   );
   const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
   const [status, setStatus] = useState<BlogStatus>(post?.status ?? "Draft");
