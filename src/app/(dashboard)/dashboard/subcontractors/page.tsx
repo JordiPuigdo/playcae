@@ -65,27 +65,29 @@ export default function SubcontractorsPage() {
       })[] = [];
 
       if (isAdmin) {
-        // Admin: cargar subcontratas de todas las empresas principales
-        const mainCompanies = companies.filter((c) => !c.isSubcontractor);
+        // Admin: cargar subcontratas de todas las empresas principales en paralelo
+        const mainCompanies = companies.filter((c) => !c.isSubcontractor && c.id);
 
-        for (const company of mainCompanies) {
-          if (!company.id) continue;
-          try {
-            const subs = await getSubcontractors(company.id);
-            subs.forEach((sub) => {
-              allSubs.push({
+        const results = await Promise.all(
+          mainCompanies.map(async (company) => {
+            try {
+              const subs = await getSubcontractors(company.id!);
+              return subs.map((sub) => ({
                 ...sub,
                 parentCompanyName: company.name,
                 parentCompanyId: company.id,
-              });
-            });
-          } catch (error) {
-            console.error(
-              `Error loading subcontractors for company ${company.id}:`,
-              error
-            );
-          }
-        }
+              }));
+            } catch (error) {
+              console.error(
+                `Error loading subcontractors for company ${company.id}:`,
+                error
+              );
+              return [];
+            }
+          })
+        );
+
+        allSubs.push(...results.flat());
       } else {
         // Company: cargar solo subcontratas de su empresa
         try {

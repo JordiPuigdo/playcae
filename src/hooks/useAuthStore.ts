@@ -9,7 +9,7 @@ import {
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 4; // Incrementado para forzar migraciÃ³n
+const AUTH_VERSION = 5; // Incrementado para incluir token JWT persistido
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -93,6 +93,7 @@ export const useAuthStore = create<AuthState>()(
               // Admin: login directo sin selecciÃ³n de empresa
               set({
                 user: userData,
+                token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
@@ -107,6 +108,7 @@ export const useAuthStore = create<AuthState>()(
               // PRL: requiere seleccionar sede si tiene mÃ¡s de una
               set({
                 user: userData,
+                token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
@@ -121,6 +123,7 @@ export const useAuthStore = create<AuthState>()(
               // Company con parentCompanyId definido: usarlo directamente
               set({
                 user: userData,
+                token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
@@ -135,6 +138,7 @@ export const useAuthStore = create<AuthState>()(
               // Company sin parentCompanyId: necesita seleccionar empresa
               set({
                 user: userData,
+                token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,

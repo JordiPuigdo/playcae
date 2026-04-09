@@ -415,7 +415,8 @@
       "reports": "Informes",
       "settings": "Configuración",
       "configuration": "Configuración",
-      "pendingValidation": "Pendientes de validar"
+      "pendingValidation": "Pendientes de validar",
+      "blog": "Blog"
     },
     "stats": {
       "totalCompanies": "Total Empresas",
@@ -454,6 +455,54 @@
         "safetyDocs": "Documentos de Seguridad",
         "compliance": "Cumplimiento Legal"
       }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "newPost": "Nuevo artículo",
+    "editPost": "Editar artículo",
+    "noPosts": "No hay artículos publicados todavía.",
+    "postNotFound": "Artículo no encontrado.",
+    "confirmDelete": "¿Seguro que quieres eliminar este artículo?",
+    "createSuccess": "Artículo creado correctamente.",
+    "createError": "Error al crear el artículo.",
+    "updateSuccess": "Artículo actualizado correctamente.",
+    "updateError": "Error al actualizar el artículo.",
+    "deleteSuccess": "Artículo eliminado correctamente.",
+    "deleteError": "Error al eliminar el artículo.",
+    "publishSuccess": "Artículo publicado.",
+    "publishError": "Error al publicar el artículo.",
+    "unpublishSuccess": "Artículo despublicado.",
+    "unpublishError": "Error al despublicar el artículo.",
+    "status": {
+      "draft": "Borrador",
+      "published": "Publicado",
+      "archived": "Archivado"
+    },
+    "table": {
+      "title": "Título",
+      "status": "Estado",
+      "tags": "Etiquetas",
+      "date": "Fecha"
+    },
+    "actions": {
+      "publish": "Publicar",
+      "unpublish": "Despublicar"
+    },
+    "form": {
+      "title": "Título",
+      "titlePlaceholder": "Ej: Cómo gestionar la documentación CAE",
+      "slug": "Slug (URL)",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Resumen breve del artículo (SEO)",
+      "content": "Contenido",
+      "contentPlaceholder": "Escribe el contenido en Markdown...",
+      "markdownHint": "Se admite formato Markdown.",
+      "author": "Autor",
+      "coverImage": "Imagen de portada",
+      "tags": "Etiquetas",
+      "tagsPlaceholder": "Escribe y pulsa Enter para añadir",
+      "status": "Estado"
     }
   },
   "pendingValidation": {
@@ -1236,5 +1285,45 @@
         10
       ]
     }
+  },
+  "license": {
+    "sidebar": "Licencias",
+    "title": "Gestión de licencias",
+    "subtitle": "Configura los límites de recursos por cliente",
+    "auth": {
+      "title": "Zona restringida",
+      "description": "Esta sección es exclusiva para implementadores de PlayCAE. Introduce tu contraseña para continuar.",
+      "passwordLabel": "Contraseña",
+      "confirm": "Verificar acceso",
+      "verifying": "Verificando...",
+      "error": "Contraseña incorrecta"
+    },
+    "search": "Buscar por nombre o email...",
+    "table": {
+      "admin": "Cliente (Admin)",
+      "contractors": "Contratistas",
+      "workers": "Trabajadores",
+      "prlUsers": "Usuarios PRL",
+      "sites": "Sedes",
+      "threshold": "Umbral alerta",
+      "noLimit": "∞",
+      "actions": "Acciones",
+      "edit": "Editar"
+    },
+    "edit": {
+      "title": "Editar licencia",
+      "subtitle": "Deja el campo vacío para sin límite",
+      "contractors": "Máx. contratistas",
+      "workers": "Máx. trabajadores",
+      "prlUsers": "Máx. usuarios PRL",
+      "sites": "Máx. sedes",
+      "threshold": "Umbral de alerta (unidades restantes)",
+      "save": "Guardar cambios",
+      "cancel": "Cancelar",
+      "success": "Licencia actualizada correctamente",
+      "error": "Error al actualizar la licencia"
+    },
+    "noTenants": "No hay clientes registrados",
+    "loading": "Cargando licencias..."
   }
 }

@@ -1,4 +1,4 @@
-import { User, UserLoginResponse } from "@/types/user";
+import { UserLoginResponse } from "@/types/user";
 import { HttpClient } from "./http-client";
 import { ApiResponse } from "@/interfaces/api-response";
 
@@ -6,7 +6,7 @@ export interface ILoginService {
   login(
     email: string,
     password: string
-  ): Promise<ApiResponse<User> | undefined>;
+  ): Promise<ApiResponse<UserLoginResponse> | undefined>;
 }
 
 export class LoginService implements ILoginService {

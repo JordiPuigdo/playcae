@@ -415,7 +415,8 @@
       "reports": "Informes",
       "settings": "Configuració",
       "configuration": "Configuració",
-      "pendingValidation": "Pendents de validar"
+      "pendingValidation": "Pendents de validar",
+      "blog": "Blog"
     },
     "stats": {
       "totalCompanies": "Total Empreses",
@@ -454,6 +455,54 @@
         "safetyDocs": "Documents de Seguretat",
         "compliance": "Compliment Legal"
       }
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "newPost": "Nou article",
+    "editPost": "Editar article",
+    "noPosts": "No hi ha articles publicats encara.",
+    "postNotFound": "Article no trobat.",
+    "confirmDelete": "Segur que vols eliminar aquest article?",
+    "createSuccess": "Article creat correctament.",
+    "createError": "Error en crear l'article.",
+    "updateSuccess": "Article actualitzat correctament.",
+    "updateError": "Error en actualitzar l'article.",
+    "deleteSuccess": "Article eliminat correctament.",
+    "deleteError": "Error en eliminar l'article.",
+    "publishSuccess": "Article publicat.",
+    "publishError": "Error en publicar l'article.",
+    "unpublishSuccess": "Article despublicat.",
+    "unpublishError": "Error en despublicar l'article.",
+    "status": {
+      "draft": "Esborrany",
+      "published": "Publicat",
+      "archived": "Arxivat"
+    },
+    "table": {
+      "title": "Títol",
+      "status": "Estat",
+      "tags": "Etiquetes",
+      "date": "Data"
+    },
+    "actions": {
+      "publish": "Publicar",
+      "unpublish": "Despublicar"
+    },
+    "form": {
+      "title": "Títol",
+      "titlePlaceholder": "Ex: Com gestionar la documentació CAE",
+      "slug": "Slug (URL)",
+      "description": "Descripció",
+      "descriptionPlaceholder": "Resum breu de l'article (SEO)",
+      "content": "Contingut",
+      "contentPlaceholder": "Escriu el contingut en Markdown...",
+      "markdownHint": "S'admet format Markdown.",
+      "author": "Autor",
+      "coverImage": "Imatge de portada",
+      "tags": "Etiquetes",
+      "tagsPlaceholder": "Escriu i prem Enter per afegir",
+      "status": "Estat"
     }
   },
   "pendingValidation": {
@@ -1236,5 +1285,45 @@
         10
       ]
     }
+  },
+  "license": {
+    "sidebar": "Llicències",
+    "title": "Gestió de llicències",
+    "subtitle": "Configura els límits de recursos per client",
+    "auth": {
+      "title": "Zona restringida",
+      "description": "Aquesta secció és exclusiva per a implementadors de PlayCAE. Introdueix la teva contrasenya per continuar.",
+      "passwordLabel": "Contrasenya",
+      "confirm": "Verificar accés",
+      "verifying": "Verificant...",
+      "error": "Contrasenya incorrecta"
+    },
+    "search": "Cerca per nom o email...",
+    "table": {
+      "admin": "Client (Admin)",
+      "contractors": "Contractistes",
+      "workers": "Treballadors",
+      "prlUsers": "Usuaris PRL",
+      "sites": "Seus",
+      "threshold": "Llindar alerta",
+      "noLimit": "∞",
+      "actions": "Accions",
+      "edit": "Editar"
+    },
+    "edit": {
+      "title": "Editar llicència",
+      "subtitle": "Deixa el camp buit per sense límit",
+      "contractors": "Màx. contractistes",
+      "workers": "Màx. treballadors",
+      "prlUsers": "Màx. usuaris PRL",
+      "sites": "Màx. seus",
+      "threshold": "Llindar d'alerta (unitats restants)",
+      "save": "Desar canvis",
+      "cancel": "Cancel·lar",
+      "success": "Llicència actualitzada correctament",
+      "error": "Error en actualitzar la llicència"
+    },
+    "noTenants": "No hi ha clients registrats",
+    "loading": "Carregant llicències..."
   }
 }

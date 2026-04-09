@@ -17,6 +17,8 @@ import {
   Settings,
   ShieldCheck,
   FileCheck2,
+  BookOpen,
+  KeyRound,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -54,6 +56,11 @@ export default function Sidebar() {
       href: "/dashboard/configuration",
       label: t("dashboard.sidebar.configuration"),
       icon: Settings,
+    },
+    {
+      href: "/dashboard/blog",
+      label: t("dashboard.sidebar.blog"),
+      icon: BookOpen,
     },
   ];
 
@@ -97,6 +104,8 @@ export default function Sidebar() {
       ? prlLinks
       : companyLinks;
 
+  const isSuperAdmin = role === UserRole.SuperAdmin;
+
   const isActive = (href: string) => {
     if (href === "/dashboard") {
       return pathname === "/dashboard";
@@ -135,6 +144,24 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {isSuperAdmin && (
+          <>
+            <div className="my-2 border-t border-playBlueLight/30" />
+            <Link
+              href="/dashboard/settings/licenses"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-xs
+              ${
+                isActive("/dashboard/settings/licenses")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey/70"
+              }`}
+            >
+              <KeyRound className="h-4 w-4" />
+              {t("license.sidebar")}
+            </Link>
+          </>
+        )}
       </nav>
     </aside>
   );
