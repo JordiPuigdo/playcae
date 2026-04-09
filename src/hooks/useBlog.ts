@@ -18,7 +18,7 @@ export const useBlog = () => {
     BLOG_KEY,
     async () => {
       const response = await blogService.getAll();
-      return response.data;
+      return Array.isArray(response.data) ? response.data : [];
     },
     {
       revalidateOnFocus: false,
