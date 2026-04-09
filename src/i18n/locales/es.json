@@ -1324,6 +1324,10 @@
       "error": "Error al actualizar la licencia"
     },
     "noTenants": "No hay clientes registrados",
-    "loading": "Cargando licencias..."
+    "loading": "Cargando licencias...",
+    "quota": {
+      "contractorsExceeded": "Límite alcanzado: {{current}}/{{max}} empresas. Contacta con tu gestor para ampliar la licencia.",
+      "workersExceeded": "Límite de trabajadores alcanzado. Contacta con tu gestor para ampliar la licencia."
+    }
   }
 }

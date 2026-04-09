@@ -1,4 +1,5 @@
 import { BaseEntity } from "./baseEntity";
+import { LicenseSummary } from "./license";
 
 export interface UserLoginResponse extends User {
   refreshTokenExpiryTime: string;
@@ -11,6 +12,7 @@ export interface UserLoginResponse extends User {
   role: UserRole;
   userName: string;
   adminLogoUrl?: string | null; // Logo personalizado del admin
+  licenseSummary?: LicenseSummary | null;
 }
 
 export interface ParentCompany {

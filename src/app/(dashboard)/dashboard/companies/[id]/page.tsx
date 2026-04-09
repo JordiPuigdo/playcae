@@ -75,7 +75,11 @@ const CompanyDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubcontractorFormOpen, setIsSubcontractorFormOpen] = useState(false);
   const { toast } = useToast();
-  const { user } = useAuthStore();
+  const { user, licenseSummary } = useAuthStore();
+
+  const workersAtLimit =
+    licenseSummary?.maxWorkers != null &&
+    licenseSummary.currentWorkers >= licenseSummary.maxWorkers;
 
   const [filters, setFilters] = useState<{
     search: string;
@@ -329,6 +333,7 @@ const CompanyDetailPage = () => {
               </div>
 
               <WorkersTable
+                workersAtLimit={workersAtLimit}
                 onCreateWorker={(e) => {
                   handleCreateWorker(e);
                 }}

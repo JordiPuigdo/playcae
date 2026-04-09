@@ -48,6 +48,7 @@ import { DocumentStatusBadge } from "./DocumentStatusBadge";
 interface WorkersTableProps {
   workers: Worker[];
   userRole: UserRole;
+  workersAtLimit?: boolean;
   onCreateWorker: (data: WorkerFormData) => void;
   onUpdateWorker: (workerId: string, data: WorkerFormData) => void;
   onDeleteWorker: (workerId: string) => void;
@@ -73,6 +74,7 @@ const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
 export const WorkersTable = ({
   workers,
   userRole,
+  workersAtLimit = false,
   onCreateWorker,
   onUpdateWorker,
   onDeleteWorker,
@@ -298,13 +300,22 @@ export const WorkersTable = ({
             </CardTitle>
 
             {canEdit && (
-              <Button
-                onClick={() => setIsFormOpen(true)}
-                className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white"
-              >
-                <Plus className="h-4 w-4" />
-                {t("workers.addWorker")}
-              </Button>
+              <div className="relative group inline-block">
+                <Button
+                  onClick={() => !workersAtLimit && setIsFormOpen(true)}
+                  disabled={workersAtLimit}
+                  className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Plus className="h-4 w-4" />
+                  {t("workers.addWorker")}
+                </Button>
+                {workersAtLimit && (
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    {t("license.quota.workersExceeded")}
+                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </CardHeader>

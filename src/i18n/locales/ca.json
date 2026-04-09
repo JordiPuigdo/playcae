@@ -1324,6 +1324,10 @@
       "error": "Error en actualitzar la llicència"
     },
     "noTenants": "No hi ha clients registrats",
-    "loading": "Carregant llicències..."
+    "loading": "Carregant llicències...",
+    "quota": {
+      "contractorsExceeded": "Límit assolit: {{current}}/{{max}} empreses. Contacta amb el teu gestor per ampliar la llicència.",
+      "workersExceeded": "Límit de treballadors assolit. Contacta amb el teu gestor per ampliar la llicència."
+    }
   }
 }

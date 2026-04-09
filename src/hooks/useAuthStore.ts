@@ -6,10 +6,11 @@ import {
   UserRole,
   UserSiteOption,
 } from "@/types/user";
+import { LicenseSummary } from "@/types/license";
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 5; // Incrementado para incluir token JWT persistido
+const AUTH_VERSION = 6; // Incrementado para incluir licenseSummary en sesión
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -37,6 +38,7 @@ interface AuthState {
   setAvailableSites: (sites: UserSiteOption[]) => void;
   setPendingSiteSelection: (pending: boolean) => void;
   setLogoUrl: (logoUrl: string | null) => void;
+  licenseSummary: LicenseSummary | null;
 }
 
 const initialState: Omit<
@@ -65,6 +67,7 @@ const initialState: Omit<
   selectedSiteId: null,
   pendingSiteSelection: false,
   availableSites: [],
+  licenseSummary: null,
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -88,6 +91,7 @@ export const useAuthStore = create<AuthState>()(
 
             // Usar el logo del admin si viene en la respuesta del login
             const logoUrl: string | null = userData.adminLogoUrl || null;
+            const licenseSummary = userData.licenseSummary ?? null;
 
             if (isAdmin) {
               // Admin: login directo sin selecciÃ³n de empresa
@@ -98,6 +102,7 @@ export const useAuthStore = create<AuthState>()(
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
                 logoUrl,
+                licenseSummary,
                 selectedParentCompanyId: null,
                 pendingParentCompanySelection: false,
                 selectedSiteId: null,
@@ -113,6 +118,7 @@ export const useAuthStore = create<AuthState>()(
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
                 logoUrl,
+                licenseSummary,
                 pendingParentCompanySelection: false,
                 selectedParentCompanyId: userData.parentCompanyId || null,
                 pendingSiteSelection: true,
@@ -128,6 +134,7 @@ export const useAuthStore = create<AuthState>()(
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
                 logoUrl,
+                licenseSummary,
                 selectedParentCompanyId: userData.parentCompanyId,
                 pendingParentCompanySelection: false,
                 selectedSiteId: null,
@@ -143,6 +150,7 @@ export const useAuthStore = create<AuthState>()(
                 isLoading: false,
                 expiresAt: now + SESSION_DURATION_MS,
                 logoUrl,
+                licenseSummary,
                 pendingParentCompanySelection: true,
                 selectedParentCompanyId: null,
                 selectedSiteId: null,
@@ -215,9 +223,10 @@ export const useAuthStore = create<AuthState>()(
         token: state.token,
         isAuthenticated: state.isAuthenticated,
         expiresAt: state.expiresAt,
-        logoUrl: state.logoUrl, // Persistir logo URL
-        selectedParentCompanyId: state.selectedParentCompanyId, // Persistir selecciÃ³n
-        selectedSiteId: state.selectedSiteId, // Persistir sede seleccionada
+        logoUrl: state.logoUrl,
+        selectedParentCompanyId: state.selectedParentCompanyId,
+        selectedSiteId: state.selectedSiteId,
+        licenseSummary: state.licenseSummary,
       }),
     },
   ),
