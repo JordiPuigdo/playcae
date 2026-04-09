@@ -57,11 +57,6 @@ export default function Sidebar() {
       label: t("dashboard.sidebar.configuration"),
       icon: Settings,
     },
-    {
-      href: "/dashboard/blog",
-      label: t("dashboard.sidebar.blog"),
-      icon: BookOpen,
-    },
   ];
 
   // Links para Company
@@ -148,6 +143,18 @@ export default function Sidebar() {
         {isSuperAdmin && (
           <>
             <div className="my-2 border-t border-playBlueLight/30" />
+            <Link
+              href="/dashboard/blog"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-xs
+              ${
+                isActive("/dashboard/blog")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey/70"
+              }`}
+            >
+              <BookOpen className="h-4 w-4" />
+              {t("dashboard.sidebar.blog")}
+            </Link>
             <Link
               href="/dashboard/settings/licenses"
               className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-xs

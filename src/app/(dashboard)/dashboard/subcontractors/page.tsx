@@ -65,27 +65,17 @@ export default function SubcontractorsPage() {
       })[] = [];
 
       if (isAdmin) {
-        // Admin: cargar subcontratas de todas las empresas principales en paralelo
+        // Admin: las subcontratas ya vienen embebidas en el array de companies del SWR
         const mainCompanies = companies.filter((c) => !c.isSubcontractor && c.id);
 
-        const results = await Promise.all(
-          mainCompanies.map(async (company) => {
-            try {
-              const subs = await getSubcontractors(company.id!);
-              return subs.map((sub) => ({
-                ...sub,
-                parentCompanyName: company.name,
-                parentCompanyId: company.id,
-              }));
-            } catch (error) {
-              console.error(
-                `Error loading subcontractors for company ${company.id}:`,
-                error
-              );
-              return [];
-            }
-          })
-        );
+        const results = mainCompanies.map((company) => {
+          const subs = company.subcontractors ?? [];
+          return subs.map((sub) => ({
+            ...sub,
+            parentCompanyName: company.name,
+            parentCompanyId: company.id,
+          }));
+        });
 
         allSubs.push(...results.flat());
       } else {
