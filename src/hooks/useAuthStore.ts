@@ -1,10 +1,15 @@
-import { create } from "zustand";
+﻿import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { ParentCompany, UserLoginResponse, UserRole } from "@/types/user";
+import {
+  ParentCompany,
+  UserLoginResponse,
+  UserRole,
+  UserSiteOption,
+} from "@/types/user";
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 3; // Incrementado para forzar migración
+const AUTH_VERSION = 4; // Incrementado para forzar migraciÃ³n
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -14,16 +19,23 @@ interface AuthState {
   errorAuth: string | null;
   expiresAt: number | null; // timestamp en ms
   logoUrl: string | null; // Logo personalizado del usuario ADMIN
-  // Nuevo: para selección de empresa padre
+  // Nuevo: para selecciÃ³n de empresa padre
   selectedParentCompanyId: string | null;
   pendingParentCompanySelection: boolean; // true si necesita seleccionar empresa
   availableParentCompanies: ParentCompany[]; // lista de empresas disponibles
+  // Nuevo: selecciÃ³n de sede para PRL
+  selectedSiteId: string | null;
+  pendingSiteSelection: boolean;
+  availableSites: UserSiteOption[];
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
   setSelectedParentCompany: (companyId: string) => void;
   setAvailableParentCompanies: (companies: ParentCompany[]) => void;
   setPendingParentCompanySelection: (pending: boolean) => void;
+  setSelectedSite: (siteId: string) => void;
+  setAvailableSites: (sites: UserSiteOption[]) => void;
+  setPendingSiteSelection: (pending: boolean) => void;
   setLogoUrl: (logoUrl: string | null) => void;
 }
 
@@ -35,6 +47,9 @@ const initialState: Omit<
   | "setSelectedParentCompany"
   | "setAvailableParentCompanies"
   | "setPendingParentCompanySelection"
+  | "setSelectedSite"
+  | "setAvailableSites"
+  | "setPendingSiteSelection"
   | "setLogoUrl"
 > = {
   user: null,
@@ -47,6 +62,9 @@ const initialState: Omit<
   selectedParentCompanyId: null,
   pendingParentCompanySelection: false,
   availableParentCompanies: [],
+  selectedSiteId: null,
+  pendingSiteSelection: false,
+  availableSites: [],
 };
 
 export const useAuthStore = create<AuthState>()(
@@ -63,7 +81,7 @@ export const useAuthStore = create<AuthState>()(
             const now = Date.now();
             const userData = response.data;
 
-            // Admin no tiene companyId, no necesita selección de empresa padre
+            // Admin no tiene companyId, no necesita selecciÃ³n de empresa padre
             const isAdmin =
               userData.role === UserRole.Admin ||
               userData.role === UserRole.SuperAdmin;
@@ -72,7 +90,7 @@ export const useAuthStore = create<AuthState>()(
             const logoUrl: string | null = userData.adminLogoUrl || null;
 
             if (isAdmin) {
-              // Admin: login directo sin selección de empresa
+              // Admin: login directo sin selecciÃ³n de empresa
               set({
                 user: userData,
                 isAuthenticated: true,
@@ -81,6 +99,23 @@ export const useAuthStore = create<AuthState>()(
                 logoUrl,
                 selectedParentCompanyId: null,
                 pendingParentCompanySelection: false,
+                selectedSiteId: null,
+                pendingSiteSelection: false,
+                availableSites: [],
+              });
+            } else if (userData.role === UserRole.PRLManager) {
+              // PRL: requiere seleccionar sede si tiene mÃ¡s de una
+              set({
+                user: userData,
+                isAuthenticated: true,
+                isLoading: false,
+                expiresAt: now + SESSION_DURATION_MS,
+                logoUrl,
+                pendingParentCompanySelection: false,
+                selectedParentCompanyId: userData.parentCompanyId || null,
+                pendingSiteSelection: true,
+                selectedSiteId: null,
+                availableSites: [],
               });
             } else if (userData.parentCompanyId) {
               // Company con parentCompanyId definido: usarlo directamente
@@ -92,6 +127,9 @@ export const useAuthStore = create<AuthState>()(
                 logoUrl,
                 selectedParentCompanyId: userData.parentCompanyId,
                 pendingParentCompanySelection: false,
+                selectedSiteId: null,
+                pendingSiteSelection: false,
+                availableSites: [],
               });
             } else {
               // Company sin parentCompanyId: necesita seleccionar empresa
@@ -103,6 +141,9 @@ export const useAuthStore = create<AuthState>()(
                 logoUrl,
                 pendingParentCompanySelection: true,
                 selectedParentCompanyId: null,
+                selectedSiteId: null,
+                pendingSiteSelection: false,
+                availableSites: [],
               });
             }
           } else {
@@ -138,6 +179,18 @@ export const useAuthStore = create<AuthState>()(
       setPendingParentCompanySelection: (pending: boolean) => {
         set({ pendingParentCompanySelection: pending });
       },
+      setSelectedSite: (siteId: string) => {
+        set({
+          selectedSiteId: siteId,
+          pendingSiteSelection: false,
+        });
+      },
+      setAvailableSites: (sites: UserSiteOption[]) => {
+        set({ availableSites: sites });
+      },
+      setPendingSiteSelection: (pending: boolean) => {
+        set({ pendingSiteSelection: pending });
+      },
       setLogoUrl: (logoUrl: string | null) => {
         set({ logoUrl });
       },
@@ -159,8 +212,10 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         expiresAt: state.expiresAt,
         logoUrl: state.logoUrl, // Persistir logo URL
-        selectedParentCompanyId: state.selectedParentCompanyId, // Persistir selección
+        selectedParentCompanyId: state.selectedParentCompanyId, // Persistir selecciÃ³n
+        selectedSiteId: state.selectedSiteId, // Persistir sede seleccionada
       }),
     },
   ),
 );
+

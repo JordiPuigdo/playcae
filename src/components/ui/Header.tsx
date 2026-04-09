@@ -4,11 +4,20 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
 import LanguageSelector from "@/components/LanguageSelector";
+import { UserRole } from "@/types/user";
 
 export default function Header() {
   const router = useRouter();
-  const { logout, logoUrl } = useAuthStore();
+  const { logout, logoUrl, user, availableSites, selectedSiteId, setSelectedSite } =
+    useAuthStore();
   const { t } = useTranslation();
 
   const handleLogout = () => {
@@ -29,6 +38,23 @@ export default function Header() {
         className="ml-2"
       />
       <div className="flex items-center gap-4">
+        {user?.role === UserRole.PRLManager && availableSites.length > 1 && (
+          <Select
+            value={selectedSiteId || ""}
+            onValueChange={setSelectedSite}
+          >
+            <SelectTrigger className="w-[220px]">
+              <SelectValue placeholder="Selecciona sede" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableSites.map((site) => (
+                <SelectItem key={site.id} value={site.id}>
+                  {site.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
         <LanguageSelector variant="minimal" showName={false} />
         <button
           onClick={handleLogout}

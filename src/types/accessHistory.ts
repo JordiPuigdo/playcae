@@ -1,8 +1,9 @@
-// ===== DTOs para validación y fichaje =====
+﻿// ===== DTOs para validaciÃ³n y fichaje =====
 
 export interface AccessValidationRequest {
   cardId: string; // DNI del trabajador
   adminUserId: string; // ID del usuario admin que valida (dueño del terminal)
+  siteId?: string; // ID de la sede seleccionada
   accessCompanyId?: string; // ID del centro de trabajo (opcional)
 }
 
@@ -26,14 +27,16 @@ export interface AccessValidationResult {
 
 export interface CheckInRequest {
   cardId: string; // DNI del trabajador
-  adminUserId: string; // ID del usuario admin que realiza el fichaje
+  adminUserId: string; // ID del usuario admin que valida (dueño del terminal)
+  siteId?: string; // ID de la sede seleccionada
   accessCompanyId?: string; // ID del centro de trabajo
   notes?: string;
 }
 
 export interface CheckOutRequest {
   cardId: string; // DNI del trabajador
-  adminUserId: string; // ID del usuario admin que realiza el desfichaje
+  adminUserId: string; // ID del usuario admin que valida (dueño del terminal)
+  siteId?: string; // ID de la sede seleccionada
   accessCompanyId?: string; // ID del centro de trabajo
   notes?: string;
 }
@@ -60,6 +63,7 @@ export interface AccessRecord {
 
 export interface AccessRecordFilter {
   accessCompanyId?: string;
+  siteId?: string;
   workerCompanyId?: string;
   workerId?: string;
   searchTerm?: string;
@@ -108,7 +112,7 @@ export interface AccessKPIData {
   trend: "up" | "down" | "stable";
 }
 
-// Función helper para convertir AccessRecord a AccessHistoryEntry (UI)
+// FunciÃ³n helper para convertir AccessRecord a AccessHistoryEntry (UI)
 export function mapAccessRecordToEntry(
   record: AccessRecord
 ): AccessHistoryEntry {
@@ -123,3 +127,5 @@ export function mapAccessRecordToEntry(
     status: record.status === 0 ? "Apto" : "No apto",
   };
 }
+
+

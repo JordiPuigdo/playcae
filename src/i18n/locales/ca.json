@@ -861,13 +861,13 @@
   "pricing": {
     "meta": {
       "title": "Preus Software CAE | Tarifes Transparents | PlayCAE",
-      "description": "Preus clars i sense costos ocults per al teu software CAE. Sense tarifes per contracta ni per treballador. Descobreix els nostres plans per a pimes i empreses."
+      "description": "Paga pel que realment necessites al teu software CAE. Sense costos ocults i sense pagar de més per volum que no utilitzes."
     },
     "hero": {
       "title": "Preus",
       "titleHighlight": "transparents",
-      "subtitle": "Sense costos ocults, sense tarifes per contracta, sense sorpreses. Tria el pla que millor s'adapti a la teva empresa.",
-      "badge": "14 dies de prova gratuïta en tots els plans"
+      "subtitle": "Paga pel que realment necessites. Sense costos ocults i sense pagar de més.",
+      "badge": "14 dies de prova gratuïta"
     },
     "plans": {
       "starter": {
@@ -895,7 +895,7 @@
     },
     "perMonth": "/mes",
     "includedInAll": {
-      "title": "Inclòs en tots els plans",
+      "title": "Inclòs en el teu preu",
       "subtitle": "Funcionalitats essencials disponibles des del primer dia",
       "items": "Validació documental amb IA|Alertes automàtiques de caducitat|Compliment RD 171/2004 garantit|Suport tècnic inclòs|Implementació en menys d'1 setmana|Migració gratuïta des d'una altra plataforma"
     },
@@ -922,8 +922,8 @@
           "answer": "Importem totes les teves empreses, treballadors i documents des de la teva plataforma actual. També inclou formació per al teu equip sense cost addicional."
         },
         {
-          "question": "Puc canviar de pla en qualsevol moment?",
-          "answer": "Sí. Pots pujar o baixar de pla quan ho necessitis. Els canvis s'apliquen en el següent cicle de facturació."
+          "question": "Puc ajustar el meu preu segons les meves necessitats?",
+          "answer": "Sí. Ajustem la proposta segons la teva operativa real. Els canvis s'apliquen en el cicle de facturació següent."
         },
         {
           "question": "Hi ha període de prova?",
@@ -936,10 +936,86 @@
       ]
     },
     "cta": {
-      "title": "Tens dubtes sobre quin pla triar?",
-      "subtitle": "Explica'ns el teu cas i et recomanem la millor opció. Sense compromís.",
+      "title": "Tens dubtes sobre la teva estimació?",
+      "subtitle": "Explica'ns el teu cas i t'ajudem a ajustar el preu a la teva operativa real. Sense compromís.",
       "talkToSales": "Parlar amb vendes",
       "tryFree": "Provar gratis 14 dies"
+    },
+    "estimator": {
+      "title": "Calcula el teu preu orientatiu",
+      "subtitle": "Respon aquestes preguntes i et recomanarem el pla més adequat per a la teva operativa.",
+      "disclaimer": "Estimació orientativa. El pressupost final pot variar segons integracions, SLA i necessitats específiques.",
+      "progress": "Pas {current} de {total}",
+      "summaryTitle": "Resum de la teva operativa",
+      "emptyValue": "No indicat",
+      "resultTitle": "Resultat orientatiu",
+      "recommendedPlan": "Pla recomanat",
+      "estimatedPrice": "Preu estimat",
+      "customPrice": "Personalitzat",
+      "monthly": "/mes",
+      "methodology": "Càlcul basat en volum operatiu: seus, contractes, treballadors, proveïdors i ús de validació amb IA.",
+      "contactCta": "Parlar amb vendes",
+      "trialCta": "Provar gratis",
+      "resetCta": "Recalcular",
+      "buttons": {
+        "back": "Anterior",
+        "next": "Següent",
+        "seeResult": "Veure resultat",
+        "edit": "Editar respostes"
+      },
+      "options": {
+        "yes": "Sí",
+        "no": "No",
+        "singleSite": "Una seu",
+        "multipleSites": "Diverses seus"
+      },
+      "validation": {
+        "selectOption": "Selecciona una opció per continuar.",
+        "minTwoSites": "Si tens diverses seus, indica com a mínim 2.",
+        "nonNegative": "Introdueix un valor vàlid (0 o superior).",
+        "positive": "Introdueix un valor superior a 0."
+      },
+      "steps": {
+        "sites": {
+          "label": "Seus",
+          "question": "La teva empresa opera en una o diverses seus?",
+          "countLabel": "Quantes seus tens?"
+        },
+        "contractors": {
+          "label": "Contractistes",
+          "question": "Quantes empreses contractistes tens?"
+        },
+        "contractorWorkers": {
+          "label": "Treballadors de contractes",
+          "question": "Quants treballadors aprox. sumen aquestes contractistes?"
+        },
+        "internalControl": {
+          "label": "Treballadors interns",
+          "question": "Vols controlar treballadors interns?"
+        },
+        "internalWorkers": {
+          "label": "Nº treballadors interns",
+          "question": "Quants treballadors interns vols controlar?"
+        },
+        "suppliersControl": {
+          "label": "Proveïdors",
+          "question": "Tens proveïdors i vols controlar-los?"
+        },
+        "suppliersCount": {
+          "label": "Nº proveïdors",
+          "question": "Quants proveïdors vols controlar?"
+        },
+        "aiValidation": {
+          "label": "Validació amb IA",
+          "question": "Vols utilitzar validació amb IA?"
+        }
+      },
+      "result": {
+        "volumeLow": "Operació petita",
+        "volumeMedium": "Operació mitjana",
+        "volumeHigh": "Operació alta",
+        "volumeEnterprise": "Operació complexa"
+      }
     },
     "breadcrumbs": {
       "home": "Inici",

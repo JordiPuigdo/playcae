@@ -19,6 +19,11 @@ export interface ParentCompany {
   taxId?: string;
 }
 
+export interface UserSiteOption {
+  id: string;
+  name: string;
+}
+
 export interface User extends BaseEntity {
   userName: string;
   role: UserRole;
@@ -28,4 +33,6 @@ export enum UserRole {
   SuperAdmin,
   Admin,
   Company,
+  Supplier,
+  PRLManager,
 }

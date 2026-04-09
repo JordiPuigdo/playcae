@@ -9,13 +9,22 @@ import { useAuthStore } from "@/hooks/useAuthStore";
 import { useUserConfiguration } from "@/hooks/useUserConfiguration";
 import { Toaster } from "@/components/ui/Toaster";
 import { UserRole } from "@/types/user";
+import { UserService } from "@/services/user.services";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { user, logoUrl, setLogoUrl } = useAuthStore();
+  const {
+    user,
+    logoUrl,
+    setLogoUrl,
+    availableSites,
+    setAvailableSites,
+    selectedSiteId,
+    setSelectedSite,
+  } = useAuthStore();
   const { getLogoUrl } = useUserConfiguration();
   const noIndexHead = (
     <>
@@ -48,6 +57,34 @@ export default function DashboardLayout({
 
     loadLogoIfNeeded();
   }, [user, logoUrl]);
+
+  useEffect(() => {
+    const loadPrlSitesIfNeeded = async () => {
+      if (!user || user.role !== UserRole.PRLManager) return;
+      if (availableSites.length > 0 && selectedSiteId) return;
+
+      try {
+        const userService = new UserService();
+        const response = await userService.getSitesByUserId(user.userId);
+        const sites = response.data || [];
+        const options = sites
+          .filter((site) => !!site.id)
+          .map((site) => ({
+            id: site.id as string,
+            name: site.name,
+          }));
+
+        setAvailableSites(options);
+        if (!selectedSiteId && options.length > 0) {
+          setSelectedSite(options[0].id);
+        }
+      } catch (error) {
+        console.error("Error loading PRL sites in dashboard:", error);
+      }
+    };
+
+    loadPrlSitesIfNeeded();
+  }, [user, availableSites.length, selectedSiteId, setAvailableSites, setSelectedSite]);
 
   if (user === null) {
     return (

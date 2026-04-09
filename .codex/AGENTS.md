@@ -186,3 +186,15 @@ Se permite iterar rapido, pero siempre con estas barandillas:
 3. Cierre con lint + build.
 
 Mover rapido si, deuda gratuita no.
+
+## 14) Scale Gate obligatorio (nueva regla)
+
+Antes de escribir codigo, el agente debe dejar por escrito:
+1. Impacto esperado para 1/10/50/100 usuarios concurrentes.
+2. Riesgo de bucles de render/refetch (`useEffect`, SWR, Zustand).
+3. Numero de llamadas de red por accion de usuario (objetivo O(1)).
+4. Estrategia de degradacion si la API tarda mas de 2s.
+5. Plan minimo de verificacion de concurrencia.
+
+Si no puede responder esos 5 puntos, debe pedir contexto antes de implementar.
+Usar plantilla: `.codex/SCALE_REVIEW_TEMPLATE.md`.

@@ -861,13 +861,13 @@
   "pricing": {
     "meta": {
       "title": "Precios Software CAE | Tarifas Transparentes | PlayCAE",
-      "description": "Precios claros y sin costes ocultos para tu software CAE. Sin tarifas por contrata ni por trabajador. Descubre nuestros planes para pymes y empresas."
+      "description": "Paga por lo que realmente necesitas en tu software CAE. Sin costes ocultos y sin pagar de más por volumen que no usas."
     },
     "hero": {
       "title": "Precios",
       "titleHighlight": "transparentes",
-      "subtitle": "Sin costes ocultos, sin tarifas por contrata, sin sorpresas. Elige el plan que mejor se adapte a tu empresa.",
-      "badge": "14 días de prueba gratis en todos los planes"
+      "subtitle": "Paga por lo que realmente necesitas. Sin costes ocultos y sin pagar de más.",
+      "badge": "14 días de prueba gratis"
     },
     "plans": {
       "starter": {
@@ -895,7 +895,7 @@
     },
     "perMonth": "/mes",
     "includedInAll": {
-      "title": "Incluido en todos los planes",
+      "title": "Incluido en tu precio",
       "subtitle": "Funcionalidades esenciales disponibles desde el primer día",
       "items": "Validación documental con IA|Alertas automáticas de caducidad|Cumplimiento RD 171/2004 garantizado|Soporte técnico incluido|Implementación en menos de 1 semana|Migración gratuita desde otra plataforma"
     },
@@ -922,8 +922,8 @@
           "answer": "Importamos todas tus empresas, trabajadores y documentos desde tu plataforma actual. También incluye formación para tu equipo sin coste adicional."
         },
         {
-          "question": "¿Puedo cambiar de plan en cualquier momento?",
-          "answer": "Sí. Puedes subir o bajar de plan cuando lo necesites. Los cambios se aplican en el siguiente ciclo de facturación."
+          "question": "¿Puedo ajustar mi precio según mis necesidades?",
+          "answer": "Sí. Ajustamos la propuesta según tu operativa real. Los cambios se aplican en el siguiente ciclo de facturación."
         },
         {
           "question": "¿Hay período de prueba?",
@@ -936,10 +936,86 @@
       ]
     },
     "cta": {
-      "title": "¿Tienes dudas sobre qué plan elegir?",
-      "subtitle": "Cuéntanos tu caso y te recomendamos la mejor opción. Sin compromiso.",
+      "title": "¿Tienes dudas sobre tu estimación?",
+      "subtitle": "Cuéntanos tu caso y te ayudamos a ajustar el precio a tu operativa real. Sin compromiso.",
       "talkToSales": "Hablar con ventas",
       "tryFree": "Probar gratis 14 días"
+    },
+    "estimator": {
+      "title": "Calcula tu precio orientativo",
+      "subtitle": "Responde estas preguntas y te recomendamos el plan más adecuado para tu operativa.",
+      "disclaimer": "Estimación orientativa. El presupuesto final puede variar según integraciones, SLA y necesidades específicas.",
+      "progress": "Paso {current} de {total}",
+      "summaryTitle": "Resumen de tu operativa",
+      "emptyValue": "No indicado",
+      "resultTitle": "Resultado orientativo",
+      "recommendedPlan": "Plan recomendado",
+      "estimatedPrice": "Precio estimado",
+      "customPrice": "Personalizado",
+      "monthly": "/mes",
+      "methodology": "Cálculo basado en volumen operativo: sedes, contratas, trabajadores, proveedores y uso de validación con IA.",
+      "contactCta": "Hablar con ventas",
+      "trialCta": "Probar gratis",
+      "resetCta": "Recalcular",
+      "buttons": {
+        "back": "Anterior",
+        "next": "Siguiente",
+        "seeResult": "Ver resultado",
+        "edit": "Editar respuestas"
+      },
+      "options": {
+        "yes": "Sí",
+        "no": "No",
+        "singleSite": "Una sede",
+        "multipleSites": "Varias sedes"
+      },
+      "validation": {
+        "selectOption": "Selecciona una opción para continuar.",
+        "minTwoSites": "Si tienes varias sedes, indica al menos 2.",
+        "nonNegative": "Introduce un valor válido (0 o mayor).",
+        "positive": "Introduce un valor mayor que 0."
+      },
+      "steps": {
+        "sites": {
+          "label": "Sedes",
+          "question": "¿Tu empresa opera en una o varias sedes?",
+          "countLabel": "¿Cuántas sedes tienes?"
+        },
+        "contractors": {
+          "label": "Contratistas",
+          "question": "¿Cuántas empresas contratistas tienes?"
+        },
+        "contractorWorkers": {
+          "label": "Trabajadores de contratas",
+          "question": "¿Cuántos trabajadores aprox. suman esas contratistas?"
+        },
+        "internalControl": {
+          "label": "Trabajadores internos",
+          "question": "¿Quieres controlar trabajadores internos?"
+        },
+        "internalWorkers": {
+          "label": "Nº trabajadores internos",
+          "question": "¿Cuántos trabajadores internos quieres controlar?"
+        },
+        "suppliersControl": {
+          "label": "Proveedores",
+          "question": "¿Tienes proveedores y quieres controlarlos?"
+        },
+        "suppliersCount": {
+          "label": "Nº proveedores",
+          "question": "¿Cuántos proveedores quieres controlar?"
+        },
+        "aiValidation": {
+          "label": "Validación con IA",
+          "question": "¿Quieres usar validación con IA?"
+        }
+      },
+      "result": {
+        "volumeLow": "Operación pequeña",
+        "volumeMedium": "Operación media",
+        "volumeHigh": "Operación alta",
+        "volumeEnterprise": "Operación compleja"
+      }
     },
     "breadcrumbs": {
       "home": "Inicio",

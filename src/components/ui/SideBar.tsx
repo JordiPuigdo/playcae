@@ -72,7 +72,30 @@ export default function Sidebar() {
     },
   ];
 
-  const links = role === UserRole.Admin ? adminLinks : companyLinks;
+  const prlLinks = [
+    { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
+    {
+      href: "/dashboard/documents",
+      label: t("dashboard.sidebar.pendingValidation"),
+      icon: FileCheck2,
+    },
+    {
+      href: "/dashboard/access-history",
+      label: t("dashboard.sidebar.accessHistory"),
+      icon: History,
+    },
+    {
+      href: "/access-control",
+      label: t("dashboard.sidebar.accessControl"),
+      icon: ScanLine,
+    },
+  ];
+
+  const links = role === UserRole.Admin || role === UserRole.SuperAdmin
+    ? adminLinks
+    : role === UserRole.PRLManager
+      ? prlLinks
+      : companyLinks;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {

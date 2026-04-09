@@ -20,6 +20,7 @@ import { AccessService } from "@/services/access.service";
 import { AccessValidationResult } from "@/types/accessHistory";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useTranslation } from "@/hooks/useTranslation";
+import { UserRole } from "@/types/user";
 
 const accessService = new AccessService();
 
@@ -28,9 +29,14 @@ type ModalState = "idle" | "validated" | "checkin" | "checkout" | "error";
 const AccessControlContent = () => {
   const searchParams = useSearchParams();
   const accessCompanyId = searchParams.get("companyId") || "";
-  const { user, logoUrl } = useAuthStore();
+  const { user, logoUrl, selectedSiteId, availableSites } = useAuthStore();
   const { t } = useTranslation();
-  const adminUserId = user?.userId || "";
+  const adminUserId =
+    user?.role === UserRole.PRLManager
+      ? user?.parentCompanyId || user?.userId || ""
+      : user?.userId || "";
+  const selectedSiteName =
+    availableSites.find((site) => site.id === selectedSiteId)?.name || null;
 
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dni, setDni] = useState("");
@@ -81,6 +87,7 @@ const AccessControlContent = () => {
       const response = await accessService.validateAccess({
         cardId: dni,
         adminUserId: adminUserId,
+        siteId: selectedSiteId || undefined,
         accessCompanyId: accessCompanyId || undefined,
       });
 
@@ -107,6 +114,7 @@ const AccessControlContent = () => {
       await accessService.checkIn({
         cardId: dni,
         adminUserId: adminUserId,
+        siteId: selectedSiteId || undefined,
         accessCompanyId: accessCompanyId || undefined,
       });
       setModalState("checkin");
@@ -133,6 +141,7 @@ const AccessControlContent = () => {
       await accessService.checkOut({
         cardId: dni,
         adminUserId: adminUserId,
+        siteId: selectedSiteId || undefined,
         accessCompanyId: accessCompanyId || undefined,
       });
       setModalState("checkout");
@@ -354,6 +363,9 @@ const AccessControlContent = () => {
             <p className="text-xl text-muted-foreground">
               {t("accessControl.kiosk.enterDni")}
             </p>
+            {selectedSiteName && (
+              <p className="text-sm text-playBlueLight">Sede activa: {selectedSiteName}</p>
+            )}
           </div>
 
           <form onSubmit={handleValidate} className="space-y-6 w-full">

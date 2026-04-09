@@ -6,22 +6,26 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .codex/hooks/session_start_datetime.ps1"
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/session_start_datetime.ps1"
           }
         ]
       }
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash",
+        "matcher": ".*",
         "hooks": [
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .codex/hooks/pre_tool_auth_warning.ps1"
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/pre_tool_scale_guard.ps1"
           },
           {
             "type": "command",
-            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .codex/hooks/pre_tool_main_branch_warning.ps1"
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/pre_tool_auth_warning.ps1"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/pre_tool_main_branch_warning.ps1"
           }
         ]
       }

@@ -79,6 +79,7 @@ export class AccessService implements IAccessService {
 
     if (filter.accessCompanyId)
       params.append("accessCompanyId", filter.accessCompanyId);
+    if (filter.siteId) params.append("siteId", filter.siteId);
     if (filter.workerCompanyId)
       params.append("workerCompanyId", filter.workerCompanyId);
     if (filter.workerId) params.append("workerId", filter.workerId);

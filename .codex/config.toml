@@ -13,6 +13,12 @@ Always read AGENTS.md and .codex/ context files before starting any task.
 Stack: Next.js 14 (frontend) 
 Assume 20 concurrent users minimum. Before any solution, evaluate what
 happens with 100 simultaneous users.
+Before writing code, always include a short "Scale Impact" section with:
+- behavior at 1/10/50/100 concurrent users
+- frontend rerender/refresh loop risk
+- network amplification (calls per user action)
+- fallback plan if latency > 2s
+Use .codex/SCALE_REVIEW_TEMPLATE.md as checklist.
 Never modify auth-related files without explicit user confirmation.
 Always propose approach with trade-offs BEFORE writing any code.
 """
@@ -34,4 +40,16 @@ Before any change: list all modules that use the code being refactored.
 Never change a public method signature without explicit warning.
 Always propose refactor in small steps, not one big change.
 At the end: list what tests to update and what modules to verify manually.
+"""
+
+[agents.scale-architect]
+description = "Validates scalability and concurrency impact before implementation"
+instructions = """
+Analyze the proposal for 1/10/50/100 concurrent users.
+Flag: render loops, request storms, missing pagination, retry storms, and non-idempotent writes.
+Return findings as:
+- critical
+- important
+- suggestion
+Never write code. Only report risks and mitigations.
 """

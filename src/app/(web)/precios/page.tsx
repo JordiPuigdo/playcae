@@ -5,26 +5,27 @@ import Script from "next/script";
 import {
   ArrowRight,
   Check,
-  Building2,
-  Users,
-  Zap,
-  Shield,
-  Clock,
   FileCheck,
+  Clock,
+  Shield,
   Headphones,
+  Zap,
+  Users,
+  Building2,
 } from "lucide-react";
 import { getServerTranslations } from "@/i18n/server";
+import PricingEstimator from "./_components/PricingEstimator";
 
 export const metadata: Metadata = {
   title: "Precios Software CAE | Tarifas Transparentes",
   description:
-    "Precios claros y sin costes ocultos para tu software CAE. Sin tarifas por contrata ni por trabajador. Descubre nuestros planes para pymes y empresas.",
+    "Paga por lo que realmente necesitas en tu software CAE. Sin costes ocultos y sin pagar de más por volumen que no usas.",
   alternates: { canonical: "/precios" },
   openGraph: {
     type: "website",
     title: "Precios Software CAE | PlayCAE",
     description:
-      "Tarifas transparentes para gestión CAE. Sin costes por contrata. Planes adaptados a tu empresa.",
+      "Paga por lo que realmente necesitas en gestión CAE. Sin costes ocultos ni sobrecostes por volumen.",
     url: "https://www.playcae.com/precios",
     images: [
       {
@@ -38,7 +39,7 @@ export const metadata: Metadata = {
     site: "@PlayCae",
     title: "Precios Software CAE | PlayCAE",
     description:
-      "Tarifas transparentes para gestión CAE. Sin costes por contrata. Planes adaptados a tu empresa.",
+      "Paga por lo que realmente necesitas en gestión CAE. Sin costes ocultos ni sobrecostes por volumen.",
     images: ["https://www.playcae.com/og-logo.png"],
   },
   robots: { index: true, follow: true },
@@ -49,25 +50,6 @@ const includedIcons = [FileCheck, Clock, Shield, Headphones, Zap, Users];
 
 export default async function PreciosPage() {
   const t = await getServerTranslations();
-
-  // Build plans from translations
-  const plans = [
-    {
-      key: "starter" as const,
-      highlighted: false,
-      href: "/register",
-    },
-    {
-      key: "professional" as const,
-      highlighted: true,
-      href: "/contacto",
-    },
-    {
-      key: "enterprise" as const,
-      highlighted: false,
-      href: "/contacto",
-    },
-  ];
 
   const includedItems = t.pricing.includedInAll.items.split("|");
   const traditionalItems = t.pricing.comparison.traditional.items.split("|");
@@ -142,99 +124,11 @@ export default async function PreciosPage() {
         </div>
       </section>
 
-      {/* Pricing Cards */}
+      {/* Pricing Estimator */}
       <section className="bg-white py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, idx) => {
-              const planData = t.pricing.plans[plan.key];
-              const features = planData.features.split("|");
-              const isCustomPrice = planData.price === "Personalizado" || planData.price === "Personalitzat";
-
-              return (
-                <div
-                  key={idx}
-                  className={`rounded-2xl p-8 border ${
-                    plan.highlighted
-                      ? "bg-playBlueDark text-white border-playBlueDark scale-105 shadow-2xl"
-                      : "bg-white border-playBlueLight/20 shadow-lg"
-                  }`}
-                >
-                  {plan.highlighted && "badge" in planData && (
-                    <div className="bg-playOrange text-white text-sm font-semibold px-4 py-1 rounded-full inline-block mb-4">
-                      {planData.badge}
-                    </div>
-                  )}
-
-                  <h3
-                    className={`text-2xl font-bold ${
-                      plan.highlighted ? "text-white" : "text-playBlueDark"
-                    }`}
-                  >
-                    {planData.name}
-                  </h3>
-                  <p
-                    className={`mt-2 text-sm ${
-                      plan.highlighted ? "text-white/80" : "text-playBlueLight"
-                    }`}
-                  >
-                    {planData.description}
-                  </p>
-
-                  <div className="mt-6">
-                    <span
-                      className={`text-4xl font-bold ${
-                        plan.highlighted ? "text-white" : "text-playBlueDark"
-                      }`}
-                    >
-                      {isCustomPrice ? "" : "€"}
-                      {planData.price}
-                    </span>
-                    <span
-                      className={`text-lg ${
-                        plan.highlighted ? "text-white/80" : "text-playBlueLight"
-                      }`}
-                    >
-                      {isCustomPrice ? "" : t.pricing.perMonth}
-                    </span>
-                  </div>
-
-                  <ul className="mt-8 space-y-4">
-                    {features.map((feature, featureIdx) => (
-                      <li key={featureIdx} className="flex items-start gap-3">
-                        <Check
-                          className={`h-5 w-5 flex-shrink-0 mt-0.5 ${
-                            plan.highlighted
-                              ? "text-playOrange"
-                              : "text-playGreen"
-                          }`}
-                        />
-                        <span
-                          className={`text-sm ${
-                            plan.highlighted
-                              ? "text-white/90"
-                              : "text-playBlueDark"
-                          }`}
-                        >
-                          {feature}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-
-                  <Link
-                    href={plan.href}
-                    className={`mt-8 block w-full text-center rounded-full px-6 py-3 font-semibold transition-colors ${
-                      plan.highlighted
-                        ? "bg-playOrange text-white hover:bg-playOrange/90"
-                        : "bg-playBlueDark text-white hover:bg-playBlueDark/90"
-                    }`}
-                  >
-                    {planData.cta}
-                  </Link>
-                </div>
-              );
-            })}
+          <div className="max-w-5xl mx-auto">
+            <PricingEstimator content={t.pricing.estimator} />
           </div>
         </div>
       </section>

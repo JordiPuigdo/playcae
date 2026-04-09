@@ -23,8 +23,10 @@ import { useAuthSession } from "@/hooks/useAuthSession";
 import { ParentCompanySelector } from "@/components/ParentCompanySelector";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
+import { UserService } from "@/services/user.services";
 import dayjs from "dayjs";
 import { useUserConfiguration } from "@/hooks/useUserConfiguration";
+import { Site } from "@/types/site";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,13 +37,17 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(false);
   const [parentCompanies, setParentCompanies] = useState<ParentCompany[]>([]);
+  const [prlSites, setPrlSites] = useState<Site[]>([]);
 
   const {
     login,
     user,
     errorAuth,
     pendingParentCompanySelection,
+    pendingSiteSelection,
     setSelectedParentCompany,
+    setSelectedSite,
+    setAvailableSites,
     setLogoUrl,
   } = useAuthStore();
 
@@ -115,6 +121,47 @@ export default function LoginPage() {
     loadParentCompanies();
   }, [user, pendingParentCompanySelection, setSelectedParentCompany]);
 
+  useEffect(() => {
+    const loadPrlSites = async () => {
+      if (!user || !pendingSiteSelection || user.role !== UserRole.PRLManager) {
+        return;
+      }
+
+      setIsLoading(false);
+      setIsLoadingCompanies(true);
+      try {
+        const userService = new UserService();
+        const response = await userService.getSitesByUserId(user.userId);
+        const sites = response.data || [];
+        setPrlSites(sites);
+        setAvailableSites(
+          sites
+            .filter((s) => !!s.id)
+            .map((s) => ({
+              id: s.id as string,
+              name: s.name,
+            }))
+        );
+
+        if (sites.length === 0) {
+          setError("Tu usuario PRL no tiene sedes asignadas. Contacta con un administrador.");
+          return;
+        }
+
+        if (sites.length === 1 && sites[0].id) {
+          setSelectedSite(sites[0].id);
+        }
+      } catch (err) {
+        console.error("Error loading PRL sites:", err);
+        setError("Error al cargar las sedes disponibles");
+      } finally {
+        setIsLoadingCompanies(false);
+      }
+    };
+
+    loadPrlSites();
+  }, [user, pendingSiteSelection, setSelectedSite, setAvailableSites]);
+
   // Manejar selección de empresa padre
   const handleParentCompanySelect = async (companyId: string) => {
     try {
@@ -131,6 +178,10 @@ export default function LoginPage() {
     }
   };
 
+  const handleSiteSelect = (siteId: string) => {
+    setSelectedSite(siteId);
+  };
+
       // company que es UserId!
   
 
@@ -140,8 +191,11 @@ export default function LoginPage() {
     if (dayjs().isAfter(dayjs(user.refreshTokenExpiryTime))) return;
     // No redirigir si está pendiente de seleccionar empresa
     if (pendingParentCompanySelection) return;
+    if (pendingSiteSelection) return;
 
     if (user?.role === UserRole.Admin) {
+      router.push("/dashboard");
+    } else if (user?.role === UserRole.PRLManager) {
       router.push("/dashboard");
     } else if (user?.role === UserRole.Company) {
       if (user.isNew) {
@@ -150,7 +204,7 @@ export default function LoginPage() {
         router.push(`/dashboard/companies/${user.companyId}`);
       }
     }
-  }, [user, pendingParentCompanySelection, router]);
+  }, [user, pendingParentCompanySelection, pendingSiteSelection, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-playGrey p-4">
@@ -173,6 +227,29 @@ export default function LoginPage() {
           isLoading={isLoadingCompanies}
           onSelect={handleParentCompanySelect}
         />
+      ) : pendingSiteSelection && user && prlSites.length > 1 ? (
+        <Card className="w-full max-w-md border border-playBlueLight/30 shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold text-center text-brand-primary">
+              Selecciona sede
+            </CardTitle>
+            <CardDescription className="text-center text-playBlueLight">
+              Tu usuario PRL tiene acceso a varias sedes.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {prlSites.map((site) => (
+              <Button
+                key={site.id}
+                variant="outline"
+                className="w-full justify-start"
+                onClick={() => handleSiteSelect(site.id || "")}
+              >
+                {site.name}
+              </Button>
+            ))}
+          </CardContent>
+        </Card>
       ) : (
         <Card className="w-full max-w-md border border-playBlueLight/30 shadow-lg">
           <CardHeader className="space-y-1">
@@ -260,3 +337,5 @@ export default function LoginPage() {
     </div>
   );
 }
+
+
