@@ -1,5 +1,5 @@
 // app/sitemap.ts
-import { MetadataRoute } from "next";
+import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://www.playcae.com";
@@ -35,7 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${base}/servicios/gestion-trabajadores-internos`,
-      lastModified: new Date(),
+      lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.8,
     },
@@ -58,7 +58,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
+      url: `${base}/plataforma-cae`,
+      lastModified: contentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
       url: `${base}/plataformas-cae`,
+      lastModified: contentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${base}/plataformas-cae-prl`,
       lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.8,
@@ -89,7 +101,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${base}/preguntas-frecuentes`,
-      lastModified: new Date(),
+      lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.7,
     },
