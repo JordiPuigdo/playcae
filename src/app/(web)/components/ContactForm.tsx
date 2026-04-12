@@ -32,6 +32,26 @@ export default function ContactForm() {
       return;
     }
 
+    const personalDomains = [
+      "gmail.com", "googlemail.com",
+      "hotmail.com", "hotmail.es", "hotmail.co.uk",
+      "outlook.com", "outlook.es",
+      "live.com", "live.es",
+      "msn.com",
+      "yahoo.com", "yahoo.es", "yahoo.co.uk",
+      "ymail.com",
+      "icloud.com", "me.com", "mac.com",
+      "aol.com",
+      "mail.com", "gmx.com", "gmx.es",
+      "protonmail.com", "proton.me",
+      "tutanota.com",
+    ];
+    const emailDomain = email.split("@")[1]?.toLowerCase();
+    if (!emailDomain || personalDomains.includes(emailDomain)) {
+      setError(t("landing.contact.errorPersonalEmail"));
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {

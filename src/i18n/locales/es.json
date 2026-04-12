@@ -298,6 +298,7 @@
       "formSuccess": "¡Mensaje enviado correctamente!",
       "formError": "Error al enviar el mensaje. Inténtalo de nuevo.",
       "errorRequired": "Todos los campos son obligatorios",
+      "errorPersonalEmail": "Por favor, usa un email corporativo. No se aceptan correos de Gmail, Hotmail, Outlook, Yahoo u otros proveedores personales.",
       "errorGeneric": "Error al enviar el mensaje. Inténtalo de nuevo.",
       "infoTitle": "Información de contacto",
       "infoSubtitle": "También puedes escribirnos directamente o llamarnos:",
@@ -1022,7 +1023,9 @@
         "selectOption": "Selecciona una opción para continuar.",
         "minTwoSites": "Si tienes varias sedes, indica al menos 2.",
         "nonNegative": "Introduce un valor válido (0 o mayor).",
-        "positive": "Introduce un valor mayor que 0."
+        "positive": "Introduce un valor mayor que 0.",
+        "invalidEmail": "Introduce un email válido.",
+        "businessEmailRequired": "Introduce un correo corporativo. No se aceptan Gmail, Hotmail, Yahoo u otros proveedores gratuitos."
       },
       "steps": {
         "sites": {
@@ -1057,6 +1060,11 @@
         "aiValidation": {
           "label": "Validación con IA",
           "question": "¿Quieres usar validación con IA?"
+        },
+        "email": {
+          "label": "Correo corporativo",
+          "question": "¿A qué correo corporativo enviamos el presupuesto?",
+          "placeholder": "tu@empresa.com"
         }
       },
       "result": {

@@ -29,6 +29,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Solo emails corporativos
+    const personalDomains = new Set([
+      "gmail.com", "googlemail.com",
+      "hotmail.com", "hotmail.es", "hotmail.co.uk",
+      "outlook.com", "outlook.es",
+      "live.com", "live.es",
+      "msn.com",
+      "yahoo.com", "yahoo.es", "yahoo.co.uk",
+      "ymail.com",
+      "icloud.com", "me.com", "mac.com",
+      "aol.com",
+      "mail.com", "gmx.com", "gmx.es",
+      "protonmail.com", "proton.me",
+      "tutanota.com",
+    ]);
+    const emailDomain = email.split("@")[1]?.toLowerCase();
+    if (!emailDomain || personalDomains.has(emailDomain)) {
+      return NextResponse.json(
+        { error: "Por favor, usa un email corporativo. No se aceptan correos de Gmail, Hotmail, Outlook, Yahoo u otros proveedores personales." },
+        { status: 422 }
+      );
+    }
+
     // Inicializar Resend
     const resend = new Resend('re_XfRtYMUA_BtNGuY7NBETjLzk1raRCng4L');
 

@@ -298,6 +298,7 @@
       "formSuccess": "Missatge enviat correctament!",
       "formError": "Error en enviar el missatge. Torna-ho a provar.",
       "errorRequired": "Tots els camps són obligatoris",
+      "errorPersonalEmail": "Si us plau, utilitza un correu corporatiu. No s'accepten correus de Gmail, Hotmail, Outlook, Yahoo ni altres proveïdors personals.",
       "errorGeneric": "Error en enviar el missatge. Torna-ho a provar.",
       "infoTitle": "Informació de contacte",
       "infoSubtitle": "També pots escriure'ns directament o trucar-nos:",
@@ -1022,7 +1023,9 @@
         "selectOption": "Selecciona una opció per continuar.",
         "minTwoSites": "Si tens diverses seus, indica com a mínim 2.",
         "nonNegative": "Introdueix un valor vàlid (0 o superior).",
-        "positive": "Introdueix un valor superior a 0."
+        "positive": "Introdueix un valor superior a 0.",
+        "invalidEmail": "Introdueix un email vàlid.",
+        "businessEmailRequired": "Introdueix un correu corporatiu. No s'accepten Gmail, Hotmail, Yahoo o altres proveïdors gratuïts."
       },
       "steps": {
         "sites": {
@@ -1057,6 +1060,11 @@
         "aiValidation": {
           "label": "Validació amb IA",
           "question": "Vols utilitzar validació amb IA?"
+        },
+        "email": {
+          "label": "Correu corporatiu",
+          "question": "A quin correu corporatiu enviem el pressupost?",
+          "placeholder": "tu@empresa.com"
         }
       },
       "result": {

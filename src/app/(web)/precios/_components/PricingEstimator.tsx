@@ -10,7 +10,8 @@ type StepKey =
   | "contractorWorkers"
   | "internalControl"
   | "suppliersControl"
-  | "aiValidation";
+  | "aiValidation"
+  | "email";
 
 interface EstimatorContent {
   title: string;
@@ -45,6 +46,8 @@ interface EstimatorContent {
     minTwoSites: string;
     nonNegative: string;
     positive: string;
+    invalidEmail: string;
+    businessEmailRequired: string;
   };
   steps: {
     sites: { label: string; question: string; countLabel: string };
@@ -55,6 +58,7 @@ interface EstimatorContent {
     suppliersControl: { label: string; question: string };
     suppliersCount: { label: string; question: string };
     aiValidation: { label: string; question: string };
+    email: { label: string; question: string; placeholder: string };
   };
   result: {
     volumeLow: string;
@@ -78,6 +82,7 @@ interface EstimatorState {
   controlSuppliers: boolean | null;
   suppliersCount: number;
   aiValidation: boolean | null;
+  email: string;
 }
 
 const BASE_STATE: EstimatorState = {
@@ -90,7 +95,25 @@ const BASE_STATE: EstimatorState = {
   controlSuppliers: null,
   suppliersCount: 20,
   aiValidation: null,
+  email: "",
 };
+
+const FREE_EMAIL_DOMAINS = new Set([
+  "gmail.com", "googlemail.com", "hotmail.com", "hotmail.es", "hotmail.co.uk",
+  "outlook.com", "outlook.es", "live.com", "live.es", "msn.com",
+  "yahoo.com", "yahoo.es", "yahoo.co.uk", "ymail.com",
+  "icloud.com", "me.com", "mac.com",
+  "protonmail.com", "proton.me",
+  "aol.com", "aim.com",
+  "mail.com", "email.com", "inbox.com",
+  "gmx.com", "gmx.es", "gmx.net",
+]);
+
+function isBusinessEmail(email: string): boolean {
+  const parts = email.toLowerCase().split("@");
+  if (parts.length !== 2) return false;
+  return !FREE_EMAIL_DOMAINS.has(parts[1]);
+}
 
 function sanitizeNumber(value: number): number {
   return Number.isFinite(value) ? Math.max(0, Math.round(value)) : 0;
@@ -170,6 +193,7 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
     baseSteps.push("suppliersControl");
 
     baseSteps.push("aiValidation");
+    baseSteps.push("email");
     return baseSteps;
   }, [state.controlInternalWorkers]);
 
@@ -207,6 +231,7 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
         internalControl: content.steps.internalControl.label,
         suppliersControl: content.steps.suppliersControl.label,
         aiValidation: content.steps.aiValidation.label,
+        email: content.steps.email.label,
       }) satisfies Record<StepKey, string>,
     [content.steps]
   );
@@ -256,6 +281,10 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
             : state.aiValidation
               ? content.options.yes
               : content.options.no,
+      },
+      {
+        label: content.steps.email.label,
+        value: state.email || content.emptyValue,
       },
     ],
     [state, content]
@@ -317,6 +346,18 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
           return false;
         }
         break;
+      case "email": {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(state.email)) {
+          setError(content.validation.invalidEmail);
+          return false;
+        }
+        if (!isBusinessEmail(state.email)) {
+          setError(content.validation.businessEmailRequired);
+          return false;
+        }
+        break;
+      }
       default:
         break;
     }
@@ -334,6 +375,26 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
       setStepIndex((prev) => prev + 1);
       return;
     }
+
+    void fetch("/api/pricing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: state.email,
+        siteMode: state.siteMode,
+        siteCount: state.siteMode === "multiple" ? sanitizeNumber(state.siteCount) : 1,
+        contractors: sanitizeNumber(state.contractors),
+        contractorWorkers: sanitizeNumber(state.contractorWorkers),
+        controlInternalWorkers: state.controlInternalWorkers === true,
+        internalWorkers: state.controlInternalWorkers === true ? sanitizeNumber(state.internalWorkers) : 0,
+        controlSuppliers: state.controlSuppliers === true,
+        suppliersCount: state.controlSuppliers === true ? sanitizeNumber(state.suppliersCount) : 0,
+        aiValidation: state.aiValidation === true,
+        estimatedPrice: recommendation.estimatedPrice,
+        isCustom: recommendation.isCustom,
+        score: recommendation.score,
+      }),
+    });
 
     setShowResult(true);
   };
@@ -592,6 +653,25 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
               )}
             </div>
           </div>
+        );
+
+      case "email":
+        return (
+          <label className="block">
+            <h3 className="text-xl font-semibold text-playBlueDark mb-3">
+              {content.steps.email.question}
+            </h3>
+            <input
+              type="email"
+              autoComplete="work email"
+              placeholder={content.steps.email.placeholder}
+              value={state.email}
+              onChange={(e) =>
+                setState((prev) => ({ ...prev, email: e.target.value }))
+              }
+              className="w-full rounded-xl border border-playBlueLight/30 px-4 py-3 text-playBlueDark focus:border-playBlueDark focus:outline-none"
+            />
+          </label>
         );
 
       default:
