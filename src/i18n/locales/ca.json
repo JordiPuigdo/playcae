@@ -999,6 +999,8 @@
       "summaryTitle": "Resum de la teva operativa",
       "emptyValue": "No indicat",
       "resultTitle": "Resultat orientatiu",
+      "confirmationTitle": "Informació rebuda!",
+      "confirmationMessage": "Hem rebut les teves dades. En breu ens posarem en contacte amb tu.",
       "recommendedPlan": "Pla recomanat",
       "estimatedPrice": "Preu estimat",
       "customPrice": "Personalitzat",

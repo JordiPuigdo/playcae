@@ -21,6 +21,8 @@ interface EstimatorContent {
   summaryTitle: string;
   emptyValue: string;
   resultTitle: string;
+  confirmationTitle: string;
+  confirmationMessage: string;
   recommendedPlan: string;
   estimatedPrice: string;
   customPrice: string;
@@ -714,35 +716,12 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
           )}
 
           {showResult && (
-            <div className="space-y-4">
-              <h3 className="text-2xl font-bold text-playBlueDark">{content.resultTitle}</h3>
-              <div className="inline-flex items-center gap-2 rounded-full bg-playGreen/10 px-4 py-2 text-sm font-semibold text-playGreen">
-                <CheckCircle2 className="h-4 w-4" />
-                {volumeTag}
+            <div className="flex flex-col items-center text-center space-y-4 py-6">
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-playGreen/10">
+                <CheckCircle2 className="h-8 w-8 text-playGreen" />
               </div>
-
-              <div className="rounded-2xl border border-playBlueLight/20 bg-playGrey p-5">
-                <div className="text-sm text-playBlueLight">{content.recommendedPlan}</div>
-                <div className="mt-1 text-2xl font-bold text-playBlueDark">
-                  {volumeTag}
-                </div>
-
-                <div className="mt-4 text-sm text-playBlueLight">{content.estimatedPrice}</div>
-                <div className="mt-1 text-3xl font-bold text-playBlueDark">
-                  {recommendation.isCustom ? (
-                    recommendation.displayPrice
-                  ) : (
-                    <>
-                      EUR {recommendation.displayPrice}
-                      <span className="ml-1 text-base font-medium text-playBlueLight">
-                        {content.monthly}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              <p className="text-sm text-playBlueLight">{content.methodology}</p>
+              <h3 className="text-2xl font-bold text-playBlueDark">{content.confirmationTitle}</h3>
+              <p className="text-playBlueLight max-w-sm">{content.confirmationMessage}</p>
             </div>
           )}
 

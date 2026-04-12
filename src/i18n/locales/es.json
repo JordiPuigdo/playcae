@@ -999,6 +999,8 @@
       "summaryTitle": "Resumen de tu operativa",
       "emptyValue": "No indicado",
       "resultTitle": "Resultado orientativo",
+      "confirmationTitle": "¡Información recibida!",
+      "confirmationMessage": "Hemos recibido tus datos. En breve nos pondremos en contacto contigo.",
       "recommendedPlan": "Plan recomendado",
       "estimatedPrice": "Precio estimado",
       "customPrice": "Personalizado",
