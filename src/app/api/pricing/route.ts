@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
       console.error("Error de Resend (pricing):", error);
       console.error("Detalles completos del error:", JSON.stringify(error, null, 2));
       return NextResponse.json(
-        { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+        { error: "Error al enviar el mensaje. Inténtalo de nuevo.", resendError: error },
         { status: 500 }
       );
     }
@@ -145,7 +145,10 @@ export async function POST(request: NextRequest) {
       console.error("Error.stack:", error.stack);
     }
     return NextResponse.json(
-      { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+      {
+        error: "Error al enviar el mensaje. Inténtalo de nuevo.",
+        catchError: error instanceof Error ? error.message : String(error),
+      },
       { status: 500 }
     );
   }
