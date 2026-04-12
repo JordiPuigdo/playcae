@@ -1,10 +1,33 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+const API_BASE = process.env.NEXT_PUBLIC_PLAYCAE_API ?? "";
 
-const CONTENT_DIR = path.join(process.cwd(), "src/content/blog");
+// Shapes del JSON devuelto por el backend (camelCase)
+interface BlogPostListDto {
+  id?: string;
+  title: string;
+  slug: string;
+  description: string;
+  author: string;
+  tags: string;           // comma-separated
+  coverImageUrl?: string | null;
+  published: boolean;
+  publishedAt?: string | null;
+  readingTimeMinutes: number;
+  active?: boolean | null;
+  creationDate?: string | null;
+}
 
-export interface BlogPost {
+interface BlogPostDto extends BlogPostListDto {
+  content: string;
+}
+
+interface PagedResult<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface WebBlogPost {
   slug: string;
   title: string;
   description: string;
@@ -16,69 +39,61 @@ export interface BlogPost {
   content: string;
 }
 
-export interface BlogPostMeta extends Omit<BlogPost, "content"> {}
+export type WebBlogPostMeta = Omit<WebBlogPost, "content">;
 
-function estimateReadingTime(content: string): number {
-  const wordsPerMinute = 200;
-  const words = content.trim().split(/\s+/).length;
-  return Math.ceil(words / wordsPerMinute);
+function parseTags(raw: string): string[] {
+  return raw
+    .split(",")
+    .map((t) => t.trim())
+    .filter(Boolean);
 }
 
-export function getAllPosts(): BlogPostMeta[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
-
-  const files = fs
-    .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith(".mdx"));
-
-  const posts = files.map((filename) => {
-    const slug = filename.replace(/\.mdx$/, "");
-    const filePath = path.join(CONTENT_DIR, filename);
-    const raw = fs.readFileSync(filePath, "utf-8");
-    const { data, content } = matter(raw);
-
-    return {
-      slug,
-      title: data.title ?? slug,
-      description: data.description ?? "",
-      date: data.date ?? "",
-      author: data.author ?? "PlayCAE",
-      tags: data.tags ?? [],
-      coverImage: data.coverImage,
-      readingTime: estimateReadingTime(content),
-    } satisfies BlogPostMeta;
-  });
-
-  return posts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-}
-
-export function getPostBySlug(slug: string): BlogPost | null {
-  const filePath = path.join(CONTENT_DIR, `${slug}.mdx`);
-
-  if (!fs.existsSync(filePath)) return null;
-
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const { data, content } = matter(raw);
-
+function toMeta(p: BlogPostListDto): WebBlogPostMeta {
   return {
-    slug,
-    title: data.title ?? slug,
-    description: data.description ?? "",
-    date: data.date ?? "",
-    author: data.author ?? "PlayCAE",
-    tags: data.tags ?? [],
-    coverImage: data.coverImage,
-    readingTime: estimateReadingTime(content),
-    content,
+    slug: p.slug,
+    title: p.title,
+    description: p.description,
+    date: p.publishedAt ?? p.creationDate ?? "",
+    author: p.author || "PlayCAE",
+    tags: parseTags(p.tags),
+    coverImage: p.coverImageUrl ?? undefined,
+    readingTime: p.readingTimeMinutes,
   };
 }
 
-export function getAllSlugs(): string[] {
-  if (!fs.existsSync(CONTENT_DIR)) return [];
-  return fs
-    .readdirSync(CONTENT_DIR)
-    .filter((f) => f.endsWith(".mdx"))
-    .map((f) => f.replace(/\.mdx$/, ""));
+export async function getAllPublishedPosts(): Promise<WebBlogPostMeta[]> {
+  try {
+    const res = await fetch(`${API_BASE}/api/blog`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return [];
+
+    const data: PagedResult<BlogPostListDto> = await res.json();
+    return (data.items ?? [])
+      .map(toMeta)
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  } catch {
+    return [];
+  }
+}
+
+export async function getPostBySlug(
+  slug: string
+): Promise<WebBlogPost | null> {
+  try {
+    const res = await fetch(`${API_BASE}/api/blog/${slug}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
+
+    const p: BlogPostDto = await res.json();
+    return { ...toMeta(p), content: p.content };
+  } catch {
+    return null;
+  }
+}
+
+export async function getAllSlugs(): Promise<string[]> {
+  const posts = await getAllPublishedPosts();
+  return posts.map((p) => p.slug);
 }

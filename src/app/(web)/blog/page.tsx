@@ -1,8 +1,9 @@
-// app/blog/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
-import { getAllPosts } from "@/lib/blog";
+import { getAllPublishedPosts } from "@/lib/blog";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Blog sobre CAE y PRL",
@@ -11,8 +12,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-export default function BlogIndex() {
-  const posts = getAllPosts();
+export default async function BlogIndex() {
+  const posts = await getAllPublishedPosts();
 
   const blogSchema = {
     "@context": "https://schema.org",

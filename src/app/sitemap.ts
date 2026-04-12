@@ -1,7 +1,10 @@
 // app/sitemap.ts
 import type { MetadataRoute } from "next";
+import { getAllPublishedPosts } from "@/lib/blog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600;
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://www.playcae.com";
   
   // Usar fechas específicas en lugar de 'now' para evitar que Google piense que todo cambia constantemente
@@ -129,5 +132,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "yearly",
       priority: 0.3,
     },
+    ...((await getAllPublishedPosts()).map((post) => ({
+      url: `${base}/blog/${post.slug}`,
+      lastModified: post.date || contentDate,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))),
   ];
 }
