@@ -126,13 +126,27 @@ export async function POST(request: NextRequest) {
     });
 
     if (error) {
-      console.error("Error Resend pricing lead:", error);
-      return NextResponse.json({ error: "Error al enviar" }, { status: 500 });
+      console.error("Error de Resend (pricing):", error);
+      console.error("Detalles completos del error:", JSON.stringify(error, null, 2));
+      return NextResponse.json(
+        { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+        { status: 500 }
+      );
     }
 
+    console.log("Email de pricing enviado exitosamente");
     return NextResponse.json({ success: true }, { status: 200 });
   } catch (error) {
-    console.error("Error en /api/pricing:", error);
-    return NextResponse.json({ error: "Error interno" }, { status: 500 });
+    console.error("Error enviando email de pricing:", error);
+    console.error("Tipo de error:", typeof error);
+    console.error("Error completo:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    if (error instanceof Error) {
+      console.error("Error.message:", error.message);
+      console.error("Error.stack:", error.stack);
+    }
+    return NextResponse.json(
+      { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+      { status: 500 }
+    );
   }
 }

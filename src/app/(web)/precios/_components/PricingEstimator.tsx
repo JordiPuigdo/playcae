@@ -368,7 +368,9 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
     return true;
   };
 
-  const goNext = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const goNext = async () => {
     if (!validateCurrentStep()) {
       return;
     }
@@ -378,30 +380,41 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
       return;
     }
 
-    fetch("/api/pricing", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: state.email,
-        siteMode: state.siteMode,
-        siteCount: state.siteMode === "multiple" ? sanitizeNumber(state.siteCount) : 1,
-        contractors: sanitizeNumber(state.contractors),
-        contractorWorkers: sanitizeNumber(state.contractorWorkers),
-        controlInternalWorkers: state.controlInternalWorkers === true,
-        internalWorkers: state.controlInternalWorkers === true ? sanitizeNumber(state.internalWorkers) : 0,
-        controlSuppliers: state.controlSuppliers === true,
-        suppliersCount: state.controlSuppliers === true ? sanitizeNumber(state.suppliersCount) : 0,
-        aiValidation: state.aiValidation === true,
-        estimatedPrice: recommendation.estimatedPrice,
-        isCustom: recommendation.isCustom,
-        score: recommendation.score,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log("[pricing]", data))
-      .catch((err) => console.error("[pricing] fetch error:", err));
-
-    setShowResult(true);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch("/api/pricing", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: state.email,
+          siteMode: state.siteMode,
+          siteCount: state.siteMode === "multiple" ? sanitizeNumber(state.siteCount) : 1,
+          contractors: sanitizeNumber(state.contractors),
+          contractorWorkers: sanitizeNumber(state.contractorWorkers),
+          controlInternalWorkers: state.controlInternalWorkers === true,
+          internalWorkers: state.controlInternalWorkers === true ? sanitizeNumber(state.internalWorkers) : 0,
+          controlSuppliers: state.controlSuppliers === true,
+          suppliersCount: state.controlSuppliers === true ? sanitizeNumber(state.suppliersCount) : 0,
+          aiValidation: state.aiValidation === true,
+          estimatedPrice: recommendation.estimatedPrice,
+          isCustom: recommendation.isCustom,
+          score: recommendation.score,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("[pricing] error:", data);
+        setError(data?.error ?? "Error al enviar. Inténtalo de nuevo.");
+        return;
+      }
+      console.log("[pricing] enviado:", data);
+      setShowResult(true);
+    } catch (err) {
+      console.error("[pricing] fetch error:", err);
+      setError("Error al enviar. Comprueba tu conexión e inténtalo de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const goBack = () => {
@@ -743,12 +756,15 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
               <button
                 type="button"
                 onClick={goNext}
-                className="inline-flex items-center gap-2 rounded-full bg-playBlueDark px-6 py-2.5 font-semibold text-white transition-colors hover:bg-playBlueLight"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-2 rounded-full bg-playBlueDark px-6 py-2.5 font-semibold text-white transition-colors hover:bg-playBlueLight disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {stepIndex === steps.length - 1
-                  ? content.buttons.seeResult
-                  : content.buttons.next}
-                <ArrowRight className="h-4 w-4" />
+                {isSubmitting
+                  ? "Enviando..."
+                  : stepIndex === steps.length - 1
+                    ? content.buttons.seeResult
+                    : content.buttons.next}
+                {!isSubmitting && <ArrowRight className="h-4 w-4" />}
               </button>
             )}
 
