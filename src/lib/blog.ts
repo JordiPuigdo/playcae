@@ -12,6 +12,7 @@ interface BlogPostListDto {
   published: boolean;
   publishedAt?: string | null;
   readingTimeMinutes: number;
+  updatedAt?: string | null;
   active?: boolean | null;
   creationDate?: string | null;
 }
@@ -32,6 +33,7 @@ export interface WebBlogPost {
   title: string;
   description: string;
   date: string;
+  updatedAt?: string;
   author: string;
   tags: string[];
   coverImage?: string;
@@ -54,6 +56,7 @@ function toMeta(p: BlogPostListDto): WebBlogPostMeta {
     title: p.title,
     description: p.description,
     date: p.publishedAt ?? p.creationDate ?? "",
+    updatedAt: p.updatedAt ?? undefined,
     author: p.author || "PlayCAE",
     tags: parseTags(p.tags),
     coverImage: p.coverImageUrl ?? undefined,
@@ -61,20 +64,34 @@ function toMeta(p: BlogPostListDto): WebBlogPostMeta {
   };
 }
 
+// Fetches all published posts handling pagination (API max 50/page)
 export async function getAllPublishedPosts(): Promise<WebBlogPostMeta[]> {
-  try {
-    const res = await fetch(`${API_BASE}/api/blog`, {
-      next: { revalidate: 60 },
-    });
-    if (!res.ok) return [];
+  const all: WebBlogPostMeta[] = [];
+  let page = 1;
+  const pageSize = 50;
 
-    const data: PagedResult<BlogPostListDto> = await res.json();
-    return (data.items ?? [])
-      .map(toMeta)
-      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  try {
+    while (true) {
+      const res = await fetch(
+        `${API_BASE}/api/blog?page=${page}&pageSize=${pageSize}`,
+        { next: { revalidate: 3600, tags: ["blog"] } }
+      );
+      if (!res.ok) break;
+
+      const data: PagedResult<BlogPostListDto> = await res.json();
+      const items = data.items ?? [];
+      all.push(...items.map(toMeta));
+
+      if (all.length >= data.total || items.length < pageSize) break;
+      page++;
+    }
   } catch {
-    return [];
+    // Return whatever was fetched so far
   }
+
+  return all.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 }
 
 export async function getPostBySlug(
@@ -82,7 +99,7 @@ export async function getPostBySlug(
 ): Promise<WebBlogPost | null> {
   try {
     const res = await fetch(`${API_BASE}/api/blog/${slug}`, {
-      next: { revalidate: 60 },
+      next: { revalidate: 3600, tags: ["blog", `blog-${slug}`] },
     });
     if (!res.ok) return null;
 

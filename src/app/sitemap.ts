@@ -134,8 +134,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     ...((await getAllPublishedPosts()).map((post) => ({
       url: `${base}/blog/${post.slug}`,
-      lastModified: post.date || contentDate,
-      changeFrequency: "monthly" as const,
+      lastModified: post.updatedAt ?? (post.date || contentDate),
+      changeFrequency: "weekly" as const,
       priority: 0.6,
     }))),
   ];

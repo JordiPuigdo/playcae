@@ -83,6 +83,7 @@ export const useBlog = () => {
     try {
       const response = await blogService.publish(id);
       await mutate();
+      fetch("/api/revalidate/blog", { method: "POST" }).catch(() => {});
       return response.data;
     } catch (err) {
       throw handleError(err);
@@ -93,6 +94,7 @@ export const useBlog = () => {
     try {
       const response = await blogService.unpublish(id);
       await mutate();
+      fetch("/api/revalidate/blog", { method: "POST" }).catch(() => {});
       return response.data;
     } catch (err) {
       throw handleError(err);
