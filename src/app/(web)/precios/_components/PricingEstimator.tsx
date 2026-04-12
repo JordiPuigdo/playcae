@@ -378,7 +378,7 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
       return;
     }
 
-    void fetch("/api/pricing", {
+    fetch("/api/pricing", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -396,7 +396,10 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
         isCustom: recommendation.isCustom,
         score: recommendation.score,
       }),
-    });
+    })
+      .then((res) => res.json())
+      .then((data) => console.log("[pricing]", data))
+      .catch((err) => console.error("[pricing] fetch error:", err));
 
     setShowResult(true);
   };
