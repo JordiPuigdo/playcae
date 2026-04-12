@@ -119,55 +119,40 @@ export default function Sidebar() {
       />
 
       <nav className="flex flex-col space-y-2 flex-grow">
-        {links.map(({ href, label, icon: Icon }) => {
-          const active = isActive(href);
-          if (!hasAccess(href)) return null;
-
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+        {isSuperAdmin ? (
+          <Link
+            href="/dashboard/blog"
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
             ${
-              active
+              isActive("/dashboard/blog")
                 ? "bg-playOrange text-white shadow-lg"
                 : "hover:bg-playBlueLight hover:text-white text-playGrey"
             }`}
-            >
-              <Icon className="h-5 w-5" />
-              {label}
-            </Link>
-          );
-        })}
+          >
+            <BookOpen className="h-5 w-5" />
+            {t("dashboard.sidebar.blog")}
+          </Link>
+        ) : (
+          links.map(({ href, label, icon: Icon }) => {
+            const active = isActive(href);
+            if (!hasAccess(href)) return null;
 
-        {isSuperAdmin && (
-          <>
-            <div className="my-2 border-t border-playBlueLight/30" />
-            <Link
-              href="/dashboard/blog"
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-xs
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
               ${
-                isActive("/dashboard/blog")
+                active
                   ? "bg-playOrange text-white shadow-lg"
-                  : "hover:bg-playBlueLight hover:text-white text-playGrey/70"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
               }`}
-            >
-              <BookOpen className="h-4 w-4" />
-              {t("dashboard.sidebar.blog")}
-            </Link>
-            <Link
-              href="/dashboard/settings/licenses"
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all text-xs
-              ${
-                isActive("/dashboard/settings/licenses")
-                  ? "bg-playOrange text-white shadow-lg"
-                  : "hover:bg-playBlueLight hover:text-white text-playGrey/70"
-              }`}
-            >
-              <KeyRound className="h-4 w-4" />
-              {t("license.sidebar")}
-            </Link>
-          </>
+              >
+                <Icon className="h-5 w-5" />
+                {label}
+              </Link>
+            );
+          })
         )}
       </nav>
     </aside>
