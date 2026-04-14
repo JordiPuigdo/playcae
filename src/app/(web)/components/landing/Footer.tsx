@@ -395,6 +395,24 @@ export default function Footer() {
 
           <div>
             <h3 className="mb-4 text-lg font-semibold text-playOrange">
+              {t("footer.navOtherProducts")}
+            </h3>
+            <ul className="space-y-2 text-playGrey">
+              <li>
+                <a
+                  href="https://www.okron.io"
+                  target="_blank"
+                  rel="noopener"
+                  className="hover:underline"
+                >
+                  {t("footer.linkOkron")}
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 text-lg font-semibold text-playOrange">
               {t("footer.navLegal")}
             </h3>
             <ul className="space-y-2 text-playGrey">
