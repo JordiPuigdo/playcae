@@ -7,9 +7,8 @@ export const revalidate = 3600;
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = "https://www.playcae.com";
   
-  // Usar fechas específicas en lugar de 'now' para evitar que Google piense que todo cambia constantemente
-  const contentDate = new Date("2025-11-01").toISOString();
-  const staticDate = new Date("2025-06-01").toISOString();
+  const contentDate = new Date().toISOString();
+  const staticDate = new Date().toISOString();
   
   return [
     {
@@ -92,6 +91,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
     {
       url: `${base}/prl-trabajos-altura`,
+      lastModified: contentDate,
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
+    {
+      url: `${base}/software-ehs-management`,
       lastModified: contentDate,
       changeFrequency: "monthly",
       priority: 0.8,

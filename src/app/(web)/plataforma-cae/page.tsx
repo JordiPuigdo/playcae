@@ -13,9 +13,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Plataforma CAE: Qué es, Cómo Funciona y Por Qué la Necesitas 2026",
+  title: "Plataforma CAE: Qué es y Cómo Automatiza tu Gestión Documental",
   description:
-    "Todo sobre la plataforma CAE para Coordinación de Actividades Empresariales. Descubre cómo una plataforma CAE automatiza la gestión documental PRL, controla accesos y te protege legalmente.",
+    "Una plataforma CAE centraliza la documentación de contratas, valida con IA y bloquea accesos si algo caduca. Cumple el RD 171/2004 sin gestión manual. Descubre cómo funciona PlayCAE.",
   keywords: [
     "plataforma cae",
     "software cae",

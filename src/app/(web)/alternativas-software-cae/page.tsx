@@ -18,9 +18,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Alternativas a Plataformas CAE: Comparativa 2025",
+  title: "Alternativas a Software CAE: Comparativa 2026 con Precios y Funciones",
   description:
-    "Buscas alternativas a tu software CAE actual? Compara funcionalidades, precios y tiempos de implementación. PlayCAE: IA, precio transparente y soporte real.",
+    "Compara las principales plataformas CAE en implementación, precios reales y validación documental. PlayCAE: operativo en menos de 1 semana, tarifa plana sin sorpresas. Migración gratuita.",
   alternates: { canonical: "/alternativas-software-cae" },
   openGraph: {
     type: "website",

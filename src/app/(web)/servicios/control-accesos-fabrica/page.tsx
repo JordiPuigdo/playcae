@@ -22,9 +22,9 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Control de Accesos y Registro en Fábrica",
+  title: "Control de Accesos vinculado a PRL | Bloqueo automático por incumplimiento",
   description:
-    "Controla en tiempo real quién está dentro de tu fábrica. Bloqueo automático por incumplimiento PRL, registro horario y trazabilidad para auditorías.",
+    "Impide el acceso a trabajadores sin documentación PRL al día. Registro horario automático, trazabilidad completa para auditorías y alertas antes de que caduque ningún documento. Prueba PlayCAE gratis.",
   alternates: { canonical: "/servicios/control-accesos-fabrica" },
   openGraph: {
     type: "website",
