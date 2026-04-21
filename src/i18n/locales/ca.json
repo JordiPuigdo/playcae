@@ -857,7 +857,18 @@
       "error": "Error",
       "errorValidation": "Error en validar l'accés",
       "errorCheckIn": "Error en registrar entrada",
-      "errorCheckOut": "Error en registrar sortida"
+      "errorCheckOut": "Error en registrar sortida",
+      "offlineTitle": "Sense connexió WiFi",
+      "offlineConfirmMessage": "Selecciona si és una entrada o sortida. El fitxatge es guardarà i s'enviarà en reconnectar-se.",
+      "errorNetwork": "Sense connexió a internet. Comprova el WiFi.",
+      "online": "Connectat",
+      "offlineWarning": "Sense connexió — Els fitxatges es guardaran",
+      "queued": "Fitxatge guardat",
+      "queuedMessage": "S'enviarà automàticament quan torni la connexió.",
+      "syncSuccess": "Fitxatges sincronitzats",
+      "syncSuccessCount": "fitxatge(s) enviat(s) correctament",
+      "syncPartialFail": "Error parcial de sincronització",
+      "syncFailCount": "fitxatge(s) no s'han pogut enviar, es tornarà a intentar"
     }
   },
   "validation": {

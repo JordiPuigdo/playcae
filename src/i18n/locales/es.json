@@ -857,7 +857,18 @@
       "error": "Error",
       "errorValidation": "Error al validar el acceso",
       "errorCheckIn": "Error al registrar entrada",
-      "errorCheckOut": "Error al registrar salida"
+      "errorCheckOut": "Error al registrar salida",
+      "offlineTitle": "Sin conexión WiFi",
+      "offlineConfirmMessage": "Selecciona si es una entrada o salida. El fichaje se guardará y enviará al reconectarse.",
+      "errorNetwork": "Sin conexión a internet. Verifica el WiFi.",
+      "online": "Conectado",
+      "offlineWarning": "Sin conexión — Los fichajes se guardarán",
+      "queued": "Fichaje guardado",
+      "queuedMessage": "Se enviará automáticamente cuando vuelva la conexión.",
+      "syncSuccess": "Fichajes sincronizados",
+      "syncSuccessCount": "fichaje(s) enviado(s) correctamente",
+      "syncPartialFail": "Error parcial de sincronización",
+      "syncFailCount": "fichaje(s) no se pudieron enviar, se reintentará"
     }
   },
   "validation": {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, Suspense } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -14,6 +14,9 @@ import {
   LogOut,
   AlertTriangle,
   Loader2,
+  WifiOff,
+  Wifi,
+  Clock,
 } from "lucide-react";
 import Image from "next/image";
 import { AccessService } from "@/services/access.service";
@@ -21,10 +24,14 @@ import { AccessValidationResult } from "@/types/accessHistory";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { useLogoCache } from "@/hooks/useLogoCache";
+import { useOfflineQueue } from "@/hooks/useOfflineQueue";
+import { toast } from "@/hooks/use-Toast";
 
 const accessService = new AccessService();
 
-type ModalState = "idle" | "validated" | "checkin" | "checkout" | "error";
+type ModalState = "idle" | "validated" | "offline-confirm" | "checkin" | "checkout" | "queued" | "error";
 
 const AccessControlContent = () => {
   const searchParams = useSearchParams();
@@ -38,6 +45,10 @@ const AccessControlContent = () => {
   const selectedSiteName =
     availableSites.find((site) => site.id === selectedSiteId)?.name || null;
 
+  const isOnline = useOnlineStatus();
+  const cachedLogoUrl = useLogoCache(logoUrl);
+  const { enqueue, syncQueue, queue } = useOfflineQueue();
+
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [dni, setDni] = useState("");
   const [showModal, setShowModal] = useState(false);
@@ -46,14 +57,31 @@ const AccessControlContent = () => {
   const [validationResult, setValidationResult] =
     useState<AccessValidationResult | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
-  const [logoError, setLogoError] = useState(false);
+  const [queuedWorkerName, setQueuedWorkerName] = useState("");
 
-  // Usar logo personalizado si existe, si no usar el logo por defecto
-  // Agregar timestamp para evitar caché
-  const displayLogoUrl =
-    logoUrl && !logoError
-      ? `${logoUrl}?t=${Date.now()}`
-      : "/assets/playcae.png";
+  const displayLogoUrl = cachedLogoUrl ?? "/assets/playcae.png";
+
+  // Auto-sync queue when connection is restored
+  useEffect(() => {
+    if (!isOnline || queue.length === 0) return;
+
+    syncQueue().then(({ synced, failed }) => {
+      if (synced > 0) {
+        toast({
+          title: t("accessControl.kiosk.syncSuccess"),
+          description: `${synced} ${t("accessControl.kiosk.syncSuccessCount")}`,
+        });
+      }
+      if (failed > 0) {
+        toast({
+          title: t("accessControl.kiosk.syncPartialFail"),
+          description: `${failed} ${t("accessControl.kiosk.syncFailCount")}`,
+          variant: "destructive",
+        });
+      }
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOnline]);
 
   const toggleFullscreen = async () => {
     try {
@@ -74,11 +102,18 @@ const AccessControlContent = () => {
     setValidationResult(null);
     setModalState("idle");
     setErrorMessage("");
+    setQueuedWorkerName("");
   };
 
   const handleValidate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!dni.trim()) return;
+
+    if (!isOnline) {
+      setModalState("offline-confirm");
+      setShowModal(true);
+      return;
+    }
 
     setIsLoading(true);
     setErrorMessage("");
@@ -105,28 +140,72 @@ const AccessControlContent = () => {
     }
   };
 
+  const handleOfflineCheckIn = () => {
+    const payload = {
+      cardId: dni,
+      adminUserId,
+      siteId: selectedSiteId || undefined,
+      accessCompanyId: accessCompanyId || undefined,
+    };
+    enqueue({ type: "checkin", payload, workerName: dni, queuedAt: Date.now() });
+    setQueuedWorkerName(dni);
+    setModalState("queued");
+    setTimeout(() => {
+      setShowModal(false);
+      resetState();
+    }, 3000);
+  };
+
+  const handleOfflineCheckOut = () => {
+    const payload = {
+      cardId: dni,
+      adminUserId,
+      siteId: selectedSiteId || undefined,
+      accessCompanyId: accessCompanyId || undefined,
+    };
+    enqueue({ type: "checkout", payload, workerName: dni, queuedAt: Date.now() });
+    setQueuedWorkerName(dni);
+    setModalState("queued");
+    setTimeout(() => {
+      setShowModal(false);
+      resetState();
+    }, 3000);
+  };
+
   const handleCheckIn = async () => {
     if (!dni.trim()) return;
 
     setIsLoading(true);
 
+    const payload = {
+      cardId: dni,
+      adminUserId: adminUserId,
+      siteId: selectedSiteId || undefined,
+      accessCompanyId: accessCompanyId || undefined,
+    };
+
     try {
-      await accessService.checkIn({
-        cardId: dni,
-        adminUserId: adminUserId,
-        siteId: selectedSiteId || undefined,
-        accessCompanyId: accessCompanyId || undefined,
-      });
+      await accessService.checkIn(payload);
       setModalState("checkin");
 
-      // Auto-close after 3 seconds
       setTimeout(() => {
         setShowModal(false);
         resetState();
       }, 3000);
     } catch (error: any) {
-      setErrorMessage(error.message || t("accessControl.kiosk.errorCheckIn"));
-      setModalState("error");
+      if (!isOnline) {
+        const name = validationResult?.workerName ?? dni;
+        enqueue({ type: "checkin", payload, workerName: name, queuedAt: Date.now() });
+        setQueuedWorkerName(name);
+        setModalState("queued");
+        setTimeout(() => {
+          setShowModal(false);
+          resetState();
+        }, 3000);
+      } else {
+        setErrorMessage(error.message || t("accessControl.kiosk.errorCheckIn"));
+        setModalState("error");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -137,23 +216,35 @@ const AccessControlContent = () => {
 
     setIsLoading(true);
 
+    const payload = {
+      cardId: dni,
+      adminUserId: adminUserId,
+      siteId: selectedSiteId || undefined,
+      accessCompanyId: accessCompanyId || undefined,
+    };
+
     try {
-      await accessService.checkOut({
-        cardId: dni,
-        adminUserId: adminUserId,
-        siteId: selectedSiteId || undefined,
-        accessCompanyId: accessCompanyId || undefined,
-      });
+      await accessService.checkOut(payload);
       setModalState("checkout");
 
-      // Auto-close after 3 seconds
       setTimeout(() => {
         setShowModal(false);
         resetState();
       }, 3000);
     } catch (error: any) {
-      setErrorMessage(error.message || t("accessControl.kiosk.errorCheckOut"));
-      setModalState("error");
+      if (!isOnline) {
+        const name = validationResult?.workerName ?? dni;
+        enqueue({ type: "checkout", payload, workerName: name, queuedAt: Date.now() });
+        setQueuedWorkerName(name);
+        setModalState("queued");
+        setTimeout(() => {
+          setShowModal(false);
+          resetState();
+        }, 3000);
+      } else {
+        setErrorMessage(error.message || t("accessControl.kiosk.errorCheckOut"));
+        setModalState("error");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -183,6 +274,52 @@ const AccessControlContent = () => {
     }
 
     switch (modalState) {
+      case "offline-confirm":
+        return (
+          <div className="flex flex-col items-center gap-5 p-6 text-center">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-orange-100">
+              <WifiOff className="h-10 w-10 text-orange-500" />
+            </div>
+
+            <div className="space-y-1">
+              <DialogTitle className="text-2xl font-bold text-gray-800">
+                {t("accessControl.kiosk.offlineTitle")}
+              </DialogTitle>
+              <p className="text-base text-muted-foreground max-w-xs mx-auto">
+                {t("accessControl.kiosk.offlineConfirmMessage")}
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 border border-gray-200">
+              <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">DNI</span>
+              <span className="text-lg font-bold text-gray-900 font-mono">{dni}</span>
+            </div>
+
+            <div className="flex gap-3 w-full">
+              <Button
+                onClick={handleOfflineCheckIn}
+                size="lg"
+                className="flex-1 h-14 text-base font-semibold bg-green-600 hover:bg-green-700 shadow-sm"
+              >
+                <LogIn className="mr-2 h-5 w-5" />
+                {t("accessControl.kiosk.checkIn")}
+              </Button>
+              <Button
+                onClick={handleOfflineCheckOut}
+                size="lg"
+                className="flex-1 h-14 text-base font-semibold bg-orange-500 hover:bg-orange-600 shadow-sm"
+              >
+                <LogOut className="mr-2 h-5 w-5" />
+                {t("accessControl.kiosk.checkOut")}
+              </Button>
+            </div>
+
+            <Button variant="ghost" onClick={handleCloseModal} className="text-sm text-muted-foreground hover:text-gray-700 w-full">
+              {t("accessControl.kiosk.close")}
+            </Button>
+          </div>
+        );
+
       case "validated":
         if (!validationResult) return null;
 
@@ -299,6 +436,26 @@ const AccessControlContent = () => {
           </div>
         );
 
+      case "queued":
+        return (
+          <div className="flex flex-col items-center space-y-6 p-6 text-center">
+            <Clock className="h-20 w-20 text-blue-500" />
+            <div className="space-y-2">
+              <DialogTitle className="text-3xl font-bold text-blue-600">
+                {t("accessControl.kiosk.queued")}
+              </DialogTitle>
+              {queuedWorkerName && (
+                <p className="text-xl font-semibold text-gray-800">
+                  {queuedWorkerName}
+                </p>
+              )}
+              <p className="text-lg text-muted-foreground">
+                {t("accessControl.kiosk.queuedMessage")}
+              </p>
+            </div>
+          </div>
+        );
+
       case "error":
         return (
           <div className="flex flex-col items-center space-y-6 p-6 text-center">
@@ -326,6 +483,21 @@ const AccessControlContent = () => {
         isFullscreen ? "z-0" : ""
       }`}
     >
+      {/* Connectivity badge */}
+      <div className="fixed top-4 left-4 z-50">
+        {isOnline ? (
+          <div className="flex items-center gap-1.5 rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+            <Wifi className="h-3 w-3" />
+            {t("accessControl.kiosk.online")}
+          </div>
+        ) : (
+          <div className="flex items-center gap-1.5 rounded-full bg-red-100 px-3 py-1.5 text-sm font-medium text-red-700">
+            <WifiOff className="h-4 w-4" />
+            {t("accessControl.kiosk.offlineWarning")}
+          </div>
+        )}
+      </div>
+
       {/* Fullscreen Toggle Button */}
       <Button
         variant="outline"
@@ -355,7 +527,6 @@ const AccessControlContent = () => {
                 width={400}
                 height={150}
                 className="flex items-center justify-center"
-                onError={() => setLogoError(true)}
                 priority
                 unoptimized
               />
