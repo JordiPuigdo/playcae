@@ -92,11 +92,27 @@ export class HttpClient {
 
   private async handleResponse<T>(response: Response): Promise<ApiResponse<T>> {
     if (!response.ok) {
-      const error = await response.json().catch(() => ({}));
+      let message = "Error de servidor";
+      try {
+        const text = await response.text();
+        if (text) {
+          try {
+            const body = JSON.parse(text);
+            if (typeof body === "string") {
+              message = body;
+            } else if (body?.message) {
+              message = body.message;
+            } else if (body?.title) {
+              message = body.title;
+            }
+          } catch {
+            message = text;
+          }
+        }
+      } catch { /* ignore */ }
       throw {
         status: response.status,
-        message: error.message || "An error occurred",
-        data: error,
+        message,
       };
     }
 

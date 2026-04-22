@@ -57,6 +57,7 @@ const AccessControlContent = () => {
   const [validationResult, setValidationResult] =
     useState<AccessValidationResult | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errorStatus, setErrorStatus] = useState<number | undefined>(undefined);
   const [queuedWorkerName, setQueuedWorkerName] = useState("");
 
   const displayLogoUrl = cachedLogoUrl ?? "/assets/playcae.png";
@@ -102,6 +103,7 @@ const AccessControlContent = () => {
     setValidationResult(null);
     setModalState("idle");
     setErrorMessage("");
+    setErrorStatus(undefined);
     setQueuedWorkerName("");
   };
 
@@ -133,6 +135,7 @@ const AccessControlContent = () => {
       }
     } catch (error: any) {
       setErrorMessage(error.message || t("accessControl.kiosk.errorValidation"));
+      setErrorStatus(error.status);
       setModalState("error");
       setShowModal(true);
     } finally {
@@ -204,6 +207,7 @@ const AccessControlContent = () => {
         }, 3000);
       } else {
         setErrorMessage(error.message || t("accessControl.kiosk.errorCheckIn"));
+        setErrorStatus(error.status);
         setModalState("error");
       }
     } finally {
@@ -243,6 +247,7 @@ const AccessControlContent = () => {
         }, 3000);
       } else {
         setErrorMessage(error.message || t("accessControl.kiosk.errorCheckOut"));
+        setErrorStatus(error.status);
         setModalState("error");
       }
     } finally {
@@ -456,21 +461,62 @@ const AccessControlContent = () => {
           </div>
         );
 
-      case "error":
+      case "error": {
+        const isNetworkError = !errorStatus;
+        const isAuthError = errorStatus === 401;
+        const isServerError = errorStatus !== undefined && errorStatus >= 500;
+
+        const errorTitle = isNetworkError
+          ? t("accessControl.kiosk.errorNetworkTitle")
+          : isAuthError
+          ? t("accessControl.kiosk.errorAuthTitle")
+          : t("accessControl.kiosk.errorTitle");
+
+        const errorDetail = isAuthError
+          ? t("accessControl.kiosk.errorAuthDetail")
+          : isNetworkError
+          ? t("accessControl.kiosk.errorNetworkDetail")
+          : errorMessage;
+
         return (
-          <div className="flex flex-col items-center space-y-6 p-6 text-center">
-            <XCircle className="h-20 w-20 text-red-500" />
-            <div className="space-y-2">
-              <DialogTitle className="text-3xl font-bold text-red-600">
-                {t("accessControl.kiosk.error")}
-              </DialogTitle>
-              <p className="text-lg text-muted-foreground">{errorMessage}</p>
+          <div className="flex flex-col items-center gap-5 p-6 text-center">
+            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-red-100">
+              <XCircle className="h-10 w-10 text-red-500" />
             </div>
-            <Button variant="outline" onClick={handleCloseModal}>
-              {t("accessControl.kiosk.close")}
+
+            <div className="space-y-2">
+              <DialogTitle className="text-2xl font-bold text-gray-800">
+                {errorTitle}
+              </DialogTitle>
+              <p className="text-base text-muted-foreground max-w-xs mx-auto">
+                {errorDetail}
+              </p>
+              {isServerError && errorMessage && errorMessage !== errorDetail && (
+                <p className="text-sm text-gray-500 italic">{errorMessage}</p>
+              )}
+            </div>
+
+            {(errorStatus || isNetworkError) && (
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200">
+                <span className="text-xs text-gray-400 uppercase tracking-wide">
+                  {t("accessControl.kiosk.errorCode")}
+                </span>
+                <span className="text-xs font-mono font-semibold text-gray-600">
+                  {errorStatus ?? "NET"}
+                </span>
+              </div>
+            )}
+
+            <Button
+              size="lg"
+              className="w-full h-14 text-base font-semibold bg-red-500 hover:bg-red-600 text-white shadow-sm"
+              onClick={handleCloseModal}
+            >
+              {t("accessControl.kiosk.tryAgain")}
             </Button>
           </div>
         );
+      }
 
       default:
         return null;

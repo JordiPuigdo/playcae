@@ -868,7 +868,14 @@
       "syncSuccess": "Fitxatges sincronitzats",
       "syncSuccessCount": "fitxatge(s) enviat(s) correctament",
       "syncPartialFail": "Error parcial de sincronització",
-      "syncFailCount": "fitxatge(s) no s'han pogut enviar, es tornarà a intentar"
+      "syncFailCount": "fitxatge(s) no s'han pogut enviar, es tornarà a intentar",
+      "errorTitle": "No s'ha pogut completar",
+      "errorNetworkTitle": "Sense connexió amb el servidor",
+      "errorAuthTitle": "Sessió caducada",
+      "errorNetworkDetail": "Comprova la connexió de xarxa del quiosc.",
+      "errorAuthDetail": "Si us plau, recarrega la pàgina i inicia sessió de nou.",
+      "errorCode": "Codi",
+      "tryAgain": "Tornar-ho a intentar"
     }
   },
   "validation": {

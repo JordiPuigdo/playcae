@@ -868,7 +868,14 @@
       "syncSuccess": "Fichajes sincronizados",
       "syncSuccessCount": "fichaje(s) enviado(s) correctamente",
       "syncPartialFail": "Error parcial de sincronización",
-      "syncFailCount": "fichaje(s) no se pudieron enviar, se reintentará"
+      "syncFailCount": "fichaje(s) no se pudieron enviar, se reintentará",
+      "errorTitle": "No se pudo completar",
+      "errorNetworkTitle": "Sin conexión con el servidor",
+      "errorAuthTitle": "Sesión expirada",
+      "errorNetworkDetail": "Comprueba la conexión de red del kiosko.",
+      "errorAuthDetail": "Por favor, recarga la página e inicia sesión de nuevo.",
+      "errorCode": "Código",
+      "tryAgain": "Intentar de nuevo"
     }
   },
   "validation": {
