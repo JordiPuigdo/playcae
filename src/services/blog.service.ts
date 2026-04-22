@@ -17,12 +17,15 @@ interface BlogApiPostDto {
   tags?: string | string[] | null;
   coverImageUrl?: string | null;
   coverImage?: string | null;
+  coverImageAlt?: string | null;
   published?: boolean;
   active?: boolean | null;
   publishedAt?: string | null;
   creationDate?: string | null;
   createdAt?: string | null;
   updatedAt?: string | null;
+  seoTitle?: string | null;
+  canonicalUrl?: string | null;
 }
 
 interface BlogApiPagedResult<T> {
@@ -93,6 +96,16 @@ export class BlogService {
     return this.httpClient.delete(`${this.baseUrl}/${id}`);
   }
 
+  async uploadImage(file: File, altText: string): Promise<ApiResponse<{ url: string }>> {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("altText", altText);
+    return this.httpClient.upload<{ url: string }>(
+      `${this.baseUrl}/images/upload`,
+      formData
+    );
+  }
+
   async publish(id: string): Promise<ApiResponse<BlogPost>> {
     const response = await this.httpClient.put<BlogApiPostDto>(
       `${this.baseUrl}/${id}/publish`,
@@ -150,10 +163,13 @@ export class BlogService {
       author: post.author ?? "PlayCAE",
       tags: this.parseTags(post.tags),
       coverImage: post.coverImageUrl ?? post.coverImage ?? undefined,
+      coverImageAlt: post.coverImageAlt ?? undefined,
       status: this.resolveStatus(post.published, post.active),
       publishedAt: post.publishedAt ?? undefined,
       createdAt,
       updatedAt,
+      seoTitle: post.seoTitle ?? undefined,
+      canonicalUrl: post.canonicalUrl ?? undefined,
     };
   }
 
@@ -196,6 +212,10 @@ export class BlogService {
     if (Array.isArray(data.tags)) payload.tags = data.tags.join(",");
     if (typeof data.coverImage === "string")
       payload.coverImageUrl = data.coverImage;
+    if (typeof data.coverImageAlt === "string")
+      payload.coverImageAlt = data.coverImageAlt;
+    if (typeof data.seoTitle === "string") payload.seoTitle = data.seoTitle;
+    if (typeof data.canonicalUrl === "string") payload.canonicalUrl = data.canonicalUrl;
 
     return payload;
   }

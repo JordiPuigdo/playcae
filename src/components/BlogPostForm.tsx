@@ -9,6 +9,8 @@ import { BlogPost, BlogStatus, CreateBlogPostData } from "@/types/blog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { X } from "lucide-react";
+import { BlogImageUpload } from "@/components/BlogImageUpload";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 interface BlogPostFormProps {
   post?: BlogPost;
@@ -46,15 +48,28 @@ export function BlogPostForm({
     post?.author ?? user?.userName ?? "PlayCAE"
   );
   const [coverImage, setCoverImage] = useState(post?.coverImage ?? "");
+  const [coverImageAlt, setCoverImageAlt] = useState(
+    post?.coverImageAlt ?? post?.title ?? ""
+  );
+  const [coverImageAltManuallyEdited, setCoverImageAltManuallyEdited] =
+    useState(Boolean(post?.coverImageAlt));
   const [status, setStatus] = useState<BlogStatus>(post?.status ?? "Draft");
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>(post?.tags ?? []);
+  const [seoTitle, setSeoTitle] = useState(post?.seoTitle ?? "");
+  const [canonicalUrl, setCanonicalUrl] = useState(post?.canonicalUrl ?? "");
 
   useEffect(() => {
     if (!slugManuallyEdited) {
       setSlug(slugify(title));
     }
   }, [title, slugManuallyEdited]);
+
+  useEffect(() => {
+    if (!coverImageAltManuallyEdited) {
+      setCoverImageAlt(title);
+    }
+  }, [title, coverImageAltManuallyEdited]);
 
   const addTag = () => {
     const trimmed = tagInput.trim().toLowerCase();
@@ -84,8 +99,11 @@ export function BlogPostForm({
       content,
       author,
       tags,
-      coverImage: coverImage || undefined,
+      coverImage,
+      coverImageAlt: coverImage ? coverImageAlt || title : "",
       status,
+      seoTitle: seoTitle || undefined,
+      canonicalUrl: canonicalUrl || undefined,
     });
   };
 
@@ -136,19 +154,14 @@ export function BlogPostForm({
         />
       </div>
 
-      {/* Contenido */}
+      {/* Contenido — editor WYSIWYG */}
       <div className="space-y-1.5">
-        <Label htmlFor="content">{t("blog.form.content")} *</Label>
-        <Textarea
-          id="content"
+        <Label>{t("blog.form.content")} *</Label>
+        <RichTextEditor
           value={content}
-          onChange={(e) => setContent(e.target.value)}
+          onChange={setContent}
           placeholder={t("blog.form.contentPlaceholder")}
-          rows={12}
-          className="font-mono text-sm"
-          required
         />
-        <p className="text-xs text-brand-primary/50">{t("blog.form.markdownHint")}</p>
       </div>
 
       {/* Autor + Imagen de portada en fila */}
@@ -165,13 +178,25 @@ export function BlogPostForm({
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="coverImage">{t("blog.form.coverImage")}</Label>
+          <Label>{t("blog.form.coverImage")}</Label>
+          <BlogImageUpload
+            currentImageUrl={coverImage || undefined}
+            altText={coverImageAlt || title}
+            onUpload={(url) => setCoverImage(url)}
+            onRemove={() => {
+              setCoverImage("");
+              setCoverImageAlt("");
+              setCoverImageAltManuallyEdited(false);
+            }}
+          />
           <Input
-            id="coverImage"
             uppercase={false}
-            value={coverImage}
-            onChange={(e) => setCoverImage(e.target.value)}
-            placeholder="/assets/blog/portada.jpg"
+            value={coverImageAlt}
+            onChange={(e) => {
+              setCoverImageAltManuallyEdited(true);
+              setCoverImageAlt(e.target.value);
+            }}
+            placeholder="Texto alternativo para SEO y accesibilidad"
           />
         </div>
       </div>
@@ -225,6 +250,42 @@ export function BlogPostForm({
           <option value="Published">{t("blog.status.published")}</option>
           <option value="Archived">{t("blog.status.archived")}</option>
         </select>
+      </div>
+
+      {/* SEO */}
+      <div className="space-y-4 rounded-lg border border-border p-4">
+        <p className="text-sm font-medium text-foreground">SEO</p>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="seoTitle">Título SEO</Label>
+          <Input
+            id="seoTitle"
+            uppercase={false}
+            value={seoTitle}
+            onChange={(e) => setSeoTitle(e.target.value)}
+            placeholder={title || "Título optimizado para buscadores"}
+          />
+          <p className="text-xs text-brand-primary/50">
+            Si está vacío se usa el título del artículo. Máx. 60 caracteres.{" "}
+            <span className={seoTitle.length > 60 ? "text-destructive" : ""}>
+              ({seoTitle.length}/60)
+            </span>
+          </p>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="canonicalUrl">URL Canónica</Label>
+          <Input
+            id="canonicalUrl"
+            uppercase={false}
+            value={canonicalUrl}
+            onChange={(e) => setCanonicalUrl(e.target.value)}
+            placeholder={`https://www.playcae.com/blog/${slug || "mi-articulo"}`}
+          />
+          <p className="text-xs text-brand-primary/50">
+            Solo si el artículo está publicado en otra URL. Dejar vacío para usar la URL del blog por defecto.
+          </p>
+        </div>
       </div>
 
       {/* Acciones */}

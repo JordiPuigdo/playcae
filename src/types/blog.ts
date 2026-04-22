@@ -9,10 +9,13 @@ export interface BlogPost {
   author: string;
   tags: string[];
   coverImage?: string;
+  coverImageAlt?: string;
   status: BlogStatus;
   publishedAt?: string;
   createdAt: string;
   updatedAt: string;
+  seoTitle?: string;
+  canonicalUrl?: string;
 }
 
 export type CreateBlogPostData = Omit<

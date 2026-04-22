@@ -11,6 +11,11 @@ import {
 import { Label } from "./ui/Label";
 import { InfoTooltip } from "./ui/InfoToolTip";
 import Image from "next/image";
+import {
+  formatFileSizeMb,
+  MIME_IMAGE_PNG_JPEG,
+  validateFile,
+} from "@/lib/upload-validation";
 
 interface LogoUploadProps {
   currentLogoUrl: string | null;
@@ -39,17 +44,14 @@ export const LogoUpload = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (file: File) => {
-    // Validar tipo de archivo
-    if (!file.type.match(/^image\/(png|jpeg|jpg)$/)) {
-      setError("Solo se permiten archivos PNG o JPG");
-      setSelectedFile(null);
-      setPreviewUrl(null);
-      return;
-    }
+    const validationError = validateFile(file, {
+      maxSizeMb: MAX_FILE_SIZE_MB,
+      allowedMimePattern: MIME_IMAGE_PNG_JPEG,
+      invalidTypeMessage: "Solo se permiten archivos PNG o JPG",
+    });
 
-    // Validar tamaño
-    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
-      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB}MB`);
+    if (validationError) {
+      setError(validationError);
       setSelectedFile(null);
       setPreviewUrl(null);
       return;
@@ -58,7 +60,6 @@ export const LogoUpload = ({
     setError(null);
     setSelectedFile(file);
 
-    // Crear preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setPreviewUrl(reader.result as string);
@@ -189,7 +190,7 @@ export const LogoUpload = ({
                   {selectedFile?.name}
                 </div>
                 <div className="text-xs text-playBlueLight">
-                  {(selectedFile!.size / 1024 / 1024).toFixed(2)} MB
+                  {formatFileSizeMb(selectedFile!.size)}
                 </div>
                 <Button
                   type="button"
@@ -307,3 +308,4 @@ export const LogoUpload = ({
     </Dialog>
   );
 };
+

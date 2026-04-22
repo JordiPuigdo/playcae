@@ -9,12 +9,15 @@ interface BlogPostListDto {
   author: string;
   tags: string;           // comma-separated
   coverImageUrl?: string | null;
+  coverImageAlt?: string | null;
   published: boolean;
   publishedAt?: string | null;
   readingTimeMinutes: number;
   updatedAt?: string | null;
   active?: boolean | null;
   creationDate?: string | null;
+  seoTitle?: string | null;
+  canonicalUrl?: string | null;
 }
 
 interface BlogPostDto extends BlogPostListDto {
@@ -37,8 +40,11 @@ export interface WebBlogPost {
   author: string;
   tags: string[];
   coverImage?: string;
+  coverImageAlt?: string;
   readingTime: number;
   content: string;
+  seoTitle?: string;
+  canonicalUrl?: string;
 }
 
 export type WebBlogPostMeta = Omit<WebBlogPost, "content">;
@@ -60,7 +66,10 @@ function toMeta(p: BlogPostListDto): WebBlogPostMeta {
     author: p.author || "PlayCAE",
     tags: parseTags(p.tags),
     coverImage: p.coverImageUrl ?? undefined,
+    coverImageAlt: p.coverImageAlt ?? undefined,
     readingTime: p.readingTimeMinutes,
+    seoTitle: p.seoTitle ?? undefined,
+    canonicalUrl: p.canonicalUrl ?? undefined,
   };
 }
 

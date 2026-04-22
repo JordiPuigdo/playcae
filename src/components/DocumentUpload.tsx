@@ -13,6 +13,7 @@ import {
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { InfoTooltip } from "./ui/InfoToolTip";
+import { formatFileSizeMb, validateFile } from "@/lib/upload-validation";
 
 interface DocumentUploadProps {
   documentName: string;
@@ -46,8 +47,9 @@ export const DocumentUpload = ({
   if (!canUpload) return null;
 
   const handleFileSelect = (file: File) => {
-    if (file.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
-      setError(`El archivo supera el límite de ${MAX_FILE_SIZE_MB}MB`);
+    const validationError = validateFile(file, { maxSizeMb: MAX_FILE_SIZE_MB });
+    if (validationError) {
+      setError(validationError);
       setSelectedFile(null);
       return;
     }
@@ -144,7 +146,7 @@ export const DocumentUpload = ({
                   {selectedFile.name}
                 </div>
                 <div className="text-xs text-playBlueLight">
-                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+                  {formatFileSizeMb(selectedFile.size)}
                 </div>
                 <Button
                   type="button"
@@ -267,3 +269,4 @@ export const DocumentUpload = ({
     </Dialog>
   );
 };
+
