@@ -1,6 +1,7 @@
 ﻿// app/(web)/que-es-cae/page.tsx
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Script from "next/script";
 import {
   ArrowRight,
@@ -15,6 +16,7 @@ import {
   BookOpen,
   Gavel,
 } from "lucide-react";
+import StickyTableOfContents from "@/components/StickyTableOfContents";
 
 export const metadata: Metadata = {
   title: "¿Qué es la CAE? Guía Completa Coordinación Actividades Empresariales",
@@ -283,7 +285,9 @@ export default function QueEsCAEPage() {
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-8">
+            <StickyTableOfContents />
+
+            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-8 scroll-mt-24">
               ¿A quién afecta la CAE?
             </h2>
 
@@ -336,6 +340,18 @@ export default function QueEsCAEPage() {
                 </div>
               </div>
             </div>
+
+            <div className="mt-10">
+              <Image
+                src="/assets/img/trabajadores-obra-epis.webp"
+                alt="Empresas obligadas a cumplir la CAE según RD 171/2004"
+                width={1200}
+                height={675}
+                priority
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="w-full h-auto rounded-2xl border border-playBlueLight/10 shadow-md"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -344,7 +360,7 @@ export default function QueEsCAEPage() {
       <section className="bg-playGrey py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4 text-center scroll-mt-24">
               Obligaciones principales según el RD 171/2004
             </h2>
             <p className="text-playBlueLight text-center mb-12 max-w-2xl mx-auto">
@@ -378,7 +394,7 @@ export default function QueEsCAEPage() {
       <section className="bg-white py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-4 text-center scroll-mt-24">
               Documentación PRL requerida para CAE
             </h2>
             <p className="text-playBlueLight text-center mb-12 max-w-2xl mx-auto">
@@ -406,6 +422,47 @@ export default function QueEsCAEPage() {
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
+
+            <div className="mt-10">
+              <Image
+                src="/assets/img/checklist-documentos-cae.webp"
+                alt="Documentación CAE requerida para contratistas y subcontratas"
+                width={1200}
+                height={675}
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="w-full h-auto rounded-2xl border border-playBlueLight/10 shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-gradient-to-br from-playOrange to-orange-500 py-14 lg:py-20">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto rounded-3xl border border-white/20 bg-white/10 backdrop-blur-sm px-6 py-10 text-center sm:px-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              ¿Gestionas contratas y subcontratas?
+            </h2>
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto mb-8">
+              PlayCAE automatiza toda la documentación CAE. Valida documentos
+              en segundos y cumple el RD 171/2004 sin esfuerzo.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/contacto"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 font-semibold text-playOrange shadow-lg hover:bg-gray-100 transition-colors"
+              >
+                Solicitar demo gratuita
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <Link
+                href="/servicios/gestion-documentacion-cae"
+                className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white px-8 py-4 font-semibold text-white hover:bg-white/10 transition-colors"
+              >
+                Ver cómo funciona
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -414,7 +471,7 @@ export default function QueEsCAEPage() {
       <section className="bg-playBlueDark py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-center scroll-mt-24">
               Sanciones por incumplimiento de la CAE
             </h2>
             <p className="text-playBlueLight text-center mb-12 max-w-2xl mx-auto">
@@ -439,6 +496,18 @@ export default function QueEsCAEPage() {
                 </div>
               ))}
             </div>
+
+            <div className="mt-10">
+              <Image
+                src="/assets/img/inspeccion-trabajo-cae.webp"
+                alt="Sanciones por incumplimiento CAE hasta 819.780 euros"
+                width={1200}
+                height={675}
+                loading="lazy"
+                sizes="(max-width: 768px) 100vw, 800px"
+                className="w-full h-auto rounded-2xl border border-white/20 shadow-lg"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -447,7 +516,7 @@ export default function QueEsCAEPage() {
       <section className="bg-white py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-12 text-center">
+            <h2 className="text-3xl md:text-4xl font-bold text-playBlueDark mb-12 text-center scroll-mt-24">
               Evolución de la normativa CAE en España
             </h2>
 
