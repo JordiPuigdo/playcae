@@ -474,7 +474,7 @@ export default function QueEsCAEPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 text-center scroll-mt-24">
               Sanciones por incumplimiento de la CAE
             </h2>
-            <p className="text-playBlueLight text-center mb-12 max-w-2xl mx-auto">
+            <p className="text-white/70 text-center mb-12 max-w-2xl mx-auto">
               La Inspección de Trabajo puede imponer multas de hasta 819.780€
             </p>
 
@@ -490,7 +490,7 @@ export default function QueEsCAEPage() {
                   <p className="text-3xl font-bold text-playOrange mb-4">
                     {sanction.range}
                   </p>
-                  <p className="text-playBlueLight text-sm">
+                  <p className="text-white/70 text-sm">
                     {sanction.examples}
                   </p>
                 </div>
