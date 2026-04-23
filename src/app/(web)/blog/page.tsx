@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Script from "next/script";
 import { getAllPublishedPosts } from "@/lib/blog";
+import BlogDebugLogger from "./BlogDebugLogger";
 
 export const revalidate = 60;
 
@@ -26,6 +27,7 @@ export default async function BlogIndex() {
 
   return (
     <>
+      <BlogDebugLogger posts={posts} />
       <header className="mb-10">
         <h1 className="text-3xl md:text-4xl font-bold text-brandPrimary">
           Blog de PlayCAE

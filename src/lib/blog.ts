@@ -79,23 +79,32 @@ export async function getAllPublishedPosts(): Promise<WebBlogPostMeta[]> {
   let page = 1;
   const pageSize = 50;
 
+  console.log("[blog] API_BASE:", API_BASE);
+
   try {
     while (true) {
-      const res = await fetch(
-        `${API_BASE}/api/blog?page=${page}&pageSize=${pageSize}`,
-        { next: { revalidate: 3600, tags: ["blog"] } }
-      );
-      if (!res.ok) break;
+      const url = `${API_BASE}/api/blog?page=${page}&pageSize=${pageSize}`;
+      console.log("[blog] fetching:", url);
+
+      const res = await fetch(url, { next: { revalidate: 3600, tags: ["blog"] } });
+      console.log("[blog] response status:", res.status, res.statusText);
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => "(no body)");
+        console.error("[blog] error body:", body);
+        break;
+      }
 
       const data: PagedResult<BlogPostListDto> = await res.json();
+      console.log("[blog] data recibida:", JSON.stringify(data, null, 2));
       const items = data.items ?? [];
       all.push(...items.map(toMeta));
 
       if (all.length >= data.total || items.length < pageSize) break;
       page++;
     }
-  } catch {
-    // Return whatever was fetched so far
+  } catch (err) {
+    console.error("[blog] excepción en fetch:", err);
   }
 
   return all.sort(

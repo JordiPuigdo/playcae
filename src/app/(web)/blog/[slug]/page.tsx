@@ -163,7 +163,7 @@ export default async function BlogPostPage({ params }: Props) {
 
         {/* HTML Content */}
         <div
-          className="prose prose-neutral dark:prose-invert max-w-none prose-headings:text-foreground prose-a:text-brandPrimary prose-a:no-underline hover:prose-a:underline prose-strong:text-foreground prose-th:text-foreground"
+          className="prose prose-neutral max-w-none prose-headings:text-foreground prose-a:text-brandPrimary prose-a:no-underline hover:prose-a:underline prose-th:text-foreground"
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(post.content, {
               allowedTags: [

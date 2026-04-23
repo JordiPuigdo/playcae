@@ -50,6 +50,7 @@
     "gray-matter": "^4.0.3",
     "locale": "^0.1.0",
     "lucide-react": "^0.525.0",
+    "marked": "^18.0.2",
     "next": "^16.1.0",
     "next-images": "^1.8.5",
     "next-mdx-remote": "^6.0.0",

@@ -7,6 +7,7 @@ import Image from "@tiptap/extension-image";
 import Placeholder from "@tiptap/extension-placeholder";
 import TextAlign from "@tiptap/extension-text-align";
 import { useCallback } from "react";
+import { marked } from "marked";
 import {
   Bold,
   Italic,
@@ -61,6 +62,19 @@ function ToolbarButton({
   );
 }
 
+function isMarkdown(value: string): boolean {
+  if (!value) return false;
+  const trimmed = value.trim();
+  if (trimmed.startsWith("<") && trimmed.includes("</")) return false;
+  return /\*\*|__|\[.+\]\(.+\)|^#{1,6} /m.test(trimmed);
+}
+
+function toEditorContent(value: string): string {
+  if (!value) return "";
+  if (!isMarkdown(value)) return value;
+  return marked(value, { async: false }) as string;
+}
+
 export function RichTextEditor({
   value,
   onChange,
@@ -74,14 +88,14 @@ export function RichTextEditor({
       Image.configure({ inline: false }),
       Placeholder.configure({ placeholder: placeholder ?? "Escribe el contenido del artículo…" }),
     ],
-    content: value,
+    content: toEditorContent(value),
     onUpdate({ editor }) {
       onChange(editor.getHTML());
     },
     editorProps: {
       attributes: {
         class:
-          "prose prose-neutral dark:prose-invert max-w-none min-h-[300px] focus:outline-none p-4 text-sm",
+          "prose prose-neutral max-w-none min-h-[300px] focus:outline-none p-4 text-sm text-foreground prose-p:text-foreground prose-headings:text-foreground prose-li:text-foreground",
       },
     },
     immediatelyRender: false,
