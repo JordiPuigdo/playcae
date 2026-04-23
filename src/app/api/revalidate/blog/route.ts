@@ -4,6 +4,6 @@ import { NextResponse } from "next/server";
 // Called from the dashboard after publishing/unpublishing a blog post.
 // Invalidates all blog-related fetch cache so pages update immediately.
 export async function POST() {
-  revalidateTag("blog");
+  revalidateTag("blog", { expire: 0 });
   return NextResponse.json({ revalidated: true });
 }
