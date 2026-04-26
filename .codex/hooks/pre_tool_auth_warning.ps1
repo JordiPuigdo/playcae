@@ -27,7 +27,7 @@ $isWriteOrEdit = (
 $touchesAuthPath = $command -match '(?i)(auth|token)'
 
 if ($isWriteOrEdit -and $touchesAuthPath) {
-  $message = "⚠️ Estás modificando un archivo de autenticación. ¿Confirmas que esto es correcto?"
+  $message = "Warning: You are modifying authentication-related code. Confirm this is intended."
   $result = @{ systemMessage = $message } | ConvertTo-Json -Compress
   [Console]::Out.Write($result)
 }

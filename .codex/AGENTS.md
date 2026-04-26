@@ -7,6 +7,14 @@ Guia de trabajo para contribuir en este repo con foco en:
 - server-side por defecto
 - velocidad de entrega (vibe coding con guardrails)
 
+Leer tambien antes de cambios no triviales:
+- `../AGENTS.md` (entrada visible para Codex)
+- `ARCHITECTURE.md`
+- `CODING_STYLE.md`
+- `MODULES.md`
+- `CHECKLISTS.md`
+- `../../SECURITY_STANDARDS.md` (RGPD/PRL/ISO/OWASP)
+
 ## 1) Contexto de la app
 
 Stack principal:
@@ -161,6 +169,10 @@ Rutas:
 Comandos obligatorios:
 - `npm run lint`
 - `npm run build`
+
+Checklists Codex:
+- Usar `CHECKLISTS.md` para `build-check`, `review-component`,
+  `i18n-check` y `audit-secrets`.
 
 Checklist:
 1. Sin errores de lint/types/build.

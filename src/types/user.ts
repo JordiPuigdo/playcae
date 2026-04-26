@@ -37,4 +37,5 @@ export enum UserRole {
   Company,
   Supplier,
   PRLManager,
+  Marketing,
 }

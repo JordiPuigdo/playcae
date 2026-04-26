@@ -2,6 +2,15 @@
 
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
+import { TableCard } from "@/components/TableCard";
 import { BlogPost, BlogStatus } from "@/types/blog";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Edit, Trash2, Eye, EyeOff } from "lucide-react";
@@ -50,42 +59,30 @@ export function BlogTable({
   }
 
   return (
-    <div className="bg-white border border-playBlueLight/20 rounded-xl overflow-hidden">
-      <table className="w-full text-sm">
-        <thead className="bg-gray-50 border-b border-playBlueLight/20">
-          <tr>
-            <th className="text-left px-6 py-3 font-semibold text-brand-primary">
-              {t("blog.table.title")}
-            </th>
-            <th className="text-left px-6 py-3 font-semibold text-brand-primary">
-              {t("blog.table.status")}
-            </th>
-            <th className="text-left px-6 py-3 font-semibold text-brand-primary">
-              {t("blog.table.tags")}
-            </th>
-            <th className="text-left px-6 py-3 font-semibold text-brand-primary">
-              {t("blog.table.date")}
-            </th>
-            <th className="px-6 py-3" />
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-playBlueLight/10">
+    <TableCard title={t("blog.title")}>
+      <Table>
+        <TableHeader>
+          <TableRow className="bg-playGrey">
+            <TableHead className="text-brand-primary">{t("blog.table.title")}</TableHead>
+            <TableHead className="text-brand-primary">{t("blog.table.status")}</TableHead>
+            <TableHead className="text-brand-primary">{t("blog.table.tags")}</TableHead>
+            <TableHead className="text-brand-primary">{t("blog.table.date")}</TableHead>
+            <TableHead />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {posts.map((post) => (
-            <tr key={post.id} className="hover:bg-gray-50 transition-colors">
-              <td className="px-6 py-4">
-                <div>
-                  <p className="font-medium text-brand-primary">{post.title}</p>
-                  <p className="text-xs text-brand-primary/50 mt-0.5">
-                    /{post.slug}
-                  </p>
-                </div>
-              </td>
-              <td className="px-6 py-4">
+            <TableRow key={post.id} className="hover:bg-playOrange/5 transition-colors">
+              <TableCell>
+                <p className="font-medium text-brand-primary">{post.title}</p>
+                <p className="text-xs text-brand-primary/50 mt-0.5">/{post.slug}</p>
+              </TableCell>
+              <TableCell>
                 <Badge variant={statusVariant[post.status]}>
                   {t(statusTranslationKey[post.status])}
                 </Badge>
-              </td>
-              <td className="px-6 py-4">
+              </TableCell>
+              <TableCell>
                 <div className="flex flex-wrap gap-1">
                   {post.tags.slice(0, 3).map((tag) => (
                     <span
@@ -101,19 +98,19 @@ export function BlogTable({
                     </span>
                   )}
                 </div>
-              </td>
-              <td className="px-6 py-4 text-brand-primary/60 text-xs">
+              </TableCell>
+              <TableCell className="text-brand-primary/60 text-xs">
                 {post.publishedAt
                   ? new Date(post.publishedAt).toLocaleDateString("es-ES")
                   : new Date(post.createdAt).toLocaleDateString("es-ES")}
-              </td>
-              <td className="px-6 py-4">
+              </TableCell>
+              <TableCell>
                 <div className="flex items-center justify-end gap-2">
                   {post.status === "Published" ? (
                     <button
                       onClick={() => onUnpublish(post.id)}
                       title={t("blog.actions.unpublish")}
-                      className="p-1.5 rounded-lg text-brand-primary/50 hover:text-brand-primary hover:bg-gray-100 transition-colors"
+                      className="p-1.5 rounded-lg text-brand-primary/50 hover:text-brand-primary hover:bg-playGrey transition-colors"
                     >
                       <EyeOff className="h-4 w-4" />
                     </button>
@@ -121,7 +118,7 @@ export function BlogTable({
                     <button
                       onClick={() => onPublish(post.id)}
                       title={t("blog.actions.publish")}
-                      className="p-1.5 rounded-lg text-playGreen hover:text-playGreen/80 hover:bg-gray-100 transition-colors"
+                      className="p-1.5 rounded-lg text-playGreen hover:text-playGreen/80 hover:bg-playGrey transition-colors"
                     >
                       <Eye className="h-4 w-4" />
                     </button>
@@ -129,23 +126,23 @@ export function BlogTable({
                   <button
                     onClick={() => onEdit(post)}
                     title={t("common.edit")}
-                    className="p-1.5 rounded-lg text-brand-primary/50 hover:text-brand-primary hover:bg-gray-100 transition-colors"
+                    className="p-1.5 rounded-lg text-brand-primary/50 hover:text-brand-primary hover:bg-playGrey transition-colors"
                   >
                     <Edit className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => onDelete(post.id)}
                     title={t("common.delete")}
-                    className="p-1.5 rounded-lg text-brand-secondary/60 hover:text-brand-secondary hover:bg-gray-100 transition-colors"
+                    className="p-1.5 rounded-lg text-brand-secondary/60 hover:text-brand-secondary hover:bg-playGrey transition-colors"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
                 </div>
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
-    </div>
+        </TableBody>
+      </Table>
+    </TableCard>
   );
 }

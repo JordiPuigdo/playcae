@@ -1,16 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { Company, CompanySimple } from "@/types/company";
-import {
-  Edit,
-  Trash2,
-  Check,
-  Network,
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
-} from "lucide-react";
+import { Edit, Trash2, Check, Network } from "lucide-react";
+import { useSortableTable } from "@/hooks/useSortableTable";
+import { SortableHeader } from "./SortableHeader";
 import { Button } from "./ui/Button";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { Card, CardContent } from "./ui/Card";
+import { TableCard } from "./TableCard";
 import {
   TableHeader,
   TableRow,
@@ -27,14 +22,7 @@ import { Badge } from "./ui/Badge";
 import { WorkerCountBadge } from "./WorkerCountBadge";
 import { useTranslation } from "@/hooks/useTranslation";
 
-type SortField =
-  | "name"
-  | "taxId"
-  | "contactPerson"
-  | "email"
-  | "status"
-  | "workerStatus";
-type SortDirection = "asc" | "desc" | null;
+type SortField = "name" | "taxId" | "contactPerson" | "email" | "status" | "workerStatus";
 
 interface CompanyTableProps {
   companies: Company[];
@@ -53,94 +41,17 @@ export const CompanyTable = ({
   const router = useRouter();
   const [deleteCompany, setDeleteCompany] = useState<Company | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === "asc") {
-        setSortDirection("desc");
-      } else if (sortDirection === "desc") {
-        setSortDirection(null);
-        setSortField(null);
-      } else {
-        setSortDirection("asc");
+  const { sortField, sortDirection, handleSort, sortedData: sortedCompanies } =
+    useSortableTable<Company, SortField>(companies, (a, b, field) => {
+      switch (field) {
+        case "name":          return a.name.localeCompare(b.name);
+        case "taxId":         return (a.taxId || "").localeCompare(b.taxId || "");
+        case "contactPerson": return (a.contactPerson || "").localeCompare(b.contactPerson || "");
+        case "email":         return (a.email || "").localeCompare(b.email || "");
+        case "status":        return String(a.status || "").localeCompare(String(b.status || ""));
+        case "workerStatus":  return String(a.workerStatus || "").localeCompare(String(b.workerStatus || ""));
       }
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const sortedCompanies = useMemo(() => {
-    if (!sortField || !sortDirection) return companies;
-
-    return [...companies].sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortField) {
-        case "name":
-          comparison = a.name.localeCompare(b.name);
-          break;
-        case "taxId":
-          comparison = (a.taxId || "").localeCompare(b.taxId || "");
-          break;
-        case "contactPerson":
-          comparison = (a.contactPerson || "").localeCompare(
-            b.contactPerson || ""
-          );
-          break;
-        case "email":
-          comparison = (a.email || "").localeCompare(b.email || "");
-          break;
-        case "status":
-          comparison = String(a.status || "").localeCompare(
-            String(b.status || "")
-          );
-          break;
-        case "workerStatus":
-          comparison = String(a.workerStatus || "").localeCompare(
-            String(b.workerStatus || "")
-          );
-          break;
-      }
-
-      return sortDirection === "asc" ? comparison : -comparison;
     });
-  }, [companies, sortField, sortDirection]);
-
-  const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-    }
-    if (sortDirection === "asc") {
-      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    if (sortDirection === "desc") {
-      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-  };
-
-  const SortableHeader = ({
-    field,
-    children,
-    className = "",
-  }: {
-    field: SortField;
-    children: React.ReactNode;
-    className?: string;
-  }) => (
-    <TableHead
-      className={`cursor-pointer hover:bg-playGrey/80 select-none transition-colors ${className}`}
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center">
-        {children}
-        {renderSortIcon(field)}
-      </div>
-    </TableHead>
-  );
 
   const handleDeleteClick = (company: Company) => {
     setDeleteCompany(company);
@@ -282,58 +193,41 @@ export const CompanyTable = ({
     </TableRow>
   );
 
-  return (
-    <Card className="bg-white">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          {t("companies.registered", { count: totalCount })}
-          {companies.some((c) => c.subcontractors?.length) && (
-            <span className="text-sm font-normal text-muted-foreground">
-              · {companies.filter((c) => !c.isSubcontractor).length} {t("companies.main")}
-            </span>
-          )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <SortableHeader field="name">{t("companies.companyName")}</SortableHeader>
-                <SortableHeader field="taxId">{t("companies.cif")}</SortableHeader>
-                <SortableHeader field="contactPerson">{t("companies.contact")}</SortableHeader>
-                <SortableHeader field="email">{t("common.email")}</SortableHeader>
-                <SortableHeader
-                  field="status"
-                  className="min-w-[140px] text-center"
-                >
-                  {t("dashboard.company")}
-                </SortableHeader>
-                <SortableHeader
-                  field="workerStatus"
-                  className="min-w-[140px]"
-                >
-                  {t("dashboard.workers")}
-                </SortableHeader>
-                <TableHead className="text-right">{t("common.actions")}</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {sortedCompanies.map((company) => (
-                <React.Fragment key={company.id}>
-                  {/* Empresa principal */}
-                  {renderRow(company, false)}
+  const subtitle = companies.some((c) => c.subcontractors?.length)
+    ? `· ${companies.filter((c) => !c.isSubcontractor).length} ${t("companies.main")}`
+    : undefined;
 
-                  {/* Subcontratas (siempre visibles, con indentación) */}
-                  {company.subcontractors?.map((sub) =>
-                    renderRow(sub, true, company.name)
-                  )}
-                </React.Fragment>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </CardContent>
+  return (
+    <>
+      <TableCard title={t("companies.registered", { count: totalCount })} subtitle={subtitle}>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <SortableHeader field="name" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>{t("companies.companyName")}</SortableHeader>
+              <SortableHeader field="taxId" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>{t("companies.cif")}</SortableHeader>
+              <SortableHeader field="contactPerson" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>{t("companies.contact")}</SortableHeader>
+              <SortableHeader field="email" sortField={sortField} sortDirection={sortDirection} onSort={handleSort}>{t("common.email")}</SortableHeader>
+              <SortableHeader field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="min-w-[140px] text-center">
+                {t("dashboard.company")}
+              </SortableHeader>
+              <SortableHeader field="workerStatus" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="min-w-[140px]">
+                {t("dashboard.workers")}
+              </SortableHeader>
+              <TableHead className="text-right">{t("common.actions")}</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {sortedCompanies.map((company) => (
+              <React.Fragment key={company.id}>
+                {renderRow(company, false)}
+                {company.subcontractors?.map((sub) =>
+                  renderRow(sub, true, company.name)
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      </TableCard>
       <DeleteConfirmationModal
         isOpen={!!deleteCompany}
         onClose={() => setDeleteCompany(null)}
@@ -343,6 +237,6 @@ export const CompanyTable = ({
         itemName={deleteCompany ? `${deleteCompany.name} ` : undefined}
         isLoading={isDeleting}
       />
-    </Card>
+    </>
   );
 };

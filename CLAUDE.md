@@ -1,4 +1,5 @@
 @.codex/AGENTS.md
+@../SECURITY_STANDARDS.md
 
 ## Claude Code — contexto adicional
 

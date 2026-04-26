@@ -1,6 +1,6 @@
-import { Users, Eye, AlertTriangle } from "lucide-react";
+import { Eye, AlertTriangle } from "lucide-react";
 import { Worker } from "@/types/worker";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/Card";
+import { TableCard } from "./TableCard";
 import { Button } from "./ui/Button";
 import {
   TableHeader,
@@ -58,16 +58,8 @@ export const AuthorizedPersonnelTable = ({
   };
 
   return (
-    <Card className="bg-white">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          {t("workers.unauthorizedPersonnel")} ({workers.length})
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="overflow-x-auto">
-          <Table>
+    <TableCard title={`${t("workers.unauthorizedPersonnel")} (${workers.length})`}>
+        <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>{t("workers.firstName")}</TableHead>
@@ -144,8 +136,6 @@ export const AuthorizedPersonnelTable = ({
               )}
             </TableBody>
           </Table>
-        </div>
-      </CardContent>
-    </Card>
+    </TableCard>
   );
 };

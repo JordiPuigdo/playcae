@@ -43,7 +43,8 @@
     "optional": "Opcional",
     "showing": "Mostrant",
     "of": "de",
-    "clear": "Netejar"
+    "clear": "Netejar",
+    "noResults": "Sense resultats"
   },
   "loading": {
     "message1": "Carregant",
@@ -419,7 +420,9 @@
       "settings": "Configuració",
       "configuration": "Configuració",
       "pendingValidation": "Pendents de validar",
-      "blog": "Blog"
+      "obras": "Obres i Projectes",
+      "blog": "Blog",
+      "licenses": "Llicències"
     },
     "stats": {
       "totalCompanies": "Total Empreses",
@@ -509,10 +512,10 @@
     }
   },
   "pendingValidation": {
-    "title": "Documentacio pendent de validar",
+    "title": "Documentació pendent de validar",
     "subtitle": "Consulta en una sola vista els documents pendents de les teves empreses assignades.",
-    "tableTitle": "Cua de validacio",
-    "noPermission": "No tens permisos per accedir a aquesta pagina.",
+    "tableTitle": "Cua de validació",
+    "noPermission": "No tens permisos per accedir a aquesta pàgina.",
     "empty": "No hi ha documents pendents amb els filtres actuals.",
     "columns": {
       "company": "Empresa",
@@ -524,13 +527,15 @@
       "actions": "Accions"
     },
     "filters": {
+      "searchLabel": "Cerca de document",
       "searchPlaceholder": "Cerca per empresa, treballador o tipus de document...",
       "company": "Empresa",
       "status": "Estat",
       "ownerType": "Tipus de titular",
       "allCompanies": "Totes les empreses",
       "allStatuses": "Tots els estats",
-      "allOwnerTypes": "Tots els tipus"
+      "allOwnerTypes": "Tots els tipus",
+      "clearFilters": "Netejar filtres"
     },
     "owner": {
       "company": "Empresa",
@@ -538,7 +543,7 @@
     },
     "status": {
       "pending": "Pendent",
-      "pendingManualy": "Pendent de validacio manual",
+      "pendingManualy": "Pendent de validació manual",
       "rejected": "Rebutjat",
       "expired": "Caducat",
       "expiredByAI": "Caducat per IA"
@@ -1332,10 +1337,15 @@
     "table": {
       "admin": "Client (Admin)",
       "contractors": "Contractistes",
-      "workers": "Treballadors",
+      "workersPerContractor": "Treb./Contractista",
+      "internalWorkers": "Treb. Interns",
       "prlUsers": "Usuaris PRL",
       "sites": "Seus",
       "threshold": "Llindar alerta",
+      "projects": "Mòdul Obres",
+      "projectsOn": "Actiu",
+      "projectsOff": "Inactiu",
+      "moduleOff": "Desactivat",
       "noLimit": "∞",
       "actions": "Accions",
       "edit": "Editar"
@@ -1344,10 +1354,15 @@
       "title": "Editar llicència",
       "subtitle": "Deixa el camp buit per sense límit",
       "contractors": "Màx. contractistes",
-      "workers": "Màx. treballadors",
+      "workersPerContractor": "Màx. treballadors per contractista",
+      "enableInternalWorkers": "Mòdul Treballadors Interns",
+      "enableInternalWorkersDesc": "Activa la gestió i limitació de treballadors de l'empresa principal",
+      "maxInternalWorkers": "Màx. treballadors interns",
       "prlUsers": "Màx. usuaris PRL",
       "sites": "Màx. seus",
       "threshold": "Llindar d'alerta (unitats restants)",
+      "enableProjects": "Mòdul d'Obres",
+      "enableProjectsDesc": "Activa l'accés a la gestió d'obres i projectes",
       "save": "Desar canvis",
       "cancel": "Cancel·lar",
       "success": "Llicència actualitzada correctament",
@@ -1356,8 +1371,22 @@
     "noTenants": "No hi ha clients registrats",
     "loading": "Carregant llicències...",
     "quota": {
-      "contractorsExceeded": "Límit assolit: {{current}}/{{max}} empreses. Contacta amb el teu gestor per ampliar la llicència.",
-      "workersExceeded": "Límit de treballadors assolit. Contacta amb el teu gestor per ampliar la llicència."
+      "contractorsExceeded": "Límit assolit: {current}/{max} empreses. Contacta amb el teu gestor per ampliar la llicència.",
+      "internalWorkersExceeded": "Límit de treballadors interns assolit. Contacta amb el teu gestor per ampliar la llicència.",
+      "contractorWorkersExceeded": "Límit de treballadors per a aquesta empresa contractista assolit."
+    },
+    "create": {
+      "button": "Nova llicència",
+      "title": "Crear llicència",
+      "subtitle": "Selecciona l'administrador al qual assignar la llicència.",
+      "emailLabel": "Administrador",
+      "selectPlaceholder": "Selecciona un administrador...",
+      "noAdmins": "No hi ha administradors sense llicència",
+      "next": "Següent →",
+      "back": "← Enrere",
+      "confirm": "Crear llicència",
+      "success": "Llicència creada correctament",
+      "error": "No s'ha pogut crear la llicència. Verifica que l'email correspon a un usuari Admin."
     }
   }
 }

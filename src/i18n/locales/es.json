@@ -43,7 +43,8 @@
     "optional": "Opcional",
     "showing": "Mostrando",
     "of": "de",
-    "clear": "Limpiar"
+    "clear": "Limpiar",
+    "noResults": "Sin resultados"
   },
   "loading": {
     "message1": "Cargando",
@@ -419,7 +420,9 @@
       "settings": "Configuración",
       "configuration": "Configuración",
       "pendingValidation": "Pendientes de validar",
-      "blog": "Blog"
+      "obras": "Obras y Proyectos",
+      "blog": "Blog",
+      "licenses": "Licencias"
     },
     "stats": {
       "totalCompanies": "Total Empresas",
@@ -509,10 +512,10 @@
     }
   },
   "pendingValidation": {
-    "title": "Documentacion pendiente de validar",
+    "title": "Documentación pendiente de validar",
     "subtitle": "Consulta en una sola vista los documentos pendientes de tus empresas asignadas.",
-    "tableTitle": "Cola de validacion",
-    "noPermission": "No tienes permisos para acceder a esta pagina.",
+    "tableTitle": "Cola de validación",
+    "noPermission": "No tienes permisos para acceder a esta página.",
     "empty": "No hay documentos pendientes con los filtros actuales.",
     "columns": {
       "company": "Empresa",
@@ -524,13 +527,15 @@
       "actions": "Acciones"
     },
     "filters": {
+      "searchLabel": "Buscar documento",
       "searchPlaceholder": "Buscar por empresa, trabajador o tipo de documento...",
       "company": "Empresa",
       "status": "Estado",
       "ownerType": "Tipo de titular",
       "allCompanies": "Todas las empresas",
       "allStatuses": "Todos los estados",
-      "allOwnerTypes": "Todos los tipos"
+      "allOwnerTypes": "Todos los tipos",
+      "clearFilters": "Limpiar filtros"
     },
     "owner": {
       "company": "Empresa",
@@ -538,7 +543,7 @@
     },
     "status": {
       "pending": "Pendiente",
-      "pendingManualy": "Pendiente de validacion manual",
+      "pendingManualy": "Pendiente de validación manual",
       "rejected": "Rechazado",
       "expired": "Caducado",
       "expiredByAI": "Caducado por IA"
@@ -1332,10 +1337,15 @@
     "table": {
       "admin": "Cliente (Admin)",
       "contractors": "Contratistas",
-      "workers": "Trabajadores",
+      "workersPerContractor": "Trab./Contratista",
+      "internalWorkers": "Trab. Internos",
       "prlUsers": "Usuarios PRL",
       "sites": "Sedes",
       "threshold": "Umbral alerta",
+      "projects": "Módulo Obras",
+      "projectsOn": "Activo",
+      "projectsOff": "Inactivo",
+      "moduleOff": "Desactivado",
       "noLimit": "∞",
       "actions": "Acciones",
       "edit": "Editar"
@@ -1344,10 +1354,15 @@
       "title": "Editar licencia",
       "subtitle": "Deja el campo vacío para sin límite",
       "contractors": "Máx. contratistas",
-      "workers": "Máx. trabajadores",
+      "workersPerContractor": "Máx. trabajadores por contratista",
+      "enableInternalWorkers": "Módulo Trabajadores Internos",
+      "enableInternalWorkersDesc": "Activa la gestión y limitación de trabajadores de la empresa principal",
+      "maxInternalWorkers": "Máx. trabajadores internos",
       "prlUsers": "Máx. usuarios PRL",
       "sites": "Máx. sedes",
       "threshold": "Umbral de alerta (unidades restantes)",
+      "enableProjects": "Módulo de Obras",
+      "enableProjectsDesc": "Activa el acceso a la gestión de obras y proyectos",
       "save": "Guardar cambios",
       "cancel": "Cancelar",
       "success": "Licencia actualizada correctamente",
@@ -1356,8 +1371,22 @@
     "noTenants": "No hay clientes registrados",
     "loading": "Cargando licencias...",
     "quota": {
-      "contractorsExceeded": "Límite alcanzado: {{current}}/{{max}} empresas. Contacta con tu gestor para ampliar la licencia.",
-      "workersExceeded": "Límite de trabajadores alcanzado. Contacta con tu gestor para ampliar la licencia."
+      "contractorsExceeded": "Límite alcanzado: {current}/{max} empresas. Contacta con tu gestor para ampliar la licencia.",
+      "internalWorkersExceeded": "Límite de trabajadores internos alcanzado. Contacta con tu gestor para ampliar la licencia.",
+      "contractorWorkersExceeded": "Límite de trabajadores para esta empresa contratista alcanzado."
+    },
+    "create": {
+      "button": "Nueva licencia",
+      "title": "Crear licencia",
+      "subtitle": "Selecciona el administrador al que asignar la licencia.",
+      "emailLabel": "Administrador",
+      "selectPlaceholder": "Selecciona un administrador...",
+      "noAdmins": "No hay administradores sin licencia",
+      "next": "Siguiente →",
+      "back": "← Atrás",
+      "confirm": "Crear licencia",
+      "success": "Licencia creada correctamente",
+      "error": "No se ha podido crear la licencia. Verifica que el email corresponde a un usuario Admin."
     }
   }
 }

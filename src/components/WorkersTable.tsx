@@ -1,4 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
+import { useSortableTable } from "@/hooks/useSortableTable";
+import { SortableHeader } from "@/components/SortableHeader";
 import { Worker, WorkerFormData, WorkerDocumentFormData } from "@/types/worker";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getDocumentTypeName } from "@/app/utils/document-type-utils";
@@ -12,13 +14,9 @@ import {
   Trash2,
   Plus,
   Check,
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
 } from "lucide-react";
 
 type SortField = "name" | "cardId" | "position" | "creationDate" | "status";
-type SortDirection = "asc" | "desc" | null;
 import {
   Table,
   TableBody,
@@ -90,89 +88,24 @@ export const WorkersTable = ({
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteWorker, setDeleteWorker] = useState<Worker | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === "asc") {
-        setSortDirection("desc");
-      } else if (sortDirection === "desc") {
-        setSortDirection(null);
-        setSortField(null);
-      } else {
-        setSortDirection("asc");
+  const { sortField, sortDirection, handleSort, sortedData: sortedWorkers } =
+    useSortableTable<Worker, SortField>(workers, (a, b, field) => {
+      switch (field) {
+        case "name": {
+          const aN = `${a.firstName} ${a.lastName}`;
+          const bN = `${b.firstName} ${b.lastName}`;
+          return aN.localeCompare(bN);
+        }
+        case "cardId":      return (a.cardId || "").localeCompare(b.cardId || "");
+        case "position":    return (a.position || "").localeCompare(b.position || "");
+        case "creationDate": {
+          const aD = a.creationDate ? new Date(a.creationDate).getTime() : 0;
+          const bD = b.creationDate ? new Date(b.creationDate).getTime() : 0;
+          return aD - bD;
+        }
+        case "status": return String(a.status || "").localeCompare(String(b.status || ""));
       }
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const sortedWorkers = useMemo(() => {
-    if (!sortField || !sortDirection) return workers;
-
-    return [...workers].sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortField) {
-        case "name":
-          const aName = `${a.firstName} ${a.lastName}`;
-          const bName = `${b.firstName} ${b.lastName}`;
-          comparison = aName.localeCompare(bName);
-          break;
-        case "cardId":
-          comparison = (a.cardId || "").localeCompare(b.cardId || "");
-          break;
-        case "position":
-          comparison = (a.position || "").localeCompare(b.position || "");
-          break;
-        case "creationDate":
-          const aDate = a.creationDate ? new Date(a.creationDate).getTime() : 0;
-          const bDate = b.creationDate ? new Date(b.creationDate).getTime() : 0;
-          comparison = aDate - bDate;
-          break;
-        case "status":
-          comparison = String(a.status || "").localeCompare(
-            String(b.status || "")
-          );
-          break;
-      }
-
-      return sortDirection === "asc" ? comparison : -comparison;
     });
-  }, [workers, sortField, sortDirection]);
-
-  const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-    }
-    if (sortDirection === "asc") {
-      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    if (sortDirection === "desc") {
-      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-  };
-
-  const SortableHeader = ({
-    field,
-    children,
-  }: {
-    field: SortField;
-    children: React.ReactNode;
-  }) => (
-    <TableHead
-      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center">
-        {children}
-        {renderSortIcon(field)}
-      </div>
-    </TableHead>
-  );
 
   const PENDING_STATUSES = [
     EntityStatus.Pending,
@@ -310,8 +243,8 @@ export const WorkersTable = ({
                   {t("workers.addWorker")}
                 </Button>
                 {workersAtLimit && (
-                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
-                    {t("license.quota.workersExceeded")}
+                  <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded max-w-[260px] text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                    {t("license.quota.internalWorkersExceeded")}
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
                   </div>
                 )}
@@ -326,13 +259,13 @@ export const WorkersTable = ({
               <TableHeader>
                 <TableRow className="bg-playGrey">
                   <TableHead className="w-10" />
-                  <SortableHeader field="name">{t("workers.title")}</SortableHeader>
-                  <SortableHeader field="cardId">{t("workers.dni")}</SortableHeader>
-                  <SortableHeader field="position">{t("workers.position")}</SortableHeader>
-                  <SortableHeader field="creationDate">
+                  <SortableHeader field="name" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("workers.title")}</SortableHeader>
+                  <SortableHeader field="cardId" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("workers.dni")}</SortableHeader>
+                  <SortableHeader field="position" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("workers.position")}</SortableHeader>
+                  <SortableHeader field="creationDate" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">
                     {t("workers.registrationDate")}
                   </SortableHeader>
-                  <SortableHeader field="status">{t("common.status")}</SortableHeader>
+                  <SortableHeader field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("common.status")}</SortableHeader>
                   <TableHead className="text-brand-primary">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>

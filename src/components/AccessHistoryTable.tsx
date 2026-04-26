@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -10,18 +9,11 @@ import {
 import { AccessHistoryEntry } from "@/types/accessHistory";
 import { format } from "date-fns";
 import { es, ca } from "date-fns/locale";
-import { ArrowUp, ArrowDown, ArrowUpDown } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSortableTable } from "@/hooks/useSortableTable";
+import { SortableHeader } from "@/components/SortableHeader";
 
-type SortField =
-  | "technicianName"
-  | "dni"
-  | "company"
-  | "entryTime"
-  | "exitTime"
-  | "duration"
-  | "status";
-type SortDirection = "asc" | "desc" | null;
+type SortField = "technicianName" | "dni" | "company" | "entryTime" | "exitTime" | "duration" | "status";
 
 interface AccessHistoryTableProps {
   history: AccessHistoryEntry[];
@@ -33,9 +25,6 @@ export const AccessHistoryTable = ({
   onSelectEntry,
 }: AccessHistoryTableProps) => {
   const { t, locale } = useTranslation();
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-
   const dateLocale = locale === "ca" ? ca : es;
 
   const formatDateTime = (dateString: string) => {
@@ -61,91 +50,22 @@ export const AccessHistoryTable = ({
     return `${hours}h ${minutes}m`;
   };
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      // Ciclo: asc -> desc -> null
-      if (sortDirection === "asc") {
-        setSortDirection("desc");
-      } else if (sortDirection === "desc") {
-        setSortDirection(null);
-        setSortField(null);
-      } else {
-        setSortDirection("asc");
-      }
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const sortedHistory = useMemo(() => {
-    if (!sortField || !sortDirection) return history;
-
-    return [...history].sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortField) {
-        case "technicianName":
-          comparison = a.technicianName.localeCompare(b.technicianName);
-          break;
-        case "dni":
-          comparison = a.dni.localeCompare(b.dni);
-          break;
-        case "company":
-          comparison = a.company.localeCompare(b.company);
-          break;
-        case "entryTime":
-          comparison =
-            new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime();
-          break;
-        case "exitTime":
+  const { sortField, sortDirection, handleSort, sortedData: sortedHistory } =
+    useSortableTable<AccessHistoryEntry, SortField>(history, (a, b, field) => {
+      switch (field) {
+        case "technicianName": return a.technicianName.localeCompare(b.technicianName);
+        case "dni":            return a.dni.localeCompare(b.dni);
+        case "company":        return a.company.localeCompare(b.company);
+        case "entryTime":      return new Date(a.entryTime).getTime() - new Date(b.entryTime).getTime();
+        case "exitTime": {
           const aExit = a.exitTime ? new Date(a.exitTime).getTime() : Infinity;
           const bExit = b.exitTime ? new Date(b.exitTime).getTime() : Infinity;
-          comparison = aExit - bExit;
-          break;
-        case "duration":
-          comparison =
-            calculateDurationMinutes(a) - calculateDurationMinutes(b);
-          break;
-        case "status":
-          comparison = a.status.localeCompare(b.status);
-          break;
+          return aExit - bExit;
+        }
+        case "duration": return calculateDurationMinutes(a) - calculateDurationMinutes(b);
+        case "status":   return a.status.localeCompare(b.status);
       }
-
-      return sortDirection === "asc" ? comparison : -comparison;
     });
-  }, [history, sortField, sortDirection]);
-
-  const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-    }
-    if (sortDirection === "asc") {
-      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    if (sortDirection === "desc") {
-      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-  };
-
-  const SortableHeader = ({
-    field,
-    children,
-  }: {
-    field: SortField;
-    children: React.ReactNode;
-  }) => (
-    <TableHead
-      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center">
-        {children}
-        {renderSortIcon(field)}
-      </div>
-    </TableHead>
-  );
 
   const renderStatusLight = (status: string) => {
     const color =
@@ -165,13 +85,13 @@ export const AccessHistoryTable = ({
       <Table>
         <TableHeader>
           <TableRow className="bg-playGrey">
-            <SortableHeader field="technicianName">{t("accessControl.technician")}</SortableHeader>
-            <SortableHeader field="dni">{t("workers.dni")}</SortableHeader>
-            <SortableHeader field="company">{t("accessControl.company")}</SortableHeader>
-            <SortableHeader field="entryTime">{t("accessControl.entry")}</SortableHeader>
-            <SortableHeader field="exitTime">{t("accessControl.exit")}</SortableHeader>
-            <SortableHeader field="duration">{t("accessControl.duration")}</SortableHeader>
-            <SortableHeader field="status">{t("common.status")}</SortableHeader>
+            <SortableHeader field="technicianName" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("accessControl.technician")}</SortableHeader>
+            <SortableHeader field="dni" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("workers.dni")}</SortableHeader>
+            <SortableHeader field="company" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("accessControl.company")}</SortableHeader>
+            <SortableHeader field="entryTime" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("accessControl.entry")}</SortableHeader>
+            <SortableHeader field="exitTime" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("accessControl.exit")}</SortableHeader>
+            <SortableHeader field="duration" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("accessControl.duration")}</SortableHeader>
+            <SortableHeader field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("common.status")}</SortableHeader>
           </TableRow>
         </TableHeader>
 

@@ -19,6 +19,8 @@ import {
   FileCheck2,
   BookOpen,
   KeyRound,
+  HardHat,
+  Lock,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -31,6 +33,7 @@ export default function Sidebar() {
   const adminLinks = [
     { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
     { href: "/dashboard/companies", label: t("dashboard.sidebar.companies"), icon: Building2 },
+    { href: "/dashboard/projects", label: t("dashboard.sidebar.obras"), icon: HardHat },
     { href: "/dashboard/subcontractors", label: t("dashboard.sidebar.subcontractors"), icon: Network },
     {
       href: "/dashboard/documents",
@@ -100,6 +103,7 @@ export default function Sidebar() {
       : companyLinks;
 
   const isSuperAdmin = role === UserRole.SuperAdmin;
+  const isMarketing = role === UserRole.Marketing;
 
   const isActive = (href: string) => {
     if (href === "/dashboard") {
@@ -120,6 +124,33 @@ export default function Sidebar() {
 
       <nav className="flex flex-col space-y-2 flex-grow">
         {isSuperAdmin ? (
+          <>
+            <Link
+              href="/dashboard/settings/licenses"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/settings/licenses")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <Lock className="h-5 w-5" />
+              {t("dashboard.sidebar.licenses")}
+            </Link>
+            <Link
+              href="/dashboard/blog"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/blog")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <BookOpen className="h-5 w-5" />
+              {t("dashboard.sidebar.blog")}
+            </Link>
+          </>
+        ) : isMarketing ? (
           <Link
             href="/dashboard/blog"
             className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all

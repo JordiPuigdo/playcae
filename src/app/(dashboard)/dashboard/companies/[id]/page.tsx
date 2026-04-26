@@ -77,9 +77,12 @@ const CompanyDetailPage = () => {
   const { toast } = useToast();
   const { user, licenseSummary } = useAuthStore();
 
-  const workersAtLimit =
-    licenseSummary?.maxWorkers != null &&
-    licenseSummary.currentWorkers >= licenseSummary.maxWorkers;
+  const workersAtLimit = company?.isMainCompany
+    ? (licenseSummary?.enableInternalWorkers === true &&
+        licenseSummary.maxInternalWorkers != null &&
+        licenseSummary.currentInternalWorkers >= licenseSummary.maxInternalWorkers)
+    : (licenseSummary?.workersPerContractor != null &&
+        workers.length >= licenseSummary.workersPerContractor);
 
   const [filters, setFilters] = useState<{
     search: string;

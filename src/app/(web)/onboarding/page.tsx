@@ -45,7 +45,7 @@ export default function CompanyOnboarding() {
   const { getCompanyById, updateCompany, updateCompanyStatus } = useCompanies();
   const { createBulkWorkers, workers } = useWorkers(token!);
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { logout, licenseSummary } = useAuthStore();
 
   const { toast } = useToast();
 
@@ -546,7 +546,11 @@ export default function CompanyOnboarding() {
           type="button"
           variant="outline"
           onClick={addWorker}
-          className="w-full"
+          disabled={
+            licenseSummary?.workersPerContractor != null &&
+            onboardingData.workers.length >= licenseSummary.workersPerContractor
+          }
+          className="w-full disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <Plus className="h-4 w-4 mr-2" />
           Añadir otro trabajador

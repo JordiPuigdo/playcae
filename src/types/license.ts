@@ -1,12 +1,15 @@
 export interface LicenseSummary {
   currentContractors: number;
   maxContractors: number | null;
-  currentWorkers: number;
-  maxWorkers: number | null;
+  enableInternalWorkers: boolean;
+  currentInternalWorkers: number;
+  maxInternalWorkers: number | null;
+  workersPerContractor: number | null;
   currentPrlUsers: number;
   maxPrlUsers: number | null;
   currentSites: number;
   maxSites: number | null;
+  enableProjects?: boolean;
 }
 
 export interface TenantLicenseAdmin {
@@ -14,20 +17,30 @@ export interface TenantLicenseAdmin {
   adminEmail: string;
   adminName: string;
   maxContractors: number | null;
-  maxWorkers: number | null;
+  enableInternalWorkers: boolean;
+  maxInternalWorkers: number | null;
+  workersPerContractor: number | null;
   maxPrlUsers: number | null;
   maxSites: number | null;
   alertThreshold: number;
   currentContractors: number;
-  currentWorkers: number;
+  currentInternalWorkers: number;
   currentPrlUsers: number;
   currentSites: number;
+  enableProjects: boolean;
 }
 
 export interface UpdateTenantLicenseDto {
   maxContractors: number | null;
-  maxWorkers: number | null;
+  enableInternalWorkers: boolean;
+  maxInternalWorkers: number | null;
+  workersPerContractor: number | null;
   maxPrlUsers: number | null;
   maxSites: number | null;
   alertThreshold: number;
+  enableProjects: boolean;
+}
+
+export interface InitTenantLicenseRequest {
+  adminEmail: string;
 }

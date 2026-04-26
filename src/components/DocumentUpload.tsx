@@ -12,6 +12,7 @@ import {
 } from "./ui/Dialog";
 import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
+import { DatePicker } from "./ui/DatePicker";
 import { InfoTooltip } from "./ui/InfoToolTip";
 import { formatFileSizeMb, validateFile } from "@/lib/upload-validation";
 
@@ -202,12 +203,10 @@ export const DocumentUpload = ({
                 <Calendar className="h-4 w-4 text-brand-primary" />
                 Fecha de emisión (opcional)
               </Label>
-              <Input
+              <DatePicker
                 id="issueDate"
-                type="date"
                 value={issueDate}
-                onChange={(e) => setIssueDate(e.target.value)}
-                className="border-playBlueLight focus-visible:ring-brand-primary"
+                onChange={setIssueDate}
               />
             </div>
 
@@ -219,12 +218,10 @@ export const DocumentUpload = ({
                 <Calendar className="h-4 w-4 text-brand-primary" />
                 Fecha de caducidad (opcional)
               </Label>
-              <Input
+              <DatePicker
                 id="expiryDate"
-                type="date"
                 value={expiryDate}
-                onChange={(e) => setExpiryDate(e.target.value)}
-                className="border-playBlueLight focus-visible:ring-brand-primary"
+                onChange={setExpiryDate}
               />
             </div>
           </div>

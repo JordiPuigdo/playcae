@@ -37,7 +37,7 @@ if ($LASTEXITCODE -ne 0) {
 $branch = $branch.Trim()
 
 if ($branch -in @("main", "master")) {
-  $message = "⚠️ Estás en la rama main. ¿Quieres crear una rama antes de continuar?"
+  $message = "Warning: You are on main/master. Consider creating a feature branch before editing."
   $result = @{ systemMessage = $message } | ConvertTo-Json -Compress
   [Console]::Out.Write($result)
 }

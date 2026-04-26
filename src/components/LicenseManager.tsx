@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { Lock, Pencil, Search } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Lock, Pencil, Plus, Search } from "lucide-react";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LoginService } from "@/services/login.service";
 import { LicenseService } from "@/services/license.service";
+import { UserService } from "@/services/user.services";
 import { TenantLicenseAdmin, UpdateTenantLicenseDto } from "@/types/license";
+import { UserRole } from "@/types/user";
 import { toast } from "@/hooks/use-Toast";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
@@ -19,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog";
+import { Switch } from "@/components/ui/Switch";
 import {
   Table,
   TableBody,
@@ -113,10 +116,13 @@ function EditLicenseModal({
     val.trim() === "" ? null : Number(val);
 
   const [maxContractors, setMaxContractors] = useState(toField(tenant.maxContractors));
-  const [maxWorkers, setMaxWorkers] = useState(toField(tenant.maxWorkers));
+  const [enableInternalWorkers, setEnableInternalWorkers] = useState(tenant.enableInternalWorkers);
+  const [maxInternalWorkers, setMaxInternalWorkers] = useState(toField(tenant.maxInternalWorkers));
+  const [workersPerContractor, setWorkersPerContractor] = useState(toField(tenant.workersPerContractor));
   const [maxPrlUsers, setMaxPrlUsers] = useState(toField(tenant.maxPrlUsers));
   const [maxSites, setMaxSites] = useState(toField(tenant.maxSites));
   const [alertThreshold, setAlertThreshold] = useState(String(tenant.alertThreshold));
+  const [enableProjects, setEnableProjects] = useState(tenant.enableProjects);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
@@ -124,10 +130,13 @@ function EditLicenseModal({
     try {
       const dto: UpdateTenantLicenseDto = {
         maxContractors: fromField(maxContractors),
-        maxWorkers: fromField(maxWorkers),
+        enableInternalWorkers,
+        maxInternalWorkers: fromField(maxInternalWorkers),
+        workersPerContractor: fromField(workersPerContractor),
         maxPrlUsers: fromField(maxPrlUsers),
         maxSites: fromField(maxSites),
         alertThreshold: Number(alertThreshold) || 5,
+        enableProjects,
       };
       await LicenseService.updateTenantLicense(tenant.adminUserId, dto);
       toast({ title: t("license.edit.success"), variant: "default" });
@@ -162,13 +171,13 @@ function EditLicenseModal({
             />
           </div>
           <div className="space-y-1">
-            <Label>{t("license.edit.workers")}</Label>
+            <Label>{t("license.edit.workersPerContractor")}</Label>
             <Input
               type="number"
               uppercase={false}
               min={0}
-              value={maxWorkers}
-              onChange={(e) => setMaxWorkers(e.target.value)}
+              value={workersPerContractor}
+              onChange={(e) => setWorkersPerContractor(e.target.value)}
               placeholder="∞"
             />
           </div>
@@ -204,6 +213,39 @@ function EditLicenseModal({
               onChange={(e) => setAlertThreshold(e.target.value)}
             />
           </div>
+          <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+            <div>
+              <Label className="text-sm font-medium">{t("license.edit.enableInternalWorkers")}</Label>
+              <p className="text-xs text-muted-foreground">{t("license.edit.enableInternalWorkersDesc")}</p>
+            </div>
+            <Switch
+              checked={enableInternalWorkers}
+              onCheckedChange={setEnableInternalWorkers}
+            />
+          </div>
+          {enableInternalWorkers && (
+            <div className="col-span-2 space-y-1">
+              <Label>{t("license.edit.maxInternalWorkers")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={0}
+                value={maxInternalWorkers}
+                onChange={(e) => setMaxInternalWorkers(e.target.value)}
+                placeholder="∞"
+              />
+            </div>
+          )}
+          <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+            <div>
+              <Label className="text-sm font-medium">{t("license.edit.enableProjects")}</Label>
+              <p className="text-xs text-muted-foreground">{t("license.edit.enableProjectsDesc")}</p>
+            </div>
+            <Switch
+              checked={enableProjects}
+              onCheckedChange={setEnableProjects}
+            />
+          </div>
         </div>
 
         <DialogFooter>
@@ -225,6 +267,277 @@ function EditLicenseModal({
 
 // ─── Tenant table ─────────────────────────────────────────────────────────────
 
+// ─── Create modal ─────────────────────────────────────────────────────────────
+
+function CreateLicenseModal({
+  onClose,
+  onCreated,
+  tenants,
+}: {
+  onClose: () => void;
+  onCreated: (tenant: TenantLicenseAdmin) => void;
+  tenants: TenantLicenseAdmin[];
+}) {
+  const { t } = useTranslation();
+  const [step, setStep] = useState<1 | 2>(1);
+  const [selectedEmail, setSelectedEmail] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [admins, setAdmins] = useState<{ email: string }[]>([]);
+  const [isLoadingAdmins, setIsLoadingAdmins] = useState(true);
+  const [query, setQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+
+  const [maxContractors, setMaxContractors] = useState("");
+  const [enableInternalWorkers, setEnableInternalWorkers] = useState(false);
+  const [maxInternalWorkers, setMaxInternalWorkers] = useState("");
+  const [workersPerContractor, setWorkersPerContractor] = useState("");
+  const [maxPrlUsers, setMaxPrlUsers] = useState("");
+  const [maxSites, setMaxSites] = useState("");
+  const [alertThreshold, setAlertThreshold] = useState("5");
+  const [enableProjects, setEnableProjects] = useState(false);
+
+  const fromField = (val: string): number | null =>
+    val.trim() === "" ? null : Number(val);
+
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const userService = new UserService();
+        const res = await userService.getAll();
+        const tenantEmails = new Set(tenants.map((t) => t.adminEmail.toLowerCase()));
+        const unlicensed = (res.data ?? []).filter(
+          (u) => u.role === UserRole.Admin && !tenantEmails.has(u.email.toLowerCase())
+        );
+        setAdmins(unlicensed);
+      } finally {
+        setIsLoadingAdmins(false);
+      }
+    };
+    load();
+  }, [tenants]);
+
+  const filteredAdmins = admins.filter((a) =>
+    a.email.toLowerCase().includes(query.toLowerCase())
+  );
+
+  const handleSelect = (email: string) => {
+    setSelectedEmail(email);
+    setQuery(email);
+    setIsOpen(false);
+  };
+
+  const handleCreate = async () => {
+    if (!selectedEmail) return;
+    setIsSaving(true);
+    try {
+      const res = await LicenseService.initTenantLicense(selectedEmail);
+      if (res.data) {
+        const dto: UpdateTenantLicenseDto = {
+          maxContractors: fromField(maxContractors),
+          enableInternalWorkers,
+          maxInternalWorkers: fromField(maxInternalWorkers),
+          workersPerContractor: fromField(workersPerContractor),
+          maxPrlUsers: fromField(maxPrlUsers),
+          maxSites: fromField(maxSites),
+          alertThreshold: Number(alertThreshold) || 5,
+          enableProjects,
+        };
+        await LicenseService.updateTenantLicense(res.data.adminUserId, dto);
+        toast({ title: t("license.create.success") });
+        onCreated({ ...res.data, ...dto });
+        onClose();
+      }
+    } catch {
+      toast({ title: t("license.create.error"), variant: "destructive" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="max-w-md">
+        <DialogHeader>
+          <DialogTitle>{t("license.create.title")}</DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            {step === 1 ? t("license.create.subtitle") : t("license.edit.subtitle")}
+          </p>
+        </DialogHeader>
+
+        {step === 1 ? (
+          <div className="space-y-3 py-2">
+            <div className="space-y-1">
+              <Label>{t("license.create.emailLabel")}</Label>
+              {isLoadingAdmins ? (
+                <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+              ) : admins.length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t("license.create.noAdmins")}</p>
+              ) : (
+                <div className="relative">
+                  <div className="relative">
+                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
+                    <Input
+                      className="pl-8"
+                      placeholder={t("license.create.selectPlaceholder")}
+                      value={query}
+                      disabled={isSaving}
+                      onChange={(e) => {
+                        setQuery(e.target.value);
+                        setSelectedEmail("");
+                        setIsOpen(true);
+                      }}
+                      onFocus={() => setIsOpen(true)}
+                      onBlur={() => setTimeout(() => setIsOpen(false), 150)}
+                    />
+                  </div>
+                  {isOpen && filteredAdmins.length > 0 && (
+                    <ul className="absolute z-50 mt-1 max-h-48 w-full overflow-auto rounded-md border bg-popover py-1 shadow-md">
+                      {filteredAdmins.map((admin) => (
+                        <li
+                          key={admin.email}
+                          className="cursor-pointer px-3 py-1.5 text-sm hover:bg-accent hover:text-accent-foreground"
+                          onMouseDown={() => handleSelect(admin.email)}
+                        >
+                          {admin.email}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {isOpen && query.length > 0 && filteredAdmins.length === 0 && (
+                    <div className="absolute z-50 mt-1 w-full rounded-md border bg-popover px-3 py-2 text-sm text-muted-foreground shadow-md">
+                      {t("common.noResults")}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 py-2">
+            <div className="space-y-1">
+              <Label>{t("license.edit.contractors")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={0}
+                value={maxContractors}
+                onChange={(e) => setMaxContractors(e.target.value)}
+                placeholder="∞"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("license.edit.workersPerContractor")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={0}
+                value={workersPerContractor}
+                onChange={(e) => setWorkersPerContractor(e.target.value)}
+                placeholder="∞"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("license.edit.prlUsers")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={0}
+                value={maxPrlUsers}
+                onChange={(e) => setMaxPrlUsers(e.target.value)}
+                placeholder="∞"
+              />
+            </div>
+            <div className="space-y-1">
+              <Label>{t("license.edit.sites")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={0}
+                value={maxSites}
+                onChange={(e) => setMaxSites(e.target.value)}
+                placeholder="∞"
+              />
+            </div>
+            <div className="col-span-2 space-y-1">
+              <Label>{t("license.edit.threshold")}</Label>
+              <Input
+                type="number"
+                uppercase={false}
+                min={1}
+                value={alertThreshold}
+                onChange={(e) => setAlertThreshold(e.target.value)}
+              />
+            </div>
+            <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+              <div>
+                <Label className="text-sm font-medium">{t("license.edit.enableInternalWorkers")}</Label>
+                <p className="text-xs text-muted-foreground">{t("license.edit.enableInternalWorkersDesc")}</p>
+              </div>
+              <Switch
+                checked={enableInternalWorkers}
+                onCheckedChange={setEnableInternalWorkers}
+              />
+            </div>
+            {enableInternalWorkers && (
+              <div className="col-span-2 space-y-1">
+                <Label>{t("license.edit.maxInternalWorkers")}</Label>
+                <Input
+                  type="number"
+                  uppercase={false}
+                  min={0}
+                  value={maxInternalWorkers}
+                  onChange={(e) => setMaxInternalWorkers(e.target.value)}
+                  placeholder="∞"
+                />
+              </div>
+            )}
+            <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+              <div>
+                <Label className="text-sm font-medium">{t("license.edit.enableProjects")}</Label>
+                <p className="text-xs text-muted-foreground">{t("license.edit.enableProjectsDesc")}</p>
+              </div>
+              <Switch
+                checked={enableProjects}
+                onCheckedChange={setEnableProjects}
+              />
+            </div>
+          </div>
+        )}
+
+        <DialogFooter>
+          {step === 1 ? (
+            <>
+              <Button variant="outline" onClick={onClose}>
+                {t("license.edit.cancel")}
+              </Button>
+              <Button
+                className="bg-brand-primary hover:bg-brand-primary/90 text-white"
+                onClick={() => setStep(2)}
+                disabled={!selectedEmail}
+              >
+                {t("license.create.next")}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="outline" onClick={() => setStep(1)} disabled={isSaving}>
+                {t("license.create.back")}
+              </Button>
+              <Button
+                className="bg-brand-primary hover:bg-brand-primary/90 text-white"
+                onClick={handleCreate}
+                disabled={isSaving}
+              >
+                {isSaving ? "..." : t("license.create.confirm")}
+              </Button>
+            </>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function LimitCell({ current, max }: { current: number; max: number | null }) {
   const { t } = useTranslation();
   const label = max === null ? t("license.table.noLimit") : String(max);
@@ -244,9 +557,11 @@ function LimitCell({ current, max }: { current: number; max: number | null }) {
 function TenantTable({
   tenants,
   onEdit,
+  onCreateClick,
 }: {
   tenants: TenantLicenseAdmin[];
   onEdit: (tenant: TenantLicenseAdmin) => void;
+  onCreateClick: () => void;
 }) {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
@@ -259,34 +574,42 @@ function TenantTable({
 
   return (
     <div className="space-y-4">
-      <div className="relative max-w-sm">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          uppercase={false}
-          className="pl-9"
-          placeholder={t("license.search")}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      <div className="flex items-center gap-3">
+        <div className="relative flex-1 max-w-sm">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            uppercase={false}
+            className="pl-9"
+            placeholder={t("license.search")}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <Button size="sm" onClick={onCreateClick}>
+          <Plus className="h-4 w-4 mr-1" />
+          {t("license.create.button")}
+        </Button>
       </div>
 
       <div className="rounded-lg border border-playBlueLight/20 overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-brand-primary/5">
+            <TableRow className="bg-playGrey">
               <TableHead>{t("license.table.admin")}</TableHead>
               <TableHead className="text-center">{t("license.table.contractors")}</TableHead>
-              <TableHead className="text-center">{t("license.table.workers")}</TableHead>
+              <TableHead className="text-center">{t("license.table.workersPerContractor")}</TableHead>
+              <TableHead className="text-center">{t("license.table.internalWorkers")}</TableHead>
               <TableHead className="text-center">{t("license.table.prlUsers")}</TableHead>
               <TableHead className="text-center">{t("license.table.sites")}</TableHead>
               <TableHead className="text-center">{t("license.table.threshold")}</TableHead>
+              <TableHead className="text-center">{t("license.table.projects")}</TableHead>
               <TableHead className="text-right">{t("license.table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
                   {t("license.noTenants")}
                 </TableCell>
               </TableRow>
@@ -300,8 +623,17 @@ function TenantTable({
                   <TableCell>
                     <LimitCell current={tenant.currentContractors} max={tenant.maxContractors} />
                   </TableCell>
+                  <TableCell className="text-center text-sm">
+                    {tenant.workersPerContractor ?? "∞"}
+                  </TableCell>
                   <TableCell>
-                    <LimitCell current={tenant.currentWorkers} max={tenant.maxWorkers} />
+                    {tenant.enableInternalWorkers ? (
+                      <LimitCell current={tenant.currentInternalWorkers} max={tenant.maxInternalWorkers} />
+                    ) : (
+                      <span className="block text-center text-xs text-muted-foreground">
+                        {t("license.table.moduleOff")}
+                      </span>
+                    )}
                   </TableCell>
                   <TableCell>
                     <LimitCell current={tenant.currentPrlUsers} max={tenant.maxPrlUsers} />
@@ -311,6 +643,11 @@ function TenantTable({
                   </TableCell>
                   <TableCell className="text-center text-sm">
                     {tenant.alertThreshold}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tenant.enableProjects ? "bg-playGreen/10 text-playGreen" : "bg-playGrey text-muted-foreground"}`}>
+                      {tenant.enableProjects ? t("license.table.projectsOn") : t("license.table.projectsOff")}
+                    </span>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button
@@ -340,6 +677,7 @@ export function LicenseManager() {
   const [tenants, setTenants] = useState<TenantLicenseAdmin[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [editTarget, setEditTarget] = useState<TenantLicenseAdmin | null>(null);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const handleVerified = async () => {
     setIsVerified(true);
@@ -356,6 +694,13 @@ export function LicenseManager() {
     setTenants((prev) =>
       prev.map((t) => (t.adminUserId === updated.adminUserId ? updated : t))
     );
+  };
+
+  const handleCreated = (newTenant: TenantLicenseAdmin) => {
+    setTenants((prev) => {
+      const exists = prev.some((t) => t.adminUserId === newTenant.adminUserId);
+      return exists ? prev : [...prev, newTenant];
+    });
   };
 
   if (!isVerified) {
@@ -385,7 +730,11 @@ export function LicenseManager() {
         {isLoading ? (
           <p className="text-muted-foreground">{t("license.loading")}</p>
         ) : (
-          <TenantTable tenants={tenants} onEdit={setEditTarget} />
+          <TenantTable
+            tenants={tenants}
+            onEdit={setEditTarget}
+            onCreateClick={() => setShowCreateModal(true)}
+          />
         )}
       </div>
 
@@ -394,6 +743,14 @@ export function LicenseManager() {
           tenant={editTarget}
           onClose={() => setEditTarget(null)}
           onSaved={handleSaved}
+        />
+      )}
+
+      {showCreateModal && (
+        <CreateLicenseModal
+          onClose={() => setShowCreateModal(false)}
+          onCreated={handleCreated}
+          tenants={tenants}
         />
       )}
     </div>

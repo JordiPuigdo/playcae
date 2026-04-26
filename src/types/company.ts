@@ -16,6 +16,8 @@ export interface CompanySimple extends BaseEntity {
   workerStatus: WorkerStatus;
   // Servicio de prevención interno
   hasInternalPreventionService: boolean;
+  // Empresa principal del tenant (IsMainCompany en backend)
+  isMainCompany?: boolean;
   // Jerarquía de subcontratación
   parentCompanyId?: string | null;
   parentCompanyName?: string | null;

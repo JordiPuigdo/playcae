@@ -8,6 +8,7 @@ import {
 import { Search, X } from "lucide-react";
 import { Button } from "./ui/Button";
 import { Input } from "./ui/Input";
+import { DatePicker } from "./ui/DatePicker";
 import { AccessHistoryFilters as Filters } from "@/types/accessHistory";
 import { Label } from "./ui/Label";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -68,12 +69,11 @@ export const AccessHistoryFilters = ({
           <Label htmlFor="startDate" className="text-brand-primary">
             {t("dashboard.filters.dateFrom")}
           </Label>
-          <Input
+          <DatePicker
             id="startDate"
-            type="date"
             value={filters.startDate}
-            onChange={(e) => onFilterChange({ startDate: e.target.value })}
-            className="border-playBlueLight focus-visible:ring-brand-primary"
+            onChange={(date) => onFilterChange({ startDate: date })}
+            max={filters.endDate || undefined}
           />
         </div>
 
@@ -82,12 +82,11 @@ export const AccessHistoryFilters = ({
           <Label htmlFor="endDate" className="text-brand-primary">
             {t("dashboard.filters.dateTo")}
           </Label>
-          <Input
+          <DatePicker
             id="endDate"
-            type="date"
             value={filters.endDate}
-            onChange={(e) => onFilterChange({ endDate: e.target.value })}
-            className="border-playBlueLight focus-visible:ring-brand-primary"
+            onChange={(date) => onFilterChange({ endDate: date })}
+            min={filters.startDate || undefined}
           />
         </div>
       </div>

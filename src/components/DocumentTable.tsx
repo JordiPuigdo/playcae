@@ -1,4 +1,3 @@
-import { useState, useMemo } from "react";
 import { Document, EntityStatus } from "@/types/document";
 
 import {
@@ -10,13 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/Card";
-import {
-  FileText,
-  AlertTriangle,
-  ArrowUp,
-  ArrowDown,
-  ArrowUpDown,
-} from "lucide-react";
+import { FileText, AlertTriangle } from "lucide-react";
+import { useSortableTable } from "@/hooks/useSortableTable";
+import { SortableHeader } from "@/components/SortableHeader";
 import { DocumentFormData } from "@/types/document";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
 import { UserRole } from "@/types/user";
@@ -29,7 +24,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
 type SortField = "name" | "uploadedDate" | "expirationDate" | "status";
-type SortDirection = "asc" | "desc" | null;
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -56,97 +50,25 @@ export const DocumentsTable = ({
   onRefresh,
 }: DocumentsTableProps) => {
   const { t } = useTranslation();
-  const [sortField, setSortField] = useState<SortField | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
-
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      if (sortDirection === "asc") {
-        setSortDirection("desc");
-      } else if (sortDirection === "desc") {
-        setSortDirection(null);
-        setSortField(null);
-      } else {
-        setSortDirection("asc");
+  const { sortField, sortDirection, handleSort, sortedData: sortedDocuments } =
+    useSortableTable<Document, SortField>(documents, (a, b, field) => {
+      switch (field) {
+        case "name":           return a.documentType.name.localeCompare(b.documentType.name);
+        case "uploadedDate": {
+          const aU = a.uploadedDate ? new Date(a.uploadedDate).getTime() : 0;
+          const bU = b.uploadedDate ? new Date(b.uploadedDate).getTime() : 0;
+          return aU - bU;
+        }
+        case "expirationDate": {
+          const aE = a.expirationDate ? new Date(a.expirationDate).getTime() : Infinity;
+          const bE = b.expirationDate ? new Date(b.expirationDate).getTime() : Infinity;
+          return aE - bE;
+        }
+        case "status": return String(a.status || "").localeCompare(String(b.status || ""));
       }
-    } else {
-      setSortField(field);
-      setSortDirection("asc");
-    }
-  };
-
-  const sortedDocuments = useMemo(() => {
-    if (!sortField || !sortDirection) return documents;
-
-    return [...documents].sort((a, b) => {
-      let comparison = 0;
-
-      switch (sortField) {
-        case "name":
-          comparison = a.documentType.name.localeCompare(b.documentType.name);
-          break;
-        case "uploadedDate":
-          const aUpload = a.uploadedDate
-            ? new Date(a.uploadedDate).getTime()
-            : 0;
-          const bUpload = b.uploadedDate
-            ? new Date(b.uploadedDate).getTime()
-            : 0;
-          comparison = aUpload - bUpload;
-          break;
-        case "expirationDate":
-          const aExp = a.expirationDate
-            ? new Date(a.expirationDate).getTime()
-            : Infinity;
-          const bExp = b.expirationDate
-            ? new Date(b.expirationDate).getTime()
-            : Infinity;
-          comparison = aExp - bExp;
-          break;
-        case "status":
-          comparison = String(a.status || "").localeCompare(
-            String(b.status || "")
-          );
-          break;
-      }
-
-      return sortDirection === "asc" ? comparison : -comparison;
     });
-  }, [documents, sortField, sortDirection]);
-
-  const renderSortIcon = (field: SortField) => {
-    if (sortField !== field) {
-      return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-    }
-    if (sortDirection === "asc") {
-      return <ArrowUp className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    if (sortDirection === "desc") {
-      return <ArrowDown className="h-4 w-4 ml-1 text-playOrange" />;
-    }
-    return <ArrowUpDown className="h-4 w-4 ml-1 opacity-40" />;
-  };
-
-  const SortableHeader = ({
-    field,
-    children,
-  }: {
-    field: SortField;
-    children: React.ReactNode;
-  }) => (
-    <TableHead
-      className="text-brand-primary cursor-pointer hover:bg-playGrey/80 select-none transition-colors"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center">
-        {children}
-        {renderSortIcon(field)}
-      </div>
-    </TableHead>
-  );
 
   return (
     <Card className="bg-white border border-playBlueLight/30">
@@ -166,15 +88,15 @@ export const DocumentsTable = ({
           <Table>
             <TableHeader>
               <TableRow className="bg-playGrey">
-                <SortableHeader field="name">{t("documents.document")}</SortableHeader>
+                <SortableHeader field="name" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("documents.document")}</SortableHeader>
                 <TableHead className="text-brand-primary">{t("documents.file")}</TableHead>
-                <SortableHeader field="uploadedDate">
+                <SortableHeader field="uploadedDate" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">
                   {t("documents.uploadDate")}
                 </SortableHeader>
-                <SortableHeader field="expirationDate">
+                <SortableHeader field="expirationDate" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">
                   {t("documents.expirationDate")}
                 </SortableHeader>
-                <SortableHeader field="status">{t("common.status")}</SortableHeader>
+                <SortableHeader field="status" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("common.status")}</SortableHeader>
                 <TableHead className="text-brand-primary">{t("common.actions")}</TableHead>
               </TableRow>
             </TableHeader>

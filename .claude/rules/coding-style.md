@@ -1,5 +1,14 @@
 # Coding Style — Patrones TypeScript/React del repo
 
+## Idioma del código
+
+**Todo el código del dashboard debe estar en inglés**: nombres de componentes, variables, funciones, interfaces, tipos, hooks y servicios.
+- Correcto: `ProjectDetailHeader`, `EditableProjectInfo`, `ProjectRowActions`
+- Incorrecto: `ObraDetailHeader`, `EditableObraInfo`, `ObraRowActions`
+
+El texto visible en UI (labels, placeholders, mensajes) puede estar en español porque es contenido para el usuario final, no código.
+La excepción es `src/app/(web)` donde el SEO en español es intencionado.
+
 ## Naming y organización
 
 - Componentes React: `PascalCase.tsx` (ej: `CompanyTable.tsx`, `AccessHistoryKPIs.tsx`)

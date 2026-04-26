@@ -13,7 +13,7 @@ export interface LocaleInfo {
   code: Locale;
   name: string;
   nativeName: string;
-  flag: string;
+  flagSrc: string;
 }
 
 export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
@@ -21,31 +21,16 @@ export const LOCALE_INFO: Record<Locale, LocaleInfo> = {
     code: "es",
     name: "Spanish",
     nativeName: "Español",
-    flag: "🇪🇸",
+    flagSrc: "/assets/flags/es.svg",
   },
   ca: {
     code: "ca",
     name: "Catalan",
     nativeName: "Català",
-    flag: "ᴄᴀ",
+    flagSrc: "/assets/flags/cat.svg",
   },
   // Para añadir más idiomas en el futuro:
-  // eu: {
-  //   code: "eu",
-  //   name: "Basque",
-  //   nativeName: "Euskara",
-  //   flag: "🏴",
-  // },
-  // gl: {
-  //   code: "gl",
-  //   name: "Galician",
-  //   nativeName: "Galego",
-  //   flag: "🏴",
-  // },
-  // en: {
-  //   code: "en",
-  //   name: "English",
-  //   nativeName: "English",
-  //   flag: "🇬🇧",
-  // },
+  // eu: { code: "eu", name: "Basque", nativeName: "Euskara", flagSrc: "/assets/flags/eu.svg" },
+  // gl: { code: "gl", name: "Galician", nativeName: "Galego", flagSrc: "/assets/flags/gl.svg" },
+  // en: { code: "en", name: "English", nativeName: "English", flagSrc: "/assets/flags/en.svg" },
 };

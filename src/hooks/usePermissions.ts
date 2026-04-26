@@ -2,12 +2,17 @@ import { UserRole } from "@/types/user";
 import { useAuthStore } from "./useAuthStore";
 
 export const usePermissions = () => {
-  const { user } = useAuthStore();
+  const { user, licenseSummary } = useAuthStore();
 
   const hasAccess = (section: string): boolean => {
     if (!user) return false;
 
-    if (user.role === UserRole.Admin || user.role === UserRole.SuperAdmin) return true;
+    if (user.role === UserRole.Admin || user.role === UserRole.SuperAdmin) {
+      if (section === "/dashboard/projects" || section.startsWith("/dashboard/projects/")) {
+        return licenseSummary?.enableProjects === true;
+      }
+      return true;
+    }
 
     // Permisos para rol Company (subcontratistas)
     if (user.role === UserRole.Company) {
@@ -31,6 +36,10 @@ export const usePermissions = () => {
       return prlPermissions.some(
         (p) => section === p || section.startsWith(p + "/")
       );
+    }
+
+    if (user.role === UserRole.Marketing) {
+      return section === "/dashboard/blog" || section.startsWith("/dashboard/blog/");
     }
 
     return false;

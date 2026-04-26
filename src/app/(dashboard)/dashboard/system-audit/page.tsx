@@ -346,6 +346,17 @@ export default function SystemAuditPage() {
 
   // ============ EMAIL HELPERS ============
 
+  const parseEmailAdditionalData = (
+    additionalData?: string
+  ): { documentTypeName?: string; expirationDate?: string } => {
+    if (!additionalData) return {};
+    try {
+      return JSON.parse(additionalData);
+    } catch {
+      return {};
+    }
+  };
+
   const getEmailTypeLabel = (emailType: EmailType): string => {
     const labels: Record<EmailType, string> = {
       [EmailType.Welcome]: t("systemAudit.emailTypes.welcome"),
@@ -420,7 +431,7 @@ export default function SystemAuditPage() {
     return documentNotifications.filter((notification) => {
       const matchesSearch =
         !searchTerm ||
-        notification.documentName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        notification.documentTypeName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         notification.recipientEmail?.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesType =
@@ -433,11 +444,13 @@ export default function SystemAuditPage() {
 
   const filteredEmails = useMemo(() => {
     return emailRegistry.filter((email) => {
+      const additionalDataParsed = parseEmailAdditionalData(email.additionalData);
       const matchesSearch =
         !searchTerm ||
         email.recipientEmail?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         email.recipientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        email.subject?.toLowerCase().includes(searchTerm.toLowerCase());
+        email.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        additionalDataParsed.documentTypeName?.toLowerCase().includes(searchTerm.toLowerCase());
 
       const matchesStatus =
         emailStatusFilter === "all" ||
@@ -944,7 +957,7 @@ export default function SystemAuditPage() {
                             <div className="flex items-center gap-2">
                               <FileText className="h-4 w-4 text-playBlueLight" />
                               <span className="text-brand-primary">
-                                {notification.documentName || "-"}
+                                {notification.documentTypeName || "-"}
                               </span>
                             </div>
                           </TableCell>
@@ -1041,8 +1054,13 @@ export default function SystemAuditPage() {
                               </div>
                             </div>
                           </TableCell>
-                          <TableCell className="text-brand-primary max-w-[300px] truncate">
-                            {email.subject || "-"}
+                          <TableCell className="text-brand-primary max-w-[300px]">
+                            <div className="truncate">{email.subject || "-"}</div>
+                            {parseEmailAdditionalData(email.additionalData).documentTypeName && (
+                              <div className="text-xs text-playBlueLight mt-0.5 truncate">
+                                {parseEmailAdditionalData(email.additionalData).documentTypeName}
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell>
                             <div>

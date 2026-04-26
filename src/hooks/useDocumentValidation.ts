@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import dayjs from "dayjs";
 import { Document, EntityStatus } from "@/types/document";
 
 interface UseDocumentValidationProps {
@@ -16,7 +15,7 @@ interface UseDocumentValidationReturn {
   isOpen: boolean;
   isValidating: boolean | null;
   isLoading: boolean;
-  expiryDate: Date | null;
+  expiryDate: string;
   comment: string;
   isValidStatusForValidation: boolean;
   isModifying: boolean;
@@ -24,7 +23,7 @@ interface UseDocumentValidationReturn {
   openDialog: () => void;
   closeDialog: () => void;
   setIsValidating: (value: boolean) => void;
-  setExpiryDate: (date: Date | null) => void;
+  setExpiryDate: (date: string) => void;
   setComment: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
   resetForm: () => void;
@@ -50,7 +49,7 @@ export const useDocumentValidation = ({
   const [isOpen, setIsOpen] = useState(false);
   const [isValidating, setIsValidating] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [expiryDate, setExpiryDate] = useState<Date | null>(null);
+  const [expiryDate, setExpiryDate] = useState("");
   const [comment, setComment] = useState("");
 
   const isModifying = ALREADY_VALIDATED_STATUSES.includes(document.status);
@@ -62,14 +61,15 @@ export const useDocumentValidation = ({
 
   const resetForm = useCallback(() => {
     setIsValidating(null);
-    setExpiryDate(null);
+    setExpiryDate("");
     setComment("");
   }, []);
 
   const openDialog = useCallback(() => {
     if (!isValidStatusForValidation) return;
     if (document.expirationDate) {
-      setExpiryDate(dayjs(document.expirationDate).toDate());
+      // expirationDate may come as ISO string; take only the date part
+      setExpiryDate(document.expirationDate.slice(0, 10));
     }
     setIsOpen(true);
   }, [isValidStatusForValidation, document.expirationDate]);
@@ -85,13 +85,9 @@ export const useDocumentValidation = ({
 
       if (isValidating === null) return;
 
-      const formattedDate = expiryDate
-        ? dayjs(expiryDate).format("YYYY-MM-DD")
-        : undefined;
-
       setIsLoading(true);
       try {
-        await onValidate(isValidating, comment || undefined, formattedDate);
+        await onValidate(isValidating, comment || undefined, expiryDate || undefined);
         closeDialog();
         onSuccess?.();
       } catch (error) {
@@ -107,7 +103,7 @@ export const useDocumentValidation = ({
     setIsValidating(value);
   }, []);
 
-  const handleSetExpiryDate = useCallback((date: Date | null) => {
+  const handleSetExpiryDate = useCallback((date: string) => {
     setExpiryDate(date);
   }, []);
 

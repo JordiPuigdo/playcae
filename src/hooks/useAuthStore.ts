@@ -10,7 +10,7 @@ import { LicenseSummary } from "@/types/license";
 import { LoginService } from "@/services/login.service";
 
 const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 6; // Incrementado para incluir licenseSummary en sesión
+const AUTH_VERSION = 7; // Incrementado al reestructurar LicenseSummary (workers internos + por contratista)
 
 interface AuthState {
   user: UserLoginResponse | null;

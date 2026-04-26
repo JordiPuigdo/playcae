@@ -9,8 +9,9 @@ codex_hooks = true
 # Instrucciones adicionales inyectadas en cada sesión
 [instructions]
 additional = """
-Always read AGENTS.md and .codex/ context files before starting any task.
-Stack: Next.js 14 (frontend) 
+Always read AGENTS.md, .codex/AGENTS.md, .codex/CHECKLISTS.md and .codex context files before starting any task.
+Read ../SECURITY_STANDARDS.md for PRL/RGPD/ISO security requirements when touching sensitive flows.
+Stack: Next.js App Router frontend.
 Assume 20 concurrent users minimum. Before any solution, evaluate what
 happens with 100 simultaneous users.
 Before writing code, always include a short "Scale Impact" section with:
@@ -20,7 +21,7 @@ Before writing code, always include a short "Scale Impact" section with:
 - fallback plan if latency > 2s
 Use .codex/SCALE_REVIEW_TEMPLATE.md as checklist.
 Never modify auth-related files without explicit user confirmation.
-Always propose approach with trade-offs BEFORE writing any code.
+For substantial or risky changes, propose approach with trade-offs before writing code.
 """
 
 # Subagentes especializados

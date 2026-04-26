@@ -51,7 +51,7 @@ export enum NotificationType {
 
 export interface DocumentNotification extends BaseEntity {
   documentId: string;
-  documentName?: string;
+  documentTypeName?: string;
   notificationType: NotificationType;
   sentDate: string;
   emailSent: boolean;

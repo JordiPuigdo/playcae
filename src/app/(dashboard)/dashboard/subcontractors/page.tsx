@@ -129,40 +129,40 @@ export default function SubcontractorsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-playBlueDark flex items-center gap-3">
-            <Network className="h-8 w-8 text-playOrange" />
-            {t("subcontractors.title")}
-          </h1>
-          <p className="text-playBlueLight mt-1">
-            {t("subcontractors.description")}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Badge variant="secondary" className="text-lg px-4 py-2">
-            {allSubcontractors.length} {t("dashboard.sidebar.subcontractors").toLowerCase()}
-          </Badge>
+    <div>
+      {/* Header — mismo patrón que Empresas */}
+      <div className="border-b bg-playGrey">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="h-6 w-px bg-playBlueLight" />
+            <div className="flex w-full justify-between items-center">
+              <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
+                <Network className="h-7 w-7 text-brand-primary" />
+                {t("subcontractors.title")}
+              </h1>
+              <Badge className="bg-playOrange/10 text-playOrange border border-playOrange/30 text-sm px-3 py-1 font-medium">
+                {allSubcontractors.length} {t("dashboard.sidebar.subcontractors").toLowerCase()}
+              </Badge>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Buscador */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              placeholder={t("subcontractors.search")}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-        </CardContent>
-      </Card>
+      <div className="container mx-auto px-4 py-8 space-y-6">
+        {/* Buscador */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                placeholder={t("subcontractors.search")}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </CardContent>
+        </Card>
 
       {/* Lista de subcontratas */}
       {filteredSubcontractors.length === 0 ? (
@@ -180,7 +180,11 @@ export default function SubcontractorsPage() {
                 : t("subcontractors.noSubcontractors")}
             </p>
             {!searchTerm && (
-              <Button asChild className="mt-4">
+              <Button
+                asChild
+                className="mt-4 bg-playOrange hover:bg-playOrange/90 text-white"
+                variant="submit"
+              >
                 <Link href="/dashboard/companies">{t("dashboard.sidebar.companies")}</Link>
               </Button>
             )}
@@ -303,6 +307,7 @@ export default function SubcontractorsPage() {
           </CardContent>
         </Card>
       )}
+      </div>
     </div>
   );
 }

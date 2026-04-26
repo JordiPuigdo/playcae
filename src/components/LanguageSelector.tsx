@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChevronDown, Globe } from "lucide-react";
+import Image from "next/image";
+import { ChevronDown } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import type { Locale } from "@/i18n/types";
 
@@ -66,8 +67,15 @@ export default function LanguageSelector({
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
-        {variant === "minimal" && <Globe className="h-4 w-4 text-gray-500" />}
-        {showFlag && <span className="text-lg">{currentLocale.flag}</span>}
+{showFlag && (
+          <Image
+            src={currentLocale.flagSrc}
+            width={20}
+            height={14}
+            alt={currentLocale.nativeName}
+            className="rounded-sm"
+          />
+        )}
         {showName && (
           <span className="text-gray-700">{currentLocale.nativeName}</span>
         )}
@@ -100,7 +108,13 @@ export default function LanguageSelector({
                 role="option"
                 aria-selected={isSelected}
               >
-                <span className="text-lg">{info.flag}</span>
+                <Image
+                  src={info.flagSrc}
+                  width={20}
+                  height={14}
+                  alt={info.nativeName}
+                  className="rounded-sm"
+                />
                 <span>{info.nativeName}</span>
                 {isSelected && (
                   <span className="ml-auto text-playOrange">✓</span>
