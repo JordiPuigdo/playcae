@@ -194,6 +194,8 @@ export default function LoginPage() {
     if (pendingSiteSelection) return;
 
     if (user?.role === UserRole.SuperAdmin) {
+      router.push("/dashboard/settings/licenses");
+    } else if (user?.role === UserRole.Marketing) {
       router.push("/dashboard/blog");
     } else if (user?.role === UserRole.Admin) {
       router.push("/dashboard");
