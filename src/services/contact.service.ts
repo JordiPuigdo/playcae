@@ -14,8 +14,7 @@ export interface IContactService {
 export class ContactService implements IContactService {
   private readonly httpClient = new HttpClient();
 
-  private readonly baseUrl =
-    process.env.NEXT_PUBLIC_PLAYCAE_API + "/api/web-inquiries/contact";
+  private readonly baseUrl = "/api/contact";
 
   async send(payload: ContactFormPayload): Promise<ApiResponse<void>> {
     return this.httpClient.post<void>(this.baseUrl, payload);

@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     if (!name || !email || !message) {
       return NextResponse.json(
-        { error: "Todos los campos son obligatorios" },
+        { message: "Todos los campos son obligatorios" },
         { status: 400 }
       );
     }
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
-        { error: "Formato de email inválido" },
+        { message: "Formato de email inválido" },
         { status: 400 }
       );
     }
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
     const emailDomain = email.split("@")[1]?.toLowerCase();
     if (!emailDomain || personalDomains.has(emailDomain)) {
       return NextResponse.json(
-        { error: "Por favor, usa un email corporativo. No se aceptan correos de Gmail, Hotmail, Outlook, Yahoo u otros proveedores personales." },
+        { message: "Por favor, usa un email corporativo. No se aceptan correos de Gmail, Hotmail, Outlook, Yahoo u otros proveedores personales." },
         { status: 422 }
       );
     }
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest) {
     if (!response.ok) {
       console.error("Error del backend al guardar contacto:", response.status);
       return NextResponse.json(
-        { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+        { message: "Error al enviar el mensaje. Inténtalo de nuevo." },
         { status: 500 }
       );
     }
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Error enviando contacto:", error);
     return NextResponse.json(
-      { error: "Error al enviar el mensaje. Inténtalo de nuevo." },
+      { message: "Error al enviar el mensaje. Inténtalo de nuevo." },
       { status: 500 }
     );
   }
