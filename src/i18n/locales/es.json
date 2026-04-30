@@ -422,7 +422,54 @@
       "pendingValidation": "Pendientes de validar",
       "obras": "Obras y Proyectos",
       "blog": "Blog",
+      "leads": "Leads",
       "licenses": "Licencias"
+    },
+    "leads": {
+      "title": "Leads",
+      "subtitle": "Consulta contactos web y registros comerciales con filtros y paginacion.",
+      "loading": "Cargando leads...",
+      "error": "Error al cargar los datos. Intentalo de nuevo.",
+      "emptyInquiries": "No hay contactos o leads de precios todavia.",
+      "emptyRegistrations": "No hay registros todavia.",
+      "tabs": {
+        "inquiries": "Contacto y Precios",
+        "registrations": "Registros"
+      },
+      "filters": {
+        "searchLabel": "Buscar",
+        "searchPlaceholder": "Empresa, email, contacto o mensaje",
+        "typeLabel": "Tipo de consulta",
+        "allTypes": "Todos los tipos",
+        "originLabel": "Origen",
+        "allOrigins": "Todos los origenes",
+        "pageSizeLabel": "Filas"
+      },
+      "types": {
+        "contact": "Contacto",
+        "pricing": "Precios"
+      },
+      "origins": {
+        "web": "Web",
+        "landing": "Landing"
+      },
+      "table": {
+        "inquiries": {
+          "type": "Tipo",
+          "detail": "Detalle"
+        },
+        "registrations": {
+          "company": "Empresa",
+          "contact": "Contacto",
+          "origin": "Origen",
+          "verified": "Verificado"
+        }
+      },
+      "pagination": {
+        "empty": "Sin resultados",
+        "summary": "Mostrando {from}-{to} de {total}",
+        "page": "Pagina {current} de {total}"
+      }
     },
     "stats": {
       "totalCompanies": "Total Empresas",

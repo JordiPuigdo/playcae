@@ -21,6 +21,7 @@ import {
   KeyRound,
   HardHat,
   Lock,
+  Users2,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -148,6 +149,18 @@ export default function Sidebar() {
             >
               <BookOpen className="h-5 w-5" />
               {t("dashboard.sidebar.blog")}
+            </Link>
+            <Link
+              href="/dashboard/leads"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/leads")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <Users2 className="h-5 w-5" />
+              {t("dashboard.sidebar.leads")}
             </Link>
           </>
         ) : isMarketing ? (

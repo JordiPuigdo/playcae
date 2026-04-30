@@ -422,7 +422,54 @@
       "pendingValidation": "Pendents de validar",
       "obras": "Obres i Projectes",
       "blog": "Blog",
+      "leads": "Leads",
       "licenses": "Llicències"
+    },
+    "leads": {
+      "title": "Leads",
+      "subtitle": "Consulta contactes web i registres comercials amb filtres i paginacio.",
+      "loading": "Carregant leads...",
+      "error": "Error en carregar les dades. Torna-ho a provar.",
+      "emptyInquiries": "Encara no hi ha contactes o leads de preus.",
+      "emptyRegistrations": "Encara no hi ha registres.",
+      "tabs": {
+        "inquiries": "Contacte i Preus",
+        "registrations": "Registres"
+      },
+      "filters": {
+        "searchLabel": "Cercar",
+        "searchPlaceholder": "Empresa, correu, contacte o missatge",
+        "typeLabel": "Tipus de consulta",
+        "allTypes": "Tots els tipus",
+        "originLabel": "Origen",
+        "allOrigins": "Tots els origens",
+        "pageSizeLabel": "Files"
+      },
+      "types": {
+        "contact": "Contacte",
+        "pricing": "Preus"
+      },
+      "origins": {
+        "web": "Web",
+        "landing": "Landing"
+      },
+      "table": {
+        "inquiries": {
+          "type": "Tipus",
+          "detail": "Detall"
+        },
+        "registrations": {
+          "company": "Empresa",
+          "contact": "Contacte",
+          "origin": "Origen",
+          "verified": "Verificat"
+        }
+      },
+      "pagination": {
+        "empty": "Sense resultats",
+        "summary": "Mostrant {from}-{to} de {total}",
+        "page": "Pagina {current} de {total}"
+      }
     },
     "stats": {
       "totalCompanies": "Total Empreses",
