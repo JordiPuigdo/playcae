@@ -7,7 +7,17 @@ export const usePermissions = () => {
   const hasAccess = (section: string): boolean => {
     if (!user) return false;
 
-    if (user.role === UserRole.Admin || user.role === UserRole.SuperAdmin) {
+    if (user.role === UserRole.SuperAdmin) {
+      const superAdminPermissions = [
+        "/dashboard/settings/licenses",
+        "/dashboard/leads",
+      ];
+      return superAdminPermissions.some(
+        (p) => section === p || section.startsWith(p + "/")
+      );
+    }
+
+    if (user.role === UserRole.Admin) {
       if (section === "/dashboard/projects" || section.startsWith("/dashboard/projects/")) {
         return licenseSummary?.enableProjects === true;
       }

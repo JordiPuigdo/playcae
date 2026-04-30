@@ -139,18 +139,6 @@ export default function Sidebar() {
               {t("dashboard.sidebar.licenses")}
             </Link>
             <Link
-              href="/dashboard/blog"
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
-              ${
-                isActive("/dashboard/blog")
-                  ? "bg-playOrange text-white shadow-lg"
-                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
-              }`}
-            >
-              <BookOpen className="h-5 w-5" />
-              {t("dashboard.sidebar.blog")}
-            </Link>
-            <Link
               href="/dashboard/leads"
               className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
               ${
