@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslation } from "@/hooks/useTranslation";
+import { ContactService } from "@/services/contact.service";
+
+const contactService = new ContactService();
 
 export default function ContactForm() {
   const { t } = useTranslation();
@@ -55,21 +58,11 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, message }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || t("landing.contact.errorGeneric"));
-      }
-
-      // Redirect to thank you page
+      await contactService.send({ name, email, message });
       router.push("/contacto/gracias");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("landing.contact.errorGeneric"));
+      const message = (err as { message?: string })?.message;
+      setError(message || t("landing.contact.errorGeneric"));
     } finally {
       setIsSubmitting(false);
     }
