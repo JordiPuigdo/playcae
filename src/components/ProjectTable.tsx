@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { HardHat, Building2, MapPin } from "lucide-react";
+import dayjs from "dayjs";
 import { cn } from "@/app/utils/utis";
 import { useLastVisited } from "@/hooks/useLastVisited";
 import { ProjectList, ProjectStatus } from "@/types/project";
@@ -39,7 +40,7 @@ const STATUS_COLORS: Record<ProjectStatus, string> = {
 };
 
 const getDaysLeft = (endDate: string) =>
-  Math.ceil((new Date(endDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  dayjs(endDate).startOf("day").diff(dayjs().startOf("day"), "day");
 
 const TERMINATED_STATUSES = new Set([
   ProjectStatus.Closed,

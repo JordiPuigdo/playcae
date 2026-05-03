@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSortableTable } from "@/hooks/useSortableTable";
 import { QuoteSimple } from "@/types/quote";
+import dayjs from "dayjs";
 import { formatDate } from "@/app/utils/date";
 import { SortableHeader } from "./SortableHeader";
 import { Button } from "./ui/Button";
@@ -61,7 +62,7 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
       case "clientCompanyName":
         return a.clientCompanyName.localeCompare(b.clientCompanyName);
       case "issueDate":
-        return new Date(a.issueDate).getTime() - new Date(b.issueDate).getTime();
+        return dayjs(a.issueDate).valueOf() - dayjs(b.issueDate).valueOf();
       case "status":
         return a.status - b.status;
       case "firstYearTotal":

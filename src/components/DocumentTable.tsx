@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Document, EntityStatus } from "@/types/document";
 
 import {
@@ -56,14 +57,11 @@ export const DocumentsTable = ({
     useSortableTable<Document, SortField>(documents, (a, b, field) => {
       switch (field) {
         case "name":           return a.documentType.name.localeCompare(b.documentType.name);
-        case "uploadedDate": {
-          const aU = a.uploadedDate ? new Date(a.uploadedDate).getTime() : 0;
-          const bU = b.uploadedDate ? new Date(b.uploadedDate).getTime() : 0;
-          return aU - bU;
-        }
+        case "uploadedDate":
+          return dayjs(a.uploadedDate ?? 0).valueOf() - dayjs(b.uploadedDate ?? 0).valueOf();
         case "expirationDate": {
-          const aE = a.expirationDate ? new Date(a.expirationDate).getTime() : Infinity;
-          const bE = b.expirationDate ? new Date(b.expirationDate).getTime() : Infinity;
+          const aE = a.expirationDate ? dayjs(a.expirationDate).valueOf() : Infinity;
+          const bE = b.expirationDate ? dayjs(b.expirationDate).valueOf() : Infinity;
           return aE - bE;
         }
         case "status": return String(a.status || "").localeCompare(String(b.status || ""));

@@ -3,7 +3,9 @@ import { useSortableTable } from "@/hooks/useSortableTable";
 import { SortableHeader } from "@/components/SortableHeader";
 import { Worker, WorkerFormData, WorkerDocumentFormData } from "@/types/worker";
 import { useTranslation } from "@/hooks/useTranslation";
+import dayjs from "dayjs";
 import { getDocumentTypeName } from "@/app/utils/document-type-utils";
+import { formatDate, isExpiringSoon, isExpired } from "@/app/utils/date";
 
 import {
   Users,
@@ -67,7 +69,6 @@ interface WorkersTableProps {
   onRefresh?: () => void;
 }
 
-const DEFAULT_EXPIRY_DATE = "0001-01-01T00:00:00";
 
 export const WorkersTable = ({
   workers,
@@ -98,11 +99,8 @@ export const WorkersTable = ({
         }
         case "cardId":      return (a.cardId || "").localeCompare(b.cardId || "");
         case "position":    return (a.position || "").localeCompare(b.position || "");
-        case "creationDate": {
-          const aD = a.creationDate ? new Date(a.creationDate).getTime() : 0;
-          const bD = b.creationDate ? new Date(b.creationDate).getTime() : 0;
-          return aD - bD;
-        }
+        case "creationDate":
+          return dayjs(a.creationDate ?? 0).valueOf() - dayjs(b.creationDate ?? 0).valueOf();
         case "status": return String(a.status || "").localeCompare(String(b.status || ""));
       }
     });
@@ -130,27 +128,6 @@ export const WorkersTable = ({
       setExpandedRows(new Set(workersWithPendingDocs));
     }
   }, [workersWithPendingDocs]);
-
-  const formatDate = (dateString?: string) => {
-    if (!dateString || dateString === DEFAULT_EXPIRY_DATE) return "-";
-    return new Date(dateString).toLocaleDateString("es-ES");
-  };
-
-  const isExpiringSoon = (expiryDate?: string) => {
-    if (!expiryDate || expiryDate === DEFAULT_EXPIRY_DATE) return false;
-    const expiry = new Date(expiryDate);
-    const today = new Date();
-    const diffTime = expiry.getTime() - today.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    return diffDays <= 30 && diffDays > 0;
-  };
-
-  const isExpired = (expiryDate?: string) => {
-    if (!expiryDate || expiryDate === DEFAULT_EXPIRY_DATE) return false;
-    const expiry = new Date(expiryDate);
-    const today = new Date();
-    return expiry < today;
-  };
 
   const toggleRow = (workerId: string) => {
     const newExpanded = new Set(expandedRows);
