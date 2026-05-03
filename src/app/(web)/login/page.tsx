@@ -65,6 +65,7 @@ export default function LoginPage() {
 
     setIsLoading(true);
     await login(email, password);
+    setIsLoading(false);
   };
 
   useEffect(() => {
