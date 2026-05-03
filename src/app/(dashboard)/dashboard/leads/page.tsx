@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
 import { FileText, Megaphone, Search } from "lucide-react";
 
@@ -16,7 +17,7 @@ import { useSortableTable } from "@/hooks/useSortableTable";
 import { toast } from "@/hooks/use-Toast";
 
 import { UserRole } from "@/types/user";
-import { LeadOrigin, Lead } from "@/types/lead";
+import { LeadOrigin, LeadListItem } from "@/types/lead";
 import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
 import { CreateQuoteRequest } from "@/types/quote";
 import { QuoteService } from "@/services/quote.service";
@@ -111,15 +112,12 @@ export default function LeadsPage() {
         case "email":
           return (a.email || "").localeCompare(b.email || "");
         case "creationDate":
-          return (
-            new Date(a.creationDate ?? 0).getTime() -
-            new Date(b.creationDate ?? 0).getTime()
-          );
+          return dayjs(a.creationDate).valueOf() - dayjs(b.creationDate).valueOf();
       }
     }
   );
 
-  const leadSort = useSortableTable<Lead, LeadSortField>(
+  const leadSort = useSortableTable<LeadListItem, LeadSortField>(
     leads.items,
     (a, b, field) => {
       switch (field) {
@@ -136,10 +134,7 @@ export default function LeadsPage() {
         case "emailVerified":
           return Number(a.emailVerified) - Number(b.emailVerified);
         case "creationDate":
-          return (
-            new Date(a.creationDate ?? 0).getTime() -
-            new Date(b.creationDate ?? 0).getTime()
-          );
+          return dayjs(a.creationDate).valueOf() - dayjs(b.creationDate).valueOf();
       }
     }
   );
