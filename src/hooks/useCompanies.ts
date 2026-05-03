@@ -5,7 +5,6 @@ import {
   CompanyFormData,
   CompanySimple,
   CompanyStatus,
-  CompanyType,
   CreateSubcontractorData,
 } from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
@@ -62,7 +61,6 @@ export const useCompanies = () => {
         isSubcontractor: false,
         active: true,
         hasInternalPreventionService: false,
-        type: data.type ?? CompanyType.Company,
       };
 
       const response = await companyService.create(newCompany);
@@ -226,18 +224,6 @@ export const useCompanies = () => {
   };
 
   /**
-   * Actualiza el tipo de empresa (Empresa / Autónomo)
-   */
-  const updateCompanyType = async (id: string, type: CompanyType): Promise<void> => {
-    try {
-      await companyService.updateType(id, type);
-      await mutate();
-    } catch (err) {
-      throw handleError(err);
-    }
-  };
-
-  /**
    * Activa o desactiva el servicio de prevención interna
    */
   const toggleInternalPrevention = async (id: string, hasInternalPrevention: boolean): Promise<void> => {
@@ -269,8 +255,7 @@ export const useCompanies = () => {
     createSubcontractor,
     // Correo de bienvenida
     resendWelcomeEmail,
-    // Tipo y prevención interna
-    updateCompanyType,
+    // Prevención interna
     toggleInternalPrevention,
   };
 };

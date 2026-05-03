@@ -21,7 +21,8 @@ import {
   Users,
   CheckCircle,
 } from "lucide-react";
-import { CompanyFormData, CompanyStatus, CompanyType } from "@/types/company";
+import { CompanyFormData, CompanyStatus } from "@/types/company";
+import { Profile } from "@/types/profile";
 import { WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-Toast";
 import { useCompanies } from "@/hooks/useCompanies";
@@ -30,10 +31,13 @@ import { Switch } from "@/components/ui/Switch";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { ProfileService } from "@/services/profile.service";
+import useSWR from "swr";
 
 interface OnboardingData {
   company: CompanyFormData;
   workers: WorkerFormData[];
+  selectedProfileId: string | null;
 }
 
 export default function CompanyOnboarding() {
@@ -46,6 +50,16 @@ export default function CompanyOnboarding() {
   const { createBulkWorkers, workers } = useWorkers(token!);
   const router = useRouter();
   const { logout, licenseSummary } = useAuthStore();
+
+  const { data: companyProfiles = [] } = useSWR<(Profile & { id: string })[]>(
+    "profiles-global-company",
+    async () => {
+      const service = new ProfileService();
+      const response = await service.getGlobalCompanyProfiles();
+      return (response.data ?? []).filter((p): p is Profile & { id: string } => !!p.id);
+    },
+    { revalidateOnFocus: false, revalidateOnReconnect: false }
+  );
 
   const { toast } = useToast();
 
@@ -70,10 +84,10 @@ export default function CompanyOnboarding() {
         contactPerson: company.contactPerson,
         email: company.email,
         phone: company.phone,
-        type: company.type ?? CompanyType.Company,
         hasInternalPreventionService: company.hasInternalPreventionService ?? false,
       },
       workers: workers,
+      selectedProfileId: null,
     });
     setIsLoadingCompany(false);
   };
@@ -91,7 +105,6 @@ export default function CompanyOnboarding() {
       contactPerson: "",
       email: "",
       phone: "",
-      type: CompanyType.Company,
       hasInternalPreventionService: false,
     },
     workers: [
@@ -104,6 +117,7 @@ export default function CompanyOnboarding() {
         ssn: "",
       },
     ],
+    selectedProfileId: null,
   });
 
   const validateCompanyForm = () => {
@@ -123,6 +137,10 @@ export default function CompanyOnboarding() {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(company.email)) {
       newErrors.email = "Please enter a valid email address";
+    }
+
+    if (!onboardingData.selectedProfileId) {
+      newErrors.profile = "Debes seleccionar un perfil de empresa";
     }
 
     setErrors(newErrors);
@@ -152,7 +170,14 @@ export default function CompanyOnboarding() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCompanyChange = (field: keyof CompanyFormData, value: string | CompanyType | boolean) => {
+  const handleProfileSelect = (profileId: string) => {
+    setOnboardingData((prev) => ({ ...prev, selectedProfileId: profileId }));
+    if (errors.profile) {
+      setErrors((prev) => ({ ...prev, profile: "" }));
+    }
+  };
+
+  const handleCompanyChange = (field: keyof CompanyFormData, value: string | boolean) => {
     setOnboardingData((prev) => ({
       ...prev,
       company: {
@@ -222,7 +247,10 @@ export default function CompanyOnboarding() {
       return;
     }
     if (currentStep === 1 && validateCompanyForm()) {
-      updateCompany(token!, onboardingData.company);
+      updateCompany(token!, {
+        ...onboardingData.company,
+        ...(onboardingData.selectedProfileId ? { profileId: onboardingData.selectedProfileId } : {}),
+      } as Partial<CompanyFormData>);
     }
 
     if (currentStep === 2 && !validateWorkersForm()) {
@@ -238,6 +266,10 @@ export default function CompanyOnboarding() {
   const handleSubmit = async () => {
     setIsLoading(true);
     try {
+      if (onboardingData.selectedProfileId) {
+        const service = new ProfileService();
+        await service.selfAssignToCompany(token!, onboardingData.selectedProfileId);
+      }
       await createBulkWorkers(onboardingData.workers);
       await updateCompanyStatus(token!, CompanyStatus.Rejected);
 
@@ -301,34 +333,40 @@ export default function CompanyOnboarding() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="space-y-3">
-          <Label className="text-base font-medium">Tipo de entidad</Label>
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant={onboardingData.company.type === CompanyType.Company ? "default" : "outline"}
-              className={`flex-1 gap-2 ${onboardingData.company.type === CompanyType.Company ? "" : "text-muted-foreground"}`}
-              onClick={() => handleCompanyChange("type", CompanyType.Company)}
-            >
-              <Building className="h-4 w-4" />
-              Empresa
-            </Button>
-            <Button
-              type="button"
-              variant={onboardingData.company.type === CompanyType.SelfEmployed ? "default" : "outline"}
-              className={`flex-1 gap-2 ${onboardingData.company.type === CompanyType.SelfEmployed ? "" : "text-muted-foreground"}`}
-              onClick={() => handleCompanyChange("type", CompanyType.SelfEmployed)}
-            >
-              <Users className="h-4 w-4" />
-              Autónomo
-            </Button>
+        {companyProfiles.length > 0 && (
+          <div className="space-y-3">
+            <Label className="text-base font-medium">
+              Perfil de empresa <span className="text-red-500">*</span>
+            </Label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {companyProfiles.map((profile) => {
+                const isSelected = onboardingData.selectedProfileId === profile.id;
+                return (
+                  <button
+                    key={profile.id}
+                    type="button"
+                    onClick={() => handleProfileSelect(profile.id)}
+                    className={`text-left rounded-lg border p-4 transition-colors ${
+                      isSelected
+                        ? "border-primary bg-primary/5 ring-1 ring-primary"
+                        : "border-border hover:border-primary/50"
+                    }`}
+                  >
+                    <p className={`font-medium text-sm ${isSelected ? "text-primary" : ""}`}>
+                      {profile.name}
+                    </p>
+                    {profile.description && (
+                      <p className="text-xs text-muted-foreground mt-1">{profile.description}</p>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+            {errors.profile && (
+              <p className="text-sm text-red-500">{errors.profile}</p>
+            )}
           </div>
-          <p className="text-sm text-muted-foreground">
-            {onboardingData.company.type === CompanyType.SelfEmployed
-              ? "Autónomo (trabajador por cuenta propia)"
-              : "Empresa (sociedad mercantil)"}
-          </p>
-        </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
@@ -345,14 +383,12 @@ export default function CompanyOnboarding() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="company-cif">
-              {onboardingData.company.type === CompanyType.SelfEmployed ? "NIF" : "CIF"} *
-            </Label>
+            <Label htmlFor="company-cif">CIF/NIF *</Label>
             <Input
               id="company-cif"
               value={onboardingData.company.taxId}
               onChange={(e) => handleCompanyChange("taxId", e.target.value)}
-              placeholder={onboardingData.company.type === CompanyType.SelfEmployed ? "Escriba su NIF" : "Escriba su CIF"}
+              placeholder="Escriba su CIF o NIF"
             />
             {errors.cif && (
               <p className="text-sm text-destructive">{errors.cif}</p>
@@ -574,14 +610,17 @@ export default function CompanyOnboarding() {
         <div>
           <h4 className="font-medium mb-3">Empresa</h4>
           <div className="bg-muted rounded-lg p-4 space-y-2">
-            <p>
-              <strong>Tipo:</strong> {onboardingData.company.type === CompanyType.SelfEmployed ? "Autónomo" : "Empresa"}
-            </p>
+            {onboardingData.selectedProfileId && (
+              <p>
+                <strong>Perfil:</strong>{" "}
+                {companyProfiles.find((p) => p.id === onboardingData.selectedProfileId)?.name ?? "—"}
+              </p>
+            )}
             <p>
               <strong>Nombre:</strong> {onboardingData.company.name}
             </p>
             <p>
-              <strong>{onboardingData.company.type === CompanyType.SelfEmployed ? "NIF" : "CIF"}:</strong> {onboardingData.company.taxId}
+              <strong>CIF/NIF:</strong> {onboardingData.company.taxId}
             </p>
             <p>
               <strong>Contacto:</strong> {onboardingData.company.contactPerson}

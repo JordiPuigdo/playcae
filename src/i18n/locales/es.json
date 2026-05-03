@@ -52,25 +52,6 @@
     "message3": "Estamos revisando cada detalle 🔍",
     "message4": "La validación está tardando un poco más de lo habitual 🕒"
   },
-  "documentTypes": {
-    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
-    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificado Corriente AEAT / Hacienda",
-    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificado de Entrega de EPIs",
-    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formación Preventiva Artículo 19 LPRL",
-    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Recibo Bancario del RLC",
-    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Trabajador",
-    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Médica (Reconocimiento médico)",
-    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Información Artículo 18 LPRL",
-    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Seguro de Responsabilidad Civil",
-    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Recibo de Liquidación de Cotizaciones (RLC)",
-    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Recibo del Seguro de Responsabilidad Civil",
-    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relación Nominal de Trabajadores (RNT)",
-    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificación Preventiva de la Empresa",
-    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificado Corriente Seguridad Social",
-    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Recibo del Servicio de Prevención Ajeno",
-    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Trabajadores en Alta (ITA)",
-    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificado de Servicio de Prevención Ajeno"
-  },
   "header": {
     "product": "Producto",
     "pricing": "Precios",
@@ -423,7 +404,10 @@
       "obras": "Obras y Proyectos",
       "blog": "Blog",
       "leads": "Leads",
-      "licenses": "Licencias"
+      "licenses": "Licencias",
+      "quotes": "Presupuestos",
+      "profiles": "Perfiles",
+      "documentTypes": "Tipos de documento"
     },
     "leads": {
       "title": "Leads",
@@ -695,9 +679,6 @@
       "phone": "Teléfono",
       "yes": "Sí",
       "no": "No",
-      "companyType": "Tipo de empresa",
-      "company": "Empresa",
-      "selfEmployed": "Autónomo",
       "internalPrevention": "Prevención interna",
       "internalPreventionDesc": "Servicio de prevención ajeno"
     },
@@ -716,9 +697,6 @@
       "deactivateTitle": "Desactivar Empresa",
       "activateConfirm": "¿Deseas activar la empresa \"{name}\"? La empresa podrá volver a acceder al sistema.",
       "deactivateConfirm": "¿Estás seguro de que deseas desactivar la empresa \"{name}\"? La empresa y sus trabajadores no podrán acceder al sistema.",
-      "changeTypeTitle": "Cambiar tipo de empresa",
-      "changeTypeToCompany": "¿Deseas cambiar \"{name}\" a tipo Empresa? Esto puede afectar a la documentación requerida.",
-      "changeTypeToSelfEmployed": "¿Deseas cambiar \"{name}\" a tipo Autónomo? Esto puede afectar a la documentación requerida.",
       "enablePreventionTitle": "Activar prevención interna",
       "disablePreventionTitle": "Desactivar prevención interna",
       "enablePreventionConfirm": "¿Deseas activar el servicio de prevención interna para \"{name}\"? Se actualizará la documentación requerida automáticamente.",
@@ -736,10 +714,8 @@
       "emailSent": "Correo enviado",
       "emailSentDesc": "El correo de bienvenida ha sido reenviado correctamente.",
       "emailError": "No se pudo reenviar el correo de bienvenida.",
-      "typeUpdated": "Tipo actualizado",
-      "typeUpdatedCompany": "La empresa se ha configurado como Empresa.",
-      "typeUpdatedSelfEmployed": "La empresa se ha configurado como Autónomo.",
-      "typeError": "No se pudo cambiar el tipo de empresa.",
+      "profileUpdated": "Perfil actualizado",
+      "profileError": "No se pudo cambiar el perfil de empresa.",
       "preventionEnabled": "Prevención interna activada",
       "preventionEnabledDesc": "Se ha activado el servicio de prevención interna. La documentación se ha actualizado.",
       "preventionDisabled": "Prevención interna desactivada",
@@ -751,6 +727,12 @@
       "invalidTaxId": "Formato de CIF/NIF inválido",
       "contactMin": "El nombre de contacto debe tener al menos 2 caracteres",
       "invalidEmail": "Email inválido"
+    },
+    "profile": {
+      "label": "Perfil de empresa",
+      "change": "Cambiar perfil",
+      "changeTitle": "Cambiar perfil de empresa",
+      "noProfile": "Sin perfil asignado"
     }
   },
   "workers": {
@@ -1309,7 +1291,7 @@
             "q": "¿Cuanto tiempo lleva implementar un software CAE?",
             "a": "Con PlayCAE puedes estar operativo en menos de una semana. Incluimos migracion gratuita desde tu sistema actual y soporte tecnico personalizado durante todo el proceso de implementacion."
           },
-          { 
+          {
             "q": "¿Cuanto cuesta una plataforma CAE?",
             "a": "PlayCAE ofrece precio transparente sin costes por contrata ni por trabajador. A diferencia de otras plataformas, sabes exactamente lo que pagas desde el primer dia. Disponible prueba gratuita de 30 dias sin tarjeta de credito."
           },
@@ -1434,6 +1416,332 @@
       "confirm": "Crear licencia",
       "success": "Licencia creada correctamente",
       "error": "No se ha podido crear la licencia. Verifica que el email corresponde a un usuario Admin."
+    }
+  },
+  "quotes": {
+    "title": "Presupuestos",
+    "subtitle": "Crea y gestiona presupuestos comerciales para los leads.",
+    "addQuote": "Nuevo presupuesto",
+    "registered": "{count} presupuestos registrados",
+    "empty": "Aún no hay presupuestos.",
+    "created": "Presupuesto creado",
+    "createdDesc": "Se ha creado el presupuesto {reference}.",
+    "createError": "No se ha podido crear el presupuesto.",
+    "saved": "Cambios guardados",
+    "saveError": "No se han podido guardar los cambios.",
+    "sent": "Presupuesto enviado",
+    "sentDesc": "Se ha enviado el presupuesto al cliente.",
+    "sendError": "No se ha podido enviar el presupuesto.",
+    "deleted": "Presupuesto eliminado",
+    "deletedDesc": "Se ha eliminado el presupuesto {reference}.",
+    "deleteError": "No se ha podido eliminar el presupuesto.",
+    "deleteQuote": "Eliminar presupuesto",
+    "confirmDelete": "¿Seguro que quieres eliminar este presupuesto?",
+    "filters": {
+      "search": "Buscar",
+      "searchPlaceholder": "Referencia, empresa cliente...",
+      "status": "Estado",
+      "allStatus": "Todos los estados",
+      "language": "Idioma",
+      "allLanguages": "Todos los idiomas",
+      "clear": "Limpiar"
+    },
+    "table": {
+      "reference": "Referencia",
+      "client": "Cliente",
+      "issueDate": "Emisión",
+      "status": "Estado",
+      "firstYearTotal": "Total 1er año"
+    },
+    "status": {
+      "draft": "Borrador",
+      "sent": "Enviado",
+      "accepted": "Aceptado",
+      "rejected": "Rechazado",
+      "expired": "Caducado"
+    },
+    "language": {
+      "es": "Español",
+      "ca": "Catalán"
+    },
+    "billingType": {
+      "annual": "Anual",
+      "oneTime": "Pago único"
+    },
+    "actions": {
+      "openEditor": "Abrir editor",
+      "send": "Enviar",
+      "preview": "Previsualizar",
+      "createFromLead": "Crear presupuesto"
+    },
+    "form": {
+      "createTitle": "Nuevo presupuesto",
+      "createDescription": "Crea un presupuesto a partir de un lead existente.",
+      "lead": "Lead",
+      "selectLead": "Selecciona un lead",
+      "leadRequired": "Selecciona un lead",
+      "language": "Idioma",
+      "validUntil": "Válido hasta",
+      "scope": "Alcance",
+      "scopePlaceholder": "Empresas externas, trabajadores...",
+      "externalCompaniesCount": "Empresas externas",
+      "externalWorkersCount": "Trabajadores externos",
+      "internalWorkersCount": "Trabajadores internos",
+      "activeDocumentsApprox": "Documentos activos (aprox.)",
+      "usersCount": "Usuarios de la aplicación",
+      "sitesCount": "Sedes",
+      "hasWorksModule": "Módulo de obras",
+      "simultaneousWorksCount": "Obras simultáneas abiertas",
+      "hasInternalWorkersModule": "Módulo de trabajadores internos",
+      "create": "Crear presupuesto",
+      "invalid": "Valor no válido",
+      "leadSearchPlaceholder": "Buscar por empresa, email, contacto o CIF...",
+      "leadResultsCount": "{shown} de {total} leads",
+      "noLeadsFound": "No se han encontrado leads.",
+      "refineSearch": "Refina la búsqueda para ver más resultados.",
+      "createNewLead": "Crear nuevo lead"
+    },
+    "info": {
+      "title": "Información del presupuesto",
+      "client": "Cliente",
+      "language": "Idioma",
+      "scope": "Alcance",
+      "externalCompaniesCount": "Empresas externas",
+      "externalWorkersCount": "Trabajadores externos",
+      "internalWorkersCount": "Trabajadores internos",
+      "activeDocumentsApprox": "Documentos activos (aprox.)",
+      "usersCount": "Usuarios de la aplicación",
+      "sitesCount": "Sedes",
+      "hasWorksModule": "Módulo de obras",
+      "simultaneousWorksCount": "Obras simultáneas abiertas",
+      "hasInternalWorkersModule": "Módulo de trabajadores internos",
+      "validUntil": "Válido hasta"
+    },
+    "summary": {
+      "title": "Resumen económico",
+      "annualSubtotal": "Subtotal anual",
+      "oneTimeSubtotal": "Subtotal pago único",
+      "firstYearTotal": "Total primer año",
+      "note": "El total no incluye conceptos opcionales."
+    },
+    "lines": {
+      "title": "Conceptos ({count})",
+      "name": "Concepto",
+      "unitPrice": "Precio",
+      "quantity": "Cantidad",
+      "billingType": "Tipo",
+      "optional": "Opcional",
+      "subtotal": "Subtotal",
+      "empty": "Aún no hay conceptos en el presupuesto.",
+      "selectModule": "Selecciona un módulo del catálogo",
+      "addModule": "Añadir módulo",
+      "addCustom": "Añadir línea libre",
+      "newCustomLine": "Nueva línea"
+    },
+    "companyDocs": {
+      "title": "Documentos de empresa ({count})",
+      "subtitle": "Documentos que la plataforma pedirá a la empresa cliente.",
+      "name": "Documento",
+      "isTemplate": "Plantilla",
+      "empty": "Aún no se han definido documentos de empresa.",
+      "addPlaceholder": "Nombre del documento"
+    },
+    "profiles": {
+      "title": "Perfiles de trabajador ({count})",
+      "subtitle": "Perfiles operativos que se materializarán al aceptar la propuesta.",
+      "empty": "Aún no se han definido perfiles.",
+      "newProfileLabel": "Nuevo perfil",
+      "newProfilePlaceholder": "Ej. Operario altura, Soldador...",
+      "addProfile": "Añadir perfil",
+      "workerCount": "Trabajadores",
+      "workersCount": "{count} trabajadores",
+      "documentsCount": "{count} documentos",
+      "noDocuments": "Sin documentos definidos.",
+      "addDocPlaceholder": "Nombre del documento"
+    },
+    "detail": {
+      "client": "Cliente"
+    },
+    "pagination": {
+      "empty": "Sin resultados",
+      "summary": "Página {page} de {totalPages} ({total} total)"
+    }
+  },
+  "quoteModules": {
+    "title": "Catálogo de módulos",
+    "subtitle": "Productos y servicios que pueden incluirse en un presupuesto.",
+    "registered": "{count} módulos en catálogo",
+    "empty": "Aún no hay módulos definidos.",
+    "add": "Nuevo módulo",
+    "addTitle": "Nuevo módulo",
+    "editTitle": "Editar módulo",
+    "deleteTitle": "Eliminar módulo",
+    "confirmDelete": "¿Seguro que quieres eliminar este módulo?",
+    "formDescription": "Define las propiedades del módulo y su precio por defecto.",
+    "created": "Módulo creado",
+    "createError": "No se ha podido crear el módulo.",
+    "updated": "Módulo actualizado",
+    "updateError": "No se ha podido actualizar el módulo.",
+    "deleted": "Módulo eliminado",
+    "deleteError": "No se ha podido eliminar el módulo.",
+    "table": {
+      "code": "Código",
+      "nameEs": "Nombre (ES)",
+      "nameCa": "Nombre (CA)",
+      "price": "Precio",
+      "billingType": "Tipo",
+      "active": "Activo"
+    },
+    "form": {
+      "code": "Código",
+      "sortOrder": "Orden",
+      "nameEs": "Nombre (ES)",
+      "nameCa": "Nombre (CA)",
+      "descriptionEs": "Descripción (ES)",
+      "descriptionCa": "Descripción (CA)",
+      "price": "Precio por defecto",
+      "billingType": "Tipo de facturación",
+      "isActive": "Activo"
+    }
+  },
+  "leads": {
+    "created": "Lead creado correctamente",
+    "actions": {
+      "newLead": "Nuevo lead"
+    },
+    "form": {
+      "createTitle": "Nuevo lead",
+      "createDescription": "Registra un lead manualmente. Se convertirá en cliente cuando acepte un presupuesto.",
+      "companyName": "Nombre de la empresa",
+      "companyNameRequired": "El nombre de la empresa es obligatorio",
+      "email": "Email",
+      "emailRequired": "El email es obligatorio",
+      "emailInvalid": "Formato de email no válido",
+      "phone": "Teléfono",
+      "taxId": "CIF / NIF",
+      "contactPerson": "Persona de contacto",
+      "contactPersonRequired": "La persona de contacto es obligatoria",
+      "address": "Dirección",
+      "origin": "Origen",
+      "create": "Crear lead",
+      "createError": "No se ha podido crear el lead."
+    }
+  },
+  "documentTypes": {
+    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riesgos y Medidas Preventivas",
+    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificado Corriente AEAT / Hacienda",
+    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificado de Entrega de EPIs",
+    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formación Preventiva Artículo 19 LPRL",
+    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Recibo Bancario del RLC",
+    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Trabajador",
+    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Médica (Reconocimiento médico)",
+    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Información Artículo 18 LPRL",
+    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Seguro de Responsabilidad Civil",
+    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Recibo de Liquidación de Cotizaciones (RLC)",
+    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Recibo del Seguro de Responsabilidad Civil",
+    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relación Nominal de Trabajadores (RNT)",
+    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificación Preventiva de la Empresa",
+    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificado Corriente Seguridad Social",
+    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Recibo del Servicio de Prevención Ajeno",
+    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Trabajadores en Alta (ITA)",
+    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificado de Servicio de Prevención Ajeno",
+    "title": "Tipos de documento",
+    "subtitle": "Catálogo global de tipos de documento requeridos en perfiles y expedientes.",
+    "registered": "{count} tipos de documento",
+    "empty": "Aún no hay tipos de documento definidos.",
+    "add": "Nuevo tipo",
+    "addTitle": "Nuevo tipo de documento",
+    "editTitle": "Editar tipo de documento",
+    "deactivateTitle": "Desactivar tipo de documento",
+    "confirmDeactivate": "¿Seguro que quieres desactivar «{name}»? No se eliminará, quedará inactivo.",
+    "created": "Tipo de documento creado",
+    "createError": "No se ha podido crear el tipo de documento.",
+    "updated": "Tipo de documento actualizado",
+    "updateError": "No se ha podido actualizar el tipo de documento.",
+    "deactivated": "Tipo de documento desactivado",
+    "deactivateError": "No se ha podido desactivar el tipo de documento.",
+    "filters": {
+      "searchPlaceholder": "Buscar por código o nombre...",
+      "isRequired": "Obligatorio",
+      "allRequired": "Todos",
+      "excludeIfInternal": "Prev. interna",
+      "allExclude": "Todos",
+      "clearFilters": "Limpiar filtros",
+      "noResults": "No hay tipos de documento que coincidan con los filtros."
+    },
+    "table": {
+      "code": "Código",
+      "name": "Nombre",
+      "legalPeriod": "Período (días)",
+      "isRequired": "Obligatorio",
+      "excludeIfInternal": "Excluir si prev. interna"
+    },
+    "form": {
+      "code": "Código",
+      "name": "Nombre",
+      "legalPeriod": "Período legal (días)",
+      "isRequired": "Documento obligatorio",
+      "excludeIfInternalPrevention": "Excluir si la empresa tiene prevención interna",
+      "status": "Estado",
+      "statusActive": "Activo",
+      "statusInactive": "Inactivo",
+      "prompt": "Prompt de extracción (IA)",
+      "promptPlaceholder": "Instrucciones para que la IA identifique este documento...",
+      "extractDueDatePrompt": "Prompt de fecha de caducidad (IA)",
+      "extractDueDatePromptPlaceholder": "Instrucciones para extraer la fecha de caducidad..."
+    }
+  },
+  "profiles": {
+    "title": "Perfiles de trabajador",
+    "subtitle": "Perfiles globales que se pueden asignar a presupuestos, trabajadores y empresas.",
+    "registered": "{count} perfiles",
+    "empty": "Aún no hay perfiles definidos.",
+    "add": "Nuevo perfil",
+    "addTitle": "Nuevo perfil",
+    "editTitle": "Editar perfil",
+    "deleteTitle": "Eliminar perfil",
+    "confirmDelete": "¿Seguro que quieres eliminar este perfil?",
+    "created": "Perfil creado",
+    "createError": "No se ha podido crear el perfil.",
+    "updated": "Perfil actualizado",
+    "updateError": "No se ha podido actualizar el perfil.",
+    "deleted": "Perfil eliminado",
+    "deleteError": "No se ha podido eliminar el perfil.",
+    "table": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "docCount": "Documentos",
+      "scope": "Alcance",
+      "target": "Aplica a"
+    },
+    "form": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "sortOrder": "Orden",
+      "documentTypes": "Tipos de documento",
+      "docSearchPlaceholder": "Buscar documento...",
+      "docNoResults": "Sin resultados",
+      "assigned": "ya asignado",
+      "selectedCount": "{count} seleccionados",
+      "scopeType": "Alcance",
+      "targetType": "Aplica a",
+      "isDefaultOnCompanyCreation": "Asignar por defecto al crear empresa",
+      "isDefaultOnWorkerCreation": "Asignar por defecto al crear trabajador"
+    },
+    "docTypes": {
+      "label": "Tipos de documento requeridos",
+      "empty": "Sin tipos de documento asignados.",
+      "add": "Añadir tipo de documento",
+      "addError": "No se ha podido añadir el tipo de documento.",
+      "removeError": "No se ha podido eliminar el tipo de documento."
+    },
+    "scope": {
+      "global": "Global",
+      "tenant": "Mi tenant"
+    },
+    "target": {
+      "company": "Empresa",
+      "worker": "Trabajador"
     }
   }
 }

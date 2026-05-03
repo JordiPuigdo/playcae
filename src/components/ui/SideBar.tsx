@@ -22,6 +22,9 @@ import {
   HardHat,
   Lock,
   Users2,
+  FileText,
+  BadgeCheck,
+  FileType,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -149,6 +152,42 @@ export default function Sidebar() {
             >
               <Users2 className="h-5 w-5" />
               {t("dashboard.sidebar.leads")}
+            </Link>
+            <Link
+              href="/dashboard/quotes"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/quotes")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <FileText className="h-5 w-5" />
+              {t("dashboard.sidebar.quotes")}
+            </Link>
+            <Link
+              href="/dashboard/profiles"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/profiles")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <BadgeCheck className="h-5 w-5" />
+              {t("dashboard.sidebar.profiles")}
+            </Link>
+            <Link
+              href="/dashboard/document-types"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/document-types")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <FileType className="h-5 w-5" />
+              {t("dashboard.sidebar.documentTypes")}
             </Link>
           </>
         ) : isMarketing ? (

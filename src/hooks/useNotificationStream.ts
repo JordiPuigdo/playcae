@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useNotificationStore } from "./useNotificationStore";
+import { useAuthStore } from "./useAuthStore";
 import { UserNotification } from "@/types/notification";
 
 function getStoredToken(): string | null {
@@ -18,10 +19,12 @@ function getStoredToken(): string | null {
 
 export function useNotificationStream(enabled: boolean) {
   const { addNotification, fetchUnreadCount } = useNotificationStore();
+  const expiresAt = useAuthStore((s) => s.expiresAt);
   const sourceRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
     if (!enabled) return;
+    if (!expiresAt || Date.now() > expiresAt) return;
 
     const token = getStoredToken();
     if (!token) return;
@@ -63,5 +66,5 @@ export function useNotificationStream(enabled: boolean) {
       sourceRef.current?.close();
       sourceRef.current = null;
     };
-  }, [enabled, addNotification, fetchUnreadCount]);
+  }, [enabled, expiresAt, addNotification, fetchUnreadCount]);
 }

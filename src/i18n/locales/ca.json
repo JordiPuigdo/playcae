@@ -52,25 +52,6 @@
     "message3": "Estem revisant cada detall 🔍",
     "message4": "La validació està trigant una mica més de l'habitual 🕒"
   },
-  "documentTypes": {
-    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",
-    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificat Corrent AEAT / Hisenda",
-    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificat de Lliurament d'EPIs",
-    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formació Preventiva Article 19 LPRL",
-    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Rebut Bancari del RLC",
-    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Treballador",
-    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Mèdica (Reconeixement mèdic)",
-    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Informació Article 18 LPRL",
-    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Assegurança de Responsabilitat Civil",
-    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Rebut de Liquidació de Cotitzacions (RLC)",
-    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Rebut de l'Assegurança de Responsabilitat Civil",
-    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relació Nominal de Treballadors (RNT)",
-    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificació Preventiva de l'Empresa",
-    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificat Corrent Seguretat Social",
-    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Rebut del Servei de Prevenció Aliè",
-    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Treballadors en Alta (ITA)",
-    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificat de Servei de Prevenció Aliè"
-  },
   "header": {
     "product": "Producte",
     "pricing": "Preus",
@@ -423,7 +404,10 @@
       "obras": "Obres i Projectes",
       "blog": "Blog",
       "leads": "Leads",
-      "licenses": "Llicències"
+      "licenses": "Llicències",
+      "quotes": "Pressupostos",
+      "profiles": "Perfils",
+      "documentTypes": "Tipus de document"
     },
     "leads": {
       "title": "Leads",
@@ -695,9 +679,6 @@
       "phone": "Telèfon",
       "yes": "Sí",
       "no": "No",
-      "companyType": "Tipus d'empresa",
-      "company": "Empresa",
-      "selfEmployed": "Autònom",
       "internalPrevention": "Prevenció interna",
       "internalPreventionDesc": "Servei de prevenció aliè"
     },
@@ -716,9 +697,6 @@
       "deactivateTitle": "Desactivar Empresa",
       "activateConfirm": "Vols activar l'empresa \"{name}\"? L'empresa podrà tornar a accedir al sistema.",
       "deactivateConfirm": "Estàs segur que vols desactivar l'empresa \"{name}\"? L'empresa i els seus treballadors no podran accedir al sistema.",
-      "changeTypeTitle": "Canviar tipus d'empresa",
-      "changeTypeToCompany": "Vols canviar \"{name}\" a tipus Empresa? Això pot afectar la documentació requerida.",
-      "changeTypeToSelfEmployed": "Vols canviar \"{name}\" a tipus Autònom? Això pot afectar la documentació requerida.",
       "enablePreventionTitle": "Activar prevenció interna",
       "disablePreventionTitle": "Desactivar prevenció interna",
       "enablePreventionConfirm": "Vols activar el servei de prevenció interna per a \"{name}\"? S'actualitzarà la documentació requerida automàticament.",
@@ -736,10 +714,8 @@
       "emailSent": "Correu enviat",
       "emailSentDesc": "El correu de benvinguda s'ha reenviat correctament.",
       "emailError": "No s'ha pogut reenviar el correu de benvinguda.",
-      "typeUpdated": "Tipus actualitzat",
-      "typeUpdatedCompany": "L'empresa s'ha configurat com a Empresa.",
-      "typeUpdatedSelfEmployed": "L'empresa s'ha configurat com a Autònom.",
-      "typeError": "No s'ha pogut canviar el tipus d'empresa.",
+      "profileUpdated": "Perfil actualitzat",
+      "profileError": "No s'ha pogut canviar el perfil d'empresa.",
       "preventionEnabled": "Prevenció interna activada",
       "preventionEnabledDesc": "S'ha activat el servei de prevenció interna. La documentació s'ha actualitzat.",
       "preventionDisabled": "Prevenció interna desactivada",
@@ -751,6 +727,12 @@
       "invalidTaxId": "Format de CIF/NIF invàlid",
       "contactMin": "El nom de contacte ha de tenir almenys 2 caràcters",
       "invalidEmail": "Email invàlid"
+    },
+    "profile": {
+      "label": "Perfil d'empresa",
+      "change": "Canviar perfil",
+      "changeTitle": "Canviar perfil d'empresa",
+      "noProfile": "Sense perfil assignat"
     }
   },
   "workers": {
@@ -1434,6 +1416,332 @@
       "confirm": "Crear llicència",
       "success": "Llicència creada correctament",
       "error": "No s'ha pogut crear la llicència. Verifica que l'email correspon a un usuari Admin."
+    }
+  },
+  "quotes": {
+    "title": "Pressupostos",
+    "subtitle": "Crea i gestiona pressupostos comercials per als leads.",
+    "addQuote": "Nou pressupost",
+    "registered": "{count} pressupostos registrats",
+    "empty": "Encara no hi ha pressupostos.",
+    "created": "Pressupost creat",
+    "createdDesc": "S'ha creat el pressupost {reference}.",
+    "createError": "No s'ha pogut crear el pressupost.",
+    "saved": "Canvis desats",
+    "saveError": "No s'han pogut desar els canvis.",
+    "sent": "Pressupost enviat",
+    "sentDesc": "S'ha enviat el pressupost al client.",
+    "sendError": "No s'ha pogut enviar el pressupost.",
+    "deleted": "Pressupost eliminat",
+    "deletedDesc": "S'ha eliminat el pressupost {reference}.",
+    "deleteError": "No s'ha pogut eliminar el pressupost.",
+    "deleteQuote": "Eliminar pressupost",
+    "confirmDelete": "Segur que vols eliminar aquest pressupost?",
+    "filters": {
+      "search": "Cerca",
+      "searchPlaceholder": "Referència, empresa client...",
+      "status": "Estat",
+      "allStatus": "Tots els estats",
+      "language": "Idioma",
+      "allLanguages": "Tots els idiomes",
+      "clear": "Neteja"
+    },
+    "table": {
+      "reference": "Referència",
+      "client": "Client",
+      "issueDate": "Emissió",
+      "status": "Estat",
+      "firstYearTotal": "Total 1r any"
+    },
+    "status": {
+      "draft": "Esborrany",
+      "sent": "Enviat",
+      "accepted": "Acceptat",
+      "rejected": "Rebutjat",
+      "expired": "Caducat"
+    },
+    "language": {
+      "es": "Espanyol",
+      "ca": "Català"
+    },
+    "billingType": {
+      "annual": "Anual",
+      "oneTime": "Pagament únic"
+    },
+    "actions": {
+      "openEditor": "Obrir editor",
+      "send": "Enviar",
+      "preview": "Previsualitzar",
+      "createFromLead": "Crear pressupost"
+    },
+    "form": {
+      "createTitle": "Nou pressupost",
+      "createDescription": "Crea un pressupost a partir d'un lead existent.",
+      "lead": "Lead",
+      "selectLead": "Selecciona un lead",
+      "leadRequired": "Selecciona un lead",
+      "language": "Idioma",
+      "validUntil": "Vàlid fins",
+      "scope": "Abast",
+      "scopePlaceholder": "Empreses externes, treballadors...",
+      "externalCompaniesCount": "Empreses externes",
+      "externalWorkersCount": "Treballadors externs",
+      "internalWorkersCount": "Treballadors interns",
+      "activeDocumentsApprox": "Documents actius (aprox.)",
+      "usersCount": "Usuaris de l'aplicació",
+      "sitesCount": "Seus",
+      "hasWorksModule": "Mòdul d'obres",
+      "simultaneousWorksCount": "Obres simultànies obertes",
+      "hasInternalWorkersModule": "Mòdul de treballadors interns",
+      "create": "Crear pressupost",
+      "invalid": "Valor no vàlid",
+      "leadSearchPlaceholder": "Cerca per empresa, email, contacte o CIF...",
+      "leadResultsCount": "{shown} de {total} leads",
+      "noLeadsFound": "No s'han trobat leads.",
+      "refineSearch": "Refina la cerca per veure més resultats.",
+      "createNewLead": "Crear nou lead"
+    },
+    "info": {
+      "title": "Informació del pressupost",
+      "client": "Client",
+      "language": "Idioma",
+      "scope": "Abast",
+      "externalCompaniesCount": "Empreses externes",
+      "externalWorkersCount": "Treballadors externs",
+      "internalWorkersCount": "Treballadors interns",
+      "activeDocumentsApprox": "Documents actius (aprox.)",
+      "usersCount": "Usuaris de l'aplicació",
+      "sitesCount": "Seus",
+      "hasWorksModule": "Mòdul d'obres",
+      "simultaneousWorksCount": "Obres simultànies obertes",
+      "hasInternalWorkersModule": "Mòdul de treballadors interns",
+      "validUntil": "Vàlid fins"
+    },
+    "summary": {
+      "title": "Resum econòmic",
+      "annualSubtotal": "Subtotal anual",
+      "oneTimeSubtotal": "Subtotal pagament únic",
+      "firstYearTotal": "Total primer any",
+      "note": "El total no inclou conceptes opcionals."
+    },
+    "lines": {
+      "title": "Conceptes ({count})",
+      "name": "Concepte",
+      "unitPrice": "Preu",
+      "quantity": "Quantitat",
+      "billingType": "Tipus",
+      "optional": "Opcional",
+      "subtotal": "Subtotal",
+      "empty": "Encara no hi ha conceptes.",
+      "selectModule": "Selecciona un mòdul del catàleg",
+      "addModule": "Afegir mòdul",
+      "addCustom": "Afegir línia lliure",
+      "newCustomLine": "Nova línia"
+    },
+    "companyDocs": {
+      "title": "Documents d'empresa ({count})",
+      "subtitle": "Documents que la plataforma demanarà a l'empresa client.",
+      "name": "Document",
+      "isTemplate": "Plantilla",
+      "empty": "Encara no s'han definit documents.",
+      "addPlaceholder": "Nom del document"
+    },
+    "profiles": {
+      "title": "Perfils de treballador ({count})",
+      "subtitle": "Perfils operatius que es materialitzaran en acceptar la proposta.",
+      "empty": "Encara no s'han definit perfils.",
+      "newProfileLabel": "Nou perfil",
+      "newProfilePlaceholder": "Ex. Operari altura, Soldador...",
+      "addProfile": "Afegir perfil",
+      "workerCount": "Treballadors",
+      "workersCount": "{count} treballadors",
+      "documentsCount": "{count} documents",
+      "noDocuments": "Sense documents definits.",
+      "addDocPlaceholder": "Nom del document"
+    },
+    "detail": {
+      "client": "Client"
+    },
+    "pagination": {
+      "empty": "Sense resultats",
+      "summary": "Pàgina {page} de {totalPages} ({total} total)"
+    }
+  },
+  "quoteModules": {
+    "title": "Catàleg de mòduls",
+    "subtitle": "Productes i serveis que poden incloure's en un pressupost.",
+    "registered": "{count} mòduls al catàleg",
+    "empty": "Encara no hi ha mòduls definits.",
+    "add": "Nou mòdul",
+    "addTitle": "Nou mòdul",
+    "editTitle": "Editar mòdul",
+    "deleteTitle": "Eliminar mòdul",
+    "confirmDelete": "Segur que vols eliminar aquest mòdul?",
+    "formDescription": "Defineix les propietats del mòdul i el seu preu per defecte.",
+    "created": "Mòdul creat",
+    "createError": "No s'ha pogut crear el mòdul.",
+    "updated": "Mòdul actualitzat",
+    "updateError": "No s'ha pogut actualitzar el mòdul.",
+    "deleted": "Mòdul eliminat",
+    "deleteError": "No s'ha pogut eliminar el mòdul.",
+    "table": {
+      "code": "Codi",
+      "nameEs": "Nom (ES)",
+      "nameCa": "Nom (CA)",
+      "price": "Preu",
+      "billingType": "Tipus",
+      "active": "Actiu"
+    },
+    "form": {
+      "code": "Codi",
+      "sortOrder": "Ordre",
+      "nameEs": "Nom (ES)",
+      "nameCa": "Nom (CA)",
+      "descriptionEs": "Descripció (ES)",
+      "descriptionCa": "Descripció (CA)",
+      "price": "Preu per defecte",
+      "billingType": "Tipus de facturació",
+      "isActive": "Actiu"
+    }
+  },
+  "leads": {
+    "created": "Lead creat correctament",
+    "actions": {
+      "newLead": "Nou lead"
+    },
+    "form": {
+      "createTitle": "Nou lead",
+      "createDescription": "Registra un lead manualment. Es convertirà en client quan accepti un pressupost.",
+      "companyName": "Nom de l'empresa",
+      "companyNameRequired": "El nom de l'empresa és obligatori",
+      "email": "Email",
+      "emailRequired": "L'email és obligatori",
+      "emailInvalid": "Format d'email no vàlid",
+      "phone": "Telèfon",
+      "taxId": "CIF / NIF",
+      "contactPerson": "Persona de contacte",
+      "contactPersonRequired": "La persona de contacte és obligatòria",
+      "address": "Adreça",
+      "origin": "Origen",
+      "create": "Crear lead",
+      "createError": "No s'ha pogut crear el lead."
+    }
+  },
+  "documentTypes": {
+    "5D9A7C47-FA4D-427B-8F0A-00803C5625D0": "Riscos i Mesures Preventives",
+    "4A28BD9E-AB1A-431A-A38B-069F1923D851": "Certificat Corrent AEAT / Hisenda",
+    "F236F4E5-3827-423F-981B-0B9E0AFE3968": "Certificat de Lliurament d'EPIs",
+    "EF720B71-CAB9-4A1B-BD8A-0F7A0B66039D": "Formació Preventiva Article 19 LPRL",
+    "DB712DF7-9099-4E9F-9FA5-12F138F1931A": "Rebut Bancari del RLC",
+    "E47A562F-C85E-4C7E-902D-1B07A9582A8E": "DNI / NIE Treballador",
+    "6203566D-D5EE-46A1-A050-335731D04A41": "Aptitud Mèdica (Reconeixement mèdic)",
+    "BA15E1BE-B3AA-4E54-A6A4-48A73D4FF68C": "Informació Article 18 LPRL",
+    "FD0098B9-943E-4237-8ED9-50C970927B1D": "Assegurança de Responsabilitat Civil",
+    "860BCFFB-704F-4173-B02F-5C8A362539AB": "Rebut de Liquidació de Cotitzacions (RLC)",
+    "E33207C9-EB6B-46B3-8D69-6129D5997E4D": "Rebut de l'Assegurança de Responsabilitat Civil",
+    "5F285EF0-05AC-43DD-BB48-7407F891B9D5": "Relació Nominal de Treballadors (RNT)",
+    "242AC755-2003-48B3-9BF8-75F8F89DE72B": "Planificació Preventiva de l'Empresa",
+    "46201F9C-8054-4837-BC57-DB4311BF5DB6": "Certificat Corrent Seguretat Social",
+    "63F0AB22-CDC8-45A0-A792-DF669FEB4A22": "Rebut del Servei de Prevenció Aliè",
+    "58090079-1598-436C-A529-FA0C09B1CEAC": "Informe de Treballadors en Alta (ITA)",
+    "9AA35074-7D80-427A-8CE1-FCEA914E9C87": "Certificat de Servei de Prevenció Aliè",
+    "title": "Tipus de document",
+    "subtitle": "Catàleg global de tipus de document requerits en perfils i expedients.",
+    "registered": "{count} tipus de document",
+    "empty": "Encara no hi ha tipus de document definits.",
+    "add": "Nou tipus",
+    "addTitle": "Nou tipus de document",
+    "editTitle": "Editar tipus de document",
+    "deactivateTitle": "Desactivar tipus de document",
+    "confirmDeactivate": "Segur que vols desactivar «{name}»? No s'eliminarà, quedarà inactiu.",
+    "created": "Tipus de document creat",
+    "createError": "No s'ha pogut crear el tipus de document.",
+    "updated": "Tipus de document actualitzat",
+    "updateError": "No s'ha pogut actualitzar el tipus de document.",
+    "deactivated": "Tipus de document desactivat",
+    "deactivateError": "No s'ha pogut desactivar el tipus de document.",
+    "filters": {
+      "searchPlaceholder": "Cercar per codi o nom...",
+      "isRequired": "Obligatori",
+      "allRequired": "Tots",
+      "excludeIfInternal": "Prev. interna",
+      "allExclude": "Tots",
+      "clearFilters": "Netejar filtres",
+      "noResults": "No hi ha tipus de document que coincideixin amb els filtres."
+    },
+    "table": {
+      "code": "Codi",
+      "name": "Nom",
+      "legalPeriod": "Període (dies)",
+      "isRequired": "Obligatori",
+      "excludeIfInternal": "Excloure si prev. interna"
+    },
+    "form": {
+      "code": "Codi",
+      "name": "Nom",
+      "legalPeriod": "Període legal (dies)",
+      "isRequired": "Document obligatori",
+      "excludeIfInternalPrevention": "Excloure si l'empresa té prevenció interna",
+      "status": "Estat",
+      "statusActive": "Actiu",
+      "statusInactive": "Inactiu",
+      "prompt": "Prompt d'extracció (IA)",
+      "promptPlaceholder": "Instruccions perquè la IA identifiqui aquest document...",
+      "extractDueDatePrompt": "Prompt de data de caducitat (IA)",
+      "extractDueDatePromptPlaceholder": "Instruccions per extreure la data de caducitat..."
+    }
+  },
+  "profiles": {
+    "title": "Perfils de treballador",
+    "subtitle": "Perfils globals que es poden assignar a pressupostos, treballadors i empreses.",
+    "registered": "{count} perfils",
+    "empty": "Encara no hi ha perfils definits.",
+    "add": "Nou perfil",
+    "addTitle": "Nou perfil",
+    "editTitle": "Editar perfil",
+    "deleteTitle": "Eliminar perfil",
+    "confirmDelete": "Segur que vols eliminar aquest perfil?",
+    "created": "Perfil creat",
+    "createError": "No s'ha pogut crear el perfil.",
+    "updated": "Perfil actualitzat",
+    "updateError": "No s'ha pogut actualitzar el perfil.",
+    "deleted": "Perfil eliminat",
+    "deleteError": "No s'ha pogut eliminar el perfil.",
+    "table": {
+      "name": "Nom",
+      "description": "Descripció",
+      "docCount": "Documents",
+      "scope": "Abast",
+      "target": "S'aplica a"
+    },
+    "form": {
+      "name": "Nom",
+      "description": "Descripció",
+      "sortOrder": "Ordre",
+      "documentTypes": "Tipus de document",
+      "docSearchPlaceholder": "Cercar document...",
+      "docNoResults": "Sense resultats",
+      "assigned": "ja assignat",
+      "selectedCount": "{count} seleccionats",
+      "scopeType": "Abast",
+      "targetType": "S'aplica a",
+      "isDefaultOnCompanyCreation": "Assignar per defecte en crear empresa",
+      "isDefaultOnWorkerCreation": "Assignar per defecte en crear treballador"
+    },
+    "docTypes": {
+      "label": "Tipus de document requerits",
+      "empty": "Sense tipus de document assignats.",
+      "add": "Afegir tipus de document",
+      "addError": "No s'ha pogut afegir el tipus de document.",
+      "removeError": "No s'ha pogut eliminar el tipus de document."
+    },
+    "scope": {
+      "global": "Global",
+      "tenant": "El meu tenant"
+    },
+    "target": {
+      "company": "Empresa",
+      "worker": "Treballador"
     }
   }
 }

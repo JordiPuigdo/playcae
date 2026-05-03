@@ -21,10 +21,13 @@ import { WorkersTable } from "@/components/WorkersTable";
 import { useToast } from "@/hooks/use-Toast";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useCompanies } from "@/hooks/useCompanies";
+import useSWR from "swr";
+import { ProfileService } from "@/services/profile.service";
+import { Profile } from "@/types/profile";
 import { useDocuments } from "@/hooks/useDocuments";
 import { useWorkers } from "@/hooks/useWorkers";
 import { useTranslation } from "@/hooks/useTranslation";
-import { Company, CompanyFormData, CompanySimple, CompanyType } from "@/types/company";
+import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import {
   DocumentFormData,
   EntityStatus,
@@ -47,9 +50,26 @@ const CompanyDetailPage = () => {
     createSubcontractor,
     toggleCompanyActive,
     resendWelcomeEmail,
-    updateCompanyType,
     toggleInternalPrevention,
   } = useCompanies();
+
+  const profileService = new ProfileService();
+  const { data: assignedProfiles = [], mutate: mutateAssignedProfiles } = useSWR<Profile[]>(
+    id ? `profiles-company-${id}` : null,
+    async () => {
+      const res = await profileService.getCompanyProfiles(id);
+      return res.data ?? [];
+    },
+    { revalidateOnFocus: false }
+  );
+  const { data: availableProfiles = [] } = useSWR<Profile[]>(
+    "profiles-global-company",
+    async () => {
+      const res = await profileService.getGlobalCompanyProfiles();
+      return res.data ?? [];
+    },
+    { revalidateOnFocus: false }
+  );
   const {
     createWorker,
     updateWorker,
@@ -151,17 +171,10 @@ const CompanyDetailPage = () => {
     }
   };
 
-  const handleUpdateType = async (companyId: string, type: CompanyType) => {
-    setIsLoading(true);
-    try {
-      await updateCompanyType(companyId, type);
-      await fetchCompany(id);
-      await refreshDocuments();
-    } catch (error) {
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
+  const handleChangeProfile = async (companyId: string, profileId: string) => {
+    await profileService.selfAssignToCompany(companyId, profileId);
+    await mutateAssignedProfiles();
+    await refreshDocuments();
   };
 
   const handleToggleInternalPrevention = async (companyId: string, hasInternalPrevention: boolean) => {
@@ -284,8 +297,10 @@ const CompanyDetailPage = () => {
             onUpdate={handleUpdateCompany}
             onToggleActive={handleToggleActive}
             onResendWelcomeEmail={resendWelcomeEmail}
-            onUpdateType={handleUpdateType}
             onToggleInternalPrevention={handleToggleInternalPrevention}
+            onChangeProfile={handleChangeProfile}
+            assignedProfiles={assignedProfiles}
+            availableProfiles={availableProfiles}
             userRole={user?.role!}
           />
         </div>

@@ -2,6 +2,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { FileText, Megaphone, Search } from "lucide-react";
+
 import { useAuthStore } from "@/hooks/useAuthStore";
 import {
   DashboardLeadTabId,
@@ -10,15 +12,52 @@ import {
   useDashboardLeads,
 } from "@/hooks/useDashboardLeads";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useSortableTable } from "@/hooks/useSortableTable";
+import { toast } from "@/hooks/use-Toast";
+
 import { UserRole } from "@/types/user";
-import { LeadOrigin } from "@/types/lead";
-import { WebInquiryType } from "@/types/web-inquiry";
+import { LeadOrigin, Lead } from "@/types/lead";
+import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
+import { CreateQuoteRequest } from "@/types/quote";
+import { QuoteService } from "@/services/quote.service";
+
 import { formatDate } from "@/app/utils/date";
 import Loader from "@/components/Loader";
+import { QuoteForm } from "@/components/QuoteForm";
+import { SortableHeader } from "@/components/SortableHeader";
+import { TableCard } from "@/components/TableCard";
+import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
+import { Card, CardContent } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/Select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/Table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/Tabs";
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50];
+
+type InquirySortField = "type" | "name" | "email" | "creationDate";
+type LeadSortField =
+  | "companyName"
+  | "contactPerson"
+  | "email"
+  | "phone"
+  | "origin"
+  | "emailVerified"
+  | "creationDate";
 
 export default function LeadsPage() {
   const { user, isAuthenticated } = useAuthStore();
@@ -31,6 +70,7 @@ export default function LeadsPage() {
   const [search, setSearch] = useState("");
   const [inquiryType, setInquiryType] = useState<InquiryTypeFilter>("all");
   const [leadOrigin, setLeadOrigin] = useState<LeadOriginFilter>("all");
+  const [quoteLead, setQuoteLead] = useState<{ id: string; companyName: string } | null>(null);
 
   const { inquiries, leads, inquiryError, leadError, isLoading } =
     useDashboardLeads({
@@ -60,351 +100,574 @@ export default function LeadsPage() {
     return () => window.clearTimeout(timeoutId);
   }, [search]);
 
-  const tabs = useMemo(
-    () => [
-      {
-        id: "inquiries" as const,
-        label: t("dashboard.leads.tabs.inquiries"),
-        count: inquiries.total,
-      },
-      {
-        id: "registrations" as const,
-        label: t("dashboard.leads.tabs.registrations"),
-        count: leads.total,
-      },
-    ],
-    [inquiries.total, leads.total, t]
+  const inquirySort = useSortableTable<WebInquiry, InquirySortField>(
+    inquiries.items,
+    (a, b, field) => {
+      switch (field) {
+        case "type":
+          return Number(a.type) - Number(b.type);
+        case "name":
+          return (a.name || "").localeCompare(b.name || "");
+        case "email":
+          return (a.email || "").localeCompare(b.email || "");
+        case "creationDate":
+          return (
+            new Date(a.creationDate).getTime() -
+            new Date(b.creationDate).getTime()
+          );
+      }
+    }
+  );
+
+  const leadSort = useSortableTable<Lead, LeadSortField>(
+    leads.items,
+    (a, b, field) => {
+      switch (field) {
+        case "companyName":
+          return a.companyName.localeCompare(b.companyName);
+        case "contactPerson":
+          return (a.contactPerson || "").localeCompare(b.contactPerson || "");
+        case "email":
+          return (a.email || "").localeCompare(b.email || "");
+        case "phone":
+          return (a.phone || "").localeCompare(b.phone || "");
+        case "origin":
+          return Number(a.origin) - Number(b.origin);
+        case "emailVerified":
+          return Number(a.emailVerified) - Number(b.emailVerified);
+        case "creationDate":
+          return (
+            new Date(a.creationDate).getTime() -
+            new Date(b.creationDate).getTime()
+          );
+      }
+    }
   );
 
   if (!user) return <Loader text="" />;
   if (user.role !== UserRole.SuperAdmin) return null;
 
   const currentTotal = activeTab === "inquiries" ? inquiries.total : leads.total;
-  const currentItems = activeTab === "inquiries" ? inquiries.items : leads.items;
   const currentError = activeTab === "inquiries" ? inquiryError : leadError;
-  const totalPages =
-    currentTotal > 0 ? Math.ceil(currentTotal / pageSize) : 1;
+  const totalPages = currentTotal > 0 ? Math.ceil(currentTotal / pageSize) : 1;
   const currentPage = Math.min(page, totalPages);
   const rangeStart = currentTotal === 0 ? 0 : (currentPage - 1) * pageSize + 1;
   const rangeEnd = Math.min(currentPage * pageSize, currentTotal);
 
+  const tableTitle =
+    activeTab === "inquiries"
+      ? `${t("dashboard.leads.tabs.inquiries")} (${inquiries.total})`
+      : `${t("dashboard.leads.tabs.registrations")} (${leads.total})`;
+
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">
-          {t("dashboard.leads.title")}
-        </h1>
-        <p className="text-gray-500 text-sm mt-1">
-          {t("dashboard.leads.subtitle")}
-        </p>
-      </div>
-
-      <div className="flex gap-2 border-b border-gray-200">
-        {tabs.map((tab) => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === tab.id
-                ? "border-orange-500 text-orange-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            {tab.label}
-            <span className="ml-2 bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full">
-              {tab.count}
-            </span>
-          </button>
-        ))}
-      </div>
-
-      <div className="flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 md:flex-row md:items-end md:justify-between">
-        <div className="grid gap-3 md:grid-cols-[minmax(280px,1fr)_180px] md:items-end">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              {t("dashboard.leads.filters.searchLabel")}
-            </label>
-            <Input
-              uppercase={false}
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder={t("dashboard.leads.filters.searchPlaceholder")}
-            />
+    <div>
+      {/* Header band */}
+      <div className="border-b bg-playGrey">
+        {isLoading && <Loader text={t("dashboard.leads.loading")} />}
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center gap-4">
+            <div className="h-6 w-px bg-playBlueLight" />
+            <div className="flex w-full justify-between items-center">
+              <div>
+                <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
+                  <Megaphone className="h-7 w-7 text-brand-primary" />
+                  {t("dashboard.leads.title")}
+                </h1>
+                <p className="text-sm text-muted-foreground mt-1">
+                  {t("dashboard.leads.subtitle")}
+                </p>
+              </div>
+            </div>
           </div>
-
-          {activeTab === "inquiries" ? (
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                {t("dashboard.leads.filters.typeLabel")}
-              </label>
-              <select
-                value={String(inquiryType)}
-                onChange={(event) =>
-                  setInquiryType(
-                    event.target.value === "all"
-                      ? "all"
-                      : Number(event.target.value) as WebInquiryType
-                  )
-                }
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="all">{t("dashboard.leads.filters.allTypes")}</option>
-                <option value={String(WebInquiryType.Contact)}>
-                  {t("dashboard.leads.types.contact")}
-                </option>
-                <option value={String(WebInquiryType.Pricing)}>
-                  {t("dashboard.leads.types.pricing")}
-                </option>
-              </select>
-            </div>
-          ) : (
-            <div>
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                {t("dashboard.leads.filters.originLabel")}
-              </label>
-              <select
-                value={String(leadOrigin)}
-                onChange={(event) =>
-                  setLeadOrigin(
-                    event.target.value === "all"
-                      ? "all"
-                      : Number(event.target.value) as LeadOrigin
-                  )
-                }
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              >
-                <option value="all">{t("dashboard.leads.filters.allOrigins")}</option>
-                <option value={String(LeadOrigin.Web)}>
-                  {t("dashboard.leads.origins.web")}
-                </option>
-                <option value={String(LeadOrigin.Landing)}>
-                  {t("dashboard.leads.origins.landing")}
-                </option>
-              </select>
-            </div>
-          )}
         </div>
+      </div>
 
-        <div className="flex items-center gap-3">
-          <div>
-            <label className="mb-2 block text-sm font-medium text-gray-700">
-              {t("dashboard.leads.filters.pageSizeLabel")}
-            </label>
-            <select
-              value={String(pageSize)}
-              onChange={(event) => setPageSize(Number(event.target.value))}
-              className="flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm"
+      <div className="container mx-auto px-4 py-8 space-y-6">
+        {/* Tabs */}
+        <Tabs
+          value={activeTab}
+          onValueChange={(value) => setActiveTab(value as DashboardLeadTabId)}
+        >
+          <TabsList className="grid grid-cols-2 w-full md:w-[480px] bg-playGrey border border-playBlueLight">
+            <TabsTrigger
+              value="inquiries"
+              className="data-[state=active]:bg-white data-[state=active]:text-brand-primary"
             >
-              {PAGE_SIZE_OPTIONS.map((value) => (
-                <option key={value} value={value}>
-                  {value}
-                </option>
-              ))}
-            </select>
+              <span className="flex items-center gap-2">
+                {t("dashboard.leads.tabs.inquiries")}
+                <Badge variant="secondary" className="text-xs">
+                  {inquiries.total}
+                </Badge>
+              </span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="registrations"
+              className="data-[state=active]:bg-white data-[state=active]:text-brand-primary"
+            >
+              <span className="flex items-center gap-2">
+                {t("dashboard.leads.tabs.registrations")}
+                <Badge variant="secondary" className="text-xs">
+                  {leads.total}
+                </Badge>
+              </span>
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Filters */}
+        <Card className="border border-playBlueLight/30 bg-white">
+          <CardContent className="p-4">
+            <div className="flex flex-col sm:flex-row gap-4 items-end">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-medium text-brand-primary">
+                  {t("dashboard.leads.filters.searchLabel")}
+                </label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-playBlueLight" />
+                  <Input
+                    uppercase={false}
+                    value={search}
+                    onChange={(event) => setSearch(event.target.value)}
+                    placeholder={t("dashboard.leads.filters.searchPlaceholder")}
+                    className="pl-10 border-playBlueLight focus-visible:ring-brand-primary"
+                  />
+                </div>
+              </div>
+
+              {activeTab === "inquiries" ? (
+                <div className="space-y-2 min-w-[200px]">
+                  <label className="text-sm font-medium text-brand-primary">
+                    {t("dashboard.leads.filters.typeLabel")}
+                  </label>
+                  <Select
+                    value={String(inquiryType)}
+                    onValueChange={(value) =>
+                      setInquiryType(
+                        value === "all"
+                          ? "all"
+                          : (Number(value) as WebInquiryType)
+                      )
+                    }
+                  >
+                    <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value="all"
+                      >
+                        {t("dashboard.leads.filters.allTypes")}
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value={String(WebInquiryType.Contact)}
+                      >
+                        {t("dashboard.leads.types.contact")}
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value={String(WebInquiryType.Pricing)}
+                      >
+                        {t("dashboard.leads.types.pricing")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              ) : (
+                <div className="space-y-2 min-w-[200px]">
+                  <label className="text-sm font-medium text-brand-primary">
+                    {t("dashboard.leads.filters.originLabel")}
+                  </label>
+                  <Select
+                    value={String(leadOrigin)}
+                    onValueChange={(value) =>
+                      setLeadOrigin(
+                        value === "all"
+                          ? "all"
+                          : (Number(value) as LeadOrigin)
+                      )
+                    }
+                  >
+                    <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value="all"
+                      >
+                        {t("dashboard.leads.filters.allOrigins")}
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value={String(LeadOrigin.Web)}
+                      >
+                        {t("dashboard.leads.origins.web")}
+                      </SelectItem>
+                      <SelectItem
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value={String(LeadOrigin.Landing)}
+                      >
+                        {t("dashboard.leads.origins.landing")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+
+              <div className="space-y-2 min-w-[120px]">
+                <label className="text-sm font-medium text-brand-primary">
+                  {t("dashboard.leads.filters.pageSizeLabel")}
+                </label>
+                <Select
+                  value={String(pageSize)}
+                  onValueChange={(value) => setPageSize(Number(value))}
+                >
+                  <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
+                    {PAGE_SIZE_OPTIONS.map((value) => (
+                      <SelectItem
+                        key={value}
+                        className="hover:bg-playGrey hover:text-brand-primary"
+                        value={String(value)}
+                      >
+                        {value}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {currentError && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+            {t("dashboard.leads.error")}
+          </div>
+        )}
+
+        {/* Table */}
+        {!currentError && activeTab === "inquiries" && (
+          <TableCard title={tableTitle}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <SortableHeader
+                    field="type"
+                    sortField={inquirySort.sortField}
+                    sortDirection={inquirySort.sortDirection}
+                    onSort={inquirySort.handleSort}
+                  >
+                    {t("dashboard.leads.table.inquiries.type")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="name"
+                    sortField={inquirySort.sortField}
+                    sortDirection={inquirySort.sortDirection}
+                    onSort={inquirySort.handleSort}
+                  >
+                    {t("common.name")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="email"
+                    sortField={inquirySort.sortField}
+                    sortDirection={inquirySort.sortDirection}
+                    onSort={inquirySort.handleSort}
+                  >
+                    {t("common.email")}
+                  </SortableHeader>
+                  <TableHead>
+                    {t("dashboard.leads.table.inquiries.detail")}
+                  </TableHead>
+                  <SortableHeader
+                    field="creationDate"
+                    sortField={inquirySort.sortField}
+                    sortDirection={inquirySort.sortDirection}
+                    onSort={inquirySort.handleSort}
+                  >
+                    {t("common.date")}
+                  </SortableHeader>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {inquirySort.sortedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={5}
+                      className="px-4 py-8 text-center text-muted-foreground"
+                    >
+                      {t("dashboard.leads.emptyInquiries")}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  inquirySort.sortedData.map((item) => (
+                    <TableRow key={item.id} className="hover:bg-playOrange/5 transition-colors">
+                      <TableCell>
+                        <Badge
+                          variant="outline"
+                          className={
+                            item.type === WebInquiryType.Contact
+                              ? "border-blue-200 bg-blue-50 text-blue-700"
+                              : "border-playOrange/40 bg-playOrange/10 text-playOrange"
+                          }
+                        >
+                          {item.type === WebInquiryType.Contact
+                            ? t("dashboard.leads.types.contact")
+                            : t("dashboard.leads.types.pricing")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        {item.name ?? (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <a
+                          href={`mailto:${item.email}`}
+                          className="text-brand-primary hover:underline"
+                        >
+                          {item.email}
+                        </a>
+                      </TableCell>
+                      <TableCell className="max-w-xs truncate">
+                        {item.type === WebInquiryType.Contact ? (
+                          item.message ?? (
+                            <span className="text-muted-foreground">-</span>
+                          )
+                        ) : item.pricingDataJson ? (
+                          <PricingSummary json={item.pricingDataJson} />
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {formatDate(item.creationDate)}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableCard>
+        )}
+
+        {!currentError && activeTab === "registrations" && (
+          <TableCard title={tableTitle}>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <SortableHeader
+                    field="companyName"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("dashboard.leads.table.registrations.company")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="contactPerson"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("dashboard.leads.table.registrations.contact")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="email"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("common.email")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="phone"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("common.phone")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="origin"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("dashboard.leads.table.registrations.origin")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="emailVerified"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                    className="text-center"
+                  >
+                    {t("dashboard.leads.table.registrations.verified")}
+                  </SortableHeader>
+                  <SortableHeader
+                    field="creationDate"
+                    sortField={leadSort.sortField}
+                    sortDirection={leadSort.sortDirection}
+                    onSort={leadSort.handleSort}
+                  >
+                    {t("common.date")}
+                  </SortableHeader>
+                  <TableHead className="text-right">
+                    {t("common.actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {leadSort.sortedData.length === 0 ? (
+                  <TableRow>
+                    <TableCell
+                      colSpan={8}
+                      className="px-4 py-8 text-center text-muted-foreground"
+                    >
+                      {t("dashboard.leads.emptyRegistrations")}
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  leadSort.sortedData.map((lead) => (
+                    <TableRow
+                      key={lead.id}
+                      className="hover:bg-playOrange/5 transition-colors"
+                    >
+                      <TableCell className="font-medium">
+                        {lead.companyName}
+                      </TableCell>
+                      <TableCell>{lead.contactPerson}</TableCell>
+                      <TableCell>
+                        <a
+                          href={`mailto:${lead.email}`}
+                          className="text-brand-primary hover:underline"
+                        >
+                          {lead.email}
+                        </a>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {lead.phone}
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary" className="text-xs">
+                          {lead.origin === LeadOrigin.Web
+                            ? t("dashboard.leads.origins.web")
+                            : t("dashboard.leads.origins.landing")}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {lead.emailVerified ? (
+                          <Badge
+                            variant="outline"
+                            className="border-success/40 bg-success/10 text-success"
+                          >
+                            {t("common.yes")}
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">
+                            {t("common.no")}
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {formatDate(lead.creationDate)}
+                      </TableCell>
+                      <TableCell
+                        className="text-right whitespace-nowrap"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            setQuoteLead({
+                              id: lead.id!,
+                              companyName: lead.companyName,
+                            })
+                          }
+                          className="gap-1 border-playOrange text-playOrange hover:bg-playOrange/10"
+                        >
+                          <FileText className="h-3 w-3" />
+                          {t("quotes.actions.createFromLead")}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </TableCard>
+        )}
+
+        {/* Pagination */}
+        <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+          <p className="text-sm text-muted-foreground">
+            {currentTotal === 0
+              ? t("dashboard.leads.pagination.empty")
+              : t("dashboard.leads.pagination.summary", {
+                  from: rangeStart,
+                  to: rangeEnd,
+                  total: currentTotal,
+                })}
+          </p>
+
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage <= 1}
+              className="border-playBlueLight"
+            >
+              {t("common.previous")}
+            </Button>
+            <span className="text-sm text-muted-foreground min-w-20 text-center">
+              {t("dashboard.leads.pagination.page", {
+                current: currentPage,
+                total: totalPages,
+              })}
+            </span>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={currentPage >= totalPages}
+              className="border-playBlueLight"
+            >
+              {t("common.next")}
+            </Button>
           </div>
         </div>
       </div>
 
-      {isLoading && <Loader text={t("dashboard.leads.loading")} />}
-
-      {currentError && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-          {t("dashboard.leads.error")}
-        </div>
-      )}
-
-      {!isLoading && !currentError && activeTab === "inquiries" && (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.inquiries.type")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.name")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.email")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.inquiries.detail")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.date")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {currentItems.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-gray-400">
-                    {t("dashboard.leads.emptyInquiries")}
-                  </td>
-                </tr>
-              ) : (
-                inquiries.items.map((item) => (
-                  <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
-                          item.type === WebInquiryType.Contact
-                            ? "bg-blue-100 text-blue-800"
-                            : "bg-orange-100 text-orange-800"
-                        }`}
-                      >
-                        {item.type === WebInquiryType.Contact
-                          ? t("dashboard.leads.types.contact")
-                          : t("dashboard.leads.types.pricing")}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">
-                      {item.name ?? <span className="text-gray-400">-</span>}
-                    </td>
-                    <td className="px-4 py-3">
-                      <a
-                        href={`mailto:${item.email}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {item.email}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600 max-w-xs truncate">
-                      {item.type === WebInquiryType.Contact ? (
-                        item.message ?? <span className="text-gray-400">-</span>
-                      ) : item.pricingDataJson ? (
-                        <PricingSummary json={item.pricingDataJson} />
-                      ) : (
-                        <span className="text-gray-400">-</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
-                      {formatDate(item.creationDate)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {!isLoading && !currentError && activeTab === "registrations" && (
-        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-          <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.registrations.company")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.registrations.contact")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.email")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.phone")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.registrations.origin")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("dashboard.leads.table.registrations.verified")}
-                </th>
-                <th className="text-left px-4 py-3 font-medium text-gray-600">
-                  {t("common.date")}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {currentItems.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-gray-400">
-                    {t("dashboard.leads.emptyRegistrations")}
-                  </td>
-                </tr>
-              ) : (
-                leads.items.map((lead) => (
-                  <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-gray-800">
-                      {lead.companyName}
-                    </td>
-                    <td className="px-4 py-3 text-gray-700">
-                      {lead.contactPerson}
-                    </td>
-                    <td className="px-4 py-3">
-                      <a
-                        href={`mailto:${lead.email}`}
-                        className="text-blue-600 hover:underline"
-                      >
-                        {lead.email}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 text-gray-600">{lead.phone}</td>
-                    <td className="px-4 py-3">
-                      <span className="bg-gray-100 text-gray-700 text-xs px-2 py-0.5 rounded">
-                        {lead.origin === LeadOrigin.Web
-                          ? t("dashboard.leads.origins.web")
-                          : t("dashboard.leads.origins.landing")}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      {lead.emailVerified ? (
-                        <span className="text-green-600 font-medium">
-                          {t("common.yes")}
-                        </span>
-                      ) : (
-                        <span className="text-gray-400">{t("common.no")}</span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-gray-500 whitespace-nowrap">
-                      {formatDate(lead.creationDate)}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-        <p className="text-sm text-gray-500">
-          {currentTotal === 0
-            ? t("dashboard.leads.pagination.empty")
-            : t("dashboard.leads.pagination.summary", {
-                from: rangeStart,
-                to: rangeEnd,
-                total: currentTotal,
-              })}
-        </p>
-
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage <= 1}
-          >
-            {t("common.previous")}
-          </Button>
-          <span className="text-sm text-gray-600 min-w-20 text-center">
-            {t("dashboard.leads.pagination.page", {
-              current: currentPage,
-              total: totalPages,
-            })}
-          </span>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setPage((prev) => prev + 1)}
-            disabled={currentPage >= totalPages}
-          >
-            {t("common.next")}
-          </Button>
-        </div>
-      </div>
+      <QuoteForm
+        isOpen={!!quoteLead}
+        onClose={() => setQuoteLead(null)}
+        fixedLead={quoteLead ?? undefined}
+        onSubmit={async (data: CreateQuoteRequest) => {
+          try {
+            const service = new QuoteService();
+            const created = await service.create(data);
+            toast({
+              title: t("quotes.created"),
+              description: t("quotes.createdDesc", { reference: created.data.reference }),
+            });
+            router.push(`/dashboard/quotes/${created.data.id}`);
+          } catch {
+            toast({
+              title: t("errors.generic"),
+              description: t("quotes.createError"),
+              variant: "destructive",
+            });
+          }
+        }}
+      />
     </div>
   );
 }
@@ -427,11 +690,11 @@ function PricingSummary({ json }: { json: string }) {
       : `EUR ${data.estimatedPrice}/mes`;
 
     return (
-      <span className="text-gray-600">
+      <span className="text-muted-foreground">
         {sites} · {data.contractors} contratas · {price}
       </span>
     );
   } catch {
-    return <span className="text-gray-400">-</span>;
+    return <span className="text-muted-foreground">-</span>;
   }
 }

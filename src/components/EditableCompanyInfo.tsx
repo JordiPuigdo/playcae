@@ -36,7 +36,8 @@ import {
   ShieldCheck,
   ShieldOff,
 } from "lucide-react";
-import { Company, CompanyFormData, CompanyType } from "@/types/company";
+import { Company, CompanyFormData } from "@/types/company";
+import { Profile } from "@/types/profile";
 import {
   Form,
   FormControl,
@@ -55,8 +56,10 @@ interface EditableCompanyInfoProps {
   onUpdate: (id: string, data: CompanyFormData) => void;
   onToggleActive?: (id: string, activate: boolean) => Promise<void>;
   onResendWelcomeEmail?: (id: string) => Promise<void>;
-  onUpdateType?: (id: string, type: CompanyType) => Promise<void>;
   onToggleInternalPrevention?: (id: string, hasInternalPrevention: boolean) => Promise<void>;
+  onChangeProfile?: (companyId: string, profileId: string) => Promise<void>;
+  assignedProfiles?: Profile[];
+  availableProfiles?: Profile[];
   userRole?: UserRole;
 }
 
@@ -68,8 +71,10 @@ export const EditableCompanyInfo = ({
   onUpdate,
   onToggleActive,
   onResendWelcomeEmail,
-  onUpdateType,
   onToggleInternalPrevention,
+  onChangeProfile,
+  assignedProfiles = [],
+  availableProfiles = [],
   userRole = UserRole.Admin,
 }: EditableCompanyInfoProps) => {
   const { t } = useTranslation();
@@ -78,9 +83,9 @@ export const EditableCompanyInfo = ({
   const [isToggleModalOpen, setIsToggleModalOpen] = useState(false);
   const [isTogglingActive, setIsTogglingActive] = useState(false);
   const [isSendingEmail, setIsSendingEmail] = useState(false);
-  const [isTypeModalOpen, setIsTypeModalOpen] = useState(false);
-  const [pendingType, setPendingType] = useState<CompanyType | null>(null);
-  const [isChangingType, setIsChangingType] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [selectedProfileId, setSelectedProfileId] = useState<string | null>(null);
+  const [isChangingProfile, setIsChangingProfile] = useState(false);
   const [isPreventionModalOpen, setIsPreventionModalOpen] = useState(false);
   const [isChangingPrevention, setIsChangingPrevention] = useState(false);
   const { toast } = useToast();
@@ -96,7 +101,6 @@ export const EditableCompanyInfo = ({
     contactPerson: z.string(),
     email: z.string().email(t("companies.validation.invalidEmail")),
     phone: z.string().optional(),
-    type: z.nativeEnum(CompanyType).optional(),
     hasInternalPreventionService: z.boolean().optional(),
   });
 
@@ -166,34 +170,22 @@ export const EditableCompanyInfo = ({
     }
   };
 
-  const handleChangeType = (newType: CompanyType) => {
-    if (newType === company.type) return;
-    setPendingType(newType);
-    setIsTypeModalOpen(true);
-  };
-
-  const handleConfirmChangeType = async () => {
-    if (!onUpdateType || pendingType === null) return;
-
-    setIsChangingType(true);
+  const handleConfirmChangeProfile = async () => {
+    if (!onChangeProfile || !selectedProfileId) return;
+    setIsChangingProfile(true);
     try {
-      await onUpdateType(company.id!, pendingType);
-      setIsTypeModalOpen(false);
-      toast({
-        title: t("companies.toast.typeUpdated"),
-        description: pendingType === CompanyType.Company
-          ? t("companies.toast.typeUpdatedCompany")
-          : t("companies.toast.typeUpdatedSelfEmployed"),
-      });
-    } catch (error) {
+      await onChangeProfile(company.id!, selectedProfileId);
+      setIsProfileModalOpen(false);
+      toast({ title: t("companies.toast.profileUpdated") });
+    } catch {
       toast({
         title: t("common.error") || "Error",
-        description: t("companies.toast.typeError"),
+        description: t("companies.toast.profileError"),
         variant: "destructive",
       });
     } finally {
-      setIsChangingType(false);
-      setPendingType(null);
+      setIsChangingProfile(false);
+      setSelectedProfileId(null);
     }
   };
 
@@ -445,42 +437,6 @@ export const EditableCompanyInfo = ({
                     </p>
                   </div>
 
-                  {/* TIPO DE EMPRESA */}
-                  {canEditCompanySettings && onUpdateType && (
-                    <div className="space-y-2">
-                      <Label className="flex items-center gap-2 text-sm font-medium text-brand.accent">
-                        <Briefcase className="h-4 w-4" />
-                        {t("companies.form.companyType")}
-                      </Label>
-                      <div className="flex gap-2">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={company.type === CompanyType.Company ? "default" : "outline"}
-                          onClick={() => handleChangeType(CompanyType.Company)}
-                          className={company.type === CompanyType.Company
-                            ? "bg-brand-secondary text-white"
-                            : "border-brand.accent text-brand-primary"}
-                        >
-                          <Building className="h-4 w-4 mr-1" />
-                          {t("companies.form.company")}
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant={company.type === CompanyType.SelfEmployed ? "default" : "outline"}
-                          onClick={() => handleChangeType(CompanyType.SelfEmployed)}
-                          className={company.type === CompanyType.SelfEmployed
-                            ? "bg-brand-secondary text-white"
-                            : "border-brand.accent text-brand-primary"}
-                        >
-                          <Briefcase className="h-4 w-4 mr-1" />
-                          {t("companies.form.selfEmployed")}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
                   {/* PREVENCIÓN INTERNA */}
                   {canEditCompanySettings && onToggleInternalPrevention && (
                     <div className="space-y-2">
@@ -568,40 +524,6 @@ export const EditableCompanyInfo = ({
                   : isActive
                   ? t("companies.actions.deactivate")
                   : t("companies.actions.activate")}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Modal de confirmación para cambiar tipo de empresa */}
-        <AlertDialog open={isTypeModalOpen} onOpenChange={setIsTypeModalOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-amber-500" />
-                {t("companies.toggle.changeTypeTitle")}
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-left">
-                {pendingType === CompanyType.SelfEmployed
-                  ? t("companies.toggle.changeTypeToSelfEmployed", { name: company.name })
-                  : t("companies.toggle.changeTypeToCompany", { name: company.name })}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel disabled={isChangingType}>
-                {t("common.cancel")}
-              </AlertDialogCancel>
-              <AlertDialogAction
-                onClick={handleConfirmChangeType}
-                disabled={isChangingType}
-                className="bg-brand-secondary text-white hover:bg-brand-secondary/90"
-              >
-                {isChangingType ? (
-                  <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                ) : (
-                  <CheckCircle className="h-4 w-4 mr-1" />
-                )}
-                {isChangingType ? t("common.loading") || "..." : t("common.confirm") || "Confirmar"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -795,52 +717,30 @@ export const EditableCompanyInfo = ({
             </div>
           </div>
 
-          {/* Tipo de empresa */}
+          {/* Perfil de empresa */}
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-brand.accent">
               <Briefcase className="h-4 w-4" />
-              {t("companies.form.companyType")}
+              {t("companies.profile.label")}
             </div>
-            {canEditCompanySettings && onUpdateType ? (
-              <div className="flex gap-2">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-brand-primary">
+                {assignedProfiles.length > 0
+                  ? assignedProfiles.map((p) => p.name).join(", ")
+                  : t("companies.profile.noProfile")}
+              </span>
+              {canEditCompanySettings && onChangeProfile && availableProfiles.length > 0 && (
                 <Button
                   size="sm"
-                  variant={company.type === CompanyType.Company ? "default" : "outline"}
-                  onClick={() => handleChangeType(CompanyType.Company)}
-                  className={company.type === CompanyType.Company
-                    ? "bg-brand-secondary text-white"
-                    : "border-brand.accent text-brand-primary"}
+                  variant="outline"
+                  onClick={() => setIsProfileModalOpen(true)}
+                  className="border-brand.accent text-brand-primary"
                 >
                   <Building className="h-4 w-4 mr-1" />
-                  {t("companies.form.company")}
+                  {t("companies.profile.change")}
                 </Button>
-                <Button
-                  size="sm"
-                  variant={company.type === CompanyType.SelfEmployed ? "default" : "outline"}
-                  onClick={() => handleChangeType(CompanyType.SelfEmployed)}
-                  className={company.type === CompanyType.SelfEmployed
-                    ? "bg-brand-secondary text-white"
-                    : "border-brand.accent text-brand-primary"}
-                >
-                  <Briefcase className="h-4 w-4 mr-1" />
-                  {t("companies.form.selfEmployed")}
-                </Button>
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 text-sm font-medium text-brand-primary">
-                {company.type === CompanyType.SelfEmployed ? (
-                  <>
-                    <Briefcase className="h-4 w-4" />
-                    {t("companies.form.selfEmployed")}
-                  </>
-                ) : (
-                  <>
-                    <Building className="h-4 w-4" />
-                    {t("companies.form.company")}
-                  </>
-                )}
-              </div>
-            )}
+              )}
+            </div>
           </div>
 
           {/* Prevención interna */}
@@ -941,35 +841,56 @@ export const EditableCompanyInfo = ({
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Modal de confirmación para cambiar tipo de empresa */}
-      <AlertDialog open={isTypeModalOpen} onOpenChange={setIsTypeModalOpen}>
+      {/* Modal de selección de perfil */}
+      <AlertDialog open={isProfileModalOpen} onOpenChange={setIsProfileModalOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
-              {t("companies.toggle.changeTypeTitle")}
+              <Briefcase className="h-5 w-5 text-brand-secondary" />
+              {t("companies.profile.changeTitle")}
             </AlertDialogTitle>
             <AlertDialogDescription className="text-left">
-              {pendingType === CompanyType.SelfEmployed
-                ? t("companies.toggle.changeTypeToSelfEmployed", { name: company.name })
-                : t("companies.toggle.changeTypeToCompany", { name: company.name })}
+              <div className="grid grid-cols-1 gap-2 mt-3">
+                {availableProfiles.map((profile) => {
+                  const isSelected = selectedProfileId === profile.id;
+                  return (
+                    <button
+                      key={profile.id}
+                      type="button"
+                      onClick={() => setSelectedProfileId(profile.id!)}
+                      className={`text-left rounded-lg border p-3 transition-colors ${
+                        isSelected
+                          ? "border-brand-secondary bg-brand-secondary/5 ring-1 ring-brand-secondary"
+                          : "border-border hover:border-brand-secondary/50"
+                      }`}
+                    >
+                      <p className={`font-medium text-sm ${isSelected ? "text-brand-secondary" : ""}`}>
+                        {profile.name}
+                      </p>
+                      {profile.description && (
+                        <p className="text-xs text-muted-foreground mt-1">{profile.description}</p>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={isChangingType}>
+            <AlertDialogCancel disabled={isChangingProfile} onClick={() => setSelectedProfileId(null)}>
               {t("common.cancel")}
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={handleConfirmChangeType}
-              disabled={isChangingType}
+              onClick={handleConfirmChangeProfile}
+              disabled={isChangingProfile || !selectedProfileId}
               className="bg-brand-secondary text-white hover:bg-brand-secondary/90"
             >
-              {isChangingType ? (
+              {isChangingProfile ? (
                 <Loader2 className="h-4 w-4 mr-1 animate-spin" />
               ) : (
                 <CheckCircle className="h-4 w-4 mr-1" />
               )}
-              {isChangingType ? t("common.loading") || "..." : t("common.confirm") || "Confirmar"}
+              {isChangingProfile ? t("common.loading") || "..." : t("common.confirm") || "Confirmar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

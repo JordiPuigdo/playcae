@@ -10,7 +10,6 @@ export interface CompanySimple extends BaseEntity {
   email: string;
   phone?: string;
   status: CompanyStatus;
-  type: CompanyType;
   active: boolean;
   userId: string;
   workerStatus: WorkerStatus;
@@ -49,18 +48,12 @@ export enum CompanyStatus {
   Pending = 2,
 }
 
-export enum CompanyType {
-  Company = 0,      // Empresa
-  SelfEmployed = 1, // Autónomo
-}
-
 export interface CompanyFormData {
   name: string;
   taxId: string;
   contactPerson: string;
   email: string;
   phone?: string;
-  type?: CompanyType;
   hasInternalPreventionService?: boolean;
 }
 
