@@ -37,6 +37,13 @@ export class ProfileService {
     );
   }
 
+  async switchGlobalProfile(companyId: string, profileId: string): Promise<ApiResponse<void>> {
+    return this.httpClient.put<void>(
+      `${this.baseUrl}/companies/${companyId}/global-profile/${profileId}`,
+      {}
+    );
+  }
+
   async getById(id: string): Promise<ApiResponse<Profile>> {
     return this.httpClient.get<Profile>(`${this.baseUrl}/${id}`);
   }

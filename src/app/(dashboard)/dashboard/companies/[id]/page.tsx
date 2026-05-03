@@ -172,7 +172,7 @@ const CompanyDetailPage = () => {
   };
 
   const handleChangeProfile = async (companyId: string, profileId: string) => {
-    await profileService.selfAssignToCompany(companyId, profileId);
+    await profileService.switchGlobalProfile(companyId, profileId);
     await mutateAssignedProfiles();
     await refreshDocuments();
   };
