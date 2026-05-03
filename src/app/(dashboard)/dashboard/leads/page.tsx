@@ -112,8 +112,8 @@ export default function LeadsPage() {
           return (a.email || "").localeCompare(b.email || "");
         case "creationDate":
           return (
-            new Date(a.creationDate).getTime() -
-            new Date(b.creationDate).getTime()
+            new Date(a.creationDate ?? 0).getTime() -
+            new Date(b.creationDate ?? 0).getTime()
           );
       }
     }
@@ -137,8 +137,8 @@ export default function LeadsPage() {
           return Number(a.emailVerified) - Number(b.emailVerified);
         case "creationDate":
           return (
-            new Date(a.creationDate).getTime() -
-            new Date(b.creationDate).getTime()
+            new Date(a.creationDate ?? 0).getTime() -
+            new Date(b.creationDate ?? 0).getTime()
           );
       }
     }
