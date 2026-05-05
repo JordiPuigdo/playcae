@@ -1,4 +1,4 @@
-﻿import { create } from "zustand";
+import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   ParentCompany,
@@ -9,8 +9,7 @@ import {
 import { LicenseSummary } from "@/types/license";
 import { LoginService } from "@/services/login.service";
 
-const SESSION_DURATION_MS = 2 * 60 * 60 * 1000; // 2 horas
-const AUTH_VERSION = 7; // Incrementado al reestructurar LicenseSummary (workers internos + por contratista)
+const AUTH_VERSION = 9;
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -18,18 +17,18 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   errorAuth: string | null;
-  expiresAt: number | null; // timestamp en ms
-  logoUrl: string | null; // Logo personalizado del usuario ADMIN
-  // Nuevo: para selecciÃ³n de empresa padre
+  expiresAt: number | null; // timestamp en ms — ahora refleja expiración del refresh token (~1 año)
+  logoUrl: string | null;
   selectedParentCompanyId: string | null;
-  pendingParentCompanySelection: boolean; // true si necesita seleccionar empresa
-  availableParentCompanies: ParentCompany[]; // lista de empresas disponibles
-  // Nuevo: selecciÃ³n de sede para PRL
+  pendingParentCompanySelection: boolean;
+  availableParentCompanies: ParentCompany[];
   selectedSiteId: string | null;
   pendingSiteSelection: boolean;
   availableSites: UserSiteOption[];
+  licenseSummary: LicenseSummary | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshSession: () => Promise<boolean>;
   clearError: () => void;
   setSelectedParentCompany: (companyId: string) => void;
   setAvailableParentCompanies: (companies: ParentCompany[]) => void;
@@ -38,13 +37,13 @@ interface AuthState {
   setAvailableSites: (sites: UserSiteOption[]) => void;
   setPendingSiteSelection: (pending: boolean) => void;
   setLogoUrl: (logoUrl: string | null) => void;
-  licenseSummary: LicenseSummary | null;
 }
 
 const initialState: Omit<
   AuthState,
   | "login"
   | "logout"
+  | "refreshSession"
   | "clearError"
   | "setSelectedParentCompany"
   | "setAvailableParentCompanies"
@@ -70,9 +69,17 @@ const initialState: Omit<
   licenseSummary: null,
 };
 
+function calcExpiresAt(refreshTokenExpiryTime?: string): number {
+  if (refreshTokenExpiryTime) {
+    const parsed = new Date(refreshTokenExpiryTime).getTime();
+    if (!isNaN(parsed)) return parsed;
+  }
+  return Date.now() + 365 * 24 * 60 * 60 * 1000;
+}
+
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       ...initialState,
       login: async (email: string, password: string) => {
         set({ isLoading: true, errorAuth: null });
@@ -81,26 +88,23 @@ export const useAuthStore = create<AuthState>()(
           const response = await loginService.login(email, password);
 
           if (response?.data) {
-            const now = Date.now();
             const userData = response.data;
 
-            // Admin no tiene companyId, no necesita selecciÃ³n de empresa padre
             const isAdmin =
               userData.role === UserRole.Admin ||
               userData.role === UserRole.SuperAdmin;
 
-            // Usar el logo del admin si viene en la respuesta del login
             const logoUrl: string | null = userData.adminLogoUrl || null;
             const licenseSummary = userData.licenseSummary ?? null;
+            const expiresAt = calcExpiresAt(userData.refreshTokenExpiryTime);
 
             if (isAdmin) {
-              // Admin: login directo sin selecciÃ³n de empresa
               set({
                 user: userData,
                 token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
-                expiresAt: now + SESSION_DURATION_MS,
+                expiresAt,
                 logoUrl,
                 licenseSummary,
                 selectedParentCompanyId: null,
@@ -110,13 +114,12 @@ export const useAuthStore = create<AuthState>()(
                 availableSites: [],
               });
             } else if (userData.role === UserRole.PRLManager) {
-              // PRL: requiere seleccionar sede si tiene mÃ¡s de una
               set({
                 user: userData,
                 token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
-                expiresAt: now + SESSION_DURATION_MS,
+                expiresAt,
                 logoUrl,
                 licenseSummary,
                 pendingParentCompanySelection: false,
@@ -126,13 +129,12 @@ export const useAuthStore = create<AuthState>()(
                 availableSites: [],
               });
             } else if (userData.parentCompanyId) {
-              // Company con parentCompanyId definido: usarlo directamente
               set({
                 user: userData,
                 token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
-                expiresAt: now + SESSION_DURATION_MS,
+                expiresAt,
                 logoUrl,
                 licenseSummary,
                 selectedParentCompanyId: userData.parentCompanyId,
@@ -142,13 +144,12 @@ export const useAuthStore = create<AuthState>()(
                 availableSites: [],
               });
             } else {
-              // Company sin parentCompanyId: necesita seleccionar empresa
               set({
                 user: userData,
                 token: userData.token || null,
                 isAuthenticated: true,
                 isLoading: false,
-                expiresAt: now + SESSION_DURATION_MS,
+                expiresAt,
                 logoUrl,
                 licenseSummary,
                 pendingParentCompanySelection: true,
@@ -164,7 +165,7 @@ export const useAuthStore = create<AuthState>()(
               isLoading: false,
             });
           }
-        } catch (error) {
+        } catch {
           set({
             errorAuth: "Credenciales incorrectas",
             isLoading: false,
@@ -172,9 +173,30 @@ export const useAuthStore = create<AuthState>()(
         }
       },
       logout: () => {
-        set({
-          ...initialState,
-        });
+        if (typeof window !== "undefined") {
+          fetch(`${process.env.NEXT_PUBLIC_PLAYCAE_API}/api/auth/logout-refresh`, {
+            method: "POST",
+            credentials: "include",
+          }).catch(() => {});
+        }
+        set({ ...initialState });
+      },
+      refreshSession: async () => {
+        try {
+          const { RefreshService } = await import("@/services/refresh.service");
+          const service = new RefreshService();
+          const response = await service.refresh();
+          if (response?.data) {
+            set({
+              token: response.data.accessToken,
+              expiresAt: new Date(response.data.refreshTokenExpiryTime).getTime(),
+            });
+            return true;
+          }
+          return false;
+        } catch {
+          return false;
+        }
       },
       clearError: () => {
         set({ errorAuth: null });
@@ -210,11 +232,9 @@ export const useAuthStore = create<AuthState>()(
     {
       name: "auth-storage",
       version: AUTH_VERSION,
-      migrate: (persistedState: any, version) => {
+      migrate: (persistedState: unknown, version) => {
         if (version < AUTH_VERSION) {
-          return {
-            ...initialState,
-          };
+          return { ...initialState };
         }
         return persistedState as AuthState;
       },
@@ -231,4 +251,3 @@ export const useAuthStore = create<AuthState>()(
     },
   ),
 );
-
