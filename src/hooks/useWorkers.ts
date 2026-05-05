@@ -11,7 +11,7 @@ export const useWorkers = (companyId: string | undefined) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const workerService = new WorkerService();
+  const workerService = useMemo(() => new WorkerService(), []);
   const documentService = useMemo(() => new DocumentService(), []);
   const companyWorkers = useMemo(() => {
     if (!companyId) return workers;

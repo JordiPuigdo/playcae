@@ -18,7 +18,8 @@ function getStoredToken(): string | null {
 }
 
 export function useNotificationStream(enabled: boolean) {
-  const { addNotification, fetchUnreadCount } = useNotificationStore();
+  const addNotification = useNotificationStore((s) => s.addNotification);
+  const fetchUnreadCount = useNotificationStore((s) => s.fetchUnreadCount);
   const expiresAt = useAuthStore((s) => s.expiresAt);
   const sourceRef = useRef<EventSource | null>(null);
 

@@ -96,7 +96,8 @@ const CompanyDetailPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubcontractorFormOpen, setIsSubcontractorFormOpen] = useState(false);
   const { toast } = useToast();
-  const { user, licenseSummary } = useAuthStore();
+  const user = useAuthStore((s) => s.user);
+  const licenseSummary = useAuthStore((s) => s.licenseSummary);
 
   const workersAtLimit = company?.isMainCompany
     ? (licenseSummary?.enableInternalWorkers === true &&
@@ -117,13 +118,15 @@ const CompanyDetailPage = () => {
 
   const fetchCompany = async (id: string) => {
     try {
-      const response = await getCompanyById(id);
+      const [response] = await Promise.all([
+        getCompanyById(id),
+        getWorkersByCompanyId(id),
+      ]);
       if (!response) {
         setCompany(null);
         setSubcontractors([]);
         return;
       }
-      await getWorkersByCompanyId(id);
       setCompany(response);
 
       if (response.subcontractors) {

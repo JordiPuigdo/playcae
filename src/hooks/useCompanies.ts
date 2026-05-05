@@ -15,8 +15,8 @@ import { useAuthStore } from "./useAuthStore";
 const COMPANIES_KEY = "/api/companies";
 
 export const useCompanies = () => {
-  const companyService = new CompanyService(new HttpClient());
-  const { user } = useAuthStore();
+  const companyService = useMemo(() => new CompanyService(new HttpClient()), []);
+  const user = useAuthStore((s) => s.user);
   const {
     data: companies = [],
     mutate,
