@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
 import SupportChat from "@/components/SupportChat";
 import Header from "@/components/ui/Header";
@@ -10,6 +11,10 @@ import { useUserConfiguration } from "@/hooks/useUserConfiguration";
 import { Toaster } from "@/components/ui/Toaster";
 import { UserRole } from "@/types/user";
 import { UserService } from "@/services/user.services";
+
+const hasAuthStoreHydrated = () =>
+  typeof window !== "undefined" &&
+  useAuthStore.persist?.hasHydrated?.() === true;
 
 export default function DashboardLayout({
   children,
@@ -26,6 +31,40 @@ export default function DashboardLayout({
     setSelectedSite,
   } = useAuthStore();
   const { getLogoUrl } = useUserConfiguration();
+  const router = useRouter();
+  const [hasHydrated, setHasHydrated] = useState(hasAuthStoreHydrated);
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
+      setHasHydrated(true);
+    });
+
+    if (hasAuthStoreHydrated()) {
+      setHasHydrated(true);
+    }
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated || user !== null) {
+      return;
+    }
+
+    router.replace("/login");
+    const fallbackRedirect = window.setTimeout(() => {
+      if (window.location.pathname.startsWith("/dashboard")) {
+        window.location.replace("/login");
+      }
+    }, 1000);
+
+    return () => {
+      window.clearTimeout(fallbackRedirect);
+    };
+  }, [hasHydrated, user, router]);
+
   const noIndexHead = (
     <>
       <meta name="robots" content="noindex, nofollow" />
@@ -86,17 +125,13 @@ export default function DashboardLayout({
     loadPrlSitesIfNeeded();
   }, [user, availableSites.length, selectedSiteId, setAvailableSites, setSelectedSite]);
 
-  if (user === null) {
+  if (!hasHydrated || user === null) {
     return (
       <>
         {noIndexHead}
         <Loader text={""} />
       </>
     );
-  }
-
-  if (!user) {
-    return <>{noIndexHead}</>;
   }
   return (
     <>

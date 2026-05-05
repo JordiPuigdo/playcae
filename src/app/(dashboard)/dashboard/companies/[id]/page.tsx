@@ -1,6 +1,7 @@
 "use client";
 
 import { CompanyDetailHeader } from "@/components/CompanyDetailHeader";
+import { CompanyDetailSkeleton } from "@/components/CompanyDetailSkeleton";
 import { CompanyForm } from "@/components/CompanyForm";
 import { CompanyObservations } from "@/components/CompanyObservations";
 import { DocumentsTable } from "@/components/DocumentTable";
@@ -115,24 +116,29 @@ const CompanyDetailPage = () => {
   });
 
   const fetchCompany = async (id: string) => {
-    const response = await getCompanyById(id);
-    if (!response) {
-      return;
-    }
-    await getWorkersByCompanyId(id);
-    setCompany(response);
+    try {
+      const response = await getCompanyById(id);
+      if (!response) {
+        setCompany(null);
+        setSubcontractors([]);
+        return;
+      }
+      await getWorkersByCompanyId(id);
+      setCompany(response);
 
-    // Cargar subcontratas
-    if (response.subcontractors) {
-      setSubcontractors(response.subcontractors);
-    } else {
-      const subs = await getSubcontractors(id);
-      setSubcontractors(subs);
-    }
-
-    setTimeout(() => {
+      if (response.subcontractors) {
+        setSubcontractors(response.subcontractors);
+      } else {
+        const subs = await getSubcontractors(id);
+        setSubcontractors(subs);
+      }
+    } catch (error) {
+      console.error("Error loading company detail:", error);
+      setCompany(null);
+      setSubcontractors([]);
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const handleValidateDocument = async (
@@ -154,9 +160,12 @@ const CompanyDetailPage = () => {
 
   const handleUpdateCompany = async (id: string, data: CompanyFormData) => {
     setIsLoading(true);
-    await updateCompany(id, data);
-    await fetchCompany(id);
-    setIsLoading(false);
+    try {
+      await updateCompany(id, data);
+      await fetchCompany(id);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleToggleActive = async (companyId: string, activate: boolean) => {
@@ -192,15 +201,17 @@ const CompanyDetailPage = () => {
 
   const handleCreateWorker = async (data: WorkerFormData) => {
     setIsLoading(true);
-    await createWorker(data);
-    await fetchCompany(id);
-    toast({
-      title: t("notifications.workerCreated"),
-      description: t("notifications.workerCreatedDesc"),
-      variant: "default",
-    });
-
-    setIsLoading(false);
+    try {
+      await createWorker(data);
+      await fetchCompany(id);
+      toast({
+        title: t("notifications.workerCreated"),
+        description: t("notifications.workerCreatedDesc"),
+        variant: "default",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -261,6 +272,10 @@ const CompanyDetailPage = () => {
       });
     }
   }, [showErrorUpload, toast, t]);
+
+  if (!company && isLoading) {
+    return <CompanyDetailSkeleton />;
+  }
 
   if (!company && !isLoading) {
     return (
