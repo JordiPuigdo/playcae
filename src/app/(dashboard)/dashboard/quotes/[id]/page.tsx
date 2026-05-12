@@ -1,8 +1,8 @@
 "use client";
 
-import { use, useEffect } from "react";
+import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, FileText, Send } from "lucide-react";
+import { ArrowLeft, FileDown, FileText, Send } from "lucide-react";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { EditableQuoteInfo } from "@/components/EditableQuoteInfo";
@@ -12,13 +12,17 @@ import { QuoteEconomicSummary } from "@/components/QuoteEconomicSummary";
 import { QuoteLinesTable } from "@/components/QuoteLinesTable";
 import { QuoteProfilesPanel } from "@/components/QuoteProfilesPanel";
 import { QuoteStatusBadge } from "@/components/QuoteStatusBadge";
+import { ConfirmationModal } from "@/components/ConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useQuote } from "@/hooks/useQuote";
 import { useQuoteModules } from "@/hooks/useQuoteModules";
 import { useTranslation } from "@/hooks/useTranslation";
+import { QuoteService } from "@/services/quote.service";
 import { QuoteStatus } from "@/types/quote";
 import { UserRole } from "@/types/user";
+
+const quoteService = new QuoteService();
 
 interface PageProps {
   params: Promise<{ id: string }>;
@@ -29,6 +33,9 @@ export default function QuoteDetailPage({ params }: PageProps) {
   const { t } = useTranslation();
   const router = useRouter();
   const { user, isAuthenticated } = useAuthStore();
+  const [isPdfLoading, setIsPdfLoading] = useState(false);
+  const [isConfirmSendOpen, setIsConfirmSendOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const {
     quote,
     isLoading,
@@ -74,16 +81,45 @@ export default function QuoteDetailPage({ params }: PageProps) {
     }
   };
 
-  const handleSend = async () => {
+  const handleDownloadPdf = async () => {
+    setIsPdfLoading(true);
+    try {
+      const res = await quoteService.generatePdf(quote.id);
+      if (res.data?.pdfUrl) {
+        window.open(res.data.pdfUrl, "_blank");
+      } else {
+        throw new Error("No PDF URL returned");
+      }
+    } catch {
+      toast({
+        title: t("errors.generic"),
+        description: t("quotes.pdfError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsPdfLoading(false);
+    }
+  };
+
+  const isResend = quote.status === QuoteStatus.Sent;
+
+  const handleConfirmSend = async () => {
+    setIsSending(true);
     try {
       await send();
-      toast({ title: t("quotes.sent"), description: t("quotes.sentDesc") });
+      toast({
+        title: isResend ? t("quotes.resent") : t("quotes.sent"),
+        description: isResend ? t("quotes.resentDesc") : t("quotes.sentDesc"),
+      });
+      setIsConfirmSendOpen(false);
     } catch {
       toast({
         title: t("errors.generic"),
         description: t("quotes.sendError"),
         variant: "destructive",
       });
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -117,13 +153,22 @@ export default function QuoteDetailPage({ params }: PageProps) {
               >
                 {t("quotes.actions.preview")}
               </Button>
-              {quote.status === QuoteStatus.Draft && (
+              <Button
+                variant="outline"
+                onClick={handleDownloadPdf}
+                disabled={isPdfLoading}
+                className="border-playBlueLight"
+              >
+                <FileDown className="h-4 w-4 mr-1" />
+                {isPdfLoading ? t("common.loading") : t("quotes.actions.downloadPdf")}
+              </Button>
+              {(quote.status === QuoteStatus.Draft || quote.status === QuoteStatus.Sent) && (
                 <Button
-                  onClick={handleSend}
+                  onClick={() => setIsConfirmSendOpen(true)}
                   className="bg-playOrange hover:bg-playOrange/90 text-white"
                 >
                   <Send className="h-4 w-4 mr-1" />
-                  {t("quotes.actions.send")}
+                  {quote.status === QuoteStatus.Sent ? t("quotes.actions.resend") : t("quotes.actions.send")}
                 </Button>
               )}
             </div>
@@ -178,6 +223,17 @@ export default function QuoteDetailPage({ params }: PageProps) {
           onRemoveProfile={removeCompanyProfile}
         />
       </div>
+
+      <ConfirmationModal
+        isOpen={isConfirmSendOpen}
+        onClose={() => setIsConfirmSendOpen(false)}
+        onConfirm={handleConfirmSend}
+        title={isResend ? t("quotes.resendQuote") : t("quotes.sendQuote")}
+        description={isResend ? t("quotes.confirmResend") : t("quotes.confirmSend")}
+        itemName={quote.reference}
+        confirmLabel={isSending ? (isResend ? t("quotes.resending") : t("quotes.sending")) : (isResend ? t("quotes.actions.resend") : t("quotes.actions.send"))}
+        isLoading={isSending}
+      />
     </div>
   );
 }

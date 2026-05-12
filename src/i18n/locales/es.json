@@ -827,6 +827,8 @@
     "uploadDate": "Fecha Subida",
     "noDocuments": "No hay documentos",
     "requiredDocumentation": "Documentación Requerida",
+    "legalPeriod": "Validez (días)",
+    "days": "días",
     "history": "Historial",
     "documentHistory": "Historial de Documentos",
     "confirmDelete": "¿Estás seguro de que quieres eliminar este documento?",
@@ -1466,6 +1468,15 @@
     "sent": "Presupuesto enviado",
     "sentDesc": "Se ha enviado el presupuesto al cliente.",
     "sendError": "No se ha podido enviar el presupuesto.",
+    "sendQuote": "Enviar presupuesto",
+    "confirmSend": "¿Confirmas que quieres enviar este presupuesto al cliente? Una vez enviado, el cliente podrá visualizarlo.",
+    "resendQuote": "Reenviar presupuesto",
+    "confirmResend": "¿Confirmas que quieres reenviar este presupuesto? El cliente podrá visualizarlo con el mismo enlace.",
+    "resent": "Presupuesto reenviado",
+    "resentDesc": "Se ha reenviado el presupuesto al cliente.",
+    "resending": "Reenviando...",
+    "sending": "Enviando...",
+    "pdfError": "No se ha podido generar el PDF.",
     "deleted": "Presupuesto eliminado",
     "deletedDesc": "Se ha eliminado el presupuesto {reference}.",
     "deleteError": "No se ha podido eliminar el presupuesto.",
@@ -1505,7 +1516,9 @@
     "actions": {
       "openEditor": "Abrir editor",
       "send": "Enviar",
+      "resend": "Reenviar",
       "preview": "Previsualizar",
+      "downloadPdf": "Descargar PDF",
       "createFromLead": "Crear presupuesto"
     },
     "form": {
@@ -1547,6 +1560,7 @@
     },
     "info": {
       "title": "Información del presupuesto",
+      "reference": "Número de presupuesto",
       "client": "Cliente",
       "language": "Idioma",
       "scope": "Alcance",

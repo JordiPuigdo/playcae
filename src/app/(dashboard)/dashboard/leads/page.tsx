@@ -20,7 +20,7 @@ import { toast } from "@/hooks/use-Toast";
 import { UserRole } from "@/types/user";
 import { LeadOrigin, LeadListItem, LeadStatus } from "@/types/lead";
 import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
-import { CreateQuoteRequest } from "@/types/quote";
+
 import { LeadService } from "@/services/lead.service";
 import { QuoteService } from "@/services/quote.service";
 import { WebInquiryService } from "@/services/web-inquiry.service";
@@ -31,7 +31,7 @@ import { LeadDetailPanel } from "@/components/LeadDetailPanel";
 import { LeadForm } from "@/components/LeadForm";
 import { LeadStatusBadge } from "@/components/LeadStatusBadge";
 import { LeadStatusCell } from "@/components/LeadStatusCell";
-import { QuoteForm } from "@/components/QuoteForm";
+import { QuoteGeneratorWizard } from "@/components/QuoteGenerator";
 import { SortableHeader } from "@/components/SortableHeader";
 import { TableCard } from "@/components/TableCard";
 import { Badge } from "@/components/ui/Badge";
@@ -801,26 +801,21 @@ export default function LeadsPage() {
         </DialogContent>
       </Dialog>
 
-      <QuoteForm
+      <QuoteGeneratorWizard
         isOpen={!!quoteLead}
         onClose={() => setQuoteLead(null)}
         fixedLead={quoteLead ?? undefined}
-        onSubmit={async (data: CreateQuoteRequest) => {
-          try {
-            const service = new QuoteService();
-            const created = await service.create(data);
-            toast({
-              title: t("quotes.created"),
-              description: t("quotes.createdDesc", { reference: created.data.reference }),
-            });
-            router.push(`/dashboard/quotes/${created.data.id}`);
-          } catch {
-            toast({
-              title: t("errors.generic"),
-              description: t("quotes.createError"),
-              variant: "destructive",
-            });
-          }
+        generateQuote={async (config) => {
+          const service = new QuoteService();
+          const res = await service.generate(config);
+          return res.data;
+        }}
+        onCreated={(quote) => {
+          toast({
+            title: t("quotes.created"),
+            description: t("quotes.createdDesc", { reference: quote.reference }),
+          });
+          router.push(`/dashboard/quotes/${quote.id}`);
         }}
       />
     </div>

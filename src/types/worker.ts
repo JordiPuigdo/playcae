@@ -21,6 +21,7 @@ export enum WorkerStatus {
 export interface DocumentType extends BaseEntity {
   code: string;
   name: string;
+  legalPeriod?: number;
 }
 
 export interface WorkerFormData {

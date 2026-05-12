@@ -29,6 +29,7 @@ interface Props {
 export const EditableQuoteInfo = ({ quote, readOnly, onSave }: Props) => {
   const { t } = useTranslation();
   const [form, setForm] = useState<UpdateQuoteRequest>({
+    reference: quote.reference,
     language: quote.language,
     clientCompanyName: quote.clientCompanyName,
     scope: quote.scope ?? "",
@@ -55,6 +56,7 @@ export const EditableQuoteInfo = ({ quote, readOnly, onSave }: Props) => {
   };
 
   const dirty =
+    form.reference !== quote.reference ||
     form.language !== quote.language ||
     form.clientCompanyName !== quote.clientCompanyName ||
     (form.scope ?? "") !== (quote.scope ?? "") ||
@@ -78,6 +80,16 @@ export const EditableQuoteInfo = ({ quote, readOnly, onSave }: Props) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label className="text-brand-primary">{t("quotes.info.reference")}</Label>
+            <Input
+              uppercase={false}
+              value={form.reference ?? ""}
+              disabled={readOnly}
+              onChange={(e) => setForm({ ...form, reference: e.target.value })}
+              className="border-playBlueLight"
+            />
+          </div>
           <div className="space-y-2">
             <Label className="text-brand-primary">{t("quotes.info.client")}</Label>
             <Input

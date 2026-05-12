@@ -827,6 +827,8 @@
     "uploadDate": "Data de Pujada",
     "noDocuments": "No hi ha documents",
     "requiredDocumentation": "Documentació Requerida",
+    "legalPeriod": "Validesa (dies)",
+    "days": "dies",
     "history": "Historial",
     "documentHistory": "Historial de Documents",
     "confirmDelete": "Estàs segur que vols eliminar aquest document?",
@@ -1466,6 +1468,15 @@
     "sent": "Pressupost enviat",
     "sentDesc": "S'ha enviat el pressupost al client.",
     "sendError": "No s'ha pogut enviar el pressupost.",
+    "sendQuote": "Enviar pressupost",
+    "confirmSend": "Confirmes que vols enviar aquest pressupost al client? Un cop enviat, el client el podrà visualitzar.",
+    "resendQuote": "Reenviar pressupost",
+    "confirmResend": "Confirmes que vols reenviar aquest pressupost? El client el podrà visualitzar amb el mateix enllaç.",
+    "resent": "Pressupost reenviat",
+    "resentDesc": "S'ha reenviat el pressupost al client.",
+    "resending": "Reenviant...",
+    "sending": "Enviant...",
+    "pdfError": "No s'ha pogut generar el PDF.",
     "deleted": "Pressupost eliminat",
     "deletedDesc": "S'ha eliminat el pressupost {reference}.",
     "deleteError": "No s'ha pogut eliminar el pressupost.",
@@ -1505,7 +1516,9 @@
     "actions": {
       "openEditor": "Obrir editor",
       "send": "Enviar",
+      "resend": "Reenviar",
       "preview": "Previsualitzar",
+      "downloadPdf": "Descarregar PDF",
       "createFromLead": "Crear pressupost"
     },
     "form": {
@@ -1547,6 +1560,7 @@
     },
     "info": {
       "title": "Informació del pressupost",
+      "reference": "Número de pressupost",
       "client": "Client",
       "language": "Idioma",
       "scope": "Abast",

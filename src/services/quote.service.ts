@@ -20,6 +20,7 @@ import {
   UpdateQuoteRequest,
   UpdateQuoteWorkerProfileSpecRequest,
 } from "@/types/quote";
+import { QuoteGeneratorConfig } from "@/types/quote-generator";
 
 export class QuoteService {
   private readonly baseUrl =
@@ -52,6 +53,10 @@ export class QuoteService {
     return this.httpClient.post<Quote>(this.baseUrl, request);
   }
 
+  async generate(config: QuoteGeneratorConfig): Promise<ApiResponse<Quote>> {
+    return this.httpClient.post<Quote>(`${this.baseUrl}/generate`, config);
+  }
+
   async update(id: string, request: UpdateQuoteRequest): Promise<ApiResponse<Quote>> {
     return this.httpClient.put<Quote>(`${this.baseUrl}/${id}`, request);
   }
@@ -62,6 +67,10 @@ export class QuoteService {
 
   async send(id: string): Promise<ApiResponse<Quote>> {
     return this.httpClient.post<Quote>(`${this.baseUrl}/${id}/send`, {});
+  }
+
+  async generatePdf(id: string): Promise<ApiResponse<{ pdfUrl: string }>> {
+    return this.httpClient.post<{ pdfUrl: string }>(`${this.baseUrl}/${id}/pdf`, {});
   }
 
   // ===== Lines =====

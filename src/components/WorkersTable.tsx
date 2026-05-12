@@ -356,6 +356,9 @@ export const WorkersTable = ({
                                       {t("documents.document")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
+                                      {t("documents.legalPeriod")}
+                                    </TableHead>
+                                    <TableHead className="text-brand-primary">
                                       {t("documents.file")}
                                     </TableHead>
                                     <TableHead className="text-brand-primary">
@@ -382,6 +385,12 @@ export const WorkersTable = ({
                                       <TableRow key={document.id}>
                                         <TableCell className="font-medium text-brand-primary">
                                           {getDocumentTypeName(document.documentType, t)}
+                                        </TableCell>
+
+                                        <TableCell className="text-brand-primary">
+                                          {document.documentType.legalPeriod != null
+                                            ? `${document.documentType.legalPeriod} ${t("documents.days")}`
+                                            : "—"}
                                         </TableCell>
 
                                         <TableCell>

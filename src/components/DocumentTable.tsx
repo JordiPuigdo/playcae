@@ -24,7 +24,7 @@ import { DocumentHistory } from "./DocumentHistory";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
-type SortField = "name" | "uploadedDate" | "expirationDate" | "status";
+type SortField = "name" | "uploadedDate" | "expirationDate" | "status" | "legalPeriod";
 
 interface DocumentsTableProps {
   documents: Document[];
@@ -65,6 +65,7 @@ export const DocumentsTable = ({
           return aE - bE;
         }
         case "status": return String(a.status || "").localeCompare(String(b.status || ""));
+        case "legalPeriod": return (a.documentType.legalPeriod ?? -1) - (b.documentType.legalPeriod ?? -1);
       }
     });
 
@@ -87,6 +88,7 @@ export const DocumentsTable = ({
             <TableHeader>
               <TableRow className="bg-playGrey">
                 <SortableHeader field="name" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("documents.document")}</SortableHeader>
+                <SortableHeader field="legalPeriod" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">{t("documents.legalPeriod")}</SortableHeader>
                 <TableHead className="text-brand-primary">{t("documents.file")}</TableHead>
                 <SortableHeader field="uploadedDate" sortField={sortField} sortDirection={sortDirection} onSort={handleSort} className="text-brand-primary">
                   {t("documents.uploadDate")}
@@ -104,6 +106,12 @@ export const DocumentsTable = ({
                 <TableRow key={document.id}>
                   <TableCell className="font-medium text-brand-primary">
                     {getDocumentTypeName(document.documentType, t)}
+                  </TableCell>
+
+                  <TableCell className="text-brand-primary">
+                    {document.documentType.legalPeriod != null
+                      ? `${document.documentType.legalPeriod} ${t("documents.days")}`
+                      : "—"}
                   </TableCell>
 
                   <TableCell>

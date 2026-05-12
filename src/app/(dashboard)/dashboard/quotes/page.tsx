@@ -64,19 +64,7 @@ const QuotesContent = () => {
   };
 
   const handleSend = async (id: string) => {
-    try {
-      await send(id);
-      toast({
-        title: t("quotes.sent"),
-        description: t("quotes.sentDesc"),
-      });
-    } catch {
-      toast({
-        title: t("errors.generic"),
-        description: t("quotes.sendError"),
-        variant: "destructive",
-      });
-    }
+    await send(id);
   };
 
   const goPage = (next: number) => {

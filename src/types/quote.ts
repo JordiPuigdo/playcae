@@ -138,6 +138,7 @@ export interface Quote extends BaseEntity {
   activeDocumentsApprox: number;
   usersCount: number;
   sitesCount: number;
+  maxContractors?: number | null;
   hasWorksModule: boolean;
   simultaneousWorksCount: number;
   hasInternalWorkersModule: boolean;
@@ -182,6 +183,7 @@ export interface CreateQuoteRequest {
 }
 
 export interface UpdateQuoteRequest {
+  reference?: string;
   language?: QuoteLanguage;
   status?: QuoteStatus;
   clientCompanyName?: string;
@@ -192,6 +194,7 @@ export interface UpdateQuoteRequest {
   activeDocumentsApprox?: number;
   usersCount?: number;
   sitesCount?: number;
+  maxContractors?: number | null;
   hasWorksModule?: boolean;
   simultaneousWorksCount?: number;
   hasInternalWorkersModule?: boolean;

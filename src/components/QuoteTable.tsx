@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSortableTable } from "@/hooks/useSortableTable";
-import { QuoteSimple } from "@/types/quote";
+import { QuoteSimple, QuoteStatus } from "@/types/quote";
 import dayjs from "dayjs";
 import { formatDate } from "@/app/utils/date";
 import { SortableHeader } from "./SortableHeader";
@@ -22,6 +22,7 @@ import {
 } from "./ui/Table";
 import { QuoteStatusBadge } from "./QuoteStatusBadge";
 import { DeleteConfirmationModal } from "./DeleteConfirmationModal";
+import { ConfirmationModal } from "./ConfirmationModal";
 import { toast } from "@/hooks/use-Toast";
 
 type SortField =
@@ -51,6 +52,8 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
   const router = useRouter();
   const [toDelete, setToDelete] = useState<QuoteSimple | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [toSend, setToSend] = useState<QuoteSimple | null>(null);
+  const [isSending, setIsSending] = useState(false);
 
   const { sortField, sortDirection, handleSort, sortedData } = useSortableTable<
     QuoteSimple,
@@ -69,6 +72,29 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
         return a.firstYearTotal - b.firstYearTotal;
     }
   });
+
+  const isResend = toSend?.status === QuoteStatus.Sent;
+
+  const handleConfirmSend = async () => {
+    if (!toSend || !onSend) return;
+    setIsSending(true);
+    try {
+      await onSend(toSend.id!);
+      toast({
+        title: isResend ? t("quotes.resent") : t("quotes.sent"),
+        description: isResend ? t("quotes.resentDesc") : t("quotes.sentDesc"),
+      });
+    } catch {
+      toast({
+        title: t("errors.generic"),
+        description: t("quotes.sendError"),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSending(false);
+      setToSend(null);
+    }
+  };
 
   const handleConfirmDelete = async () => {
     if (!toDelete) return;
@@ -184,13 +210,13 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
                     >
                       <Edit className="h-4 w-4" />
                     </Button>
-                    {onSend && q.status === 0 && (
+                    {onSend && (q.status === QuoteStatus.Draft || q.status === QuoteStatus.Sent) && (
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => onSend(q.id!)}
+                        onClick={() => setToSend(q)}
                         className="gap-1 text-brand-primary"
-                        title={t("quotes.actions.send")}
+                        title={q.status === QuoteStatus.Sent ? t("quotes.actions.resend") : t("quotes.actions.send")}
                       >
                         <Send className="h-3 w-3" />
                       </Button>
@@ -234,6 +260,17 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
         description={t("quotes.confirmDelete")}
         itemName={toDelete?.reference}
         isLoading={isDeleting}
+      />
+
+      <ConfirmationModal
+        isOpen={!!toSend}
+        onClose={() => setToSend(null)}
+        onConfirm={handleConfirmSend}
+        title={isResend ? t("quotes.resendQuote") : t("quotes.sendQuote")}
+        description={isResend ? t("quotes.confirmResend") : t("quotes.confirmSend")}
+        itemName={toSend?.reference}
+        confirmLabel={isSending ? (isResend ? t("quotes.resending") : t("quotes.sending")) : (isResend ? t("quotes.actions.resend") : t("quotes.actions.send"))}
+        isLoading={isSending}
       />
     </>
   );
