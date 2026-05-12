@@ -1,1070 +1,943 @@
 // app/(web)/plataformas-cae/page.tsx
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
+import Script from "next/script";
+import type { LucideIcon } from "lucide-react";
 import {
-  ArrowRight,
-  Check,
-  X,
-  Shield,
-  Zap,
-  Users,
-  FileCheck,
-  Clock,
-  Building2,
-  Brain,
-  ChevronRight,
   AlertTriangle,
+  ArrowRight,
+  Bell,
+  Brain,
+  Building2,
+  Check,
+  ChevronRight,
+  CreditCard,
+  FileCheck,
+  FileText,
+  Headphones,
+  LockKeyhole,
+  Scale,
+  Shield,
+  Sparkles,
   Star,
-  Layers,
-  GitBranch,
+  Timer,
+  Users,
+  X,
+  Zap,
 } from "lucide-react";
+import {
+  PlataformasCaeChecklist,
+  PlataformasCaeTableOfContents,
+} from "./PlataformasCaeInteractive";
+
+const canonicalUrl = "https://www.playcae.com/plataformas-cae";
 
 export const metadata: Metadata = {
-  title: "Plataformas CAE 2026: Guía Completa, Comparativa y Cómo Elegir",
+  title: {
+    absolute:
+      "Plataformas CAE 2026: Guía Completa, Comparativa y Cómo Elegir la Mejor | PlayCAE",
+  },
   description:
-    "Guía definitiva sobre plataformas CAE: qué son, cómo funcionan, tipos, comparativa real y cómo elegir la mejor para tu empresa. Incluye alternativas a las soluciones más conocidas del mercado español.",
+    "Guía definitiva de plataformas CAE en España 2026. Comparativa de las mejores soluciones, criterios de selección, precios y por qué PlayCAE es la opción más moderna. Incluye checklist gratuito.",
   keywords: [
     "plataformas cae",
-    "plataforma cae",
     "software cae",
-    "comparativa plataformas cae",
-    "alternativa dokify",
-    "coordinacion actividades empresariales software",
+    "plataforma cae empresas",
     "mejor plataforma cae",
-    "software coordinacion actividades empresariales",
-    "plataforma cae precio",
-    "plataforma cae sin coste por trabajador",
-    "gestion documental prl",
-    "rd 171 2004 software",
+    "comparativa plataformas cae",
+    "gestión documental cae",
+    "control acceso fabricas",
+    "coordinación actividades empresariales",
+    "RD 171/2004",
   ],
-  alternates: { canonical: "/plataformas-cae" },
+  alternates: { canonical: canonicalUrl },
   openGraph: {
     type: "article",
-    title: "Plataformas CAE 2026: Guía Completa y Comparativa | PlayCAE",
+    title:
+      "Plataformas CAE 2026: Guía Completa, Comparativa y Cómo Elegir la Mejor | PlayCAE",
     description:
-      "Qué son, cómo funcionan, tipos y cómo elegir la mejor plataforma CAE para tu empresa. Comparativa real del mercado español.",
-    url: "https://www.playcae.com/plataformas-cae",
+      "Comparativa de plataformas CAE en España, criterios de selección, marco legal, checklist y diferencias clave para elegir software CAE.",
+    url: canonicalUrl,
     images: [
       {
-        url: "https://www.playcae.com/og-logo.png",
-        alt: "PlayCAE – Plataforma CAE con IA",
+        url: "https://www.playcae.com/assets/img/checklist-documentos-cae.webp",
+        alt: "Checklist de documentos CAE para elegir plataforma CAE",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
     site: "@PlayCae",
-    title: "Plataformas CAE 2026: Guía Completa y Comparativa | PlayCAE",
+    title:
+      "Plataformas CAE 2026: Guía Completa y Comparativa | PlayCAE",
     description:
-      "Guía definitiva: qué son las plataformas CAE, tipos, comparativa y cómo elegir la correcta para tu empresa.",
-    images: ["https://www.playcae.com/og-logo.png"],
+      "Guía práctica para elegir plataforma CAE: legalidad, comparativa, criterios, errores comunes y checklist gratuito.",
+    images: ["https://www.playcae.com/assets/img/checklist-documentos-cae.webp"],
   },
   robots: { index: true, follow: true },
 };
 
-// ─── Datos ────────────────────────────────────────────────────────────────────
+type IconCard = {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+};
 
-const tiposPlataforma = [
+type FaqItem = {
+  question: string;
+  answer: string;
+};
+
+const selectionCriteria: IconCard[] = [
   {
-    icon: Layers,
-    tipo: "Repositorio documental básico",
-    descripcion:
-      "El nivel más sencillo. La empresa sube documentos en una carpeta compartida o portal web. No hay validación automática: alguien del equipo revisa cada documento manualmente y da el visto bueno.",
-    ventajas: ["Bajo coste inicial", "Fácil de entender"],
-    limitaciones: [
-      "Requiere revisión manual de cada documento",
-      "Sin alertas automáticas de caducidad",
-      "Sin control de accesos integrado",
-      "Escala mal con volumen de contratas",
-    ],
-    paraQuien: "Empresas pequeñas con 2-5 contratas y poco movimiento documental.",
-  },
-  {
-    icon: GitBranch,
-    tipo: "Plataforma CAE con workflows",
-    descripcion:
-      "Incorpora flujos de aprobación configurables: cuando una contrata sube un documento, el sistema lo enruta al responsable correcto. Hay notificaciones, estados y trazabilidad, pero la validación sigue siendo humana.",
-    ventajas: [
-      "Trazabilidad y auditoría clara",
-      "Flujos personalizables por tipo de empresa",
-      "Alertas de caducidad automatizadas",
-    ],
-    limitaciones: [
-      "La validación final la hace una persona",
-      "Cuellos de botella en picos de trabajo",
-      "Crecimiento del equipo necesario al escalar",
-    ],
-    paraQuien: "Empresas medianas con 20-100 contratas que tienen técnico de PRL dedicado.",
+    icon: FileCheck,
+    title: "Gestión documental completa",
+    description:
+      "Debe cubrir documentos de empresa, trabajador, centro, maquinaria, formación, aptitud médica, seguros y requisitos por actividad.",
   },
   {
     icon: Brain,
-    tipo: "Plataforma CAE con IA",
-    descripcion:
-      "El nivel más avanzado. La inteligencia artificial extrae datos del documento (fechas, importes, CIF, coberturas), los valida contra los requisitos configurados y emite una decisión automática en segundos. Sin intervención humana para el 80-95% de los documentos.",
-    ventajas: [
-      "Validación en segundos, no en días",
-      "Sin errores humanos ni descuidos",
-      "Escala sin aumentar equipo",
-      "Control de accesos en tiempo real",
-      "Alertas preventivas automáticas",
-    ],
-    limitaciones: [
-      "Mayor coste mensual vs repositorios básicos",
-      "Requiere configuración inicial de requisitos",
-    ],
-    paraQuien: "Empresas con más de 50 contratas, industria, logística, construcción o energía.",
+    title: "Validación",
+    description:
+      "La automatización útil extrae datos, detecta caducidades y valida coherencia documental sin convertir a PRL en un cuello de botella.",
   },
-];
-
-const funcionalidades = [
   {
-    icon: FileCheck,
-    titulo: "Validación documental automática",
-    descripcion:
-      "TC1/TC2, seguros de RC, formaciones PRL, reconocimientos médicos, evaluaciones de riesgo. Una plataforma CAE real valida fechas de vigencia, importes mínimos y datos del asegurado sin que nadie lo lea.",
-    esencial: true,
+    icon: LockKeyhole,
+    title: "Control de accesos integrado",
+    description:
+      "La plataforma CAE debe bloquear accesos cuando falta documentación o un requisito crítico está caducado.",
   },
   {
     icon: Users,
-    titulo: "Gestión de contratas y subcontratas",
-    descripcion:
-      "Estructura jerárquica de empresas: principal → contratista → subcontratista. Con acceso diferenciado por rol y visibilidad sobre qué empresas tienen documentación en regla.",
-    esencial: true,
+    title: "Facilidad de uso para contratas",
+    description:
+      "Si las contratas no entienden qué subir, cuándo y por qué se rechaza, el proyecto acaba en llamadas, correos y retrasos.",
   },
   {
-    icon: Clock,
-    titulo: "Alertas de caducidad preventivas",
-    descripcion:
-      "La plataforma avisa con 30, 15 y 7 días de antelación antes de que un documento caduque. La contrata recibe el aviso y puede renovar antes de quedarse sin acceso.",
-    esencial: true,
+    icon: Bell,
+    title: "Alertas de caducidad automáticas",
+    description:
+      "Avisos preventivos antes de vencer documentos clave, con estados claros para empresa principal y contratas.",
   },
   {
-    icon: Shield,
-    titulo: "Control de accesos en tiempo real",
-    descripcion:
-      "Solo los trabajadores con documentación válida y al día reciben autorización. El sistema bloquea automáticamente a quien tiene algo caducado, sin depender de un vigilante revisando manualmente.",
-    esencial: false,
+    icon: Timer,
+    title: "Implementación rápida",
+    description:
+      "La configuración inicial debería medirse en días, no en meses, especialmente si no hay integraciones complejas.",
+  },
+  {
+    icon: CreditCard,
+    title: "Precio transparente",
+    description:
+      "Evalúa si el coste cambia por trabajador, contrata, documento, centro o módulo, y pide siempre el coste total esperado.",
+  },
+  {
+    icon: Headphones,
+    title: "Soporte en español",
+    description:
+      "La adopción depende mucho del acompañamiento inicial y de resolver dudas operativas de PRL y contratas sin esperas largas.",
+  },
+];
+
+const comparisonPlatforms = [
+  {
+    name: "PlayCAE",
+    badge: "Mejor valorado 2026",
+    ai: "Equipo interno",
+    access: "Integrado",
+    implementation: "< 1 semana",
+    price: "Tarifa plana",
+    contractorsFree: "Sí",
+    support: "Sí",
+    usability: 5,
+    highlighted: true,
+  },
+  {
+    name: "Twind/CTAIMA",
+    ai: "Según plan",
+    access: "Según configuración",
+    implementation: "4 semanas",
+    price: "Consultar",
+    contractorsFree: "Consultar",
+    support: "Sí",
+    usability: 4,
+    highlighted: false,
+  },
+  {
+    name: "Nalanda",
+    ai: "Según plan",
+    access: "Según configuración",
+    implementation: "6 semanas",
+    price: "Consultar",
+    contractorsFree: "Consultar",
+    support: "Sí",
+    usability: 4,
+    highlighted: false,
+  },
+  {
+    name: "Dokify",
+    ai: "Según plan",
+    access: "Según configuración",
+    implementation: "Proyecto guiado",
+    price: "Consultar",
+    contractorsFree: "Consultar",
+    support: "Sí",
+    usability: 4,
+    highlighted: false,
+  },
+  {
+    name: "6conecta",
+    ai: "Según plan",
+    access: "Según configuración",
+    implementation: "Consultar",
+    price: "Consultar",
+    contractorsFree: "Consultar",
+    support: "Sí",
+    usability: 3,
+    highlighted: false,
+  },
+];
+
+const playCaeDifferences: IconCard[] = [
+  {
+    icon: Brain,
+    title: "Inteligencia artificial",
+    description:
+      "PlayCAE está pensado para validar documentos en segundos, detectar fechas y reducir la revisión humana repetitiva.",
   },
   {
     icon: Zap,
-    titulo: "Portal de contratas autoservicio",
-    descripcion:
-      "Las empresas subcontratadas suben su documentación directamente sin llamar a nadie. Ven en tiempo real qué tienen aprobado, qué falta y qué va a caducar.",
-    esencial: true,
+    title: "Operativa en menos de 1 semana",
+    description:
+      "La puesta en marcha prioriza configuración clara, invitación de contratas y requisitos documentales listos para trabajar.",
+  },
+  {
+    icon: CreditCard,
+    title: "Tarifa plana sin coste por contrata",
+    description:
+      "Un modelo predecible evita que el coste crezca justo cuando aumentan los centros, contratas o trabajadores externos.",
   },
   {
     icon: Building2,
-    titulo: "Multi-centro y multi-empresa",
-    descripcion:
-      "Para grupos empresariales con varias instalaciones: gestión unificada con requisitos diferenciados por centro de trabajo, tipo de trabajo o zona de riesgo.",
-    esencial: false,
+    title: "100% español con soporte local",
+    description:
+      "Soporte cercano para responsables de PRL, RRHH, operaciones y gerencia que necesitan respuestas aplicables.",
   },
 ];
 
-const criteriosEleccion = [
-  {
-    numero: "01",
-    criterio: "¿Valida automáticamente o solo almacena?",
-    explicacion:
-      "La diferencia más importante. Un repositorio documental no es una plataforma CAE. Si el sistema solo guarda PDFs y alguien los tiene que revisar a mano, el cuello de botella sigue existiendo. Pregunta directamente: '¿Quién valida el documento?' Si la respuesta incluye a una persona de tu equipo, no es automatización real.",
-  },
-  {
-    numero: "02",
-    criterio: "¿Cuánto tarda la implementación?",
-    explicacion:
-      "Plataformas heredadas de los años 2000-2010 requieren proyectos de 3 a 6 meses con consultorías externas. Las soluciones modernas están operativas en menos de una semana. Si el proveedor no puede darte un plazo concreto en días, es una señal de alerta.",
-  },
-  {
-    numero: "03",
-    criterio: "¿El precio escala con trabajadores o con contratas?",
-    explicacion:
-      "El modelo de precios más habitual en el mercado cobra por trabajador registrado. Con 500 trabajadores externos, el coste mensual puede dispararse sin que el servicio mejore. Evalúa plataformas con tarifa plana independiente del volumen, especialmente si tu plantilla de contratas fluctúa.",
-  },
-  {
-    numero: "04",
-    criterio: "¿Qué pasa cuando hay un cambio normativo?",
-    explicacion:
-      "El RD 171/2004 y la normativa de PRL evolucionan. Algunos proveedores actualizan sus sistemas automáticamente; otros requieren una nueva consultoría. Pregunta específicamente quién actualiza las plantillas de validación cuando cambia la ley y en qué plazo.",
-  },
-  {
-    numero: "05",
-    criterio: "¿Cómo es el soporte real?",
-    explicacion:
-      "Durante los primeros meses de uso tu equipo tendrá dudas, tus contratas también. Verifica si el soporte es por ticket (respuesta en días) o por canal directo (respuesta en horas). Un soporte lento durante la adopción inicial puede hundir el proyecto.",
-  },
+const commonMistakes = [
+  "Elegir por precio sin evaluar automatización real.",
+  "No considerar la experiencia de las contratas.",
+  "Ignorar el tiempo de implementación real.",
+  "No verificar el soporte postventa.",
+  "Firmar contratos con costes ocultos por número de contratas.",
 ];
 
-const comparativaRows = [
+const faqItems: FaqItem[] = [
   {
-    criterio: "Validación automática con IA",
-    tradicional: false,
-    playcae: true,
-    nota: "",
-  },
-  {
-    criterio: "Precio por trabajador",
-    tradicional: true,
-    playcae: false,
-    nota: "PlayCAE: tarifa plana",
-  },
-  {
-    criterio: "Implementación < 1 semana",
-    tradicional: false,
-    playcae: true,
-    nota: "",
-  },
-  {
-    criterio: "Portal de contratas incluido",
-    tradicional: true,
-    playcae: true,
-    nota: "",
-  },
-  {
-    criterio: "Alertas automáticas de caducidad",
-    tradicional: true,
-    playcae: true,
-    nota: "",
-  },
-  {
-    criterio: "Control de accesos en tiempo real",
-    tradicional: false,
-    playcae: true,
-    nota: "Opcional en muchas soluciones",
-  },
-  {
-    criterio: "Actualizaciones normativas automáticas",
-    tradicional: false,
-    playcae: true,
-    nota: "",
-  },
-  {
-    criterio: "Onboarding sin consultoría",
-    tradicional: false,
-    playcae: true,
-    nota: "",
-  },
-];
-
-const sectores = [
-  {
-    nombre: "Construcción e infraestructuras",
-    retos:
-      "Alto volumen de subcontratas, alta rotación de trabajadores, trabajos en altura y espacios confinados, documentación específica por tipo de obra.",
-    clave:
-      "Control de accesos por zona y validación de formaciones específicas (trabajos en altura, espacios confinados, eléctricos).",
-  },
-  {
-    nombre: "Industria y fabricación",
-    retos:
-      "Contratas de mantenimiento recurrentes, zonas ATEX, riesgos específicos por proceso productivo y necesidad de permisos de trabajo.",
-    clave:
-      "Requisitos configurables por zona industrial y gestión de permisos de trabajo integrada.",
-  },
-  {
-    nombre: "Logística y distribución",
-    retos:
-      "Alta rotación de transportistas externos, múltiples puntos de acceso simultáneos y operativa 24/7.",
-    clave:
-      "Validación express automatizada y control de accesos en tiempo real sin intervención humana en cada turno.",
-  },
-  {
-    nombre: "Energía y utilities",
-    retos:
-      "Normativas estrictas, trabajos eléctricos de alta tensión, riesgos medioambientales y contratas altamente especializadas.",
-    clave:
-      "Gestión de certificaciones específicas, formaciones reglamentadas y trazabilidad completa para auditorías sectoriales.",
-  },
-];
-
-const faqItems = [
-  {
-    question: "¿Qué es una plataforma CAE y para qué sirve exactamente?",
+    question: "¿Qué es una plataforma CAE?",
     answer:
-      "Una plataforma CAE (Coordinación de Actividades Empresariales) es un software que digitaliza y automatiza la gestión de la documentación PRL que las empresas están obligadas a intercambiar cuando trabajan juntas en un mismo centro de trabajo (RD 171/2004). Sirve para validar que contratas y trabajadores externos tienen al día documentos como TC1/TC2, seguro de RC, formaciones de seguridad y reconocimientos médicos, y para controlar quién puede acceder a tus instalaciones.",
+      "Una plataforma CAE es un software para gestionar la Coordinación de Actividades Empresariales: intercambio de información preventiva, solicitud y validación documental de contratas, control de requisitos por trabajador y evidencias de cumplimiento cuando varias empresas coinciden en un centro de trabajo.",
+  },
+  {
+    question: "¿Cuál es la mejor plataforma CAE para pymes?",
+    answer:
+      "Para una pyme, la mejor plataforma CAE suele ser la que combina implantación rápida, precio predecible, soporte cercano y facilidad para contratas. Si además incorpora validación automática y control de accesos, reduce trabajo administrativo sin crear un proyecto tecnológico complejo.",
   },
   {
     question: "¿Cuánto cuesta una plataforma CAE?",
     answer:
-      "Los precios varían mucho según el modelo de negocio. Las plataformas tradicionales suelen cobrar por trabajador registrado (entre 1 y 5€ por trabajador/mes), lo que dispara el coste en empresas con muchas contratas. Las plataformas modernas como PlayCAE ofrecen tarifa plana desde 199€/mes independientemente del número de trabajadores. El coste total de propiedad (incluyendo horas de tu equipo validando manualmente) suele ser mayor en soluciones aparentemente baratas.",
+      "El precio depende del proveedor, número de centros, trabajadores, contratas, módulos e integraciones. En comparativas conviene exigir el coste total: licencias, implantación, soporte, control de accesos, migración y posibles cargos por volumen. En competidores, si no hay precio público, lo prudente es indicar Consultar.",
   },
   {
-    question: "¿Cuánto tiempo tarda en implementarse una plataforma CAE?",
+    question: "¿Es obligatorio usar software CAE?",
     answer:
-      "Depende del proveedor. Las soluciones heredadas del mercado suelen requerir proyectos de implementación de 3 a 6 meses con consultorías incluidas. Las plataformas modernas con configuración guiada están operativas en menos de una semana: configuras tus requisitos documentales, invitas a tus contratas y empiezas a recibir documentación el mismo día.",
+      "La ley no obliga a usar un software concreto. Lo obligatorio es cumplir la Coordinación de Actividades Empresariales según la Ley 31/1995 y el RD 171/2004. En empresas con varias contratas, hacerlo con correo, hojas de cálculo y carpetas suele aumentar el riesgo de errores y falta de trazabilidad.",
   },
   {
-    question: "¿Qué diferencia hay entre Dokify y otras plataformas CAE del mercado?",
+    question: "¿Qué documentos gestiona una plataforma CAE?",
     answer:
-      "Dokify es una de las plataformas CAE más conocidas en España, con una base de usuarios consolidada. Las diferencias principales entre plataformas suelen estar en el modelo de precios (por trabajador vs tarifa plana), el grado de automatización real (IA vs revisión manual) y el tiempo de implementación. Si buscas alternativas, los criterios clave son: ¿quién valida realmente el documento?, ¿qué modelo de precios tiene cuando tu volumen de contratas crece?, y ¿en cuánto tiempo puedes estar operativo?",
+      "Puede gestionar certificados de aptitud médica, formación PRL, entrega de EPIs, TC1/TC2 o documentos equivalentes, seguros de responsabilidad civil, evaluaciones de riesgos, planes preventivos, autorizaciones de maquinaria, permisos de trabajo y documentación específica por actividad o centro.",
   },
   {
-    question: "¿Es obligatorio usar una plataforma CAE para cumplir el RD 171/2004?",
+    question: "¿Cuánto tarda la implementación?",
     answer:
-      "No existe obligación legal de usar un software específico, pero sí de cumplir las obligaciones de Coordinación de Actividades Empresariales. La realidad es que con más de 10-15 contratas activas, cumplir estas obligaciones de forma manual (correo, Excel, carpetas) resulta inviable sin errores. Una plataforma CAE no es un lujo: es la forma práctica de demostrar diligencia debida ante Inspección de Trabajo.",
+      "Depende de la complejidad. Una implantación sencilla puede estar operativa en días si los requisitos documentales están claros. Los proyectos con muchos centros, integraciones de control de acceso o migración histórica pueden requerir más planificación.",
   },
   {
-    question: "¿Puedo usar una plataforma CAE sin pagar por cada trabajador?",
+    question: "¿Qué diferencia hay entre Twind, Nalanda y PlayCAE?",
     answer:
-      "Sí. El modelo de pago por trabajador es el más extendido en el mercado heredado, pero no es el único. Algunas plataformas modernas ofrecen tarifa plana mensual sin restricciones de volumen. Este modelo es especialmente ventajoso si trabajas con sectores de alta rotación (logística, construcción temporal) donde el número de trabajadores externos fluctúa mucho entre meses.",
+      "Twind, Nalanda y otras plataformas consolidadas cubren necesidades CAE con distintos enfoques, planes e implantaciones. PlayCAE se diferencia por priorizar IA documental, tarifa plana, puesta en marcha rápida y soporte local, especialmente para empresas que quieren reducir revisión manual.",
   },
   {
-    question: "¿Qué documentos debe gestionar una plataforma CAE?",
+    question: "¿Pueden las contratas acceder gratis?",
     answer:
-      "Los documentos habituales son: TC1/TC2 (cotizaciones a la Seguridad Social), seguro de responsabilidad civil, plan de prevención de riesgos, evaluación de riesgos, formaciones PRL específicas por puesto, reconocimientos médicos, entrega de EPIs y, en algunos casos, permisos de trabajo o certificaciones específicas por sector. Una buena plataforma CAE permite configurar qué documentos exige a cada tipo de empresa o trabajador.",
+      "En PlayCAE, el modelo busca que las contratas puedan subir documentación sin convertirse en un coste variable para la empresa principal. En otras plataformas, esta condición depende del contrato y debe verificarse antes de comparar precios.",
+  },
+  {
+    question: "¿Una plataforma CAE sirve para control acceso fabricas?",
+    answer:
+      "Sí, si integra la validación documental con el sistema de accesos. El objetivo es que un trabajador con documentación caducada o requisitos incompletos no pueda entrar en zonas donde no debería estar autorizado.",
   },
 ];
 
-// ─── Componente ───────────────────────────────────────────────────────────────
+const sanctions = [
+  {
+    type: "Leves",
+    amount: "45€ - 2.450€",
+    detail:
+      "Incumplimientos formales o de menor entidad en prevención de riesgos laborales.",
+  },
+  {
+    type: "Graves",
+    amount: "2.451€ - 49.180€",
+    detail:
+      "Deficiencias preventivas relevantes, falta de coordinación efectiva o ausencia de controles exigibles.",
+  },
+  {
+    type: "Muy graves",
+    amount: "49.181€ - 983.736€",
+    detail:
+      "Situaciones con riesgo grave, incumplimientos severos o exposición de trabajadores a daños relevantes.",
+  },
+];
 
-export default function PlataformasCAEPage() {
+const sourceLinks = [
+  {
+    label: "RD 171/2004 sobre coordinación de actividades empresariales",
+    href: "https://www.boe.es/eli/es/rd/2004/01/30/171",
+  },
+  {
+    label: "Ley 31/1995 de Prevención de Riesgos Laborales",
+    href: "https://www.boe.es/buscar/act.php?id=BOE-A-1995-24292",
+  },
+  {
+    label: "LISOS: cuantía de sanciones en prevención",
+    href: "https://www.boe.es/buscar/act.php?id=BOE-A-2000-15060",
+  },
+  {
+    label: "INSST: Coordinación de Actividades Empresariales",
+    href: "https://www.insst.es/materias/transversales/gestion-prevencion/cae",
+  },
+];
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Inicio",
+      item: "https://www.playcae.com/",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Plataformas CAE",
+      item: canonicalUrl,
+    },
+  ],
+};
+
+const faqLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqItems.map((faq) => ({
+    "@type": "Question",
+    name: faq.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.answer,
+    },
+  })),
+};
+
+const organizationLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "PlayCAE",
+  url: "https://www.playcae.com",
+  logo: "https://www.playcae.com/assets/playcae.png",
+  description:
+    "Plataforma CAE con IA para gestión documental de contratas y control de accesos.",
+  areaServed: {
+    "@type": "Country",
+    name: "España",
+  },
+};
+
+const renderStars = (value: number) => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-playGrey">
+    <span aria-label={`${value} de 5 estrellas`} className="text-playOrange">
+      {"★".repeat(value)}
+      <span className="text-playBlueLight/30">{"★".repeat(5 - value)}</span>
+    </span>
+  );
+};
 
-      {/* Hero */}
-      <section className="px-4 py-16 md:py-24">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center">
-            <span className="mb-4 inline-block rounded-full bg-playBlueDark/10 px-4 py-2 text-sm font-semibold text-playBlueDark">
-              Guía actualizada 2026
-            </span>
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-playBlueDark md:text-5xl lg:text-6xl">
-              Plataformas CAE:{" "}
-              <span className="text-playBlueLight">
-                Guía Completa y Comparativa
-              </span>
-            </h1>
-            <p className="mx-auto mb-8 max-w-3xl text-lg text-playBlueLight md:text-xl">
-              Todo lo que necesitas saber sobre las plataformas de{" "}
-              <strong>Coordinación de Actividades Empresariales</strong>: qué
-              son, cómo funcionan, qué tipos existen y cómo elegir la correcta
-              para tu empresa — sin venderte nada en los primeros 2.000 palabras.
-            </p>
-            <div className="flex flex-col items-center justify-center gap-3 text-sm text-playBlueLight sm:flex-row">
-              <span className="flex items-center gap-1">
-                <Clock className="h-4 w-4" /> 12 min de lectura
-              </span>
-              <span className="hidden sm:block">·</span>
-              <span>Actualizado abril 2026</span>
-              <span className="hidden sm:block">·</span>
-              <span>RD 171/2004 incluido</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Índice */}
-      <section className="px-4 py-8">
-        <div className="container mx-auto max-w-4xl">
-          <nav className="rounded-xl border border-playBlueLight/20 bg-white p-6">
-            <p className="mb-4 font-semibold text-playBlueDark">En esta guía:</p>
-            <ol className="space-y-2 text-playBlueLight">
-              {[
-                "¿Qué es una plataforma CAE?",
-                "Cómo funciona paso a paso",
-                "Tipos de plataformas CAE",
-                "Funcionalidades clave",
-                "Comparativa del mercado español",
-                "Alternativa a Dokify y plataformas establecidas",
-                "Plataforma CAE sin coste por trabajador",
-                "Implementación en días vs meses",
-                "Cómo elegir la correcta",
-                "Plataformas CAE por sector",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-2">
-                  <span className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-playBlueDark/10 text-xs font-bold text-playBlueDark">
-                    {i + 1}
-                  </span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ol>
-          </nav>
-        </div>
-      </section>
-
-      {/* 1. Qué es */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-6 text-3xl font-bold text-playBlueDark">
-            ¿Qué es una Plataforma CAE?
-          </h2>
-          <div className="space-y-4 text-lg text-playBlueLight">
-            <p>
-              Una <strong>plataforma CAE</strong> es un software especializado que
-              digitaliza la gestión de la{" "}
-              <strong>Coordinación de Actividades Empresariales</strong> tal como
-              la exige el Real Decreto 171/2004 y la Ley 31/1995 de Prevención de
-              Riesgos Laborales.
-            </p>
-            <p>
-              Su función central es garantizar que todas las empresas y
-              trabajadores externos que acceden a tus instalaciones tienen la
-              documentación de prevención de riesgos en regla — antes de entrar,
-              no después.
-            </p>
-            <p>
-              Sin una plataforma CAE, esta gestión se hace manualmente: correos
-              electrónicos con PDFs adjuntos, Excel con fechas de caducidad,
-              llamadas de recordatorio y revisión visual de cada documento. Un
-              sistema que funciona con 5 contratas y colapsa con 50.
-            </p>
-          </div>
-          <div className="mt-8 rounded-xl border-l-4 border-playBlueDark bg-playGrey p-6">
-            <p className="font-semibold text-playBlueDark">Marco legal de referencia:</p>
-            <ul className="mt-3 space-y-2 text-playBlueLight">
-              <li className="flex items-start gap-2">
-                <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playBlueDark" />
-                <span>
-                  <strong>RD 171/2004</strong> — regula la coordinación cuando
-                  concurren trabajadores de distintas empresas en un mismo centro
-                  de trabajo.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playBlueDark" />
-                <span>
-                  <strong>Ley 31/1995 de PRL</strong> — establece las obligaciones
-                  generales del empresario en materia de seguridad y salud.
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <AlertTriangle className="mt-1 h-4 w-4 flex-shrink-0 text-playOrange" />
-                <span>
-                  Sin cumplimiento documentado, la empresa principal puede ser
-                  responsable subsidiaria de las sanciones a sus contratas.
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. Cómo funciona */}
-      <section className="bg-playGrey px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Cómo Funciona una Plataforma CAE (Paso a Paso)
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            El proceso completo, desde que una contrata empieza a trabajar contigo
-            hasta que un trabajador cruza la puerta:
-          </p>
-          <div className="space-y-6">
-            {[
-              {
-                paso: "1",
-                titulo: "La empresa principal configura sus requisitos",
-                detalle:
-                  "Defines qué documentación exiges a cada tipo de empresa contratista y a cada perfil de trabajador. Puede variar según el centro de trabajo, el tipo de tarea o la zona de riesgo.",
-              },
-              {
-                paso: "2",
-                titulo: "La contrata recibe acceso al portal y sube su documentación",
-                detalle:
-                  "La empresa subcontratada recibe un enlace de invitación, accede al portal con sus credenciales y sube los documentos requeridos: TC1/TC2, seguro de RC, formaciones, reconocimientos médicos, etc.",
-              },
-              {
-                paso: "3",
-                titulo: "La plataforma valida automáticamente",
-                detalle:
-                  "En las plataformas con IA, el sistema extrae los datos del documento, verifica fechas de vigencia, importes de cobertura y datos de identificación. En plataformas con workflows, el documento pasa a revisión manual por un técnico.",
-              },
-              {
-                paso: "4",
-                titulo: "Los trabajadores se dan de alta y reciben autorización",
-                detalle:
-                  "Cada trabajador queda vinculado a su empresa y a los centros de trabajo donde opera. Solo quienes tienen toda la documentación en regla reciben autorización de acceso.",
-              },
-              {
-                paso: "5",
-                titulo: "Control continuo y alertas de caducidad",
-                detalle:
-                  "La plataforma monitoriza fechas de vencimiento. Cuando un documento va a caducar, avisa automáticamente a la contrata y al responsable de la empresa principal con la antelación configurada.",
-              },
-              {
-                paso: "6",
-                titulo: "Control de accesos en tiempo real (si aplica)",
-                detalle:
-                  "Las plataformas CAE más completas integran control de accesos físico: solo los trabajadores con documentación válida pueden entrar. El bloqueo es automático cuando algo caduca.",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="flex gap-5 rounded-xl border border-playBlueLight/20 bg-white p-6"
-              >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-playBlueDark text-lg font-bold text-white">
-                  {item.paso}
-                </div>
-                <div>
-                  <h3 className="mb-2 text-lg font-semibold text-playBlueDark">
-                    {item.titulo}
-                  </h3>
-                  <p className="text-playBlueLight">{item.detalle}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 3. Tipos */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Tipos de Plataformas CAE en el Mercado
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            No todas las plataformas CAE son iguales. Hay tres generaciones bien
-            diferenciadas en el mercado español:
-          </p>
-          <div className="space-y-8">
-            {tiposPlataforma.map((tipo, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-playBlueLight/20 bg-white p-8"
-              >
-                <div className="mb-4 flex items-center gap-3">
-                  <div className="rounded-lg bg-playBlueDark/10 p-3">
-                    <tipo.icon className="h-6 w-6 text-playBlueDark" />
-                  </div>
-                  <div>
-                    <span className="text-sm font-medium text-playBlueLight">
-                      Tipo {i + 1}
-                    </span>
-                    <h3 className="text-xl font-bold text-playBlueDark">
-                      {tipo.tipo}
-                    </h3>
-                  </div>
-                </div>
-                <p className="mb-6 text-playBlueLight">{tipo.descripcion}</p>
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div>
-                    <p className="mb-2 font-semibold text-playBlueDark">Ventajas:</p>
-                    <ul className="space-y-1">
-                      {tipo.ventajas.map((v, j) => (
-                        <li key={j} className="flex items-start gap-2 text-playBlueLight">
-                          <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playGreen" />
-                          <span>{v}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <p className="mb-2 font-semibold text-playBlueDark">Limitaciones:</p>
-                    <ul className="space-y-1">
-                      {tipo.limitaciones.map((l, j) => (
-                        <li key={j} className="flex items-start gap-2 text-playBlueLight">
-                          <X className="mt-1 h-4 w-4 flex-shrink-0 text-securityRed" />
-                          <span>{l}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-                <div className="mt-5 rounded-lg bg-playGrey px-4 py-3">
-                  <span className="text-sm font-semibold text-playBlueDark">
-                    ¿Para quién?{" "}
-                  </span>
-                  <span className="text-sm text-playBlueLight">{tipo.paraQuien}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Funcionalidades */}
-      <section className="bg-playGrey px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Funcionalidades Clave de las Plataformas CAE
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            Al evaluar cualquier plataforma CAE, estas son las funcionalidades
-            que debes verificar — y las que son imprescindibles vs. opcionales:
-          </p>
-          <div className="grid gap-6 md:grid-cols-2">
-            {funcionalidades.map((f, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-playBlueLight/20 bg-white p-6"
-              >
-                <div className="mb-4 flex items-start justify-between">
-                  <div className="rounded-lg bg-playBlueDark/10 p-3">
-                    <f.icon className="h-6 w-6 text-playBlueDark" />
-                  </div>
-                  {f.esencial ? (
-                    <span className="rounded-full bg-playGreen/20 px-3 py-1 text-xs font-semibold text-playGreen">
-                      Imprescindible
-                    </span>
-                  ) : (
-                    <span className="rounded-full bg-playBlueDark/10 px-3 py-1 text-xs font-semibold text-playBlueDark">
-                      Muy recomendable
-                    </span>
-                  )}
-                </div>
-                <h3 className="mb-2 text-lg font-semibold text-playBlueDark">
-                  {f.titulo}
-                </h3>
-                <p className="text-playBlueLight">{f.descripcion}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. Comparativa */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Comparativa de Plataformas CAE en España 2026
-          </h2>
-          <p className="mb-2 text-lg text-playBlueLight">
-            El mercado español de software CAE está dominado por soluciones que
-            nacieron hace 10-15 años para gestionar documentación manualmente.
-            Han ido incorporando mejoras, pero su arquitectura base —y su modelo
-            de precios— sigue siendo la misma.
-          </p>
-          <p className="mb-8 text-lg text-playBlueLight">
-            En los últimos dos años han aparecido plataformas de nueva generación
-            con IA real integrada desde el diseño. Esta tabla compara ambos
-            enfoques:
-          </p>
-          <div className="overflow-hidden rounded-2xl border border-playBlueLight/20 bg-white shadow-sm">
-            <div className="grid grid-cols-3 border-b border-playBlueLight/20 bg-playGrey px-4 py-4">
-              <div className="font-semibold text-playBlueDark">Criterio</div>
-              <div className="text-center font-semibold text-playBlueLight">
-                Plataformas tradicionales
-              </div>
-              <div className="text-center font-semibold text-playBlueDark">
-                PlayCAE
-              </div>
-            </div>
-            {comparativaRows.map((row, i) => (
-              <div
-                key={i}
-                className={`grid grid-cols-3 px-4 py-4 ${
-                  i % 2 === 0 ? "bg-white" : "bg-playGrey/30"
-                }`}
-              >
-                <div className="text-playBlueDark">
-                  <p className="font-medium">{row.criterio}</p>
-                  {row.nota && (
-                    <p className="mt-0.5 text-xs text-playBlueLight">{row.nota}</p>
-                  )}
-                </div>
-                <div className="flex items-center justify-center">
-                  {row.tradicional ? (
-                    <Check className="h-5 w-5 text-playGreen" />
-                  ) : (
-                    <X className="h-5 w-5 text-securityRed" />
-                  )}
-                </div>
-                <div className="flex items-center justify-center">
-                  {row.playcae ? (
-                    <Check className="h-5 w-5 text-playGreen" />
-                  ) : (
-                    <X className="h-5 w-5 text-securityRed" />
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-4 text-sm text-playBlueLight/70">
-            * Comparativa basada en funcionalidades estándar de plataformas
-            consolidadas del mercado. Las características específicas pueden variar
-            según plan y configuración.
-          </p>
-        </div>
-      </section>
-
-      {/* 6. Alternativa a Dokify */}
-      <section className="bg-playGrey px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Alternativa a Dokify: Qué Evaluar Antes de Cambiar
-          </h2>
-          <p className="mb-6 text-lg text-playBlueLight">
-            Dokify es una de las plataformas CAE más conocidas en España, con una
-            base de clientes sólida y muchos años de recorrido. Si estás usando
-            Dokify —o cualquier otra plataforma establecida— y estás evaluando
-            alternativas, estas son las preguntas correctas que hacerse:
-          </p>
-          <div className="space-y-4">
-            {[
-              {
-                pregunta: "¿Tu equipo sigue validando documentos manualmente?",
-                contexto:
-                  "Si la plataforma almacena documentos pero alguien de tu equipo los tiene que revisar uno a uno, estás pagando por un repositorio, no por automatización. Una alternativa real debería eliminar esa carga completamente.",
-              },
-              {
-                pregunta: "¿El coste mensual crece con cada trabajador nuevo?",
-                contexto:
-                  "El modelo de pago por trabajador penaliza el crecimiento. Si acabas de ganar un contrato nuevo con 200 trabajadores externos, tu factura se dispara. Evalúa si existe un modelo de tarifa plana que te proteja de esa variabilidad.",
-              },
-              {
-                pregunta: "¿Cuánto tardaste en implementarlo cuando empezaste?",
-                contexto:
-                  "Si la implementación inicial duró meses y necesitaste consultoría externa, el coste real del software fue mucho mayor del precio anunciado. Las alternativas modernas deben poder demostrarte un onboarding autoguiado en menos de una semana.",
-              },
-              {
-                pregunta: "¿La interfaz que usan tus contratas es intuitiva?",
-                contexto:
-                  "Si tus subcontratas te llaman constantemente porque no saben cómo subir documentos, el problema no es de ellas — es del diseño de la plataforma. La adopción de las contratas es el mayor factor de éxito en la implementación.",
-              },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-playBlueLight/20 bg-white p-6"
-              >
-                <h3 className="mb-2 flex items-start gap-2 text-lg font-semibold text-playBlueDark">
-                  <Star className="mt-0.5 h-5 w-5 flex-shrink-0 text-playOrange" />
-                  {item.pregunta}
-                </h3>
-                <p className="text-playBlueLight">{item.contexto}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 rounded-xl bg-playBlueDark p-6 text-white">
-            <p className="font-semibold">Conclusión:</p>
-            <p className="mt-2 text-playGrey">
-              No cambies de plataforma solo por el precio. Cambia si la plataforma
-              actual te crea trabajo en lugar de eliminarlo. El indicador más
-              honesto es cuántas horas semanales dedica tu equipo a revisar
-              documentos manualmente.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* 7. Sin coste por trabajador */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Plataforma CAE sin Coste por Trabajador: El Modelo de Tarifa Plana
-          </h2>
-          <p className="mb-6 text-lg text-playBlueLight">
-            El modelo de precios más extendido en el mercado CAE cobra por cada
-            trabajador externo registrado en la plataforma. Parece razonable al
-            principio, pero tiene un problema fundamental: penaliza exactamente
-            lo que más te interesa, que es registrar a todos tus trabajadores
-            externos.
-          </p>
-          <div className="mb-8 grid gap-6 md:grid-cols-2">
-            <div className="rounded-xl border border-securityRed/30 bg-securityRed/5 p-6">
-              <h3 className="mb-4 font-semibold text-securityRed">
-                Modelo por trabajador — el problema
-              </h3>
-              <ul className="space-y-3 text-playBlueLight">
-                <li className="flex items-start gap-2">
-                  <X className="mt-1 h-4 w-4 flex-shrink-0 text-securityRed" />
-                  <span>
-                    500 trabajadores × 2€/mes = <strong>1.000€/mes</strong>{" "}
-                    variables
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="mt-1 h-4 w-4 flex-shrink-0 text-securityRed" />
-                  <span>
-                    Picos de coste en temporadas altas (obra nueva, campañas
-                    logísticas)
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="mt-1 h-4 w-4 flex-shrink-0 text-securityRed" />
-                  <span>
-                    Incentivo perverso a no registrar todos los trabajadores
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <X className="mt-1 h-4 w-4 flex-shrink-0 text-securityRed" />
-                  <span>Factura impredecible mes a mes</span>
-                </li>
-              </ul>
-            </div>
-            <div className="rounded-xl border border-playGreen/30 bg-playGreen/5 p-6">
-              <h3 className="mb-4 font-semibold text-playGreen">
-                Modelo tarifa plana — las ventajas
-              </h3>
-              <ul className="space-y-3 text-playBlueLight">
-                <li className="flex items-start gap-2">
-                  <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playGreen" />
-                  <span>Coste fijo mensual independientemente del volumen</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playGreen" />
-                  <span>
-                    Presupuesto predecible: el crecimiento no penaliza
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playGreen" />
-                  <span>
-                    Incentivo correcto: registras a todos los trabajadores
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <Check className="mt-1 h-4 w-4 flex-shrink-0 text-playGreen" />
-                  <span>ROI positivo desde el primer mes con volumen medio</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <p className="text-lg text-playBlueLight">
-            El modelo de tarifa plana es especialmente ventajoso para empresas con
-            alta rotación de trabajadores externos (construcción, logística,
-            eventos, mantenimiento industrial) donde el número de registros activos
-            puede variar un 200-300% entre meses.
-          </p>
-        </div>
-      </section>
-
-      {/* 8. Implementación días vs meses */}
-      <section className="bg-playGrey px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Implementación en Días vs Meses: Cómo Distinguir una Plataforma Moderna
-          </h2>
-          <p className="mb-8 text-lg text-playBlueLight">
-            El tiempo de implementación es uno de los indicadores más honestos de
-            si estás ante una solución moderna o heredada. Estas son las señales
-            claras:
-          </p>
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-4">
-              <h3 className="font-semibold text-playBlueLight">
-                🔴 Señales de implementación larga (3-6 meses)
-              </h3>
-              {[
-                'Te ofrecen un "proyecto de implantación" con fases',
-                "Requiere formación presencial de tu equipo",
-                "Necesitas migrar datos de un sistema anterior manualmente",
-                "El onboarding lo lidera un consultor externo",
-                "La configuración de requisitos requiere tickets al soporte",
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 rounded-lg border border-securityRed/20 bg-white p-4"
-                >
-                  <X className="mt-0.5 h-4 w-4 flex-shrink-0 text-securityRed" />
-                  <span className="text-playBlueLight">{s}</span>
-                </div>
-              ))}
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold text-playBlueLight">
-                🟢 Señales de implementación rápida (&lt;1 semana)
-              </h3>
-              {[
-                "Puedes configurar tus requisitos tú mismo desde el panel",
-                "El portal de contratas está listo para usar el mismo día",
-                "Las contratas se incorporan solas con un enlace de invitación",
-                "Hay documentación de autoservicio clara y vídeos cortos",
-                "El soporte responde en horas, no en días laborables",
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="flex items-start gap-3 rounded-lg border border-playGreen/20 bg-white p-4"
-                >
-                  <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-playGreen" />
-                  <span className="text-playBlueLight">{s}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 9. Cómo elegir */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Cómo Elegir la Plataforma CAE Correcta para tu Empresa
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            5 criterios reales para tomar la decisión — sin dejarte llevar solo
-            por la demo o el precio de portada:
-          </p>
-          <div className="space-y-6">
-            {criteriosEleccion.map((c, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-playBlueLight/20 bg-white p-6 transition-all hover:border-playBlueDark/30"
-              >
-                <div className="flex items-start gap-4">
-                  <span className="text-3xl font-bold text-playBlueDark/20">
-                    {c.numero}
-                  </span>
-                  <div>
-                    <h3 className="mb-2 text-xl font-semibold text-playBlueDark">
-                      {c.criterio}
-                    </h3>
-                    <p className="text-playBlueLight">{c.explicacion}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 10. Sectores */}
-      <section className="bg-playGrey px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Plataformas CAE por Sector: Qué Necesita Cada Industria
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            Los retos de coordinación de actividades empresariales no son iguales
-            en todos los sectores. Estos son los más habituales:
-          </p>
-          <div className="grid gap-6 md:grid-cols-2">
-            {sectores.map((s, i) => (
-              <div
-                key={i}
-                className="rounded-xl border border-playBlueLight/20 bg-white p-6"
-              >
-                <div className="mb-4 flex items-center gap-3">
-                  <Building2 className="h-7 w-7 text-playBlueDark" />
-                  <h3 className="text-xl font-semibold text-playBlueDark">
-                    {s.nombre}
-                  </h3>
-                </div>
-                <div className="mb-4">
-                  <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-playBlueLight/60">
-                    Retos típicos
-                  </p>
-                  <p className="text-playBlueLight">{s.retos}</p>
-                </div>
-                <div>
-                  <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-playBlueLight/60">
-                    Lo que más importa en la plataforma
-                  </p>
-                  <p className="text-playBlueLight">{s.clave}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA PlayCAE */}
-      <section className="bg-gradient-to-br from-playBlueDark to-playBlueLight px-4 py-20">
-        <div className="container mx-auto max-w-4xl text-center text-white">
-          <span className="mb-4 inline-block rounded-full bg-white/20 px-4 py-2 text-sm font-semibold">
-            PlayCAE — Plataforma CAE española con IA
-          </span>
-          <h2 className="mb-6 text-3xl font-bold md:text-4xl">
-            La Plataforma CAE Diseñada para No Darte Trabajo
-          </h2>
-          <p className="mx-auto mb-10 max-w-2xl text-lg text-playGrey">
-            Validación automática con IA, tarifa plana sin coste por trabajador,
-            portal de contratas incluido y operativo en menos de una semana. Sin
-            consultorías, sin sorpresas en la factura.
-          </p>
-          <div className="mb-12 grid gap-4 sm:grid-cols-4">
-            {[
-              { valor: "<1 semana", label: "Implementación" },
-              { valor: "Tarifa plana", label: "Sin coste por trabajador" },
-              { valor: "IA real", label: "Validación automática" },
-              { valor: "24/7", label: "Acceso para contratas" },
-            ].map((stat, i) => (
-              <div key={i} className="rounded-xl bg-white/10 p-4 backdrop-blur-sm">
-                <div className="mb-1 text-2xl font-bold">{stat.valor}</div>
-                <div className="text-sm text-playGrey">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/register"
-              className="group inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 text-lg font-semibold text-playBlueDark transition-all hover:bg-playGrey"
-            >
-              Prueba Gratis 14 Días
-              <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-            </Link>
-            <Link
-              href="/contacto"
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-white px-8 py-4 text-lg font-semibold text-white transition-all hover:bg-white/10"
-            >
-              Hablar con un Experto
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="px-4 py-16">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="mb-4 text-3xl font-bold text-playBlueDark">
-            Preguntas Frecuentes sobre Plataformas CAE
-          </h2>
-          <p className="mb-10 text-lg text-playBlueLight">
-            Las dudas más habituales al evaluar un software de Coordinación de
-            Actividades Empresariales:
-          </p>
-          <div className="space-y-6">
-            {faqItems.map((faq, i) => (
-              <article
-                key={i}
-                className="rounded-xl border border-playBlueLight/20 bg-white p-6"
-              >
-                <h3 className="mb-3 text-lg font-semibold text-playBlueDark">
-                  {faq.question}
-                </h3>
-                <p className="text-playBlueLight">{faq.answer}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Internal linking */}
-      <section className="bg-playGrey px-4 py-12">
-        <div className="container mx-auto max-w-4xl">
-          <div className="rounded-2xl border border-playBlueLight/20 bg-white p-8">
-            <h2 className="mb-6 text-2xl font-bold text-playBlueDark">
-              Más recursos sobre CAE y PRL
-            </h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              {[
-                { href: "/plataforma-cae", label: "¿Qué es una Plataforma CAE?" },
-                { href: "/plataformas-cae-prl", label: "Plataformas CAE + PRL" },
-                { href: "/que-es-cae", label: "¿Qué es la CAE?" },
-                { href: "/preguntas-frecuentes", label: "FAQs CAE y PRL" },
-              ].map((link, i) => (
-                <Link
-                  key={i}
-                  href={link.href}
-                  className="flex items-center gap-2 rounded-lg border border-playBlueLight/20 p-4 text-playBlueLight transition-all hover:border-playBlueDark hover:text-playBlueDark"
-                >
-                  <ChevronRight className="h-5 w-5 flex-shrink-0" />
-                  <span>{link.label}</span>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "FAQPage",
-            mainEntity: faqItems.map((faq) => ({
-              "@type": "Question",
-              name: faq.question,
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: faq.answer,
-              },
-            })),
-          }),
-        }}
-      />
+function SectionHeading({
+  eyebrow,
+  id,
+  title,
+  description,
+}: {
+  eyebrow?: string;
+  id: string;
+  title: string;
+  description?: string;
+}) {
+  return (
+    <div className="mb-8">
+      {eyebrow ? (
+        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-playOrange">
+          {eyebrow}
+        </p>
+      ) : null}
+      <h2 id={id} className="scroll-mt-28 text-3xl font-bold text-playBlueDark">
+        {title}
+      </h2>
+      {description ? (
+        <p className="mt-4 text-lg leading-8 text-playBlueLight">
+          {description}
+        </p>
+      ) : null}
     </div>
+  );
+}
+
+function FeatureCard({ item }: { item: IconCard }) {
+  return (
+    <article className="rounded-lg border border-playBlueLight/20 bg-white p-6 shadow-sm transition-all hover:border-playOrange/40 hover:shadow-md">
+      <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-playBlueDark/10">
+        <item.icon className="h-6 w-6 text-playBlueDark" />
+      </div>
+      <h3 className="mb-3 text-xl font-semibold text-playBlueDark">
+        {item.title}
+      </h3>
+      <p className="leading-7 text-playBlueLight">{item.description}</p>
+    </article>
+  );
+}
+
+function StatusCell({ value }: { value: string }) {
+  const positive = ["Sí", "Integrado", "Tarifa plana", "< 1 semana"].some(
+    (text) => value.startsWith(text)
+  );
+
+  return (
+    <span
+      className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${
+        positive
+          ? "bg-playGreen/10 text-playGreen"
+          : "bg-playGrey text-playBlueLight"
+      }`}
+    >
+      {value}
+    </span>
+  );
+}
+
+export default function PlataformasCaePage() {
+  return (
+    <main className="bg-white">
+      <section className="relative overflow-hidden bg-playGrey">
+        <div className="absolute inset-0 bg-gradient-to-br from-playBlueDark/10 via-white/30 to-playOrange/10" />
+        <div className="container relative mx-auto grid gap-10 px-4 py-16 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-24">
+          <div>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-playBlueDark shadow-sm">
+              <Sparkles className="h-4 w-4 text-playOrange" />
+              Guía actualizada 2026
+            </div>
+            <h1 className="max-w-4xl text-4xl font-bold tracking-tight text-playBlueDark md:text-5xl lg:text-6xl">
+              Plataformas CAE en España 2026: Guía Completa y Comparativa
+            </h1>
+            <p className="mt-6 max-w-3xl text-lg leading-8 text-playBlueLight md:text-xl">
+              Elegir una <strong>plataforma CAE</strong> ya no va solo de subir
+              PDFs. El mejor <strong>software CAE</strong> combina gestión
+              documental CAE, validación automática, trazabilidad legal y control
+              de accesos para fábricas, obras, centros logísticos e instalaciones
+              con contratas.
+            </p>
+            <div className="mt-6 rounded-lg border border-playOrange/20 bg-white p-5 text-playBlueDark shadow-sm">
+              <p className="flex gap-3 leading-7">
+                <AlertTriangle className="mt-1 h-5 w-5 flex-shrink-0 text-playOrange" />
+                <span>
+                  El INSST recuerda que la concurrencia de empresas exige
+                  controlar los riesgos de cada actividad y los generados por su
+                  interacción. La CAE debe evitar el mero cumplimiento formal y
+                  servir para prevenir accidentes reales.
+                </span>
+              </p>
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-playOrange px-6 py-3 font-semibold text-white transition-colors hover:bg-playBlueDark"
+              >
+                Prueba PlayCAE Gratis
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+              <a
+                href="#comparativa-plataformas-cae"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border border-playBlueLight/30 bg-white px-6 py-3 font-semibold text-playBlueDark transition-colors hover:border-playOrange hover:text-playOrange"
+              >
+                Ver comparativa
+              </a>
+            </div>
+          </div>
+          <div className="relative min-h-80 overflow-hidden rounded-lg border border-white bg-white shadow-lg">
+            <Image
+              src="/assets/img/checklist-documentos-cae.webp"
+              alt="Checklist de gestión documental CAE para comparar plataformas CAE"
+              fill
+              priority
+              sizes="(min-width: 1024px) 45vw, 100vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="container mx-auto grid gap-10 px-4 py-12 lg:grid-cols-[280px_1fr] lg:py-16">
+        <PlataformasCaeTableOfContents />
+
+        <div className="space-y-20">
+          <section id="que-es-plataforma-cae" className="scroll-mt-28">
+            <SectionHeading
+              id="que-es-una-plataforma-cae"
+              eyebrow="Concepto básico"
+              title="¿Qué es una plataforma CAE?"
+              description="Una plataforma CAE es una herramienta digital para gestionar las obligaciones de Coordinación de Actividades Empresariales cuando varias empresas o trabajadores autónomos coinciden en un mismo centro de trabajo."
+            />
+            <div className="grid gap-8 lg:grid-cols-[1fr_320px]">
+              <div className="space-y-5 text-lg leading-8 text-playBlueLight">
+                <p>
+                  El RD 171/2004 desarrolla el artículo 24 de la Ley 31/1995 y
+                  regula cómo deben cooperar, informarse y coordinarse las
+                  empresas concurrentes. En la práctica, una{" "}
+                  <strong>plataforma cae empresas</strong> centraliza requisitos,
+                  documentos, estados, avisos y evidencias para demostrar que esa
+                  coordinación existe.
+                </p>
+                <p>
+                  Sirve para solicitar documentación a contratas, validar
+                  requisitos por trabajador o empresa, controlar vencimientos,
+                  preparar inspecciones y conectar el estado documental con el
+                  acceso físico al centro cuando existe integración.
+                </p>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="rounded-lg border border-securityRed/20 bg-securityRed/5 p-5">
+                    <h3 className="mb-3 font-semibold text-securityRed">
+                      Gestión manual
+                    </h3>
+                    <ul className="space-y-2 text-base">
+                      <li className="flex gap-2">
+                        <X className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Correos, Excel y carpetas dispersas.
+                      </li>
+                      <li className="flex gap-2">
+                        <X className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Caducidades revisadas tarde.
+                      </li>
+                      <li className="flex gap-2">
+                        <X className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Difícil trazabilidad ante inspección.
+                      </li>
+                    </ul>
+                  </div>
+                  <div className="rounded-lg border border-playGreen/20 bg-playGreen/5 p-5">
+                    <h3 className="mb-3 font-semibold text-playGreen">
+                      Plataforma CAE
+                    </h3>
+                    <ul className="space-y-2 text-base">
+                      <li className="flex gap-2">
+                        <Check className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Estados y evidencias centralizados.
+                      </li>
+                      <li className="flex gap-2">
+                        <Check className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Alertas y validaciones automáticas.
+                      </li>
+                      <li className="flex gap-2">
+                        <Check className="mt-1 h-4 w-4 flex-shrink-0" />
+                        Accesos vinculados a cumplimiento.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <p className="rounded-lg bg-playGrey p-5 text-base">
+                  Nota sobre estadísticas: en esta guía no usamos como oficiales
+                  cifras comerciales no verificadas. Las referencias legales y
+                  preventivas se apoyan en BOE e INSST.
+                </p>
+              </div>
+              <div className="relative min-h-72 overflow-hidden rounded-lg border border-playBlueLight/20">
+                <Image
+                  src="/assets/img/trabajadores-obra-epis.webp"
+                  alt="Trabajadores con EPIs en entorno de concurrencia empresarial CAE"
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1024px) 320px, 100vw"
+                  className="object-cover"
+                />
+              </div>
+            </div>
+          </section>
+
+          <section className="scroll-mt-28">
+            <SectionHeading
+              id="marco-legal-obligatorio"
+              eyebrow="Normativa"
+              title="Marco legal obligatorio"
+              description="El software no sustituye al criterio preventivo, pero ayuda a demostrar diligencia: quién pidió cada documento, cuándo se validó, qué venció y qué trabajador estaba autorizado."
+            />
+            <div className="grid gap-6 md:grid-cols-3">
+              <FeatureCard
+                item={{
+                  icon: Scale,
+                  title: "Ley 31/1995",
+                  description:
+                    "Establece el marco general de prevención de riesgos laborales y el deber de protección empresarial.",
+                }}
+              />
+              <FeatureCard
+                item={{
+                  icon: Shield,
+                  title: "RD 171/2004",
+                  description:
+                    "Desarrolla la coordinación cuando concurren empresas en un mismo centro de trabajo.",
+                }}
+              />
+              <FeatureCard
+                item={{
+                  icon: FileText,
+                  title: "LISOS",
+                  description:
+                    "Tipifica infracciones y cuantías sancionadoras aplicables en prevención de riesgos laborales.",
+                }}
+              />
+            </div>
+            <div className="mt-8 grid gap-6 lg:grid-cols-[360px_1fr] lg:items-center">
+              <div className="relative min-h-64 overflow-hidden rounded-lg border border-playBlueLight/20">
+                <Image
+                  src="/assets/img/inspeccion-trabajo-cae.webp"
+                  alt="Inspección de trabajo revisando documentación CAE y PRL"
+                  fill
+                  loading="lazy"
+                  sizes="(min-width: 1024px) 360px, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              <div className="rounded-lg bg-playGrey p-6">
+                <h3 className="mb-3 text-xl font-semibold text-playBlueDark">
+                  Evidencias listas para inspección
+                </h3>
+                <p className="leading-7 text-playBlueLight">
+                  Una plataforma CAE debe permitir reconstruir qué documentación
+                  se solicitó, quién la aportó, cuándo se validó y qué medidas de
+                  coordinación estaban activas. Esa trazabilidad es la diferencia
+                  entre una gestión documental cae ordenada y una carpeta difícil
+                  de defender.
+                </p>
+              </div>
+            </div>
+            <div className="mt-8 overflow-hidden rounded-lg border border-playBlueLight/20 bg-white">
+              <div className="bg-playBlueDark px-5 py-4 text-white">
+                <h3 className="text-xl font-semibold">
+                  Tabla de sanciones PRL según LISOS
+                </h3>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[680px] text-left">
+                  <thead className="bg-playGrey text-sm uppercase tracking-wide text-playBlueDark">
+                    <tr>
+                      <th className="px-5 py-4">Tipo</th>
+                      <th className="px-5 py-4">Importe</th>
+                      <th className="px-5 py-4">Contexto habitual</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-playBlueLight/10">
+                    {sanctions.map((sanction) => (
+                      <tr key={sanction.type}>
+                        <td className="px-5 py-4 font-semibold text-playBlueDark">
+                          {sanction.type}
+                        </td>
+                        <td className="px-5 py-4 text-playOrange">
+                          {sanction.amount}
+                        </td>
+                        <td className="px-5 py-4 text-playBlueLight">
+                          {sanction.detail}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p className="mt-6 rounded-lg bg-playGrey p-5 leading-7 text-playBlueLight">
+              Responsabilidad subsidiaria, vigilancia del cumplimiento y
+              coordinación efectiva deben analizarse caso por caso. Una
+              plataforma CAE no elimina la responsabilidad preventiva, pero sí
+              reduce el riesgo operativo de no poder acreditar controles,
+              comunicaciones y documentación exigida.
+            </p>
+          </section>
+
+          <section id="criterios-elegir-plataforma-cae" className="scroll-mt-28">
+            <SectionHeading
+              id="criterios-para-elegir-una-plataforma-cae"
+              eyebrow="Framework de decisión"
+              title="Criterios para elegir una plataforma CAE"
+              description="Antes de comparar demos, compara criterios. La mejor plataforma CAE no es la que tiene más pantallas, sino la que reduce riesgo, llamadas y trabajo manual."
+            />
+            <div className="grid gap-5 md:grid-cols-2">
+              {selectionCriteria.map((item) => (
+                <FeatureCard key={item.title} item={item} />
+              ))}
+            </div>
+          </section>
+
+          <section id="comparativa-plataformas-cae" className="scroll-mt-28">
+            <SectionHeading
+              id="comparativa-de-las-mejores-plataformas-cae-2026"
+              eyebrow="Comparativa plataformas CAE"
+              title="Comparativa de las mejores plataformas CAE 2026"
+              description="Comparativa honesta basada en criterios de compra habituales. Las funcionalidades concretas pueden variar por plan, contrato, implantación o configuración."
+            />
+            <div className="overflow-hidden rounded-lg border border-playBlueLight/20 bg-white shadow-sm">
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[980px] text-left">
+                  <thead className="bg-playBlueDark text-sm uppercase tracking-wide text-white">
+                    <tr>
+                      <th className="px-4 py-4">Plataforma</th>
+                      <th className="px-4 py-4">Validación</th>
+                      <th className="px-4 py-4">Control accesos</th>
+                      <th className="px-4 py-4">Implementación</th>
+                      <th className="px-4 py-4">Precio desde</th>
+                      <th className="px-4 py-4">Gratuito contratas</th>
+                      <th className="px-4 py-4">Soporte español</th>
+                      <th className="px-4 py-4">Facilidad</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-playBlueLight/10">
+                    {comparisonPlatforms.map((platform) => (
+                      <tr
+                        key={platform.name}
+                        className={
+                          platform.highlighted
+                            ? "bg-playOrange/5"
+                            : "bg-white"
+                        }
+                      >
+                        <td className="px-4 py-5">
+                          <div className="font-semibold text-playBlueDark">
+                            {platform.name}
+                          </div>
+                          {platform.badge ? (
+                            <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-playOrange px-3 py-1 text-xs font-semibold text-white">
+                              <Star className="h-3 w-3" />
+                              {platform.badge}
+                            </span>
+                          ) : null}
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.ai} />
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.access} />
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.implementation} />
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.price} />
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.contractorsFree} />
+                        </td>
+                        <td className="px-4 py-5">
+                          <StatusCell value={platform.support} />
+                        </td>
+                        <td className="px-4 py-5">
+                          {renderStars(platform.usability)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p className="mt-4 text-sm leading-6 text-playBlueLight">
+              No inventamos precios de competidores: cuando no hay tarifa pública
+              clara, la tabla indica Consultar. Revisa siempre contrato, alcance,
+              implantación e integraciones antes de decidir.
+            </p>
+          </section>
+
+          <section className="scroll-mt-28">
+            <SectionHeading
+              id="por-que-playcae-es-diferente"
+              eyebrow="PlayCAE"
+              title="Por qué PlayCAE es diferente"
+              description="PlayCAE está diseñado para responsables de PRL, RRHH, gerentes y operaciones que necesitan controlar contratas sin multiplicar el trabajo administrativo."
+            />
+            <div className="grid gap-5 md:grid-cols-2">
+              {playCaeDifferences.map((item) => (
+                <FeatureCard key={item.title} item={item} />
+              ))}
+            </div>
+          </section>
+
+          <section id="errores-comunes-plataforma-cae" className="scroll-mt-28">
+            <SectionHeading
+              id="errores-comunes-al-elegir-plataforma-cae"
+              eyebrow="Riesgos de compra"
+              title="Errores comunes al elegir plataforma CAE"
+              description="Los errores más caros no suelen verse en la demo. Aparecen cuando llegan las primeras caducidades, las primeras contratas bloqueadas o la primera inspección."
+            />
+            <div className="space-y-4">
+              {commonMistakes.map((mistake, index) => (
+                <article
+                  key={mistake}
+                  className="flex gap-4 rounded-lg border border-playBlueLight/20 bg-white p-5 shadow-sm"
+                >
+                  <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-playOrange/10 font-semibold text-playOrange">
+                    {index + 1}
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <AlertTriangle className="mt-1 h-5 w-5 flex-shrink-0 text-playOrange" />
+                    <p className="text-lg font-medium text-playBlueDark">
+                      {mistake}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <PlataformasCaeChecklist />
+
+          <section id="preguntas-frecuentes" className="scroll-mt-28">
+            <SectionHeading
+              id="preguntas-frecuentes-ampliadas"
+              eyebrow="FAQ"
+              title="Preguntas frecuentes ampliadas"
+              description="Respuestas rápidas para comparar plataformas cae, entender obligaciones y preparar una compra con menos incertidumbre."
+            />
+            <div className="grid gap-5">
+              {faqItems.map((faq) => (
+                <article
+                  key={faq.question}
+                  className="rounded-lg border border-playBlueLight/20 bg-white p-6 shadow-sm"
+                >
+                  <h3 className="mb-3 text-xl font-semibold text-playBlueDark">
+                    {faq.question}
+                  </h3>
+                  <p className="leading-7 text-playBlueLight">{faq.answer}</p>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="overflow-hidden rounded-lg bg-gradient-to-br from-playBlueDark to-playBlueLight p-8 text-white md:p-10">
+            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
+              <div>
+                <p className="mb-3 inline-flex rounded-full bg-white/15 px-4 py-2 text-sm font-semibold">
+                  Sin tarjeta de crédito
+                </p>
+                <h2
+                  id="prueba-playcae-gratis"
+                  className="scroll-mt-28 text-3xl font-bold"
+                >
+                  Prueba PlayCAE 14 días gratis — Sin tarjeta de crédito
+                </h2>
+                <p className="mt-4 max-w-2xl leading-7 text-playGrey">
+                  Comprueba si la validación con IA, el portal de contratas y el
+                  control de accesos encajan con tu operativa antes de comprometer
+                  presupuesto.
+                </p>
+              </div>
+              <Link
+                href="/register"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-playBlueDark transition-colors hover:bg-playGrey"
+              >
+                Prueba PlayCAE Gratis
+                <ArrowRight className="h-5 w-5" />
+              </Link>
+            </div>
+          </section>
+
+          <section className="rounded-lg border border-playBlueLight/20 bg-playGrey p-6">
+            <h2
+              id="fuentes-consultadas"
+              className="mb-4 scroll-mt-28 text-2xl font-bold text-playBlueDark"
+            >
+              Fuentes consultadas
+            </h2>
+            <ul className="grid gap-3 md:grid-cols-2">
+              {sourceLinks.map((source) => (
+                <li key={source.href}>
+                  <a
+                    href={source.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-start gap-2 rounded-lg bg-white p-4 text-playBlueLight transition-colors hover:text-playOrange"
+                  >
+                    <ChevronRight className="mt-0.5 h-5 w-5 flex-shrink-0" />
+                    <span>{source.label}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="bg-white">
+            <div className="rounded-lg border border-playBlueLight/20 bg-white p-8 shadow-sm">
+              <h2
+                id="enlaces-internos-cae-prl"
+                className="mb-6 scroll-mt-28 text-2xl font-bold text-playBlueDark"
+              >
+                Más recursos sobre CAE y PRL
+              </h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { href: "/plataforma-cae", label: "¿Qué es una Plataforma CAE?" },
+                  { href: "/plataformas-cae-prl", label: "Plataformas CAE + PRL" },
+                  { href: "/que-es-cae", label: "¿Qué es la CAE?" },
+                  { href: "/preguntas-frecuentes", label: "FAQs CAE y PRL" },
+                ].map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className="flex items-center gap-2 rounded-lg border border-playBlueLight/20 p-4 text-playBlueLight transition-all hover:border-playBlueDark hover:text-playBlueDark"
+                  >
+                    <ChevronRight className="h-5 w-5 flex-shrink-0" />
+                    <span>{link.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <Script
+        id="plataformas-cae-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
+      <Script
+        id="plataformas-cae-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+      />
+      <Script
+        id="plataformas-cae-organization-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
+      />
+    </main>
   );
 }
