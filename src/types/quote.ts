@@ -90,8 +90,18 @@ export interface QuoteWorkerProfileSpec extends BaseEntity {
   name: string;
   description?: string | null;
   workerCount: number;
+  documentCount: number;
   sortOrder: number;
   documents: QuoteWorkerProfileDocumentSpec[];
+}
+
+export interface QuoteCompanyProfileSpec extends BaseEntity {
+  quoteId: string;
+  name: string;
+  description?: string | null;
+  companyCount: number;
+  documentCount: number;
+  sortOrder: number;
 }
 
 export interface QuoteSimple extends BaseEntity {
@@ -136,6 +146,7 @@ export interface Quote extends BaseEntity {
   lines: QuoteLine[];
   companyDocumentSpecs: QuoteCompanyDocumentSpec[];
   workerProfileSpecs: QuoteWorkerProfileSpec[];
+  companyProfileSpecs: QuoteCompanyProfileSpec[];
   annualSubtotal: number;
   oneTimeSubtotal: number;
   firstYearTotal: number;
@@ -166,6 +177,8 @@ export interface CreateQuoteRequest {
   simultaneousWorksCount: number;
   hasInternalWorkersModule: boolean;
   validUntil?: string | null;
+  workerProfiles?: CreateQuoteWorkerProfileSpecRequest[];
+  companyProfiles?: CreateQuoteCompanyProfileSpecRequest[];
 }
 
 export interface UpdateQuoteRequest {
@@ -215,6 +228,7 @@ export interface CreateQuoteWorkerProfileSpecRequest {
   name: string;
   description?: string | null;
   workerCount: number;
+  documentCount: number;
   sortOrder: number;
   documents: CreateQuoteWorkerProfileDocumentSpecRequest[];
 }
@@ -223,5 +237,23 @@ export interface UpdateQuoteWorkerProfileSpecRequest {
   name?: string;
   description?: string | null;
   workerCount?: number;
+  documentCount?: number;
   sortOrder?: number;
 }
+
+export interface QuoteCompanyProfileSpecCreate {
+  name: string;
+  description?: string | null;
+  companyCount: number;
+  documentCount: number;
+}
+
+export interface CreateQuoteCompanyProfileSpecRequest {
+  name: string;
+  description?: string | null;
+  companyCount: number;
+  documentCount: number;
+  sortOrder: number;
+}
+
+export type UpdateQuoteCompanyProfileSpecRequest = Partial<CreateQuoteCompanyProfileSpecRequest>;

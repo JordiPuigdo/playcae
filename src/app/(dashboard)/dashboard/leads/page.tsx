@@ -1,15 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { FileText, Megaphone, Search } from "lucide-react";
+import { ArrowRight, FileText, Megaphone, Plus, Search, ShieldCheck, ShieldOff, Trash2, Users } from "lucide-react";
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 import {
   DashboardLeadTabId,
   InquiryTypeFilter,
   LeadOriginFilter,
+  LeadStatusFilter,
   useDashboardLeads,
 } from "@/hooks/useDashboardLeads";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -17,13 +18,19 @@ import { useSortableTable } from "@/hooks/useSortableTable";
 import { toast } from "@/hooks/use-Toast";
 
 import { UserRole } from "@/types/user";
-import { LeadOrigin, LeadListItem } from "@/types/lead";
+import { LeadOrigin, LeadListItem, LeadStatus } from "@/types/lead";
 import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
 import { CreateQuoteRequest } from "@/types/quote";
+import { LeadService } from "@/services/lead.service";
 import { QuoteService } from "@/services/quote.service";
+import { WebInquiryService } from "@/services/web-inquiry.service";
 
 import { formatDate } from "@/app/utils/date";
 import Loader from "@/components/Loader";
+import { LeadDetailPanel } from "@/components/LeadDetailPanel";
+import { LeadForm } from "@/components/LeadForm";
+import { LeadStatusBadge } from "@/components/LeadStatusBadge";
+import { LeadStatusCell } from "@/components/LeadStatusCell";
 import { QuoteForm } from "@/components/QuoteForm";
 import { SortableHeader } from "@/components/SortableHeader";
 import { TableCard } from "@/components/TableCard";
@@ -47,8 +54,29 @@ import {
   TableRow,
 } from "@/components/ui/Table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/Tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/Dialog";
+
+const leadService = new LeadService();
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50];
+
+const LEAD_STATUS_OPTIONS: { value: LeadStatusFilter; label: string }[] = [
+  { value: "all", label: "Todos los estados" },
+  { value: LeadStatus.New, label: "Nuevo" },
+  { value: LeadStatus.Contacted, label: "Contactado" },
+  { value: LeadStatus.QuoteSent, label: "Presupuesto enviado" },
+  { value: LeadStatus.PendingClaim, label: "Pendiente reclamar" },
+  { value: LeadStatus.Converted, label: "Convertido" },
+  { value: LeadStatus.Rejected, label: "Rechazado" },
+  { value: LeadStatus.Lost, label: "Perdido" },
+];
 
 type InquirySortField = "type" | "name" | "email" | "creationDate";
 type LeadSortField =
@@ -57,8 +85,10 @@ type LeadSortField =
   | "email"
   | "phone"
   | "origin"
+  | "status"
   | "emailVerified"
-  | "creationDate";
+  | "creationDate"
+  | "lastEventDate";
 
 export default function LeadsPage() {
   const { user, isAuthenticated } = useAuthStore();
@@ -71,9 +101,16 @@ export default function LeadsPage() {
   const [search, setSearch] = useState("");
   const [inquiryType, setInquiryType] = useState<InquiryTypeFilter>("all");
   const [leadOrigin, setLeadOrigin] = useState<LeadOriginFilter>("all");
+  const [leadStatus, setLeadStatus] = useState<LeadStatusFilter>("all");
+  const [hideRegistered, setHideRegistered] = useState(true);
+  const [selectedLead, setSelectedLead] = useState<LeadListItem | null>(null);
   const [quoteLead, setQuoteLead] = useState<{ id: string; companyName: string } | null>(null);
+  const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
+  const [inquiryToConvert, setInquiryToConvert] = useState<WebInquiry | null>(null);
+  const [inquiryToDelete, setInquiryToDelete] = useState<WebInquiry | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { inquiries, leads, inquiryError, leadError, isLoading } =
+  const { inquiries, leads, inquiryError, leadError, isLoading, mutateLeads, mutateInquiries } =
     useDashboardLeads({
       activeTab,
       page,
@@ -81,6 +118,8 @@ export default function LeadsPage() {
       search,
       inquiryType,
       leadOrigin,
+      leadStatus,
+      hideRegistered,
     });
 
   useEffect(() => {
@@ -91,15 +130,88 @@ export default function LeadsPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [activeTab, pageSize, inquiryType, leadOrigin]);
+  }, [activeTab, pageSize, inquiryType, leadOrigin, leadStatus, hideRegistered]);
 
   useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      setPage(1);
-    }, 250);
-
+    const timeoutId = window.setTimeout(() => setPage(1), 250);
     return () => window.clearTimeout(timeoutId);
   }, [search]);
+
+  const handleStatusUpdated = useCallback(
+    (leadId: string, newStatus: LeadStatus) => {
+      mutateLeads((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.map((item) =>
+            item.id === leadId ? { ...item, status: newStatus } : item
+          ),
+        };
+      }, false);
+
+      setSelectedLead((prev) =>
+        prev?.id === leadId ? { ...prev, status: newStatus } : prev
+      );
+    },
+    [mutateLeads]
+  );
+
+  const handleEmailVerified = useCallback(
+    (leadId: string, verified: boolean) => {
+      mutateLeads((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.map((item) =>
+            item.id === leadId ? { ...item, emailVerified: verified } : item
+          ),
+        };
+      }, false);
+
+      setSelectedLead((prev) =>
+        prev?.id === leadId ? { ...prev, emailVerified: verified } : prev
+      );
+    },
+    [mutateLeads]
+  );
+
+  const handleToggleEmailVerified = useCallback(
+    async (lead: LeadListItem) => {
+      const action = lead.emailVerified
+        ? leadService.deactivate(lead.id!)
+        : leadService.activate(lead.id!);
+      try {
+        await action;
+        handleEmailVerified(lead.id!, !lead.emailVerified);
+      } catch {
+        /* noop */
+      }
+    },
+    [handleEmailVerified]
+  );
+
+  const handleDeleteInquiry = useCallback(async () => {
+    if (!inquiryToDelete?.id) return;
+    setIsDeleting(true);
+    try {
+      const service = new WebInquiryService();
+      await service.delete(inquiryToDelete.id);
+      mutateInquiries((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.filter((i) => i.id !== inquiryToDelete.id),
+          total: current.total - 1,
+        };
+      }, false);
+      toast({ title: "Contacto eliminado" });
+    } catch {
+      toast({ title: "Error al eliminar", variant: "destructive" });
+    } finally {
+      setIsDeleting(false);
+      setInquiryToDelete(null);
+    }
+  }, [inquiryToDelete, mutateInquiries]);
 
   const inquirySort = useSortableTable<WebInquiry, InquirySortField>(
     inquiries.items,
@@ -131,10 +243,14 @@ export default function LeadsPage() {
           return (a.phone || "").localeCompare(b.phone || "");
         case "origin":
           return Number(a.origin) - Number(b.origin);
+        case "status":
+          return Number(a.status) - Number(b.status);
         case "emailVerified":
           return Number(a.emailVerified) - Number(b.emailVerified);
         case "creationDate":
           return dayjs(a.creationDate).valueOf() - dayjs(b.creationDate).valueOf();
+        case "lastEventDate":
+          return dayjs(a.lastEventDate ?? 0).valueOf() - dayjs(b.lastEventDate ?? 0).valueOf();
       }
     }
   );
@@ -156,7 +272,7 @@ export default function LeadsPage() {
 
   return (
     <div>
-      {/* Header band */}
+      {/* Header */}
       <div className="border-b bg-playGrey">
         {isLoading && <Loader text={t("dashboard.leads.loading")} />}
         <div className="container mx-auto px-4 py-6">
@@ -172,6 +288,14 @@ export default function LeadsPage() {
                   {t("dashboard.leads.subtitle")}
                 </p>
               </div>
+              <Button
+                type="button"
+                onClick={() => setIsLeadFormOpen(true)}
+                className="bg-brand-secondary hover:bg-brand-secondary/90 text-white shadow-md gap-2"
+              >
+                <Plus className="h-4 w-4" />
+                {t("leads.form.createTitle")}
+              </Button>
             </div>
           </div>
         </div>
@@ -212,8 +336,8 @@ export default function LeadsPage() {
         {/* Filters */}
         <Card className="border border-playBlueLight/30 bg-white">
           <CardContent className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-end">
-              <div className="flex-1 space-y-2">
+            <div className="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
+              <div className="flex-1 min-w-[200px] space-y-2">
                 <label className="text-sm font-medium text-brand-primary">
                   {t("dashboard.leads.filters.searchLabel")}
                 </label>
@@ -230,7 +354,7 @@ export default function LeadsPage() {
               </div>
 
               {activeTab === "inquiries" ? (
-                <div className="space-y-2 min-w-[200px]">
+                <div className="space-y-2 min-w-[180px]">
                   <label className="text-sm font-medium text-brand-primary">
                     {t("dashboard.leads.filters.typeLabel")}
                   </label>
@@ -238,80 +362,106 @@ export default function LeadsPage() {
                     value={String(inquiryType)}
                     onValueChange={(value) =>
                       setInquiryType(
-                        value === "all"
-                          ? "all"
-                          : (Number(value) as WebInquiryType)
+                        value === "all" ? "all" : (Number(value) as WebInquiryType)
                       )
                     }
                   >
                     <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
                       <SelectValue />
                     </SelectTrigger>
-                    <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value="all"
-                      >
+                    <SelectContent className="bg-white border border-playBlueLight/30">
+                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
                         {t("dashboard.leads.filters.allTypes")}
                       </SelectItem>
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value={String(WebInquiryType.Contact)}
-                      >
+                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Contact)}>
                         {t("dashboard.leads.types.contact")}
                       </SelectItem>
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value={String(WebInquiryType.Pricing)}
-                      >
+                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Pricing)}>
                         {t("dashboard.leads.types.pricing")}
                       </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               ) : (
-                <div className="space-y-2 min-w-[200px]">
-                  <label className="text-sm font-medium text-brand-primary">
-                    {t("dashboard.leads.filters.originLabel")}
-                  </label>
-                  <Select
-                    value={String(leadOrigin)}
-                    onValueChange={(value) =>
-                      setLeadOrigin(
-                        value === "all"
-                          ? "all"
-                          : (Number(value) as LeadOrigin)
-                      )
-                    }
-                  >
-                    <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value="all"
+                <>
+                  <div className="space-y-2 min-w-[180px]">
+                    <label className="text-sm font-medium text-brand-primary">Estado</label>
+                    <Select
+                      value={String(leadStatus)}
+                      onValueChange={(value) =>
+                        setLeadStatus(value === "all" ? "all" : (Number(value) as LeadStatus))
+                      }
+                    >
+                      <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-playBlueLight/30">
+                        {LEAD_STATUS_OPTIONS.map((opt) => (
+                          <SelectItem
+                            key={String(opt.value)}
+                            value={String(opt.value)}
+                            className="hover:bg-playGrey hover:text-brand-primary"
+                          >
+                            {opt.label}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2 min-w-[160px]">
+                    <label className="text-sm font-medium text-brand-primary">
+                      {t("dashboard.leads.filters.originLabel")}
+                    </label>
+                    <Select
+                      value={String(leadOrigin)}
+                      onValueChange={(value) =>
+                        setLeadOrigin(value === "all" ? "all" : (Number(value) as LeadOrigin))
+                      }
+                    >
+                      <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white border border-playBlueLight/30">
+                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
+                          {t("dashboard.leads.filters.allOrigins")}
+                        </SelectItem>
+                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Web)}>
+                          {t("dashboard.leads.origins.web")}
+                        </SelectItem>
+                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Landing)}>
+                          {t("dashboard.leads.origins.landing")}
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-brand-primary">Mostrar activas</label>
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={!hideRegistered}
+                      onClick={() => setHideRegistered((prev) => !prev)}
+                      className={`relative flex h-9 w-16 items-center rounded-full transition-colors border ${
+                        !hideRegistered
+                          ? "bg-brand-primary border-brand-primary"
+                          : "bg-white border-playBlueLight"
+                      }`}
+                    >
+                      <span
+                        className={`inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow transition-transform ${
+                          !hideRegistered ? "translate-x-8" : "translate-x-1"
+                        }`}
                       >
-                        {t("dashboard.leads.filters.allOrigins")}
-                      </SelectItem>
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value={String(LeadOrigin.Web)}
-                      >
-                        {t("dashboard.leads.origins.web")}
-                      </SelectItem>
-                      <SelectItem
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value={String(LeadOrigin.Landing)}
-                      >
-                        {t("dashboard.leads.origins.landing")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
+                        <Users className={`h-3.5 w-3.5 ${!hideRegistered ? "text-brand-primary" : "text-muted-foreground"}`} />
+                      </span>
+                    </button>
+                  </div>
+                </>
               )}
 
-              <div className="space-y-2 min-w-[120px]">
+              <div className="space-y-2 min-w-[110px]">
                 <label className="text-sm font-medium text-brand-primary">
                   {t("dashboard.leads.filters.pageSizeLabel")}
                 </label>
@@ -322,7 +472,7 @@ export default function LeadsPage() {
                   <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-white border border-playBlueLight/30 hover:cursor-pointer">
+                  <SelectContent className="bg-white border border-playBlueLight/30">
                     {PAGE_SIZE_OPTIONS.map((value) => (
                       <SelectItem
                         key={value}
@@ -345,56 +495,32 @@ export default function LeadsPage() {
           </div>
         )}
 
-        {/* Table */}
+        {/* Inquiries table */}
         {!currentError && activeTab === "inquiries" && (
           <TableCard title={tableTitle}>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <SortableHeader
-                    field="type"
-                    sortField={inquirySort.sortField}
-                    sortDirection={inquirySort.sortDirection}
-                    onSort={inquirySort.handleSort}
-                  >
+                  <SortableHeader field="type" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("dashboard.leads.table.inquiries.type")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="name"
-                    sortField={inquirySort.sortField}
-                    sortDirection={inquirySort.sortDirection}
-                    onSort={inquirySort.handleSort}
-                  >
+                  <SortableHeader field="name" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("common.name")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="email"
-                    sortField={inquirySort.sortField}
-                    sortDirection={inquirySort.sortDirection}
-                    onSort={inquirySort.handleSort}
-                  >
+                  <SortableHeader field="email" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("common.email")}
                   </SortableHeader>
-                  <TableHead>
-                    {t("dashboard.leads.table.inquiries.detail")}
-                  </TableHead>
-                  <SortableHeader
-                    field="creationDate"
-                    sortField={inquirySort.sortField}
-                    sortDirection={inquirySort.sortDirection}
-                    onSort={inquirySort.handleSort}
-                  >
+                  <TableHead>{t("dashboard.leads.table.inquiries.detail")}</TableHead>
+                  <SortableHeader field="creationDate" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("common.date")}
                   </SortableHeader>
+                  <TableHead className="text-right">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {inquirySort.sortedData.length === 0 ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={5}
-                      className="px-4 py-8 text-center text-muted-foreground"
-                    >
+                    <TableCell colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
                       {t("dashboard.leads.emptyInquiries")}
                     </TableCell>
                   </TableRow>
@@ -415,24 +541,15 @@ export default function LeadsPage() {
                             : t("dashboard.leads.types.pricing")}
                         </Badge>
                       </TableCell>
+                      <TableCell>{item.name ?? <span className="text-muted-foreground">-</span>}</TableCell>
                       <TableCell>
-                        {item.name ?? (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
-                      <TableCell>
-                        <a
-                          href={`mailto:${item.email}`}
-                          className="text-brand-primary hover:underline"
-                        >
+                        <a href={`mailto:${item.email}`} className="text-brand-primary hover:underline">
                           {item.email}
                         </a>
                       </TableCell>
                       <TableCell className="max-w-xs truncate">
                         {item.type === WebInquiryType.Contact ? (
-                          item.message ?? (
-                            <span className="text-muted-foreground">-</span>
-                          )
+                          item.message ?? <span className="text-muted-foreground">-</span>
                         ) : item.pricingDataJson ? (
                           <PricingSummary json={item.pricingDataJson} />
                         ) : (
@@ -442,6 +559,30 @@ export default function LeadsPage() {
                       <TableCell className="whitespace-nowrap text-muted-foreground">
                         {formatDate(item.creationDate)}
                       </TableCell>
+                      <TableCell className="text-right whitespace-nowrap">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setInquiryToConvert(item)}
+                            disabled={!!item.isConverted}
+                            className="gap-1 border-brand-primary text-brand-primary hover:bg-brand-primary/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            <ArrowRight className="h-3 w-3" />
+                            {item.isConverted ? "Convertido" : t("leads.actions.convertToLead")}
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setInquiryToDelete(item)}
+                            className="gap-1 border-red-300 text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
                     </TableRow>
                   ))
                 )}
@@ -450,80 +591,43 @@ export default function LeadsPage() {
           </TableCard>
         )}
 
+        {/* Leads CRM table */}
         {!currentError && activeTab === "registrations" && (
           <TableCard title={tableTitle}>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <SortableHeader
-                    field="companyName"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
+                  <SortableHeader field="companyName" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
                     {t("dashboard.leads.table.registrations.company")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="contactPerson"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
+                  <SortableHeader field="status" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
+                    Estado
+                  </SortableHeader>
+                  <SortableHeader field="contactPerson" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
                     {t("dashboard.leads.table.registrations.contact")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="email"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
-                    {t("common.email")}
-                  </SortableHeader>
-                  <SortableHeader
-                    field="phone"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
+                  <SortableHeader field="phone" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
                     {t("common.phone")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="origin"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
+                  <SortableHeader field="origin" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
                     {t("dashboard.leads.table.registrations.origin")}
                   </SortableHeader>
-                  <SortableHeader
-                    field="emailVerified"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                    className="text-center"
-                  >
-                    {t("dashboard.leads.table.registrations.verified")}
+                  <SortableHeader field="emailVerified" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
+                    Activa
                   </SortableHeader>
-                  <SortableHeader
-                    field="creationDate"
-                    sortField={leadSort.sortField}
-                    sortDirection={leadSort.sortDirection}
-                    onSort={leadSort.handleSort}
-                  >
+                  <SortableHeader field="creationDate" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
                     {t("common.date")}
                   </SortableHeader>
-                  <TableHead className="text-right">
-                    {t("common.actions")}
-                  </TableHead>
+                  <SortableHeader field="lastEventDate" sortField={leadSort.sortField} sortDirection={leadSort.sortDirection} onSort={leadSort.handleSort}>
+                    Último cambio
+                  </SortableHeader>
+                  <TableHead className="text-right">{t("common.actions")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {leadSort.sortedData.length === 0 ? (
                   <TableRow>
-                    <TableCell
-                      colSpan={8}
-                      className="px-4 py-8 text-center text-muted-foreground"
-                    >
+                    <TableCell colSpan={9} className="px-4 py-8 text-center text-muted-foreground">
                       {t("dashboard.leads.emptyRegistrations")}
                     </TableCell>
                   </TableRow>
@@ -531,23 +635,22 @@ export default function LeadsPage() {
                   leadSort.sortedData.map((lead) => (
                     <TableRow
                       key={lead.id}
-                      className="hover:bg-playOrange/5 transition-colors"
+                      className="hover:bg-playOrange/5 transition-colors cursor-pointer"
+                      onClick={() => setSelectedLead(lead)}
                     >
-                      <TableCell className="font-medium">
-                        {lead.companyName}
+                      <TableCell className="font-medium">{lead.companyName}</TableCell>
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <LeadStatusCell
+                          status={lead.status}
+                          lastEventType={lead.lastEventType}
+                          lastEventDate={lead.lastEventDate}
+                          lastEventPreviousStatus={lead.lastEventPreviousStatus}
+                          lastEventNewStatus={lead.lastEventNewStatus}
+                          lastNote={lead.lastNote}
+                        />
                       </TableCell>
                       <TableCell>{lead.contactPerson}</TableCell>
-                      <TableCell>
-                        <a
-                          href={`mailto:${lead.email}`}
-                          className="text-brand-primary hover:underline"
-                        >
-                          {lead.email}
-                        </a>
-                      </TableCell>
-                      <TableCell className="text-muted-foreground">
-                        {lead.phone}
-                      </TableCell>
+                      <TableCell className="text-muted-foreground">{lead.phone}</TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-xs">
                           {lead.origin === LeadOrigin.Web
@@ -555,22 +658,30 @@ export default function LeadsPage() {
                             : t("dashboard.leads.origins.landing")}
                         </Badge>
                       </TableCell>
-                      <TableCell className="text-center">
-                        {lead.emailVerified ? (
-                          <Badge
-                            variant="outline"
-                            className="border-success/40 bg-success/10 text-success"
-                          >
-                            {t("common.yes")}
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground">
-                            {t("common.no")}
-                          </span>
-                        )}
+                      <TableCell onClick={(e) => e.stopPropagation()}>
+                        <button
+                          type="button"
+                          title={lead.emailVerified ? "Desactivar cuenta" : "Activar cuenta"}
+                          onClick={() => handleToggleEmailVerified(lead)}
+                          className={`flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium transition-colors ${
+                            lead.emailVerified
+                              ? "bg-playGreen/15 text-playGreen hover:bg-red-50 hover:text-red-600"
+                              : "bg-gray-100 text-muted-foreground hover:bg-playGreen/15 hover:text-playGreen"
+                          }`}
+                        >
+                          {lead.emailVerified ? (
+                            <ShieldCheck className="h-3.5 w-3.5" />
+                          ) : (
+                            <ShieldOff className="h-3.5 w-3.5" />
+                          )}
+                          {lead.emailVerified ? "Sí" : "No"}
+                        </button>
                       </TableCell>
                       <TableCell className="whitespace-nowrap text-muted-foreground">
                         {formatDate(lead.creationDate)}
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap text-muted-foreground">
+                        {lead.lastEventDate ? formatDate(lead.lastEventDate) : <span>—</span>}
                       </TableCell>
                       <TableCell
                         className="text-right whitespace-nowrap"
@@ -580,16 +691,11 @@ export default function LeadsPage() {
                           type="button"
                           variant="outline"
                           size="sm"
-                          onClick={() =>
-                            setQuoteLead({
-                              id: lead.id!,
-                              companyName: lead.companyName,
-                            })
-                          }
-                          className="gap-1 border-playOrange text-playOrange hover:bg-playOrange/10"
+                          title={t("quotes.actions.createFromLead")}
+                          onClick={() => setQuoteLead({ id: lead.id!, companyName: lead.companyName })}
+                          className="border-playOrange text-playOrange hover:bg-playOrange/10"
                         >
                           <FileText className="h-3 w-3" />
-                          {t("quotes.actions.createFromLead")}
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -611,7 +717,6 @@ export default function LeadsPage() {
                   total: currentTotal,
                 })}
           </p>
-
           <div className="flex items-center gap-2">
             <Button
               type="button"
@@ -641,6 +746,61 @@ export default function LeadsPage() {
         </div>
       </div>
 
+      <LeadForm
+        isOpen={isLeadFormOpen || !!inquiryToConvert}
+        onClose={() => {
+          setIsLeadFormOpen(false);
+          setInquiryToConvert(null);
+        }}
+        initialEmail={inquiryToConvert?.email ?? undefined}
+        initialContactPerson={inquiryToConvert?.name ?? undefined}
+        sourceInquiryId={inquiryToConvert?.id ?? undefined}
+        onCreated={() => {
+          setActiveTab("registrations");
+          mutateLeads();
+          mutateInquiries();
+        }}
+      />
+
+      <LeadDetailPanel
+        lead={selectedLead}
+        onClose={() => setSelectedLead(null)}
+        onStatusUpdated={handleStatusUpdated}
+        onEmailVerified={handleEmailVerified}
+      />
+
+      <Dialog open={!!inquiryToDelete} onOpenChange={(open) => { if (!open) setInquiryToDelete(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿Eliminar contacto?</DialogTitle>
+            <DialogDescription>
+              Esta acción eliminará permanentemente el contacto de{" "}
+              <span className="font-medium text-foreground">{inquiryToDelete?.name ?? inquiryToDelete?.email}</span>.
+              No se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setInquiryToDelete(null)}
+              disabled={isDeleting}
+              className="border-playBlueLight"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={handleDeleteInquiry}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isDeleting ? "Eliminando..." : "Sí, eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <QuoteForm
         isOpen={!!quoteLead}
         onClose={() => setQuoteLead(null)}
@@ -669,24 +829,30 @@ export default function LeadsPage() {
 
 interface PricingData {
   siteMode?: "single" | "multiple";
+  SiteMode?: "single" | "multiple";
   siteCount?: number;
+  SiteCount?: number;
   contractors?: number;
+  Contractors?: number;
   estimatedPrice?: number;
+  EstimatedPrice?: number;
   isCustom?: boolean;
+  IsCustom?: boolean;
 }
 
 function PricingSummary({ json }: { json: string }) {
   try {
     const data = JSON.parse(json) as PricingData;
-    const sites =
-      data.siteMode === "multiple" ? `${data.siteCount} sedes` : "1 sede";
-    const price = data.isCustom
-      ? "Enterprise"
-      : `EUR ${data.estimatedPrice}/mes`;
-
+    const siteMode = data.siteMode ?? data.SiteMode;
+    const siteCount = data.siteCount ?? data.SiteCount ?? 1;
+    const contractors = data.contractors ?? data.Contractors ?? 0;
+    const estimatedPrice = data.estimatedPrice ?? data.EstimatedPrice;
+    const isCustom = data.isCustom ?? data.IsCustom ?? false;
+    const sites = siteMode === "multiple" ? `${siteCount} sedes` : "1 sede";
+    const price = isCustom || estimatedPrice === undefined ? "Enterprise" : `EUR ${estimatedPrice}/mes`;
     return (
       <span className="text-muted-foreground">
-        {sites} · {data.contractors} contratas · {price}
+        {sites} · {contractors} contratas · {price}
       </span>
     );
   } catch {

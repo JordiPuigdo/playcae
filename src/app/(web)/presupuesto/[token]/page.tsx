@@ -2,7 +2,7 @@
 
 import { use, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { CheckCircle2, FileText, Building2 } from "lucide-react";
+import { CheckCircle2, FileText, Building2, Printer } from "lucide-react";
 import { QuoteService } from "@/services/quote.service";
 import {
   Quote,
@@ -123,7 +123,25 @@ export default function PublicQuotePage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-playGrey">
-      <div className="max-w-4xl mx-auto py-10 px-4">
+      <style>{`
+        @media print {
+          .no-print { display: none !important; }
+          body { background: white !important; }
+          @page { margin: 1.5cm; }
+        }
+      `}</style>
+
+      <div className="no-print max-w-4xl mx-auto pt-6 px-4 flex justify-end">
+        <button
+          onClick={() => window.print()}
+          className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-md text-sm hover:opacity-90 transition-opacity"
+        >
+          <Printer className="h-4 w-4" />
+          Imprimir / Guardar PDF
+        </button>
+      </div>
+
+      <div className="max-w-4xl mx-auto pb-10 px-4">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header */}
           <div className="bg-brand-primary text-white p-8">

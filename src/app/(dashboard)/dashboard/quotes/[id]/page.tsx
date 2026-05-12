@@ -7,6 +7,7 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { EditableQuoteInfo } from "@/components/EditableQuoteInfo";
 import { QuoteCompanyDocsPanel } from "@/components/QuoteCompanyDocsPanel";
+import { QuoteCompanyProfilesPanel } from "@/components/QuoteCompanyProfilesPanel";
 import { QuoteEconomicSummary } from "@/components/QuoteEconomicSummary";
 import { QuoteLinesTable } from "@/components/QuoteLinesTable";
 import { QuoteProfilesPanel } from "@/components/QuoteProfilesPanel";
@@ -43,6 +44,9 @@ export default function QuoteDetailPage({ params }: PageProps) {
     removeWorkerProfile,
     addWorkerProfileDocument,
     removeWorkerProfileDocument,
+    addCompanyProfile,
+    updateCompanyProfile,
+    removeCompanyProfile,
   } = useQuote(id);
   const { modules } = useQuoteModules({ isActive: true });
 
@@ -164,6 +168,14 @@ export default function QuoteDetailPage({ params }: PageProps) {
           onRemoveProfile={removeWorkerProfile}
           onAddDoc={addWorkerProfileDocument}
           onRemoveDoc={removeWorkerProfileDocument}
+        />
+
+        <QuoteCompanyProfilesPanel
+          quote={quote}
+          readOnly={readOnly}
+          onAddProfile={addCompanyProfile}
+          onUpdateProfile={updateCompanyProfile}
+          onRemoveProfile={removeCompanyProfile}
         />
       </div>
     </div>

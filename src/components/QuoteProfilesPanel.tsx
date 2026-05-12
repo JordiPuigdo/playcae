@@ -49,6 +49,7 @@ export const QuoteProfilesPanel = ({
         name: newName.trim(),
         description: null,
         workerCount: 1,
+        documentCount: 0,
         sortOrder: sorted.length,
         documents: [],
       });
@@ -158,7 +159,7 @@ const ProfileSpecRow = ({
           <Button variant="outline" size="sm" onClick={onToggle}>
             {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </Button>
-          <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-4 gap-3">
             {readOnly ? (
               <div className="font-medium text-brand-primary">{profile.name}</div>
             ) : (
@@ -192,9 +193,27 @@ const ProfileSpecRow = ({
                 />
               </div>
             )}
-            <div className="text-xs text-muted-foreground self-center">
-              {t("quotes.profiles.documentsCount", { count: profile.documents.length })}
-            </div>
+            {readOnly ? (
+              <div className="text-xs text-muted-foreground self-center">
+                {t("quotes.profiles.documentCountDisplay", { count: profile.documentCount })}
+              </div>
+            ) : (
+              <div>
+                <label className="text-xs text-brand-accent block mb-1">
+                  {t("quotes.profiles.documentCount")}
+                </label>
+                <Input
+                  type="number"
+                  min={0}
+                  defaultValue={profile.documentCount}
+                  onBlur={(e) => {
+                    const v = Number(e.target.value);
+                    if (v !== profile.documentCount) onUpdate({ documentCount: v });
+                  }}
+                  className="border-playBlueLight"
+                />
+              </div>
+            )}
           </div>
           {!readOnly && (
             <Button

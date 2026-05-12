@@ -6,6 +6,24 @@ export enum LeadOrigin {
   Landing = 1,
 }
 
+export enum LeadStatus {
+  New = 0,
+  Contacted = 1,
+  QuoteSent = 2,
+  PendingClaim = 3,
+  Converted = 4,
+  Rejected = 5,
+  Lost = 6,
+}
+
+export enum LeadEventType {
+  StatusChanged = 0,
+  NoteAdded = 1,
+  QuoteSent = 2,
+  EmailSent = 3,
+  CallMade = 4,
+}
+
 export interface Lead extends BaseEntity {
   companyName: string;
   email: string;
@@ -15,6 +33,7 @@ export interface Lead extends BaseEntity {
   address: string;
   password: string;
   origin: LeadOrigin;
+  status: LeadStatus;
   userId: string;
 }
 
@@ -27,7 +46,23 @@ export interface LeadListItem extends BaseEntity {
   address: string;
   origin: LeadOrigin;
   emailVerified: boolean;
+  status: LeadStatus;
   userId?: string;
+  lastEventType?: LeadEventType;
+  lastEventDate?: string;
+  lastEventPreviousStatus?: LeadStatus;
+  lastEventNewStatus?: LeadStatus;
+  lastNote?: string;
+}
+
+export interface LeadEvent extends BaseEntity {
+  leadId: string;
+  eventType: LeadEventType;
+  notes?: string;
+  previousStatus?: LeadStatus;
+  newStatus?: LeadStatus;
+  createdByUserId?: string;
+  createdByUserEmail?: string;
 }
 
 export interface LeadListQuery {
@@ -35,6 +70,8 @@ export interface LeadListQuery {
   pageSize?: number;
   search?: string;
   origin?: LeadOrigin;
+  status?: LeadStatus;
+  hideRegistered?: boolean;
 }
 
 export type LeadPagedResult = PagedResult<LeadListItem>;
@@ -48,4 +85,15 @@ export interface CreateLeadRequest {
   address: string;
   password: string;
   origin: LeadOrigin;
+  sourceInquiryId?: string;
+}
+
+export interface UpdateLeadStatusRequest {
+  status: LeadStatus;
+  notes?: string;
+}
+
+export interface CreateLeadEventRequest {
+  eventType: LeadEventType;
+  notes?: string;
 }

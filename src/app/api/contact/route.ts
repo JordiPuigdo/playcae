@@ -50,6 +50,14 @@ export async function POST(request: NextRequest) {
     }
 
     const apiUrl = process.env.NEXT_PUBLIC_PLAYCAE_API;
+    if (!apiUrl) {
+      console.error("NEXT_PUBLIC_PLAYCAE_API no está definida");
+      return NextResponse.json(
+        { message: "Error de configuración del servidor." },
+        { status: 500 }
+      );
+    }
+
     const response = await fetch(`${apiUrl}/api/web-inquiries/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,7 +65,8 @@ export async function POST(request: NextRequest) {
     });
 
     if (!response.ok) {
-      console.error("Error del backend al guardar contacto:", response.status);
+      const errorBody = await response.text().catch(() => "(sin cuerpo)");
+      console.error(`Error del backend al guardar contacto: ${response.status}`, errorBody);
       return NextResponse.json(
         { message: "Error al enviar el mensaje. Inténtalo de nuevo." },
         { status: 500 }

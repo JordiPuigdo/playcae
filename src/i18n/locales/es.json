@@ -447,13 +447,46 @@
           "company": "Empresa",
           "contact": "Contacto",
           "origin": "Origen",
-          "verified": "Verificado"
+          "verified": "Verificado",
+          "status": "Estado"
         }
       },
       "pagination": {
         "empty": "Sin resultados",
         "summary": "Mostrando {from}-{to} de {total}",
         "page": "Pagina {current} de {total}"
+      },
+      "crm": {
+        "showRegistered": "Mostrar registrados",
+        "statusLabel": "Estado",
+        "saveStatus": "Guardar",
+        "addNote": "Añadir nota",
+        "registerCall": "Registrar llamada",
+        "quoteSentAction": "Presupuesto enviado",
+        "activityHistory": "Historial de actividad",
+        "noActivity": "Sin actividad registrada",
+        "notePlaceholder": "Escribe una nota...",
+        "callPlaceholder": "Resumen de la llamada...",
+        "statusNotePlaceholder": "Nota sobre el cambio de estado (opcional)",
+        "save": "Guardar",
+        "cancel": "Cancelar",
+        "statuses": {
+          "new": "Nuevo",
+          "contacted": "Contactado",
+          "quoteSent": "Presupuesto enviado",
+          "pendingClaim": "Pendiente reclamar",
+          "converted": "Convertido",
+          "rejected": "Rechazado",
+          "lost": "Perdido"
+        },
+        "eventTypes": {
+          "statusChanged": "Cambio de estado",
+          "noteAdded": "Nota",
+          "quoteSent": "Presupuesto enviado",
+          "emailSent": "Email enviado",
+          "callMade": "Llamada registrada"
+        },
+        "allStatuses": "Todos los estados"
       }
     },
     "stats": {
@@ -1500,7 +1533,17 @@
       "leadResultsCount": "{shown} de {total} leads",
       "noLeadsFound": "No se han encontrado leads.",
       "refineSearch": "Refina la búsqueda para ver más resultados.",
-      "createNewLead": "Crear nuevo lead"
+      "createNewLead": "Crear nuevo lead",
+      "workerProfilesTitle": "Plantillas por trabajador",
+      "companyProfilesTitle": "Plantillas por empresa",
+      "profileName": "Nombre",
+      "profileNamePlaceholder": "Ej. Operario, Técnico, Subcontratista...",
+      "workerCount": "Nº trabajadores",
+      "workerCountShort": "trab.",
+      "companyCount": "Nº empresas",
+      "companyCountShort": "emp.",
+      "documentCount": "Nº documentos",
+      "docCountShort": "docs."
     },
     "info": {
       "title": "Información del presupuesto",
@@ -1556,9 +1599,23 @@
       "addProfile": "Añadir perfil",
       "workerCount": "Trabajadores",
       "workersCount": "{count} trabajadores",
+      "documentCount": "Nº documentos",
+      "documentCountDisplay": "{count} docs",
       "documentsCount": "{count} documentos",
       "noDocuments": "Sin documentos definidos.",
       "addDocPlaceholder": "Nombre del documento"
+    },
+    "companyProfiles": {
+      "title": "Plantillas por empresa ({count})",
+      "subtitle": "Define los perfiles de empresa y los documentos que requerirán.",
+      "empty": "No hay plantillas de empresa definidas.",
+      "newProfileLabel": "Nueva plantilla de empresa",
+      "newProfilePlaceholder": "Ej. Subcontratista, Suministrador...",
+      "addProfile": "Añadir plantilla",
+      "companyCount": "Nº empresas",
+      "documentCount": "Nº documentos",
+      "companiesCount": "{count} empresa(s)",
+      "documentsCount": "{count} doc(s)"
     },
     "detail": {
       "client": "Cliente"
@@ -1608,7 +1665,8 @@
   "leads": {
     "created": "Lead creado correctamente",
     "actions": {
-      "newLead": "Nuevo lead"
+      "newLead": "Nuevo lead",
+      "convertToLead": "Convertir a lead"
     },
     "form": {
       "createTitle": "Nuevo lead",

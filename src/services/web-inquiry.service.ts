@@ -11,6 +11,10 @@ export class WebInquiryService {
 
   constructor(private readonly httpClient: HttpClient = new HttpClient()) {}
 
+  async delete(id: string): Promise<void> {
+    await this.httpClient.delete(`${this.baseUrl}/${id}`);
+  }
+
   async getAll(
     query?: WebInquiryListQuery
   ): Promise<ApiResponse<WebInquiryPagedResult>> {

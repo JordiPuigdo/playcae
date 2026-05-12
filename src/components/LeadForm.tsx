@@ -28,6 +28,9 @@ interface LeadFormProps {
   onClose: () => void;
   onCreated: (lead: Lead) => void;
   initialCompanyName?: string;
+  initialEmail?: string;
+  initialContactPerson?: string;
+  sourceInquiryId?: string;
 }
 
 const generatePassword = () => {
@@ -45,7 +48,7 @@ const generatePassword = () => {
   );
 };
 
-export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName }: LeadFormProps) => {
+export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initialEmail, initialContactPerson, sourceInquiryId }: LeadFormProps) => {
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
@@ -63,19 +66,39 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName }: Lea
 
   useEffect(() => {
     if (!isOpen) return;
+
+    let contactPerson = (initialContactPerson ?? "").toUpperCase();
+    let companyName = (initialCompanyName ?? "").toUpperCase();
+
+    if (initialEmail) {
+      const atIndex = initialEmail.indexOf("@");
+      if (atIndex > 0) {
+        const localPart = initialEmail.slice(0, atIndex);
+        const domainPart = initialEmail.slice(atIndex + 1);
+
+        if (!contactPerson) {
+          contactPerson = localPart.split(".").join(" ").toUpperCase();
+        }
+
+        if (!companyName) {
+          companyName = domainPart.split(".")[0].toUpperCase();
+        }
+      }
+    }
+
     setForm({
-      companyName: initialCompanyName ?? "",
-      email: "",
+      companyName,
+      email: initialEmail ?? "",
       phone: "",
       taxId: "",
-      contactPerson: "",
+      contactPerson,
       address: "",
       password: generatePassword(),
       origin: LeadOrigin.Web,
     });
     setErrors({});
     setServerError(null);
-  }, [isOpen, initialCompanyName]);
+  }, [isOpen, initialCompanyName, initialEmail, initialContactPerson]);
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
@@ -95,7 +118,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName }: Lea
     setServerError(null);
     try {
       const service = new LeadService();
-      const response = await service.create(form);
+      const response = await service.create({ ...form, sourceInquiryId });
       onCreated(response.data);
       onClose();
     } catch (err) {
@@ -134,11 +157,10 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName }: Lea
               {t("leads.form.companyName")} *
             </Label>
             <Input
-              uppercase={false}
               value={form.companyName}
               onChange={(e) => setField("companyName", e.target.value)}
               className={errors.companyName ? "border-destructive" : "border-brand-accent"}
-              placeholder="Constructora ABC S.L."
+              placeholder="CONSTRUCTORA ABC S.L."
             />
             {errors.companyName && (
               <p className="text-sm text-destructive">{errors.companyName}</p>
@@ -186,11 +208,10 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName }: Lea
                 {t("leads.form.contactPerson")} *
               </Label>
               <Input
-                uppercase={false}
                 value={form.contactPerson}
                 onChange={(e) => setField("contactPerson", e.target.value)}
                 className={errors.contactPerson ? "border-destructive" : "border-brand-accent"}
-                placeholder="Nombre y apellidos"
+                placeholder="NOMBRE Y APELLIDOS"
               />
               {errors.contactPerson && (
                 <p className="text-sm text-destructive">{errors.contactPerson}</p>

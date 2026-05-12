@@ -12,6 +12,7 @@ export interface WebInquiry extends BaseEntity {
   email: string;
   message?: string;
   pricingDataJson?: string;
+  isConverted?: boolean;
 }
 
 export interface WebInquiryListQuery {

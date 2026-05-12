@@ -4,12 +4,16 @@ import { UserRole } from "@/types/user";
 import { WorkerService } from "@/services/worker.service";
 import { DocumentService } from "@/services/document.service";
 import { EntityStatus } from "@/types/document";
+import { useAuthStore } from "@/hooks/useAuthStore";
 
 export const useWorkers = (companyId: string | undefined) => {
   const [workers, setWorkers] = useState<Worker[]>([]);
   const [userRole] = useState<UserRole>(UserRole.Admin);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const selectedParentCompanyId = useAuthStore(
+    (state) => state.selectedParentCompanyId
+  );
 
   const workerService = useMemo(() => new WorkerService(), []);
   const documentService = useMemo(() => new DocumentService(), []);
@@ -55,6 +59,7 @@ export const useWorkers = (companyId: string | undefined) => {
       setIsLoading(true);
       const workersToCreate = workersData.map((data) => ({
         companyId,
+        tenantAdminUserId: selectedParentCompanyId,
         firstName: data.firstName,
         lastName: data.lastName,
         cardId: data.cardId,
@@ -88,6 +93,7 @@ export const useWorkers = (companyId: string | undefined) => {
     if (!companyId) return;
     const newWorker: Worker = {
       companyId,
+      tenantAdminUserId: selectedParentCompanyId,
       firstName: data.firstName,
       lastName: data.lastName,
       cardId: data.cardId,
@@ -95,8 +101,8 @@ export const useWorkers = (companyId: string | undefined) => {
       status: WorkerStatus.Rejected,
       ssn: data.ssn,
     };
-    await workerService.create(newWorker);
-    setWorkers((prev) => [...prev, newWorker]);
+    const response = await workerService.create(newWorker);
+    setWorkers((prev) => [...prev, response.data]);
   };
 
   const updateWorker = async (workerId: string, data: WorkerFormData) => {
@@ -118,7 +124,7 @@ export const useWorkers = (companyId: string | undefined) => {
   };
 
   const activateWorker = async (workerId: string) => {
-    await workerService.activate(workerId);
+    await workerService.activate(workerId, selectedParentCompanyId);
     setWorkers((prev) =>
       prev.map((worker) =>
         worker.id === workerId ? { ...worker, active: true } : worker

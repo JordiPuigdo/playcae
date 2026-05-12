@@ -7,6 +7,7 @@ import {
   LeadOrigin,
   LeadListQuery,
   LeadPagedResult,
+  LeadStatus,
 } from "@/types/lead";
 import {
   WebInquiryListQuery,
@@ -19,6 +20,7 @@ import { WebInquiryService } from "@/services/web-inquiry.service";
 export type DashboardLeadTabId = "inquiries" | "registrations";
 export type InquiryTypeFilter = "all" | WebInquiryType;
 export type LeadOriginFilter = "all" | LeadOrigin;
+export type LeadStatusFilter = "all" | LeadStatus;
 
 interface UseDashboardLeadsParams {
   activeTab: DashboardLeadTabId;
@@ -27,6 +29,8 @@ interface UseDashboardLeadsParams {
   search: string;
   inquiryType: InquiryTypeFilter;
   leadOrigin: LeadOriginFilter;
+  leadStatus: LeadStatusFilter;
+  hideRegistered: boolean;
 }
 
 const leadService = new LeadService();
@@ -70,8 +74,10 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
       pageSize: params.pageSize,
       search: normalizedSearch,
       origin: params.leadOrigin === "all" ? undefined : params.leadOrigin,
+      status: params.leadStatus === "all" ? undefined : params.leadStatus,
+      hideRegistered: params.hideRegistered,
     }),
-    [normalizedSearch, params.leadOrigin, params.page, params.pageSize]
+    [normalizedSearch, params.leadOrigin, params.leadStatus, params.hideRegistered, params.page, params.pageSize]
   );
 
   const {
@@ -118,5 +124,7 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
     refresh: async () => {
       await Promise.all([mutateInquiries(), mutateLeads()]);
     },
+    mutateLeads,
+    mutateInquiries,
   };
 }

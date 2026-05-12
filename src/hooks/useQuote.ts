@@ -3,10 +3,12 @@ import useSWR from "swr";
 import { QuoteService } from "@/services/quote.service";
 import {
   CreateQuoteCompanyDocumentSpecRequest,
+  CreateQuoteCompanyProfileSpecRequest,
   CreateQuoteLineRequest,
   CreateQuoteWorkerProfileDocumentSpecRequest,
   CreateQuoteWorkerProfileSpecRequest,
   Quote,
+  UpdateQuoteCompanyProfileSpecRequest,
   UpdateQuoteLineRequest,
   UpdateQuoteRequest,
   UpdateQuoteWorkerProfileSpecRequest,
@@ -98,6 +100,24 @@ export const useQuote = (id: string | undefined) => {
     await mutate();
   };
 
+  const addCompanyProfile = async (request: CreateQuoteCompanyProfileSpecRequest) => {
+    await service.addCompanyProfile(id!, request);
+    await mutate();
+  };
+
+  const updateCompanyProfile = async (
+    specId: string,
+    request: UpdateQuoteCompanyProfileSpecRequest
+  ) => {
+    await service.updateCompanyProfile(id!, specId, request);
+    await mutate();
+  };
+
+  const removeCompanyProfile = async (specId: string) => {
+    await service.removeCompanyProfile(id!, specId);
+    await mutate();
+  };
+
   return {
     quote: data,
     isLoading: !data && !error,
@@ -116,5 +136,8 @@ export const useQuote = (id: string | undefined) => {
     removeWorkerProfile,
     addWorkerProfileDocument,
     removeWorkerProfileDocument,
+    addCompanyProfile,
+    updateCompanyProfile,
+    removeCompanyProfile,
   };
 };

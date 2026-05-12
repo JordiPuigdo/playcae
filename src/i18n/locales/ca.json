@@ -447,13 +447,46 @@
           "company": "Empresa",
           "contact": "Contacte",
           "origin": "Origen",
-          "verified": "Verificat"
+          "verified": "Verificat",
+          "status": "Estat"
         }
       },
       "pagination": {
         "empty": "Sense resultats",
         "summary": "Mostrant {from}-{to} de {total}",
         "page": "Pagina {current} de {total}"
+      },
+      "crm": {
+        "showRegistered": "Mostrar registrats",
+        "statusLabel": "Estat",
+        "saveStatus": "Guardar",
+        "addNote": "Afegir nota",
+        "registerCall": "Registrar trucada",
+        "quoteSentAction": "Pressupost enviat",
+        "activityHistory": "Historial d'activitat",
+        "noActivity": "Sense activitat registrada",
+        "notePlaceholder": "Escriu una nota...",
+        "callPlaceholder": "Resum de la trucada...",
+        "statusNotePlaceholder": "Nota sobre el canvi d'estat (opcional)",
+        "save": "Guardar",
+        "cancel": "Cancel·lar",
+        "statuses": {
+          "new": "Nou",
+          "contacted": "Contactat",
+          "quoteSent": "Pressupost enviat",
+          "pendingClaim": "Pendent reclamar",
+          "converted": "Convertit",
+          "rejected": "Rebutjat",
+          "lost": "Perdut"
+        },
+        "eventTypes": {
+          "statusChanged": "Canvi d'estat",
+          "noteAdded": "Nota",
+          "quoteSent": "Pressupost enviat",
+          "emailSent": "Correu enviat",
+          "callMade": "Trucada registrada"
+        },
+        "allStatuses": "Tots els estats"
       }
     },
     "stats": {
@@ -1500,7 +1533,17 @@
       "leadResultsCount": "{shown} de {total} leads",
       "noLeadsFound": "No s'han trobat leads.",
       "refineSearch": "Refina la cerca per veure més resultats.",
-      "createNewLead": "Crear nou lead"
+      "createNewLead": "Crear nou lead",
+      "workerProfilesTitle": "Plantilles per treballador",
+      "companyProfilesTitle": "Plantilles per empresa",
+      "profileName": "Nom",
+      "profileNamePlaceholder": "Ex. Operari, Tècnic, Subcontractista...",
+      "workerCount": "Nº treballadors",
+      "workerCountShort": "treb.",
+      "companyCount": "Nº empreses",
+      "companyCountShort": "emp.",
+      "documentCount": "Nº documents",
+      "docCountShort": "docs."
     },
     "info": {
       "title": "Informació del pressupost",
@@ -1556,9 +1599,23 @@
       "addProfile": "Afegir perfil",
       "workerCount": "Treballadors",
       "workersCount": "{count} treballadors",
+      "documentCount": "Nº documents",
+      "documentCountDisplay": "{count} docs",
       "documentsCount": "{count} documents",
       "noDocuments": "Sense documents definits.",
       "addDocPlaceholder": "Nom del document"
+    },
+    "companyProfiles": {
+      "title": "Plantilles per empresa ({count})",
+      "subtitle": "Defineix els perfils d'empresa i els documents que requeriran.",
+      "empty": "No hi ha plantilles d'empresa definides.",
+      "newProfileLabel": "Nova plantilla d'empresa",
+      "newProfilePlaceholder": "Ex. Subcontractista, Proveïdor...",
+      "addProfile": "Afegir plantilla",
+      "companyCount": "Nº empreses",
+      "documentCount": "Nº documents",
+      "companiesCount": "{count} empresa(es)",
+      "documentsCount": "{count} doc(s)"
     },
     "detail": {
       "client": "Client"
@@ -1608,7 +1665,8 @@
   "leads": {
     "created": "Lead creat correctament",
     "actions": {
-      "newLead": "Nou lead"
+      "newLead": "Nou lead",
+      "convertToLead": "Convertir a lead"
     },
     "form": {
       "createTitle": "Nou lead",

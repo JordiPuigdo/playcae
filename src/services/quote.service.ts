@@ -2,17 +2,20 @@ import { ApiResponse } from "@/interfaces/api-response";
 import { HttpClient } from "./http-client";
 import {
   CreateQuoteCompanyDocumentSpecRequest,
+  CreateQuoteCompanyProfileSpecRequest,
   CreateQuoteLineRequest,
   CreateQuoteRequest,
   CreateQuoteWorkerProfileDocumentSpecRequest,
   CreateQuoteWorkerProfileSpecRequest,
   Quote,
   QuoteCompanyDocumentSpec,
+  QuoteCompanyProfileSpec,
   QuoteLine,
   QuoteListQuery,
   QuotePagedResult,
   QuoteWorkerProfileDocumentSpec,
   QuoteWorkerProfileSpec,
+  UpdateQuoteCompanyProfileSpecRequest,
   UpdateQuoteLineRequest,
   UpdateQuoteRequest,
   UpdateQuoteWorkerProfileSpecRequest,
@@ -134,6 +137,32 @@ export class QuoteService {
     return this.httpClient.delete<void>(
       `${this.baseUrl}/${id}/worker-profiles/${specId}/documents/${docId}`
     );
+  }
+
+  // ===== Company profile specs =====
+  async addCompanyProfile(
+    id: string,
+    request: CreateQuoteCompanyProfileSpecRequest
+  ): Promise<ApiResponse<QuoteCompanyProfileSpec>> {
+    return this.httpClient.post<QuoteCompanyProfileSpec>(
+      `${this.baseUrl}/${id}/company-profiles`,
+      request
+    );
+  }
+
+  async updateCompanyProfile(
+    id: string,
+    specId: string,
+    request: UpdateQuoteCompanyProfileSpecRequest
+  ): Promise<ApiResponse<QuoteCompanyProfileSpec>> {
+    return this.httpClient.put<QuoteCompanyProfileSpec>(
+      `${this.baseUrl}/${id}/company-profiles/${specId}`,
+      request
+    );
+  }
+
+  async removeCompanyProfile(id: string, specId: string): Promise<ApiResponse<void>> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}/company-profiles/${specId}`);
   }
 
   /**

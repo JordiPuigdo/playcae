@@ -63,6 +63,18 @@ export class HttpClient {
     return this.handleResponse<T>(response, doRequest);
   }
 
+  async patch<T = void>(url: string, body: unknown): Promise<ApiResponse<T>> {
+    const doRequest = () =>
+      fetch(`${this.baseUrl}${url}`, {
+        method: "PATCH",
+        headers: this.buildHeaders({ "Content-Type": "application/json" }),
+        body: JSON.stringify(body),
+        credentials: "include",
+      });
+    const response = await doRequest();
+    return this.handleResponse<T>(response, doRequest);
+  }
+
   async delete<T = void>(url: string): Promise<ApiResponse<T>> {
     const doRequest = () =>
       fetch(`${this.baseUrl}${url}`, {

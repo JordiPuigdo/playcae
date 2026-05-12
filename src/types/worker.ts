@@ -3,6 +3,7 @@ import { Document } from "./document";
 
 export interface Worker extends BaseEntity {
   companyId: string;
+  tenantAdminUserId?: string | null;
   firstName: string;
   lastName: string;
   cardId: string;
@@ -28,6 +29,7 @@ export interface WorkerFormData {
   cardId: string;
   position?: string;
   companyId: string;
+  tenantAdminUserId?: string | null;
   ssn: string;
 }
 

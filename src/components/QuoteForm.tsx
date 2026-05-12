@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   CreateQuoteRequest,
@@ -27,6 +28,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/Select";
+
+interface ProfileDraft {
+  name: string;
+  count: number;
+  documentCount: number;
+}
 
 interface QuoteFormProps {
   isOpen: boolean;
@@ -60,6 +67,10 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
     validUntil: null,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [workerProfiles, setWorkerProfiles] = useState<ProfileDraft[]>([]);
+  const [companyProfiles, setCompanyProfiles] = useState<ProfileDraft[]>([]);
+  const [newWorkerProfile, setNewWorkerProfile] = useState<ProfileDraft>({ name: "", count: 1, documentCount: 0 });
+  const [newCompanyProfile, setNewCompanyProfile] = useState<ProfileDraft>({ name: "", count: 1, documentCount: 0 });
 
   useEffect(() => {
     if (!isOpen) return;
@@ -81,6 +92,10 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
       validUntil: null,
     });
     setErrors({});
+    setWorkerProfiles([]);
+    setCompanyProfiles([]);
+    setNewWorkerProfile({ name: "", count: 1, documentCount: 0 });
+    setNewCompanyProfile({ name: "", count: 1, documentCount: 0 });
   }, [isOpen, fixedLead]);
 
   const validate = (): boolean => {
@@ -108,6 +123,19 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
         leadId: selectedLead.id,
         simultaneousWorksCount: form.hasWorksModule ? form.simultaneousWorksCount : 0,
         internalWorkersCount: form.hasInternalWorkersModule ? form.internalWorkersCount : 0,
+        workerProfiles: workerProfiles.map((p, i) => ({
+          name: p.name,
+          workerCount: p.count,
+          documentCount: p.documentCount,
+          sortOrder: i,
+          documents: [],
+        })),
+        companyProfiles: companyProfiles.map((p, i) => ({
+          name: p.name,
+          companyCount: p.count,
+          documentCount: p.documentCount,
+          sortOrder: i,
+        })),
       };
       await onSubmit(payload);
       onClose();
@@ -126,8 +154,8 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="sm:max-w-[640px] bg-white border border-brand-accent/30 shadow-xl">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-[640px] bg-white border border-brand-accent/30 shadow-xl flex flex-col max-h-[90vh]">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="text-brand-primary">
               {t("quotes.form.createTitle")}
             </DialogTitle>
@@ -136,7 +164,8 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
             </DialogDescription>
           </DialogHeader>
 
-          <form onSubmit={submit} className="space-y-5">
+          <form onSubmit={submit} className="flex flex-col flex-1 min-h-0">
+            <div className="overflow-y-auto flex-1 space-y-5 pr-1">
             <div className="space-y-2">
               <Label className="text-brand-primary">{t("quotes.form.lead")} *</Label>
               {fixedLead ? (
@@ -328,7 +357,146 @@ export const QuoteForm = ({ isOpen, onClose, onSubmit, fixedLead }: QuoteFormPro
               )}
             </div>
 
-            <DialogFooter>
+            {/* Plantillas por trabajador */}
+            <div className="space-y-3 rounded-md border border-playBlueLight/30 p-3">
+              <Label className="text-brand-primary font-medium">
+                {t("quotes.form.workerProfilesTitle")}
+              </Label>
+              {workerProfiles.map((p, i) => (
+                <div key={i} className="flex items-center gap-2 bg-playGrey/40 rounded-md px-3 py-2">
+                  <span className="flex-1 text-sm font-medium text-brand-primary truncate">{p.name}</span>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {p.count} {t("quotes.form.workerCountShort")} · {p.documentCount} {t("quotes.form.docCountShort")}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setWorkerProfiles((prev) => prev.filter((_, idx) => idx !== i))}
+                    className="text-destructive hover:text-destructive shrink-0"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+              <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-end">
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.profileName")}</Label>
+                  <Input
+                    uppercase={false}
+                    value={newWorkerProfile.name}
+                    onChange={(e) => setNewWorkerProfile((p) => ({ ...p, name: e.target.value }))}
+                    placeholder={t("quotes.form.profileNamePlaceholder")}
+                    className="border-brand-accent"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.workerCount")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={newWorkerProfile.count}
+                    onChange={(e) => setNewWorkerProfile((p) => ({ ...p, count: Math.max(1, Number(e.target.value)) }))}
+                    className="border-brand-accent w-20"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.documentCount")}</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={newWorkerProfile.documentCount}
+                    onChange={(e) => setNewWorkerProfile((p) => ({ ...p, documentCount: Math.max(0, Number(e.target.value)) }))}
+                    className="border-brand-accent w-20"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!newWorkerProfile.name.trim()}
+                  onClick={() => {
+                    setWorkerProfiles((prev) => [...prev, { ...newWorkerProfile }]);
+                    setNewWorkerProfile({ name: "", count: 1, documentCount: 0 });
+                  }}
+                  className="border-brand-accent self-end"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {/* Plantillas por empresa */}
+            <div className="space-y-3 rounded-md border border-playBlueLight/30 p-3">
+              <Label className="text-brand-primary font-medium">
+                {t("quotes.form.companyProfilesTitle")}
+              </Label>
+              {companyProfiles.map((p, i) => (
+                <div key={i} className="flex items-center gap-2 bg-playGrey/40 rounded-md px-3 py-2">
+                  <span className="flex-1 text-sm font-medium text-brand-primary truncate">{p.name}</span>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {p.count} {t("quotes.form.companyCountShort")} · {p.documentCount} {t("quotes.form.docCountShort")}
+                  </span>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCompanyProfiles((prev) => prev.filter((_, idx) => idx !== i))}
+                    className="text-destructive hover:text-destructive shrink-0"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                </div>
+              ))}
+              <div className="grid grid-cols-[1fr_auto_auto_auto] gap-2 items-end">
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.profileName")}</Label>
+                  <Input
+                    uppercase={false}
+                    value={newCompanyProfile.name}
+                    onChange={(e) => setNewCompanyProfile((p) => ({ ...p, name: e.target.value }))}
+                    placeholder={t("quotes.form.profileNamePlaceholder")}
+                    className="border-brand-accent"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.companyCount")}</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={newCompanyProfile.count}
+                    onChange={(e) => setNewCompanyProfile((p) => ({ ...p, count: Math.max(1, Number(e.target.value)) }))}
+                    className="border-brand-accent w-20"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label className="text-xs text-brand-accent">{t("quotes.form.documentCount")}</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={newCompanyProfile.documentCount}
+                    onChange={(e) => setNewCompanyProfile((p) => ({ ...p, documentCount: Math.max(0, Number(e.target.value)) }))}
+                    className="border-brand-accent w-20"
+                  />
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={!newCompanyProfile.name.trim()}
+                  onClick={() => {
+                    setCompanyProfiles((prev) => [...prev, { ...newCompanyProfile }]);
+                    setNewCompanyProfile({ name: "", count: 1, documentCount: 0 });
+                  }}
+                  className="border-brand-accent self-end"
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            </div>
+
+            <DialogFooter className="shrink-0 pt-4 border-t border-playBlueLight/30">
               <Button
                 type="button"
                 variant="outline"

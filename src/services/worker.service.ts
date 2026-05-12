@@ -13,6 +13,7 @@ export interface IWorkerService {
   getById(id: string): Promise<ApiResponse<Worker>>;
   update(id: string, worker: Partial<Worker>): Promise<ApiResponse<Worker>>;
   delete(id: string): Promise<ApiResponse<void>>;
+  activate(id: string, tenantAdminUserId?: string | null): Promise<ApiResponse<void>>;
 }
 
 export class WorkerService implements IWorkerService {
@@ -58,7 +59,12 @@ export class WorkerService implements IWorkerService {
     return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 
-  async activate(id: string): Promise<ApiResponse<void>> {
-    return this.httpClient.put<void>(`${this.baseUrl}/${id}/activate`, {});
+  async activate(
+    id: string,
+    tenantAdminUserId?: string | null
+  ): Promise<ApiResponse<void>> {
+    return this.httpClient.put<void>(`${this.baseUrl}/${id}/activate`, {
+      tenantAdminUserId,
+    });
   }
 }
