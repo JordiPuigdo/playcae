@@ -84,7 +84,7 @@ export default function QuoteDetailPage({ params }: PageProps) {
   const handleDownloadPdf = async () => {
     setIsPdfLoading(true);
     try {
-      const res = await quoteService.generatePdf(quote.id);
+      const res = await quoteService.generatePdf(quote.id!);
       if (res.data?.pdfUrl) {
         window.open(res.data.pdfUrl, "_blank");
       } else {
