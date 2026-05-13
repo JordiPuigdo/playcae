@@ -767,6 +767,7 @@ export default function LeadsPage() {
         onClose={() => setSelectedLead(null)}
         onStatusUpdated={handleStatusUpdated}
         onEmailVerified={handleEmailVerified}
+        onLeadChanged={mutateLeads}
       />
 
       <Dialog open={!!inquiryToDelete} onOpenChange={(open) => { if (!open) setInquiryToDelete(null); }}>

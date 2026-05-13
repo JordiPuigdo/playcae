@@ -29,7 +29,7 @@ export default function PublicQuotePage({ params }: PageProps) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-playGrey">
-        <p className="text-brand-accent">Cargando…</p>
+        <p className="text-brand-accent">Cargando...</p>
       </div>
     );
   }
@@ -43,7 +43,7 @@ export default function PublicQuotePage({ params }: PageProps) {
             Propuesta no disponible
           </h1>
           <p className="text-brand-accent">
-            Este presupuesto ya no está disponible o el enlace no es válido.
+            Este presupuesto ya no esta disponible o el enlace no es valido.
           </p>
         </div>
       </div>

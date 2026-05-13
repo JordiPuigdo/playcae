@@ -2,7 +2,7 @@
 
 import { use, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, FileDown, FileText, Send } from "lucide-react";
+import { ArrowLeft, CheckSquare2, FileDown, FileText, Square } from "lucide-react";
 import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { EditableQuoteInfo } from "@/components/EditableQuoteInfo";
@@ -147,7 +147,7 @@ export default function QuoteDetailPage({ params }: PageProps) {
               <Button
                 variant="outline"
                 onClick={() =>
-                  window.open(`/presupuesto/preview/${quote.id}`, "_blank")
+                  window.open(`/quote-preview/${quote.id}`, "_blank")
                 }
                 className="border-playBlueLight"
               >
@@ -167,8 +167,11 @@ export default function QuoteDetailPage({ params }: PageProps) {
                   onClick={() => setIsConfirmSendOpen(true)}
                   className="bg-playOrange hover:bg-playOrange/90 text-white"
                 >
-                  <Send className="h-4 w-4 mr-1" />
-                  {quote.status === QuoteStatus.Sent ? t("quotes.actions.resend") : t("quotes.actions.send")}
+                  {quote.status === QuoteStatus.Sent
+                    ? <CheckSquare2 className="h-4 w-4 mr-1" />
+                    : <Square className="h-4 w-4 mr-1" />
+                  }
+                  {t("quotes.actions.send")}
                 </Button>
               )}
             </div>

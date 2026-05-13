@@ -1,6 +1,6 @@
 "use client";
 
-import { Edit, Trash2, FileText, Send } from "lucide-react";
+import { Edit, Trash2, FileText, CheckSquare2, Square, Download } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -37,23 +37,25 @@ interface QuoteTableProps {
   total: number;
   onDelete: (id: string) => Promise<void>;
   onSend?: (id: string) => Promise<void>;
+  onDownload?: (id: string) => Promise<void>;
 }
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+const formatCurrency = (value: number) => {
+  const abs = Math.abs(value).toFixed(2);
+  const [int, dec] = abs.split(".");
+  const intFormatted = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const decPart = dec === "00" ? "" : `,${dec}`;
+  return `${value < 0 ? "-" : ""}${intFormatted}${decPart} €`;
+};
 
-export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps) => {
+export const QuoteTable = ({ quotes, total, onDelete, onSend, onDownload }: QuoteTableProps) => {
   const { t } = useTranslation();
   const router = useRouter();
   const [toDelete, setToDelete] = useState<QuoteSimple | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [toSend, setToSend] = useState<QuoteSimple | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [downloadingId, setDownloadingId] = useState<string | null>(null);
 
   const { sortField, sortDirection, handleSort, sortedData } = useSortableTable<
     QuoteSimple,
@@ -114,6 +116,18 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
     } finally {
       setIsDeleting(false);
       setToDelete(null);
+    }
+  };
+
+  const handleDownload = async (q: QuoteSimple) => {
+    if (!onDownload || downloadingId) return;
+    setDownloadingId(q.id!);
+    try {
+      await onDownload(q.id!);
+    } catch {
+      toast({ title: t("errors.generic"), variant: "destructive" });
+    } finally {
+      setDownloadingId(null);
     }
   };
 
@@ -216,9 +230,24 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
                         size="sm"
                         onClick={() => setToSend(q)}
                         className="gap-1 text-brand-primary"
-                        title={q.status === QuoteStatus.Sent ? t("quotes.actions.resend") : t("quotes.actions.send")}
+                        title={t("quotes.actions.send")}
                       >
-                        <Send className="h-3 w-3" />
+                        {q.status === QuoteStatus.Sent
+                          ? <CheckSquare2 className="h-3 w-3" />
+                          : <Square className="h-3 w-3" />
+                        }
+                      </Button>
+                    )}
+                    {onDownload && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDownload(q)}
+                        disabled={downloadingId === q.id}
+                        className="gap-1"
+                        title={t("quotes.actions.downloadPdf")}
+                      >
+                        <Download className="h-3 w-3" />
                       </Button>
                     )}
                     <Button
@@ -226,7 +255,7 @@ export const QuoteTable = ({ quotes, total, onDelete, onSend }: QuoteTableProps)
                       size="sm"
                       onClick={() =>
                         window.open(
-                          `/presupuesto/preview/${q.id}`,
+                          `/quote-preview/${q.id}`,
                           "_blank"
                         )
                       }

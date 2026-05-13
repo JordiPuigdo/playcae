@@ -1,7 +1,7 @@
 "use client";
 
 import { use, useEffect, useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { FileText, Printer, Eye } from "lucide-react";
 import { QuoteService } from "@/services/quote.service";
 import { QuoteDocument } from "@/components/QuoteDocument";
@@ -16,6 +16,8 @@ interface PageProps {
 export default function QuotePreviewPage({ params }: PageProps) {
   const { id } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pdfToken = searchParams.get("pdfToken");
   const { user, isAuthenticated } = useAuthStore();
   const [quote, setQuote] = useState<Quote | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +26,15 @@ export default function QuotePreviewPage({ params }: PageProps) {
   const service = useMemo(() => new QuoteService(), []);
 
   useEffect(() => {
+    if (pdfToken) {
+      service
+        .getByRenderToken(id, pdfToken)
+        .then((res) => setQuote(res.data))
+        .catch(() => setError("Presupuesto no disponible"))
+        .finally(() => setLoading(false));
+      return;
+    }
+
     if (!isAuthenticated || !user) return;
     if (user.role !== UserRole.SuperAdmin) {
       router.replace("/dashboard");
@@ -34,12 +45,12 @@ export default function QuotePreviewPage({ params }: PageProps) {
       .then((res) => setQuote(res.data))
       .catch(() => setError("Presupuesto no disponible"))
       .finally(() => setLoading(false));
-  }, [service, id, isAuthenticated, user, router]);
+  }, [service, id, isAuthenticated, user, router, pdfToken]);
 
-  if (!isAuthenticated || !user || loading) {
+  if ((!pdfToken && (!isAuthenticated || !user)) || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-playGrey">
-        <p className="text-brand-accent">Cargando…</p>
+        <p className="text-brand-accent">Cargando...</p>
       </div>
     );
   }
@@ -64,7 +75,7 @@ export default function QuotePreviewPage({ params }: PageProps) {
     <div className="min-h-screen bg-playGrey">
       <div className="no-print bg-playOrange text-white px-4 py-2 flex items-center justify-center gap-2 text-sm font-medium">
         <Eye className="h-4 w-4" />
-        Vista previa interna — el cliente no ve esta barra
+        Vista previa interna - el cliente no ve esta barra
       </div>
       <div className="py-6 px-4">
         <div className="no-print max-w-[900px] mx-auto mb-4 flex justify-end">

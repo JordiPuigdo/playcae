@@ -4,13 +4,13 @@ import Image from "next/image";
 import { CheckCircle2 } from "lucide-react";
 import { Quote, QuoteBillingType, QuoteLanguage, QuoteStatus } from "@/types/quote";
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+const formatCurrency = (value: number) => {
+  const abs = Math.abs(value).toFixed(2);
+  const [int, dec] = abs.split(".");
+  const intFormatted = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const decPart = dec === "00" ? "" : `,${dec}`;
+  return `${value < 0 ? "-" : ""}${intFormatted}${decPart} €`;
+};
 
 const formatDate = (iso?: string | null, lang: QuoteLanguage = QuoteLanguage.Es) => {
   if (!iso) return "-";
@@ -62,13 +62,15 @@ export function QuoteDocument({ quote }: Props) {
   const halfTotal = quote.firstYearTotal / 2;
 
   return (
-    <div style={{ maxWidth: 900, margin: "0 auto", background: "white", boxShadow: "0 4px 40px rgba(0,0,0,0.12)" }}>
+    <div data-quote-document="true" style={{ maxWidth: 900, margin: "0 auto", background: "white", boxShadow: "0 4px 40px rgba(0,0,0,0.12)" }}>
       <style>{`
         @media print {
           .no-print { display: none !important; }
           body { background: white !important; }
           @page { size: A4; margin: 0; }
           * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+          .print-section { break-inside: avoid; }
+          .print-page-break { break-before: page; }
         }
       `}</style>
 
@@ -229,7 +231,7 @@ export function QuoteDocument({ quote }: Props) {
         </Section>
 
         {/* ── PROPUESTA ECONÓMICA ── */}
-        <Section>
+        <Section pageBreak>
           <SectionHeader icon="💰" title={isCa ? "Proposta Econòmica" : "Propuesta Económica"} />
           <div style={{ background: "#153454", borderRadius: 14, padding: 32, color: "white", marginTop: 8 }}>
             {[...quote.lines].sort((a, b) => a.sortOrder - b.sortOrder).map((line, i, arr) => (
@@ -250,9 +252,13 @@ export function QuoteDocument({ quote }: Props) {
                     {line.billingType === QuoteBillingType.Annual
                       ? isCa ? "Pagament anual" : "Pago anual"
                       : isCa ? "Pagament únic" : "Pago único"}
+                    {" · "}
+                    {line.quantity === 1
+                      ? isCa ? "1 ut." : "1 ud."
+                      : isCa ? `${line.quantity} uts.` : `${line.quantity} uds.`}
                   </small>
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: "white", fontFamily: "monospace", whiteSpace: "nowrap", flexShrink: 0 }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: line.nameSnapshot.includes("CAE") ? "#EF7932" : "white", fontFamily: "monospace", whiteSpace: "nowrap", flexShrink: 0 }}>
                   {formatCurrency(line.unitPrice * line.quantity)}
                 </div>
               </div>
@@ -379,7 +385,7 @@ export function QuoteDocument({ quote }: Props) {
         </Section>
 
         {/* ── ACEPTACIÓN ── */}
-        <Section noBorder>
+        <Section noBorder pageBreak>
           <SectionHeader icon="✅" title={isCa ? "Acceptació de l'Oferta" : "Aceptación de la Oferta"} />
           <p style={{ fontSize: 13, color: "#4a5568", marginBottom: 20 }}>
             {quote.status === QuoteStatus.Accepted
@@ -449,9 +455,12 @@ export function QuoteDocument({ quote }: Props) {
 
 // ── Sub-components ──────────────────────────────────────────
 
-function Section({ children, noBorder }: { children: React.ReactNode; noBorder?: boolean }) {
+function Section({ children, noBorder, pageBreak }: { children: React.ReactNode; noBorder?: boolean; pageBreak?: boolean }) {
   return (
-    <div style={{ padding: "36px 0", borderBottom: noBorder ? "none" : "1px solid #e2e8f0" }}>
+    <div
+      className={`print-section${pageBreak ? " print-page-break" : ""}`}
+      style={{ padding: "36px 0", borderBottom: noBorder ? "none" : "1px solid #e2e8f0" }}
+    >
       {children}
     </div>
   );

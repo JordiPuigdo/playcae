@@ -183,4 +183,10 @@ export class QuoteService {
       `${process.env.NEXT_PUBLIC_PLAYCAE_API}/api/public/quotes/${token}`
     );
   }
+
+  async getByRenderToken(id: string, token: string): Promise<ApiResponse<Quote>> {
+    return this.httpClient.get<Quote>(
+      `${process.env.NEXT_PUBLIC_PLAYCAE_API}/api/public/quotes/render/${id}?token=${encodeURIComponent(token)}`
+    );
+  }
 }

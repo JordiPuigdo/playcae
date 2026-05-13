@@ -72,9 +72,10 @@ interface LeadDetailPanelProps {
   onClose: () => void;
   onStatusUpdated: (leadId: string, newStatus: LeadStatus) => void;
   onEmailVerified: (leadId: string, verified: boolean) => void;
+  onLeadChanged?: () => void;
 }
 
-export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerified }: LeadDetailPanelProps) {
+export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerified, onLeadChanged }: LeadDetailPanelProps) {
   const [events, setEvents] = useState<LeadEvent[]>([]);
   const [eventsLoading, setEventsLoading] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<LeadStatus>(LeadStatus.New);
@@ -115,6 +116,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
       onStatusUpdated(lead.id!, selectedStatus);
       setStatusNote("");
       await loadEvents(lead.id!);
+      onLeadChanged?.();
     } catch {
       /* noop */
     } finally {
@@ -130,6 +132,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
       setNoteText("");
       setActiveAction(null);
       await loadEvents(lead.id!);
+      onLeadChanged?.();
     } catch {
       /* noop */
     } finally {
@@ -141,6 +144,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
     if (!lead) return;
     await leadService.addEvent(lead.id!, { eventType });
     await loadEvents(lead.id!);
+    onLeadChanged?.();
   }
 
   async function handleActivate() {
@@ -150,6 +154,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
       await leadService.activate(lead.id!);
       onEmailVerified(lead.id!, true);
       await loadEvents(lead.id!);
+      onLeadChanged?.();
     } catch {
       /* noop */
     } finally {
@@ -164,6 +169,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
       await leadService.deactivate(lead.id!);
       onEmailVerified(lead.id!, false);
       await loadEvents(lead.id!);
+      onLeadChanged?.();
     } catch {
       /* noop */
     } finally {
@@ -179,6 +185,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
       setNoteText("");
       setActiveAction(null);
       await loadEvents(lead.id!);
+      onLeadChanged?.();
     } catch {
       /* noop */
     } finally {

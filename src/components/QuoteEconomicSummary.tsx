@@ -8,13 +8,13 @@ interface Props {
   quote: Quote;
 }
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+const formatCurrency = (value: number) => {
+  const abs = Math.abs(value).toFixed(2);
+  const [int, dec] = abs.split(".");
+  const intFormatted = int.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  const decPart = dec === "00" ? "" : `,${dec}`;
+  return `${value < 0 ? "-" : ""}${intFormatted}${decPart} €`;
+};
 
 export const QuoteEconomicSummary = ({ quote }: Props) => {
   const { t } = useTranslation();

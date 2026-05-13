@@ -23,7 +23,7 @@ const QuotesContent = () => {
   const router = useRouter();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { items, total, page, totalPages, query, setQuery, isLoading, create, remove, send } =
+  const { items, total, page, totalPages, query, setQuery, isLoading, create, remove, send, downloadPdf } =
     useQuotes({ page: 1, pageSize: PAGE_SIZE });
 
   useEffect(() => {
@@ -115,6 +115,7 @@ const QuotesContent = () => {
               await remove(id);
             }}
             onSend={handleSend}
+            onDownload={downloadPdf}
           />
         )}
 

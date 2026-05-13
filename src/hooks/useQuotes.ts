@@ -62,6 +62,11 @@ export const useQuotes = (initialQuery: QuoteListQuery = { page: 1, pageSize: 20
     return response.data;
   };
 
+  const downloadPdf = async (id: string): Promise<void> => {
+    const { data: { pdfUrl } } = await service.generatePdf(id);
+    window.open(pdfUrl, "_blank");
+  };
+
   return {
     items,
     total,
@@ -77,6 +82,7 @@ export const useQuotes = (initialQuery: QuoteListQuery = { page: 1, pageSize: 20
     update,
     remove,
     send,
+    downloadPdf,
     refresh: mutate,
   };
 };
