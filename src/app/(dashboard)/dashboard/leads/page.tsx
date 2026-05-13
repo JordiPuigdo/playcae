@@ -252,7 +252,8 @@ export default function LeadsPage() {
         case "lastEventDate":
           return dayjs(a.lastEventDate ?? 0).valueOf() - dayjs(b.lastEventDate ?? 0).valueOf();
       }
-    }
+    },
+    { initialSortField: "lastEventDate", initialSortDirection: "desc" }
   );
 
   if (!user) return <Loader text="" />;

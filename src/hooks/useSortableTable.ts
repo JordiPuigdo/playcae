@@ -9,12 +9,18 @@ export interface UseSortableTableReturn<T, F extends string> {
   sortedData: T[];
 }
 
+interface UseSortableTableOptions<F extends string> {
+  initialSortField?: F;
+  initialSortDirection?: SortDirection;
+}
+
 export function useSortableTable<T, F extends string>(
   data: T[],
-  compareFn: (a: T, b: T, field: F) => number
+  compareFn: (a: T, b: T, field: F) => number,
+  options?: UseSortableTableOptions<F>
 ): UseSortableTableReturn<T, F> {
-  const [sortField, setSortField] = useState<F | null>(null);
-  const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [sortField, setSortField] = useState<F | null>(options?.initialSortField ?? null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>(options?.initialSortDirection ?? null);
 
   const handleSort = (field: F) => {
     if (sortField === field) {
