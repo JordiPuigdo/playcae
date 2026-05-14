@@ -33,21 +33,6 @@ interface LeadFormProps {
   sourceInquiryId?: string;
 }
 
-const generatePassword = () => {
-  // Strong placeholder password; real password is set only when the lead is
-  // promoted to a tenant Admin user upon quote acceptance.
-  const bytes = new Uint8Array(18);
-  crypto.getRandomValues(bytes);
-  return (
-    "Tmp!" +
-    Array.from(bytes)
-      .map((b) => b.toString(36))
-      .join("")
-      .slice(0, 20) +
-    "9"
-  );
-};
-
 export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initialEmail, initialContactPerson, sourceInquiryId }: LeadFormProps) => {
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
@@ -59,7 +44,6 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     taxId: "",
     contactPerson: "",
     address: "",
-    password: generatePassword(),
     origin: LeadOrigin.Web,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -93,7 +77,6 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
       taxId: "",
       contactPerson,
       address: "",
-      password: generatePassword(),
       origin: LeadOrigin.Web,
     });
     setErrors({});

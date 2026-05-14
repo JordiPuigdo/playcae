@@ -14,6 +14,7 @@ export interface ILeadService {
   getAll(query?: LeadListQuery): Promise<ApiResponse<LeadPagedResult>>;
   create(request: CreateLeadRequest): Promise<ApiResponse<Lead>>;
   updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>>;
+  onboardClient(id: string): Promise<ApiResponse<Lead>>;
   activate(id: string): Promise<ApiResponse<Lead>>;
   deactivate(id: string): Promise<ApiResponse<Lead>>;
   getEvents(id: string): Promise<ApiResponse<LeadEvent[]>>;
@@ -50,6 +51,10 @@ export class LeadService implements ILeadService {
 
   async updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>> {
     return this.httpClient.patch<Lead>(`${this.baseUrl}/${id}/status`, request);
+  }
+
+  async onboardClient(id: string): Promise<ApiResponse<Lead>> {
+    return this.httpClient.post<Lead>(`${this.baseUrl}/${id}/onboard`, {});
   }
 
   async activate(id: string): Promise<ApiResponse<Lead>> {

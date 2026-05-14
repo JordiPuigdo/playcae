@@ -31,10 +31,10 @@ export interface Lead extends BaseEntity {
   taxId: string;
   contactPerson: string;
   address: string;
-  password: string;
   origin: LeadOrigin;
+  emailVerified: boolean;
   status: LeadStatus;
-  userId: string;
+  userId?: string;
 }
 
 export interface LeadListItem extends BaseEntity {
@@ -83,7 +83,6 @@ export interface CreateLeadRequest {
   taxId: string;
   contactPerson: string;
   address: string;
-  password: string;
   origin: LeadOrigin;
   sourceInquiryId?: string;
 }

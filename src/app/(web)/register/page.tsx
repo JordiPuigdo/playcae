@@ -114,7 +114,6 @@ export default function RegisterPage() {
         email: registerData.email,
         phone: registerData.phone,
         address: registerData.address,
-        password: registerData.password,
         origin: LeadOrigin.Web,
       });
 

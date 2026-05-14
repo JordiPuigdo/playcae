@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { ArrowRight, FileText, Megaphone, Plus, Search, ShieldCheck, ShieldOff, Trash2, Users } from "lucide-react";
+import { ArrowRight, FileText, Megaphone, Plus, Rocket, Search, ShieldCheck, ShieldOff, Trash2, Users } from "lucide-react";
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 import {
@@ -109,6 +109,8 @@ export default function LeadsPage() {
   const [inquiryToConvert, setInquiryToConvert] = useState<WebInquiry | null>(null);
   const [inquiryToDelete, setInquiryToDelete] = useState<WebInquiry | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [onboardTarget, setOnboardTarget] = useState<LeadListItem | null>(null);
+  const [isOnboarding, setIsOnboarding] = useState(false);
 
   const { inquiries, leads, inquiryError, leadError, isLoading, mutateLeads, mutateInquiries } =
     useDashboardLeads({
@@ -212,6 +214,31 @@ export default function LeadsPage() {
       setInquiryToDelete(null);
     }
   }, [inquiryToDelete, mutateInquiries]);
+
+  const handleOnboardClient = useCallback(async () => {
+    if (!onboardTarget?.id) return;
+    setIsOnboarding(true);
+    try {
+      const response = await leadService.onboardClient(onboardTarget.id);
+      mutateLeads((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.map((item) =>
+            item.id === onboardTarget.id
+              ? { ...item, userId: response.data.userId, emailVerified: true, status: response.data.status }
+              : item
+          ),
+        };
+      }, false);
+      toast({ title: "Cliente activado. Se ha enviado el email de acceso." });
+    } catch {
+      toast({ title: "Error al activar el cliente", variant: "destructive" });
+    } finally {
+      setIsOnboarding(false);
+      setOnboardTarget(null);
+    }
+  }, [onboardTarget, mutateLeads]);
 
   const inquirySort = useSortableTable<WebInquiry, InquirySortField>(
     inquiries.items,
@@ -688,16 +715,30 @@ export default function LeadsPage() {
                         className="text-right whitespace-nowrap"
                         onClick={(e) => e.stopPropagation()}
                       >
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          title={t("quotes.actions.createFromLead")}
-                          onClick={() => setQuoteLead({ id: lead.id!, companyName: lead.companyName })}
-                          className="border-playOrange text-playOrange hover:bg-playOrange/10"
-                        >
-                          <FileText className="h-3 w-3" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          {!lead.userId && (
+                            <Button
+                              type="button"
+                              size="sm"
+                              title="Activar cliente"
+                              onClick={() => setOnboardTarget(lead)}
+                              className="gap-1 bg-playGreen hover:bg-playGreen/90 text-white"
+                            >
+                              <Rocket className="h-3 w-3" />
+                              Activar
+                            </Button>
+                          )}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title={t("quotes.actions.createFromLead")}
+                            onClick={() => setQuoteLead({ id: lead.id!, companyName: lead.companyName })}
+                            className="border-playOrange text-playOrange hover:bg-playOrange/10"
+                          >
+                            <FileText className="h-3 w-3" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
@@ -798,6 +839,41 @@ export default function LeadsPage() {
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting ? "Eliminando..." : "Sí, eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!onboardTarget} onOpenChange={(open) => { if (!open) setOnboardTarget(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿Activar cliente?</DialogTitle>
+            <DialogDescription>
+              Se creará el usuario, empresa, sede y licencia para{" "}
+              <span className="font-medium text-foreground">{onboardTarget?.companyName}</span>.
+              Se enviará un email con acceso temporal al correo{" "}
+              <span className="font-medium text-foreground">{onboardTarget?.email}</span>.
+              Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOnboardTarget(null)}
+              disabled={isOnboarding}
+              className="border-playBlueLight"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={handleOnboardClient}
+              disabled={isOnboarding}
+              className="bg-playGreen hover:bg-playGreen/90 text-white gap-2"
+            >
+              <Rocket className="h-4 w-4" />
+              {isOnboarding ? "Activando..." : "Sí, activar cliente"}
             </Button>
           </DialogFooter>
         </DialogContent>
