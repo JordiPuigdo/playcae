@@ -44,7 +44,7 @@ export default function ContactoPage() {
         "@type": "ContactPoint",
         contactType: "sales",
         email: "soporte@playcae.com",
-        telephone: "+34 628 735 826",
+        telephone: "+34 680 60 82 56",
         areaServed: "ES",
         availableLanguage: ["es"],
       },
@@ -188,10 +188,10 @@ export default function ContactoPage() {
                   </svg>
                 </div>
                 <a
-                  href="tel:+34600123456"
+                  href="tel:+34680608256"
                   className="text-playBlueDark hover:underline hover:text-playOrange"
                 >
-                  +34 628 735 826
+                  +34 680 60 82 56
                 </a>
               </div>
             </div>

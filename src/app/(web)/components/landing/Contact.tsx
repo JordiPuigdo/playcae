@@ -157,7 +157,7 @@ const ContactSection: React.FC = () => {
                     />
                   </svg>
                 </div>
-                <span className="text-gray-700">+34 628 735 826</span>
+                <span className="text-gray-700">+34 680 60 82 56</span>
               </div>
             </div>
             <div>

@@ -248,7 +248,7 @@ export function QuoteDocument({ quote }: Props) {
                       </span>
                     )}
                   </strong>
-                  <small style={{ fontSize: 12, color: "rgba(255,255,255,0.45)" }}>
+                  <small style={{ fontSize: 12, color: line.billingType === QuoteBillingType.Annual ? "#EF7932" : "rgba(255,255,255,0.45)" }}>
                     {line.billingType === QuoteBillingType.Annual
                       ? isCa ? "Pagament anual" : "Pago anual"
                       : isCa ? "Pagament únic" : "Pago único"}
@@ -258,7 +258,7 @@ export function QuoteDocument({ quote }: Props) {
                       : isCa ? `${line.quantity} uts.` : `${line.quantity} uds.`}
                   </small>
                 </div>
-                <div style={{ fontSize: 22, fontWeight: 800, color: line.nameSnapshot.includes("CAE") ? "#EF7932" : "white", fontFamily: "monospace", whiteSpace: "nowrap", flexShrink: 0 }}>
+                <div style={{ fontSize: 22, fontWeight: 800, color: line.billingType === QuoteBillingType.Annual ? "#EF7932" : "white", fontFamily: "monospace", whiteSpace: "nowrap", flexShrink: 0 }}>
                   {formatCurrency(line.unitPrice * line.quantity)}
                 </div>
               </div>
