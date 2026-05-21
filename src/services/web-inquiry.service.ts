@@ -11,6 +11,12 @@ export class WebInquiryService {
 
   constructor(private readonly httpClient: HttpClient = new HttpClient()) {}
 
+  async checkEmail(email: string): Promise<{ exists: boolean }> {
+    return this.httpClient.get<{ exists: boolean }>(
+      `${this.baseUrl}/check-email?email=${encodeURIComponent(email)}`
+    );
+  }
+
   async delete(id: string): Promise<void> {
     await this.httpClient.delete(`${this.baseUrl}/${id}`);
   }

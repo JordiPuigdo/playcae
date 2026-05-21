@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CreateLeadRequest, Lead, LeadOrigin } from "@/types/lead";
 import { LeadService } from "@/services/lead.service";
+import { WebInquiryService } from "@/services/web-inquiry.service";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +38,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
   const { t } = useTranslation();
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
+  const [inquiryWarning, setInquiryWarning] = useState(false);
   const [form, setForm] = useState<CreateLeadRequest>({
     companyName: initialCompanyName ?? "",
     email: "",
@@ -81,6 +83,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     });
     setErrors({});
     setServerError(null);
+    setInquiryWarning(false);
   }, [isOpen, initialCompanyName, initialEmail, initialContactPerson]);
 
   const validate = (): boolean => {
@@ -94,9 +97,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     return Object.keys(e).length === 0;
   };
 
-  const submit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!validate()) return;
+  const createLead = async () => {
     setSubmitting(true);
     setServerError(null);
     try {
@@ -112,6 +113,29 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     }
   };
 
+  const submit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (!validate()) return;
+
+    if (!sourceInquiryId) {
+      setSubmitting(true);
+      try {
+        const inquiryService = new WebInquiryService();
+        const { exists } = await inquiryService.checkEmail(form.email);
+        if (exists) {
+          setInquiryWarning(true);
+          return;
+        }
+      } catch {
+        // si falla el check, dejamos continuar para no bloquear el flujo
+      } finally {
+        setSubmitting(false);
+      }
+    }
+
+    await createLead();
+  };
+
   const setField = <K extends keyof CreateLeadRequest>(
     key: K,
     value: CreateLeadRequest[K]
@@ -123,6 +147,43 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
   };
 
   return (
+    <>
+    <Dialog open={inquiryWarning} onOpenChange={(open) => { if (!open) setInquiryWarning(false); }}>
+      <DialogContent className="sm:max-w-md bg-white border border-brand-accent/30 shadow-xl">
+        <DialogHeader>
+          <DialogTitle className="text-brand-primary">
+            Este email ya existe en Contacto y Precios
+          </DialogTitle>
+          <DialogDescription>
+            El email{" "}
+            <span className="font-medium text-foreground">{form.email}</span>{" "}
+            ya tiene una entrada en la tabla de Contacto y Precios.
+            Te recomendamos generarlo desde allí usando el botón{" "}
+            <span className="font-medium">«Convertir a lead»</span>.
+            ¿Quieres crearlo igualmente desde aquí?
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="flex gap-2 sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setInquiryWarning(false)}
+            className="border-brand-accent text-brand-primary hover:bg-brand-neutral"
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="button"
+            disabled={submitting}
+            onClick={() => { setInquiryWarning(false); createLead(); }}
+            className="bg-brand-secondary hover:bg-brand-secondary/90 text-white shadow-md"
+          >
+            {submitting ? t("common.saving") : "Sí, crear igualmente"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[560px] bg-white border border-brand-accent/30 shadow-xl">
         <DialogHeader>
@@ -259,5 +320,6 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
         </form>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
