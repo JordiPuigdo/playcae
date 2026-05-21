@@ -123,6 +123,7 @@ function EditLicenseModal({
   const [maxSites, setMaxSites] = useState(toField(tenant.maxSites));
   const [alertThreshold, setAlertThreshold] = useState(String(tenant.alertThreshold));
   const [enableProjects, setEnableProjects] = useState(tenant.enableProjects);
+  const [enableAI, setEnableAI] = useState(tenant.enableAI);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
@@ -137,6 +138,7 @@ function EditLicenseModal({
         maxSites: fromField(maxSites),
         alertThreshold: Number(alertThreshold) || 5,
         enableProjects,
+        enableAI,
       };
       await LicenseService.updateTenantLicense(tenant.adminUserId, dto);
       toast({ title: t("license.edit.success"), variant: "default" });
@@ -246,6 +248,16 @@ function EditLicenseModal({
               onCheckedChange={setEnableProjects}
             />
           </div>
+          <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+            <div>
+              <Label className="text-sm font-medium">{t("license.edit.enableAI")}</Label>
+              <p className="text-xs text-muted-foreground">{t("license.edit.enableAIDesc")}</p>
+            </div>
+            <Switch
+              checked={enableAI}
+              onCheckedChange={setEnableAI}
+            />
+          </div>
         </div>
 
         <DialogFooter>
@@ -295,6 +307,7 @@ function CreateLicenseModal({
   const [maxSites, setMaxSites] = useState("");
   const [alertThreshold, setAlertThreshold] = useState("5");
   const [enableProjects, setEnableProjects] = useState(false);
+  const [enableAI, setEnableAI] = useState(true);
 
   const fromField = (val: string): number | null =>
     val.trim() === "" ? null : Number(val);
@@ -341,6 +354,7 @@ function CreateLicenseModal({
           maxSites: fromField(maxSites),
           alertThreshold: Number(alertThreshold) || 5,
           enableProjects,
+          enableAI,
         };
         await LicenseService.updateTenantLicense(res.data.adminUserId, dto);
         toast({ title: t("license.create.success") });
@@ -501,6 +515,16 @@ function CreateLicenseModal({
                 onCheckedChange={setEnableProjects}
               />
             </div>
+            <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+              <div>
+                <Label className="text-sm font-medium">{t("license.edit.enableAI")}</Label>
+                <p className="text-xs text-muted-foreground">{t("license.edit.enableAIDesc")}</p>
+              </div>
+              <Switch
+                checked={enableAI}
+                onCheckedChange={setEnableAI}
+              />
+            </div>
           </div>
         )}
 
@@ -603,13 +627,14 @@ function TenantTable({
               <TableHead className="text-center">{t("license.table.sites")}</TableHead>
               <TableHead className="text-center">{t("license.table.threshold")}</TableHead>
               <TableHead className="text-center">{t("license.table.projects")}</TableHead>
+              <TableHead className="text-center">{t("license.table.ai")}</TableHead>
               <TableHead className="text-right">{t("license.table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
                   {t("license.noTenants")}
                 </TableCell>
               </TableRow>
@@ -647,6 +672,11 @@ function TenantTable({
                   <TableCell className="text-center">
                     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tenant.enableProjects ? "bg-playGreen/10 text-playGreen" : "bg-playGrey text-muted-foreground"}`}>
                       {tenant.enableProjects ? t("license.table.projectsOn") : t("license.table.projectsOff")}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tenant.enableAI ? "bg-playGreen/10 text-playGreen" : "bg-playGrey text-muted-foreground"}`}>
+                      {tenant.enableAI ? t("license.table.aiOn") : t("license.table.aiOff")}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">
