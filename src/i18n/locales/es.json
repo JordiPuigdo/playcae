@@ -436,7 +436,11 @@
       },
       "origins": {
         "web": "Web",
-        "landing": "Landing"
+        "landing": "Landing",
+        "phone": "Llamada telefónica",
+        "socialMedia": "Redes sociales",
+        "event": "Feria / Evento",
+        "referral": "Referido"
       },
       "table": {
         "inquiries": {
@@ -871,6 +875,23 @@
       "modifyButton": "Modificar",
       "modifyTitle": "Modificar validación de {name}",
       "modifyDocument": "Modificar documento"
+    },
+    "detail": {
+      "title": "Detalles del documento",
+      "validationDate": "Fecha de validación",
+      "rejectionReason": "Motivo del rechazo",
+      "comment": "Comentario",
+      "noFile": "Sin archivo para previsualizar",
+      "openExternal": "Abrir en nueva pestaña",
+      "status": {
+        "Pending": "Pendiente",
+        "Approved": "Aprobado",
+        "Rejected": "Rechazado",
+        "Expired": "Caducado",
+        "ValidatedByAI": "Validado por IA",
+        "ExpiredByAI": "Caducado (IA)",
+        "PendingManualy": "Pendiente revisión"
+      }
     }
   },
   "accessControl": {

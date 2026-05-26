@@ -436,7 +436,11 @@
       },
       "origins": {
         "web": "Web",
-        "landing": "Landing"
+        "landing": "Landing",
+        "phone": "Trucada telefònica",
+        "socialMedia": "Xarxes socials",
+        "event": "Fira / Esdeveniment",
+        "referral": "Referit"
       },
       "table": {
         "inquiries": {
@@ -871,6 +875,23 @@
       "modifyButton": "Modificar",
       "modifyTitle": "Modificar validació de {name}",
       "modifyDocument": "Modificar document"
+    },
+    "detail": {
+      "title": "Detalls del document",
+      "validationDate": "Data de validació",
+      "rejectionReason": "Motiu del rebuig",
+      "comment": "Comentari",
+      "noFile": "Sense arxiu per previsualitzar",
+      "openExternal": "Obrir en nova pestanya",
+      "status": {
+        "Pending": "Pendent",
+        "Approved": "Aprovat",
+        "Rejected": "Rebutjat",
+        "Expired": "Caducat",
+        "ValidatedByAI": "Validat per IA",
+        "ExpiredByAI": "Caducat (IA)",
+        "PendingManualy": "Pendent revisió"
+      }
     }
   },
   "accessControl": {
