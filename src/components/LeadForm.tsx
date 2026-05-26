@@ -289,6 +289,18 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
                 <SelectItem value={String(LeadOrigin.Landing)}>
                   {t("dashboard.leads.origins.landing")}
                 </SelectItem>
+                <SelectItem value={String(LeadOrigin.Phone)}>
+                  {t("dashboard.leads.origins.phone")}
+                </SelectItem>
+                <SelectItem value={String(LeadOrigin.SocialMedia)}>
+                  {t("dashboard.leads.origins.socialMedia")}
+                </SelectItem>
+                <SelectItem value={String(LeadOrigin.Event)}>
+                  {t("dashboard.leads.origins.event")}
+                </SelectItem>
+                <SelectItem value={String(LeadOrigin.Referral)}>
+                  {t("dashboard.leads.origins.referral")}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>

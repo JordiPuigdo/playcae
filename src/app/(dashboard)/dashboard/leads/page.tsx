@@ -29,7 +29,6 @@ import { formatDate } from "@/app/utils/date";
 import Loader from "@/components/Loader";
 import { LeadDetailPanel } from "@/components/LeadDetailPanel";
 import { LeadForm } from "@/components/LeadForm";
-import { LeadStatusBadge } from "@/components/LeadStatusBadge";
 import { LeadStatusCell } from "@/components/LeadStatusCell";
 import { QuoteGeneratorWizard } from "@/components/QuoteGenerator";
 import { SortableHeader } from "@/components/SortableHeader";

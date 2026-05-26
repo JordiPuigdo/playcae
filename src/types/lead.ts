@@ -4,6 +4,10 @@ import { PagedResult } from "./pagination";
 export enum LeadOrigin {
   Web = 0,
   Landing = 1,
+  Phone = 2,
+  SocialMedia = 3,
+  Event = 4,
+  Referral = 5,
 }
 
 export enum LeadStatus {
