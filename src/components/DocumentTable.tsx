@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { useState } from "react";
 import { Document, EntityStatus } from "@/types/document";
 
 import {
@@ -21,6 +22,7 @@ import { DocumentValidation } from "./DocumentValidation";
 import { DocumentUpload } from "./DocumentUpload";
 import { FileCell } from "./FileCell";
 import { DocumentHistory } from "./DocumentHistory";
+import { DocumentDetailDrawer } from "./DocumentDetailDrawer";
 import { useTranslation } from "@/hooks/useTranslation";
 import { getDocumentTypeName } from "@/app/utils/document-type-utils";
 
@@ -36,7 +38,7 @@ interface DocumentsTableProps {
     comment?: string,
     expiryDate?: string
   ) => void;
-  onOpen: (documentId: string) => void;
+  onOpen?: (documentId: string) => void;
   companyId: string;
   onRefresh?: () => void;
 }
@@ -46,11 +48,11 @@ export const DocumentsTable = ({
   userRole,
   onUpload,
   onValidate,
-  onOpen,
   companyId,
   onRefresh,
 }: DocumentsTableProps) => {
   const { t } = useTranslation();
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const canUpload = userRole == UserRole.Company;
   const canValidate = userRole == UserRole.Admin;
   const { sortField, sortDirection, handleSort, sortedData: sortedDocuments } =
@@ -115,7 +117,10 @@ export const DocumentsTable = ({
                   </TableCell>
 
                   <TableCell>
-                    <FileCell document={document} onOpen={onOpen} />
+                    <FileCell
+                      document={document}
+                      onOpen={(id) => setSelectedDocumentId(id)}
+                    />
                   </TableCell>
 
                   <TableCell className="text-brand-primary">
@@ -179,6 +184,13 @@ export const DocumentsTable = ({
           </Table>
         </div>
       </CardContent>
+
+      <DocumentDetailDrawer
+        documentId={selectedDocumentId}
+        onClose={() => setSelectedDocumentId(null)}
+        canValidate={canValidate}
+        onValidated={onRefresh}
+      />
     </Card>
   );
 };

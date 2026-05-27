@@ -40,6 +40,7 @@ import { PendingValidationOwnerType } from "@/types/pendingValidation";
 import { UserRole } from "@/types/user";
 import { DocumentStatusBadge } from "@/components/DocumentStatusBadge";
 import { DocumentValidation } from "@/components/DocumentValidation";
+import { DocumentDetailDrawer } from "@/components/DocumentDetailDrawer";
 import { DocumentService } from "@/services/document.service";
 
 type SortField = "company" | "owner" | "documentType" | "uploadedDate" | "expirationDate";
@@ -62,6 +63,7 @@ export default function DocumentsManagementPage() {
   const [ownerFilter, setOwnerFilter] = useState("all");
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -202,15 +204,8 @@ export default function DocumentsManagementPage() {
     await refresh();
   };
 
-  const handleOpenDocument = async (documentId: string) => {
-    try {
-      const response = await documentService.open(documentId);
-      if (response.status === 200 && response.data) {
-        window.open(response.data, "_blank", "noopener,noreferrer");
-      }
-    } catch (error) {
-      console.error("Error al abrir documento", error);
-    }
+  const handleOpenDocument = (documentId: string) => {
+    setSelectedDocumentId(documentId);
   };
 
   if (!mounted) {
@@ -476,6 +471,13 @@ export default function DocumentsManagementPage() {
           </CardContent>
         </Card>
       </div>
+
+      <DocumentDetailDrawer
+        documentId={selectedDocumentId}
+        onClose={() => setSelectedDocumentId(null)}
+        canValidate={isAdmin}
+        onValidated={refresh}
+      />
     </div>
   );
 }

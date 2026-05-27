@@ -30,6 +30,7 @@ interface UseDocumentValidationReturn {
 }
 
 const VALID_STATUSES_FOR_VALIDATION: EntityStatus[] = [
+  EntityStatus.Pending,
   EntityStatus.Rejected,
   EntityStatus.Expired,
   EntityStatus.PendingManualy,

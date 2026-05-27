@@ -38,7 +38,7 @@ import { UserRole } from "@/types/user";
 import { WorkerFormData, WorkerStatus } from "@/types/worker";
 import { FileText, MessageSquare, Users, Network, Plus } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const CompanyDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -87,7 +87,6 @@ const CompanyDetailPage = () => {
     uploadDocument,
     validateDocument,
     showErrorUpload,
-    openDocument,
     update,
     refreshDocuments,
   } = useDocuments(id || "");
@@ -220,10 +219,6 @@ const CompanyDetailPage = () => {
   useEffect(() => {
     fetchCompany(id);
   }, [id]);
-
-  const handleOpenDocument = useCallback(async (documentId: string) => {
-    await openDocument(documentId);
-  }, []);
 
   const handleUploadDocument = async (
     documentId: string,
@@ -402,7 +397,6 @@ const CompanyDetailPage = () => {
                 onActivateWorker={(workerId) => {
                   activateWorker(workerId);
                 }}
-                onOpenDocument={(documentId) => handleOpenDocument(documentId)}
                 onRefresh={() => getWorkersByCompanyId(id)}
               />
             </TabsContent>
@@ -417,7 +411,6 @@ const CompanyDetailPage = () => {
                 onValidate={(id, isValid, comment, expiryDate) =>
                   handleValidateDocument(id, isValid, comment, expiryDate)
                 }
-                onOpen={(documentId) => handleOpenDocument(documentId)}
                 companyId={id}
                 onRefresh={refreshDocuments}
               />

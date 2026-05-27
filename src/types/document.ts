@@ -9,6 +9,8 @@ export interface Document extends BaseEntity {
   issueDate?: string;
   expirationDate?: string;
   uploadedDate: string;
+  validationDate?: string;
+  comment?: string;
 }
 
 export interface DocumentFormData {

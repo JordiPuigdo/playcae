@@ -44,6 +44,7 @@ import { DocumentHistory } from "./DocumentHistory";
 import { DocumentValidation } from "./DocumentValidation";
 import { FileCell } from "./FileCell";
 import { DocumentStatusBadge } from "./DocumentStatusBadge";
+import { DocumentDetailDrawer } from "./DocumentDetailDrawer";
 
 interface WorkersTableProps {
   workers: Worker[];
@@ -65,7 +66,7 @@ interface WorkersTableProps {
     expiryDate?: string
   ) => void;
   onActivateWorker: (workerId: string) => void;
-  onOpenDocument: (documentId: string) => void;
+  onOpenDocument?: (documentId: string) => void;
   onRefresh?: () => void;
 }
 
@@ -85,6 +86,7 @@ export const WorkersTable = ({
 }: WorkersTableProps) => {
   const { t } = useTranslation();
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
+  const [selectedDocumentId, setSelectedDocumentId] = useState<string | null>(null);
   const [editingWorker, setEditingWorker] = useState<Worker | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteWorker, setDeleteWorker] = useState<Worker | null>(null);
@@ -396,7 +398,7 @@ export const WorkersTable = ({
                                         <TableCell>
                                           <FileCell
                                             document={document}
-                                            onOpen={onOpenDocument}
+                                            onOpen={(id) => setSelectedDocumentId(id)}
                                           />
                                         </TableCell>
 
@@ -523,6 +525,13 @@ export const WorkersTable = ({
             : undefined
         }
         isLoading={isDeleting}
+      />
+
+      <DocumentDetailDrawer
+        documentId={selectedDocumentId}
+        onClose={() => setSelectedDocumentId(null)}
+        canValidate={canValidate}
+        onValidated={onRefresh}
       />
     </>
   );
