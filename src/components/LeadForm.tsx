@@ -121,7 +121,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
       setSubmitting(true);
       try {
         const inquiryService = new WebInquiryService();
-        const { exists } = await inquiryService.checkEmail(form.email);
+        const { data: { exists } } = await inquiryService.checkEmail(form.email);
         if (exists) {
           setInquiryWarning(true);
           return;

@@ -11,7 +11,7 @@ export class WebInquiryService {
 
   constructor(private readonly httpClient: HttpClient = new HttpClient()) {}
 
-  async checkEmail(email: string): Promise<{ exists: boolean }> {
+  async checkEmail(email: string): Promise<ApiResponse<{ exists: boolean }>> {
     return this.httpClient.get<{ exists: boolean }>(
       `${this.baseUrl}/check-email?email=${encodeURIComponent(email)}`
     );
