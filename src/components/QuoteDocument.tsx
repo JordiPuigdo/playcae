@@ -254,7 +254,7 @@ export function QuoteDocument({ quote }: Props) {
                 style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: i < arr.length - 1 ? "1px solid rgba(255,255,255,0.1)" : "none", gap: 24 }}
               >
                 <div style={{ flex: 1 }}>
-                  <strong style={{ display: "block", color: "white", fontSize: 15, fontWeight: 600, marginBottom: 3 }}>
+                  <strong style={{ display: "block", color: line.billingType === QuoteBillingType.Annual ? "#EF7932" : "white", fontSize: 15, fontWeight: 600, marginBottom: 3 }}>
                     {line.nameSnapshot}
                     {line.isOptional && (
                       <span style={{ marginLeft: 8, fontSize: 11, background: "rgba(244,197,66,0.3)", color: "#F4C542", borderRadius: 4, padding: "1px 6px" }}>
