@@ -20,7 +20,6 @@ import { WebInquiryService } from "@/services/web-inquiry.service";
 export type DashboardLeadTabId = "inquiries" | "registrations";
 export type InquiryTypeFilter = "all" | WebInquiryType;
 export type LeadOriginFilter = "all" | LeadOrigin;
-export type LeadStatusFilter = "all" | LeadStatus;
 
 interface UseDashboardLeadsParams {
   activeTab: DashboardLeadTabId;
@@ -29,7 +28,7 @@ interface UseDashboardLeadsParams {
   search: string;
   inquiryType: InquiryTypeFilter;
   leadOrigin: LeadOriginFilter;
-  leadStatus: LeadStatusFilter;
+  leadStatuses: LeadStatus[];
   hideRegistered: boolean;
 }
 
@@ -74,10 +73,10 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
       pageSize: params.pageSize,
       search: normalizedSearch,
       origin: params.leadOrigin === "all" ? undefined : params.leadOrigin,
-      status: params.leadStatus === "all" ? undefined : params.leadStatus,
+      statuses: params.leadStatuses.length ? params.leadStatuses : undefined,
       hideRegistered: params.hideRegistered,
     }),
-    [normalizedSearch, params.leadOrigin, params.leadStatus, params.hideRegistered, params.page, params.pageSize]
+    [normalizedSearch, params.leadOrigin, params.leadStatuses, params.hideRegistered, params.page, params.pageSize]
   );
 
   const {

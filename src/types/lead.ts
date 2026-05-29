@@ -75,6 +75,7 @@ export interface LeadListQuery {
   search?: string;
   origin?: LeadOrigin;
   status?: LeadStatus;
+  statuses?: LeadStatus[];
   hideRegistered?: boolean;
 }
 
@@ -94,6 +95,16 @@ export interface CreateLeadRequest {
 export interface UpdateLeadStatusRequest {
   status: LeadStatus;
   notes?: string;
+}
+
+export interface UpdateLeadRequest {
+  companyName: string;
+  email: string;
+  phone: string;
+  taxId: string;
+  contactPerson: string;
+  address: string;
+  origin: LeadOrigin;
 }
 
 export interface CreateLeadEventRequest {

@@ -1620,7 +1620,9 @@
       "selectModule": "Selecciona un mòdul del catàleg",
       "addModule": "Afegir mòdul",
       "addCustom": "Afegir línia lliure",
-      "newCustomLine": "Nova línia"
+      "newCustomLine": "Nova línia",
+      "moveUp": "Pujar",
+      "moveDown": "Baixar"
     },
     "companyDocs": {
       "title": "Documents d'empresa ({count})",

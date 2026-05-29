@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { CreateLeadRequest, Lead, LeadOrigin } from "@/types/lead";
+import { CreateLeadRequest, Lead, LeadListItem, LeadOrigin, UpdateLeadRequest } from "@/types/lead";
 import { LeadService } from "@/services/lead.service";
 import { WebInquiryService } from "@/services/web-inquiry.service";
 import {
@@ -27,15 +27,18 @@ import {
 interface LeadFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreated: (lead: Lead) => void;
+  onCreated?: (lead: Lead) => void;
+  onUpdated?: (lead: Lead) => void;
+  leadToEdit?: LeadListItem;
   initialCompanyName?: string;
   initialEmail?: string;
   initialContactPerson?: string;
   sourceInquiryId?: string;
 }
 
-export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initialEmail, initialContactPerson, sourceInquiryId }: LeadFormProps) => {
+export const LeadForm = ({ isOpen, onClose, onCreated, onUpdated, leadToEdit, initialCompanyName, initialEmail, initialContactPerson, sourceInquiryId }: LeadFormProps) => {
   const { t } = useTranslation();
+  const isEditMode = !!leadToEdit;
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [inquiryWarning, setInquiryWarning] = useState(false);
@@ -52,6 +55,22 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
 
   useEffect(() => {
     if (!isOpen) return;
+
+    if (isEditMode && leadToEdit) {
+      setForm({
+        companyName: leadToEdit.companyName ?? "",
+        email: leadToEdit.email ?? "",
+        phone: leadToEdit.phone ?? "",
+        taxId: leadToEdit.taxId ?? "",
+        contactPerson: leadToEdit.contactPerson ?? "",
+        address: leadToEdit.address ?? "",
+        origin: leadToEdit.origin,
+      });
+      setErrors({});
+      setServerError(null);
+      setInquiryWarning(false);
+      return;
+    }
 
     let contactPerson = (initialContactPerson ?? "").toUpperCase();
     let companyName = (initialCompanyName ?? "").toUpperCase();
@@ -84,7 +103,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     setErrors({});
     setServerError(null);
     setInquiryWarning(false);
-  }, [isOpen, initialCompanyName, initialEmail, initialContactPerson]);
+  }, [isOpen, isEditMode, leadToEdit, initialCompanyName, initialEmail, initialContactPerson]);
 
   const validate = (): boolean => {
     const e: Record<string, string> = {};
@@ -103,7 +122,7 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     try {
       const service = new LeadService();
       const response = await service.create({ ...form, sourceInquiryId });
-      onCreated(response.data);
+      onCreated?.(response.data);
       onClose();
     } catch (err) {
       const e = err as { message?: string };
@@ -113,9 +132,40 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
     }
   };
 
+  const updateLead = async () => {
+    if (!leadToEdit?.id) return;
+    setSubmitting(true);
+    setServerError(null);
+    try {
+      const service = new LeadService();
+      const request: UpdateLeadRequest = {
+        companyName: form.companyName,
+        email: form.email,
+        phone: form.phone,
+        taxId: form.taxId,
+        contactPerson: form.contactPerson,
+        address: form.address,
+        origin: form.origin,
+      };
+      const response = await service.update(leadToEdit.id, request);
+      onUpdated?.(response.data);
+      onClose();
+    } catch (err) {
+      const e = err as { message?: string };
+      setServerError(e.message || "Error al guardar los cambios");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!validate()) return;
+
+    if (isEditMode) {
+      await updateLead();
+      return;
+    }
 
     if (!sourceInquiryId) {
       setSubmitting(true);
@@ -188,10 +238,10 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
       <DialogContent className="sm:max-w-[560px] bg-white border border-brand-accent/30 shadow-xl">
         <DialogHeader>
           <DialogTitle className="text-brand-primary">
-            {t("leads.form.createTitle")}
+            {isEditMode ? "Editar lead" : t("leads.form.createTitle")}
           </DialogTitle>
           <DialogDescription className="text-brand-accent">
-            {t("leads.form.createDescription")}
+            {isEditMode ? "Modifica los datos del lead." : t("leads.form.createDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -326,7 +376,11 @@ export const LeadForm = ({ isOpen, onClose, onCreated, initialCompanyName, initi
               disabled={submitting}
               className="bg-brand-secondary hover:bg-brand-secondary/90 text-white shadow-md"
             >
-              {submitting ? t("common.saving") : t("leads.form.create")}
+              {submitting
+                ? t("common.saving")
+                : isEditMode
+                ? "Guardar cambios"
+                : t("leads.form.create")}
             </Button>
           </DialogFooter>
         </form>

@@ -7,12 +7,15 @@ import {
   LeadEvent,
   LeadListQuery,
   LeadPagedResult,
+  UpdateLeadRequest,
   UpdateLeadStatusRequest,
 } from "@/types/lead";
 
 export interface ILeadService {
   getAll(query?: LeadListQuery): Promise<ApiResponse<LeadPagedResult>>;
   create(request: CreateLeadRequest): Promise<ApiResponse<Lead>>;
+  update(id: string, request: UpdateLeadRequest): Promise<ApiResponse<Lead>>;
+  delete(id: string): Promise<ApiResponse<void>>;
   updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>>;
   onboardClient(id: string): Promise<ApiResponse<Lead>>;
   activate(id: string): Promise<ApiResponse<Lead>>;
@@ -36,7 +39,11 @@ export class LeadService implements ILeadService {
     if (query?.pageSize) params.set("pageSize", String(query.pageSize));
     if (query?.search) params.set("search", query.search);
     if (query?.origin !== undefined) params.set("origin", String(query.origin));
-    if (query?.status !== undefined) params.set("status", String(query.status));
+    if (query?.statuses?.length) {
+      query.statuses.forEach((s) => params.append("statuses", String(s)));
+    } else if (query?.status !== undefined) {
+      params.set("status", String(query.status));
+    }
     if (query?.hideRegistered !== undefined) params.set("hideRegistered", String(query.hideRegistered));
 
     const queryString = params.toString();
@@ -47,6 +54,14 @@ export class LeadService implements ILeadService {
 
   async create(request: CreateLeadRequest): Promise<ApiResponse<Lead>> {
     return this.httpClient.post<Lead>(this.baseUrl, request);
+  }
+
+  async update(id: string, request: UpdateLeadRequest): Promise<ApiResponse<Lead>> {
+    return this.httpClient.put<Lead>(`${this.baseUrl}/${id}`, request);
+  }
+
+  async delete(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
   }
 
   async updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>> {

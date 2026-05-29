@@ -1620,7 +1620,9 @@
       "selectModule": "Selecciona un módulo del catálogo",
       "addModule": "Añadir módulo",
       "addCustom": "Añadir línea libre",
-      "newCustomLine": "Nueva línea"
+      "newCustomLine": "Nueva línea",
+      "moveUp": "Subir",
+      "moveDown": "Bajar"
     },
     "companyDocs": {
       "title": "Documentos de empresa ({count})",

@@ -3,14 +3,13 @@
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { ArrowRight, FileText, Megaphone, Plus, Rocket, Search, ShieldCheck, ShieldOff, Trash2, Users } from "lucide-react";
+import { ArrowRight, FileText, Filter, Megaphone, Pencil, Plus, Rocket, Search, ShieldCheck, ShieldOff, Trash2, X } from "lucide-react";
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 import {
   DashboardLeadTabId,
   InquiryTypeFilter,
   LeadOriginFilter,
-  LeadStatusFilter,
   useDashboardLeads,
 } from "@/hooks/useDashboardLeads";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -18,7 +17,7 @@ import { useSortableTable } from "@/hooks/useSortableTable";
 import { toast } from "@/hooks/use-Toast";
 
 import { UserRole } from "@/types/user";
-import { LeadOrigin, LeadListItem, LeadStatus } from "@/types/lead";
+import { Lead, LeadOrigin, LeadListItem, LeadStatus } from "@/types/lead";
 import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
 
 import { LeadService } from "@/services/lead.service";
@@ -61,13 +60,20 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/Dialog";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/Sheet";
+import { Switch } from "@/components/ui/Switch";
 
 const leadService = new LeadService();
 
 const PAGE_SIZE_OPTIONS = [10, 20, 50];
 
-const LEAD_STATUS_OPTIONS: { value: LeadStatusFilter; label: string }[] = [
-  { value: "all", label: "Todos los estados" },
+const LEAD_STATUS_CHIPS: { value: LeadStatus; label: string }[] = [
   { value: LeadStatus.New, label: "Nuevo" },
   { value: LeadStatus.Contacted, label: "Contactado" },
   { value: LeadStatus.QuoteSent, label: "Presupuesto enviado" },
@@ -100,8 +106,8 @@ export default function LeadsPage() {
   const [search, setSearch] = useState("");
   const [inquiryType, setInquiryType] = useState<InquiryTypeFilter>("all");
   const [leadOrigin, setLeadOrigin] = useState<LeadOriginFilter>("all");
-  const [leadStatus, setLeadStatus] = useState<LeadStatusFilter>("all");
-  const [hideRegistered, setHideRegistered] = useState(true);
+  const [leadStatuses, setLeadStatuses] = useState<LeadStatus[]>([]);
+  const [hideRegistered, setHideRegistered] = useState(false);
   const [selectedLead, setSelectedLead] = useState<LeadListItem | null>(null);
   const [quoteLead, setQuoteLead] = useState<{ id: string; companyName: string } | null>(null);
   const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
@@ -110,6 +116,9 @@ export default function LeadsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [onboardTarget, setOnboardTarget] = useState<LeadListItem | null>(null);
   const [isOnboarding, setIsOnboarding] = useState(false);
+  const [leadToEdit, setLeadToEdit] = useState<LeadListItem | null>(null);
+  const [leadToDelete, setLeadToDelete] = useState<LeadListItem | null>(null);
+  const [isDeletingLead, setIsDeletingLead] = useState(false);
 
   const { inquiries, leads, inquiryError, leadError, isLoading, mutateLeads, mutateInquiries } =
     useDashboardLeads({
@@ -119,7 +128,7 @@ export default function LeadsPage() {
       search,
       inquiryType,
       leadOrigin,
-      leadStatus,
+      leadStatuses,
       hideRegistered,
     });
 
@@ -131,7 +140,7 @@ export default function LeadsPage() {
 
   useEffect(() => {
     setPage(1);
-  }, [activeTab, pageSize, inquiryType, leadOrigin, leadStatus, hideRegistered]);
+  }, [activeTab, pageSize, inquiryType, leadOrigin, leadStatuses, hideRegistered]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => setPage(1), 250);
@@ -214,6 +223,45 @@ export default function LeadsPage() {
     }
   }, [inquiryToDelete, mutateInquiries]);
 
+  const handleDeleteLead = useCallback(async () => {
+    if (!leadToDelete?.id) return;
+    setIsDeletingLead(true);
+    try {
+      await leadService.delete(leadToDelete.id);
+      mutateLeads((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.filter((i) => i.id !== leadToDelete.id),
+          total: current.total - 1,
+        };
+      }, false);
+      if (selectedLead?.id === leadToDelete.id) setSelectedLead(null);
+      toast({ title: "Lead eliminado" });
+    } catch {
+      toast({ title: "Error al eliminar el lead", variant: "destructive" });
+    } finally {
+      setIsDeletingLead(false);
+      setLeadToDelete(null);
+    }
+  }, [leadToDelete, mutateLeads, selectedLead]);
+
+  const handleLeadUpdated = useCallback(
+    (lead: Lead) => {
+      mutateLeads((current) => {
+        if (!current) return current;
+        return {
+          ...current,
+          items: current.items.map((item) =>
+            item.id === lead.id ? { ...item, ...lead } : item
+          ),
+        };
+      }, false);
+      setSelectedLead((prev) => (prev?.id === lead.id ? { ...prev, ...lead } : prev));
+    },
+    [mutateLeads]
+  );
+
   const handleOnboardClient = useCallback(async () => {
     if (!onboardTarget?.id) return;
     setIsOnboarding(true);
@@ -238,6 +286,18 @@ export default function LeadsPage() {
       setOnboardTarget(null);
     }
   }, [onboardTarget, mutateLeads]);
+
+  const activeFilterCount =
+    activeTab === "inquiries"
+      ? (inquiryType !== "all" ? 1 : 0)
+      : leadStatuses.length + (leadOrigin !== "all" ? 1 : 0) + (hideRegistered ? 1 : 0);
+
+  const clearAllFilters = useCallback(() => {
+    setLeadStatuses([]);
+    setLeadOrigin("all");
+    setHideRegistered(false);
+    setInquiryType("all");
+  }, []);
 
   const inquirySort = useSortableTable<WebInquiry, InquirySortField>(
     inquiries.items,
@@ -363,156 +423,231 @@ export default function LeadsPage() {
         {/* Filters */}
         <Card className="border border-playBlueLight/30 bg-white">
           <CardContent className="p-4">
-            <div className="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
-              <div className="flex-1 min-w-[200px] space-y-2">
-                <label className="text-sm font-medium text-brand-primary">
-                  {t("dashboard.leads.filters.searchLabel")}
-                </label>
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-playBlueLight" />
-                  <Input
-                    uppercase={false}
-                    value={search}
-                    onChange={(event) => setSearch(event.target.value)}
-                    placeholder={t("dashboard.leads.filters.searchPlaceholder")}
-                    className="pl-10 border-playBlueLight focus-visible:ring-brand-primary"
-                  />
-                </div>
+            <div className="flex gap-3 items-center">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-playBlueLight" />
+                <Input
+                  uppercase={false}
+                  value={search}
+                  onChange={(event) => setSearch(event.target.value)}
+                  placeholder={t("dashboard.leads.filters.searchPlaceholder")}
+                  className="pl-10 border-playBlueLight focus-visible:ring-brand-primary"
+                />
               </div>
 
-              {activeTab === "inquiries" ? (
-                <div className="space-y-2 min-w-[180px]">
-                  <label className="text-sm font-medium text-brand-primary">
-                    {t("dashboard.leads.filters.typeLabel")}
-                  </label>
-                  <Select
-                    value={String(inquiryType)}
-                    onValueChange={(value) =>
-                      setInquiryType(
-                        value === "all" ? "all" : (Number(value) as WebInquiryType)
-                      )
-                    }
-                  >
-                    <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white border border-playBlueLight/30">
-                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
-                        {t("dashboard.leads.filters.allTypes")}
-                      </SelectItem>
-                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Contact)}>
-                        {t("dashboard.leads.types.contact")}
-                      </SelectItem>
-                      <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Pricing)}>
-                        {t("dashboard.leads.types.pricing")}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              ) : (
-                <>
-                  <div className="space-y-2 min-w-[180px]">
-                    <label className="text-sm font-medium text-brand-primary">Estado</label>
-                    <Select
-                      value={String(leadStatus)}
-                      onValueChange={(value) =>
-                        setLeadStatus(value === "all" ? "all" : (Number(value) as LeadStatus))
-                      }
-                    >
-                      <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border border-playBlueLight/30">
-                        {LEAD_STATUS_OPTIONS.map((opt) => (
-                          <SelectItem
-                            key={String(opt.value)}
-                            value={String(opt.value)}
-                            className="hover:bg-playGrey hover:text-brand-primary"
-                          >
-                            {opt.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2 min-w-[160px]">
-                    <label className="text-sm font-medium text-brand-primary">
-                      {t("dashboard.leads.filters.originLabel")}
-                    </label>
-                    <Select
-                      value={String(leadOrigin)}
-                      onValueChange={(value) =>
-                        setLeadOrigin(value === "all" ? "all" : (Number(value) as LeadOrigin))
-                      }
-                    >
-                      <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white border border-playBlueLight/30">
-                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
-                          {t("dashboard.leads.filters.allOrigins")}
-                        </SelectItem>
-                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Web)}>
-                          {t("dashboard.leads.origins.web")}
-                        </SelectItem>
-                        <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Landing)}>
-                          {t("dashboard.leads.origins.landing")}
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium text-brand-primary">Mostrar activas</label>
-                    <button
-                      type="button"
-                      role="switch"
-                      aria-checked={!hideRegistered}
-                      onClick={() => setHideRegistered((prev) => !prev)}
-                      className={`relative flex h-9 w-16 items-center rounded-full transition-colors border ${
-                        !hideRegistered
-                          ? "bg-brand-primary border-brand-primary"
-                          : "bg-white border-playBlueLight"
-                      }`}
-                    >
-                      <span
-                        className={`inline-flex h-7 w-7 items-center justify-center rounded-full bg-white shadow transition-transform ${
-                          !hideRegistered ? "translate-x-8" : "translate-x-1"
-                        }`}
-                      >
-                        <Users className={`h-3.5 w-3.5 ${!hideRegistered ? "text-brand-primary" : "text-muted-foreground"}`} />
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="gap-2 border-playBlueLight shrink-0">
+                    <Filter className="h-4 w-4 text-brand-primary" />
+                    Filtros
+                    {activeFilterCount > 0 && (
+                      <span className="inline-flex items-center justify-center h-5 min-w-[20px] rounded-full bg-brand-primary text-white text-xs px-1">
+                        {activeFilterCount}
                       </span>
-                    </button>
-                  </div>
-                </>
-              )}
+                    )}
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-80 overflow-y-auto">
+                  <SheetHeader className="mb-6">
+                    <SheetTitle className="text-brand-primary flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      Filtros
+                    </SheetTitle>
+                  </SheetHeader>
 
-              <div className="space-y-2 min-w-[110px]">
-                <label className="text-sm font-medium text-brand-primary">
-                  {t("dashboard.leads.filters.pageSizeLabel")}
-                </label>
-                <Select
-                  value={String(pageSize)}
-                  onValueChange={(value) => setPageSize(Number(value))}
-                >
-                  <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white border border-playBlueLight/30">
-                    {PAGE_SIZE_OPTIONS.map((value) => (
-                      <SelectItem
-                        key={value}
-                        className="hover:bg-playGrey hover:text-brand-primary"
-                        value={String(value)}
+                  <div className="space-y-6">
+                    {activeTab === "inquiries" ? (
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-brand-primary">
+                          {t("dashboard.leads.filters.typeLabel")}
+                        </label>
+                        <Select
+                          value={String(inquiryType)}
+                          onValueChange={(value) =>
+                            setInquiryType(value === "all" ? "all" : (Number(value) as WebInquiryType))
+                          }
+                        >
+                          <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border border-playBlueLight/30">
+                            <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
+                              {t("dashboard.leads.filters.allTypes")}
+                            </SelectItem>
+                            <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Contact)}>
+                              {t("dashboard.leads.types.contact")}
+                            </SelectItem>
+                            <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(WebInquiryType.Pricing)}>
+                              {t("dashboard.leads.types.pricing")}
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    ) : (
+                      <>
+                        <div className="space-y-3">
+                          <label className="text-sm font-medium text-brand-primary">Estado</label>
+                          <div className="flex flex-wrap gap-2">
+                            {LEAD_STATUS_CHIPS.map((opt) => {
+                              const active = leadStatuses.includes(opt.value);
+                              return (
+                                <button
+                                  key={opt.value}
+                                  type="button"
+                                  onClick={() =>
+                                    setLeadStatuses((prev) =>
+                                      prev.includes(opt.value)
+                                        ? prev.filter((s) => s !== opt.value)
+                                        : [...prev, opt.value]
+                                    )
+                                  }
+                                  className={`rounded-full px-3 py-1.5 text-xs font-medium border transition-colors ${
+                                    active
+                                      ? "bg-brand-primary text-white border-brand-primary"
+                                      : "bg-white text-muted-foreground border-playBlueLight hover:border-brand-primary hover:text-brand-primary"
+                                  }`}
+                                >
+                                  {opt.label}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-brand-primary">
+                            {t("dashboard.leads.filters.originLabel")}
+                          </label>
+                          <Select
+                            value={String(leadOrigin)}
+                            onValueChange={(value) =>
+                              setLeadOrigin(value === "all" ? "all" : (Number(value) as LeadOrigin))
+                            }
+                          >
+                            <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-white border border-playBlueLight/30">
+                              <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
+                                {t("dashboard.leads.filters.allOrigins")}
+                              </SelectItem>
+                              <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Web)}>
+                                {t("dashboard.leads.origins.web")}
+                              </SelectItem>
+                              <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Landing)}>
+                                {t("dashboard.leads.origins.landing")}
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+
+                        <div className="flex items-center justify-between py-1">
+                          <label className="text-sm font-medium text-brand-primary">
+                            Solo leads activas
+                          </label>
+                          <Switch
+                            checked={!hideRegistered}
+                            onCheckedChange={(checked) => setHideRegistered(!checked)}
+                            className="data-[state=checked]:bg-brand-primary"
+                          />
+                        </div>
+                      </>
+                    )}
+
+                    <div className="space-y-2 pt-4 border-t border-playBlueLight/20">
+                      <label className="text-sm font-medium text-brand-primary">
+                        {t("dashboard.leads.filters.pageSizeLabel")}
+                      </label>
+                      <Select
+                        value={String(pageSize)}
+                        onValueChange={(value) => setPageSize(Number(value))}
                       >
-                        {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+                        <SelectTrigger className="border-playBlueLight focus-visible:ring-brand-primary">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white border border-playBlueLight/30">
+                          {PAGE_SIZE_OPTIONS.map((value) => (
+                            <SelectItem
+                              key={value}
+                              className="hover:bg-playGrey hover:text-brand-primary"
+                              value={String(value)}
+                            >
+                              {value}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    {activeFilterCount > 0 && (
+                      <button
+                        type="button"
+                        onClick={clearAllFilters}
+                        className="w-full text-sm text-red-600 hover:text-red-700 border border-red-200 hover:border-red-300 rounded-lg py-2 transition-colors"
+                      >
+                        Limpiar todos los filtros
+                      </button>
+                    )}
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
+
+            {activeFilterCount > 0 && (
+              <div className="flex flex-wrap items-center gap-1.5 mt-3 pt-3 border-t border-playBlueLight/20">
+                {leadStatuses.map((s) => {
+                  const label = LEAD_STATUS_CHIPS.find((c) => c.value === s)?.label ?? String(s);
+                  return (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => setLeadStatuses((prev) => prev.filter((x) => x !== s))}
+                      className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                    >
+                      {label}
+                      <X className="h-3 w-3" />
+                    </button>
+                  );
+                })}
+                {leadOrigin !== "all" && (
+                  <button
+                    type="button"
+                    onClick={() => setLeadOrigin("all")}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                  >
+                    {leadOrigin === LeadOrigin.Web ? t("dashboard.leads.origins.web") : t("dashboard.leads.origins.landing")}
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+                {hideRegistered && (
+                  <button
+                    type="button"
+                    onClick={() => setHideRegistered(false)}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                  >
+                    Solo inactivas
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+                {inquiryType !== "all" && (
+                  <button
+                    type="button"
+                    onClick={() => setInquiryType("all")}
+                    className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
+                  >
+                    {inquiryType === WebInquiryType.Contact ? t("dashboard.leads.types.contact") : t("dashboard.leads.types.pricing")}
+                    <X className="h-3 w-3" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={clearAllFilters}
+                  className="text-xs text-muted-foreground hover:text-red-600 ml-1 transition-colors"
+                >
+                  Limpiar todo
+                </button>
+              </div>
+            )}
           </CardContent>
         </Card>
 
@@ -737,6 +872,26 @@ export default function LeadsPage() {
                           >
                             <FileText className="h-3 w-3" />
                           </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title="Editar lead"
+                            onClick={() => setLeadToEdit(lead)}
+                            className="border-brand-primary text-brand-primary hover:bg-brand-primary/10"
+                          >
+                            <Pencil className="h-3 w-3" />
+                          </Button>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            title="Eliminar lead"
+                            onClick={() => setLeadToDelete(lead)}
+                            className="border-red-300 text-red-600 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
                         </div>
                       </TableCell>
                     </TableRow>
@@ -803,6 +958,16 @@ export default function LeadsPage() {
         }}
       />
 
+      <LeadForm
+        isOpen={!!leadToEdit}
+        onClose={() => setLeadToEdit(null)}
+        leadToEdit={leadToEdit ?? undefined}
+        onUpdated={(lead) => {
+          handleLeadUpdated(lead);
+          setLeadToEdit(null);
+        }}
+      />
+
       <LeadDetailPanel
         lead={selectedLead}
         onClose={() => setSelectedLead(null)}
@@ -838,6 +1003,38 @@ export default function LeadsPage() {
               className="bg-red-600 hover:bg-red-700 text-white"
             >
               {isDeleting ? "Eliminando..." : "Sí, eliminar"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!leadToDelete} onOpenChange={(open) => { if (!open) setLeadToDelete(null); }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>¿Eliminar lead?</DialogTitle>
+            <DialogDescription>
+              Esta acción eliminará permanentemente el lead de{" "}
+              <span className="font-medium text-foreground">{leadToDelete?.companyName}</span>.
+              No se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setLeadToDelete(null)}
+              disabled={isDeletingLead}
+              className="border-playBlueLight"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="button"
+              onClick={handleDeleteLead}
+              disabled={isDeletingLead}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isDeletingLead ? "Eliminando..." : "Sí, eliminar"}
             </Button>
           </DialogFooter>
         </DialogContent>

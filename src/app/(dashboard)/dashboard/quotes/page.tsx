@@ -7,12 +7,13 @@ import Loader from "@/components/Loader";
 import { Button } from "@/components/ui/Button";
 import { QuoteFilters, QuoteFiltersState } from "@/components/QuoteFilters";
 import { QuoteTable } from "@/components/QuoteTable";
-import { QuoteForm } from "@/components/QuoteForm";
+import { QuoteGeneratorWizard } from "@/components/QuoteGenerator";
 import { toast } from "@/hooks/use-Toast";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useQuotes } from "@/hooks/useQuotes";
 import { useTranslation } from "@/hooks/useTranslation";
-import { CreateQuoteRequest, QuoteListQuery } from "@/types/quote";
+import { QuoteListQuery } from "@/types/quote";
+import { QuoteService } from "@/services/quote.service";
 import { UserRole } from "@/types/user";
 
 const PAGE_SIZE = 20;
@@ -23,7 +24,7 @@ const QuotesContent = () => {
   const router = useRouter();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const { items, total, page, totalPages, query, setQuery, isLoading, create, remove, send, downloadPdf } =
+  const { items, total, page, totalPages, query, setQuery, isLoading, remove, send, downloadPdf } =
     useQuotes({ page: 1, pageSize: PAGE_SIZE });
 
   useEffect(() => {
@@ -44,23 +45,6 @@ const QuotesContent = () => {
       language: filters.language === "all" ? undefined : filters.language,
     };
     setQuery(next);
-  };
-
-  const handleCreate = async (data: CreateQuoteRequest) => {
-    try {
-      const created = await create(data);
-      toast({
-        title: t("quotes.created"),
-        description: t("quotes.createdDesc", { reference: created.reference }),
-      });
-      router.push(`/dashboard/quotes/${created.id}`);
-    } catch {
-      toast({
-        title: t("errors.generic"),
-        description: t("quotes.createError"),
-        variant: "destructive",
-      });
-    }
   };
 
   const handleSend = async (id: string) => {
@@ -150,10 +134,21 @@ const QuotesContent = () => {
         </div>
       </div>
 
-      <QuoteForm
+      <QuoteGeneratorWizard
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
-        onSubmit={handleCreate}
+        generateQuote={async (config) => {
+          const service = new QuoteService();
+          const res = await service.generate(config);
+          return res.data;
+        }}
+        onCreated={(quote) => {
+          toast({
+            title: t("quotes.created"),
+            description: t("quotes.createdDesc", { reference: quote.reference }),
+          });
+          router.push(`/dashboard/quotes/${quote.id}`);
+        }}
       />
     </div>
   );

@@ -22,6 +22,20 @@ const formatDate = (iso?: string | null, lang: QuoteLanguage = QuoteLanguage.Es)
   });
 };
 
+const buildDocumentNumber = (reference: string, clientCompanyName: string, issueDate: string) => {
+  const namePart = clientCompanyName
+    .toUpperCase()
+    .replace(/\b(S\.L\.U\.|S\.A\.U\.|S\.L\.|S\.A\.|SLU|SAU|SL|SA)\b/g, "")
+    .replace(/[^A-Z0-9\s]/g, "")
+    .trim()
+    .split(/\s+/)[0];
+  const d = new Date(issueDate);
+  const dd = String(d.getDate()).padStart(2, "0");
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const yyyy = d.getFullYear();
+  return `${reference}_${namePart}_${dd}_${mm}_${yyyy}`;
+};
+
 const FEATURES = [
   { icon: "📁", title: "Gestión documental CAE", titleCa: "Gestió documental CAE", desc: "Control completo del ciclo de vida de documentos", descCa: "Control complet del cicle de vida de documents" },
   { icon: "⏰", title: "Control de caducidades", titleCa: "Control de caducitats", desc: "Avisos automáticos 7 días antes y tras vencimiento", descCa: "Avisos automàtics 7 dies abans i després del venciment" },
@@ -93,8 +107,8 @@ export function QuoteDocument({ quote }: Props) {
         <div style={{ display: "flex", gap: 32, marginTop: 24, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.12)" }}>
           {[
             { label: isCa ? "Client" : "Cliente", value: quote.clientCompanyName },
-            { label: isCa ? "Referència" : "Referencia", value: quote.reference, mono: true },
-            { label: isCa ? "Data emissió" : "Fecha emisión", value: formatDate(quote.issueDate, quote.language) },
+            { label: isCa ? "Núm. Pressupost" : "Nº Presupuesto", value: buildDocumentNumber(quote.reference, quote.clientCompanyName, quote.issueDate), mono: true },
+            { label: isCa ? "Data" : "Fecha", value: formatDate(quote.issueDate, quote.language) },
             { label: isCa ? "Vàlid fins" : "Válido hasta", value: formatDate(quote.validUntil, quote.language) },
           ].map(({ label, value, mono }) => (
             <div key={label}>
@@ -446,7 +460,7 @@ export function QuoteDocument({ quote }: Props) {
         </div>
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right", fontFamily: "monospace" }}>
           {isCa ? "Document confidencial · Ús exclusiu del destinatari" : "Documento confidencial · Uso exclusivo del destinatario"}<br />
-          Ref: {quote.reference}
+          Ref: {buildDocumentNumber(quote.reference, quote.clientCompanyName, quote.issueDate)}
         </div>
       </div>
     </div>
