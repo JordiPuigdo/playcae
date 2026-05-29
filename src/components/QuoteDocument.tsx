@@ -107,7 +107,7 @@ export function QuoteDocument({ quote }: Props) {
         <div style={{ display: "flex", gap: 32, marginTop: 24, paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.12)" }}>
           {[
             { label: isCa ? "Client" : "Cliente", value: quote.clientCompanyName },
-            { label: isCa ? "Núm. Pressupost" : "Nº Presupuesto", value: buildDocumentNumber(quote.reference, quote.clientCompanyName, quote.issueDate), mono: true },
+            { label: isCa ? "Núm. Pressupost" : "Nº Presupuesto", value: quote.reference, mono: true },
             { label: isCa ? "Data" : "Fecha", value: formatDate(quote.issueDate, quote.language) },
             { label: isCa ? "Vàlid fins" : "Válido hasta", value: formatDate(quote.validUntil, quote.language) },
           ].map(({ label, value, mono }) => (
@@ -460,7 +460,7 @@ export function QuoteDocument({ quote }: Props) {
         </div>
         <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", textAlign: "right", fontFamily: "monospace" }}>
           {isCa ? "Document confidencial · Ús exclusiu del destinatari" : "Documento confidencial · Uso exclusivo del destinatario"}<br />
-          Ref: {buildDocumentNumber(quote.reference, quote.clientCompanyName, quote.issueDate)}
+          Ref: {quote.reference}
         </div>
       </div>
     </div>

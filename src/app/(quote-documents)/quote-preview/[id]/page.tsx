@@ -47,6 +47,7 @@ export default function QuotePreviewPage({ params }: PageProps) {
       .finally(() => setLoading(false));
   }, [service, id, isAuthenticated, user, router, pdfToken]);
 
+
   if ((!pdfToken && (!isAuthenticated || !user)) || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-playGrey">
@@ -80,7 +81,25 @@ export default function QuotePreviewPage({ params }: PageProps) {
       <div className="py-6 px-4">
         <div className="no-print max-w-[900px] mx-auto mb-4 flex justify-end">
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              if (quote) {
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                const mm = String(today.getMonth() + 1).padStart(2, "0");
+                const dd = String(today.getDate()).padStart(2, "0");
+                const clientPart = quote.clientCompanyName
+                  .toUpperCase()
+                  .replace(/\b(S\.L\.U\.|S\.A\.U\.|S\.L\.|S\.A\.|SLU|SAU|SL|SA)\b/g, "")
+                  .replace(/[^A-Z0-9]/g, "")
+                  .trim();
+                const original = document.title;
+                document.title = `${quote.reference}_${clientPart}_${yyyy}${mm}${dd}`;
+                window.print();
+                document.title = original;
+              } else {
+                window.print();
+              }
+            }}
             className="flex items-center gap-2 bg-brand-primary text-white px-4 py-2 rounded-md text-sm hover:opacity-90 transition-opacity"
           >
             <Printer className="h-4 w-4" />
