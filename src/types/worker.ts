@@ -8,6 +8,7 @@ export interface Worker extends BaseEntity {
   lastName: string;
   cardId: string;
   position?: string;
+  email?: string;
   status: WorkerStatus;
   ssn: string;
   documents?: Document[];
@@ -29,6 +30,7 @@ export interface WorkerFormData {
   lastName: string;
   cardId: string;
   position?: string;
+  email?: string;
   companyId: string;
   tenantAdminUserId?: string | null;
   ssn: string;

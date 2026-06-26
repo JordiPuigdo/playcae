@@ -119,6 +119,7 @@ export default function LeadsPage() {
   const [leadToEdit, setLeadToEdit] = useState<LeadListItem | null>(null);
   const [leadToDelete, setLeadToDelete] = useState<LeadListItem | null>(null);
   const [isDeletingLead, setIsDeletingLead] = useState(false);
+  const [deleteUserToo, setDeleteUserToo] = useState(false);
 
   const { inquiries, leads, inquiryError, leadError, isLoading, mutateLeads, mutateInquiries } =
     useDashboardLeads({
@@ -225,9 +226,10 @@ export default function LeadsPage() {
 
   const handleDeleteLead = useCallback(async () => {
     if (!leadToDelete?.id) return;
+    const alsoDeleteUser = deleteUserToo && !!leadToDelete.userId;
     setIsDeletingLead(true);
     try {
-      await leadService.delete(leadToDelete.id);
+      await leadService.delete(leadToDelete.id, alsoDeleteUser);
       mutateLeads((current) => {
         if (!current) return current;
         return {
@@ -237,14 +239,17 @@ export default function LeadsPage() {
         };
       }, false);
       if (selectedLead?.id === leadToDelete.id) setSelectedLead(null);
-      toast({ title: "Lead eliminado" });
+      toast({
+        title: alsoDeleteUser ? "Lead y usuario eliminados" : "Lead eliminado",
+      });
     } catch {
       toast({ title: "Error al eliminar el lead", variant: "destructive" });
     } finally {
       setIsDeletingLead(false);
       setLeadToDelete(null);
+      setDeleteUserToo(false);
     }
-  }, [leadToDelete, mutateLeads, selectedLead]);
+  }, [leadToDelete, deleteUserToo, mutateLeads, selectedLead]);
 
   const handleLeadUpdated = useCallback(
     (lead: Lead) => {
@@ -1008,7 +1013,7 @@ export default function LeadsPage() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={!!leadToDelete} onOpenChange={(open) => { if (!open) setLeadToDelete(null); }}>
+      <Dialog open={!!leadToDelete} onOpenChange={(open) => { if (!open) { setLeadToDelete(null); setDeleteUserToo(false); } }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>¿Eliminar lead?</DialogTitle>
@@ -1018,6 +1023,23 @@ export default function LeadsPage() {
               No se puede deshacer.
             </DialogDescription>
           </DialogHeader>
+          {leadToDelete?.userId && (
+            <label className="flex items-start gap-3 rounded-md border border-red-200 bg-red-50 p-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={deleteUserToo}
+                onChange={(e) => setDeleteUserToo(e.target.checked)}
+                disabled={isDeletingLead}
+                className="mt-0.5 h-4 w-4 accent-red-600"
+              />
+              <span className="text-sm text-red-700">
+                <span className="font-medium">Eliminar también el usuario y todos sus datos</span>
+                <br />
+                Se borrarán su empresa, sedes, trabajadores, documentos, licencia y todo lo
+                asociado. Esta acción es irreversible.
+              </span>
+            </label>
+          )}
           <DialogFooter className="flex gap-2 sm:justify-end">
             <Button
               type="button"

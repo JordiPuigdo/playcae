@@ -15,7 +15,7 @@ export interface ILeadService {
   getAll(query?: LeadListQuery): Promise<ApiResponse<LeadPagedResult>>;
   create(request: CreateLeadRequest): Promise<ApiResponse<Lead>>;
   update(id: string, request: UpdateLeadRequest): Promise<ApiResponse<Lead>>;
-  delete(id: string): Promise<ApiResponse<void>>;
+  delete(id: string, deleteUser?: boolean): Promise<ApiResponse<void>>;
   updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>>;
   onboardClient(id: string): Promise<ApiResponse<Lead>>;
   activate(id: string): Promise<ApiResponse<Lead>>;
@@ -60,8 +60,13 @@ export class LeadService implements ILeadService {
     return this.httpClient.put<Lead>(`${this.baseUrl}/${id}`, request);
   }
 
-  async delete(id: string): Promise<ApiResponse<void>> {
-    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
+  async delete(id: string, deleteUser?: boolean): Promise<ApiResponse<void>> {
+    const params = new URLSearchParams();
+    if (deleteUser) params.set("deleteUser", "true");
+    const queryString = params.toString();
+    return this.httpClient.delete<void>(
+      `${this.baseUrl}/${id}${queryString ? `?${queryString}` : ""}`
+    );
   }
 
   async updateStatus(id: string, request: UpdateLeadStatusRequest): Promise<ApiResponse<Lead>> {

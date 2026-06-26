@@ -403,6 +403,7 @@
       "configuration": "Configuració",
       "pendingValidation": "Pendents de validar",
       "obras": "Obres i Projectes",
+      "internalWorkers": "Treballadors interns",
       "blog": "Blog",
       "leads": "Leads",
       "licenses": "Llicències",
@@ -816,6 +817,27 @@
       "activityStatus": "Estat d'activitat",
       "selectActivity": "Seleccionar activitat"
     }
+  },
+  "internalWorkers": {
+    "title": "Treballadors interns",
+    "subtitle": "Gestiona els treballadors propis de la teva empresa i la seva documentació.",
+    "noMainCompany": "No s'ha trobat la teva empresa principal. Contacta amb suport.",
+    "addMultiple": "Afegir-ne diversos",
+    "addMultipleDesc": "Afegeix diversos treballadors alhora. Omple una fila per treballador.",
+    "addRow": "Afegir fila",
+    "saveAll": "Desar-ho tot",
+    "duplicateCardId": "DNI/NIE duplicat a la llista",
+    "bulkCreated": "Treballadors creats",
+    "bulkCreatedDesc": "S'han creat {count} treballadors correctament.",
+    "bulkError": "No s'han pogut crear els treballadors. Torna-ho a provar.",
+    "importExcel": "Importar Excel/CSV",
+    "importDesc": "Puja un fitxer Excel (.xlsx) o CSV amb les columnes: Nom, Cognoms, DNI/NIE, SSN, Lloc, Email.",
+    "importParseError": "No s'ha pogut llegir el fitxer. Revisa el format i les columnes.",
+    "selectFile": "Seleccionar fitxer",
+    "validRows": "{count} vàlids",
+    "invalidRows": "{count} amb errors",
+    "rowOk": "Correcte",
+    "importValid": "Importar {count} vàlids"
   },
   "documents": {
     "title": "Documents",

@@ -21,6 +21,9 @@ export const usePermissions = () => {
       if (section === "/dashboard/projects" || section.startsWith("/dashboard/projects/")) {
         return licenseSummary?.enableProjects === true;
       }
+      if (section === "/dashboard/internal-workers" || section.startsWith("/dashboard/internal-workers/")) {
+        return licenseSummary?.enableInternalWorkers === true;
+      }
       return true;
     }
 

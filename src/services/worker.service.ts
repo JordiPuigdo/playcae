@@ -2,9 +2,15 @@ import { ApiResponse } from "@/interfaces/api-response";
 import { Worker } from "@/types/worker";
 import { HttpClient } from "./http-client";
 
+export interface InternalWorkers {
+  companyId: string;
+  workers: Worker[];
+}
+
 export interface IWorkerService {
   create(worker: Omit<Worker, "id">): Promise<ApiResponse<Worker>>;
   getByCompanyId(companyId: string): Promise<ApiResponse<Worker[]>>;
+  getInternalByUserId(userId: string): Promise<ApiResponse<InternalWorkers>>;
   createBulk(
     companyId: string,
     workers: Omit<Worker, "id">[]
@@ -32,6 +38,14 @@ export class WorkerService implements IWorkerService {
   async getByCompanyId(companyId: string): Promise<ApiResponse<Worker[]>> {
     return this.httpClient.get<Worker[]>(
       `${this.baseUrl}/company/${companyId}`
+    );
+  }
+
+  async getInternalByUserId(
+    userId: string
+  ): Promise<ApiResponse<InternalWorkers>> {
+    return this.httpClient.get<InternalWorkers>(
+      `${this.baseUrl}/internal/by-user/${userId}`
     );
   }
   async createBulk(

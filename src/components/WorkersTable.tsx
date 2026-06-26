@@ -50,6 +50,7 @@ interface WorkersTableProps {
   workers: Worker[];
   userRole: UserRole;
   workersAtLimit?: boolean;
+  manageMode?: boolean;
   onCreateWorker: (data: WorkerFormData) => void;
   onUpdateWorker: (workerId: string, data: WorkerFormData) => void;
   onDeleteWorker: (workerId: string) => void;
@@ -75,6 +76,7 @@ export const WorkersTable = ({
   workers,
   userRole,
   workersAtLimit = false,
+  manageMode = false,
   onCreateWorker,
   onUpdateWorker,
   onDeleteWorker,
@@ -197,9 +199,9 @@ export const WorkersTable = ({
     }
   };
 
-  const canUpload = userRole == UserRole.Company;
+  const canUpload = userRole == UserRole.Company || manageMode;
   const canValidate = userRole == UserRole.Admin;
-  const canEdit = userRole == UserRole.Company;
+  const canEdit = userRole == UserRole.Company || manageMode;
 
    return (
     <>
@@ -511,6 +513,7 @@ export const WorkersTable = ({
         onSubmit={editingWorker ? handleUpdateWorker : handleCreateWorker}
         worker={editingWorker || undefined}
         mode={editingWorker ? "edit" : "create"}
+        showEmail={manageMode}
       />
 
       <DeleteConfirmationModal

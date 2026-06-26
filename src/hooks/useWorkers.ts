@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Worker, WorkerFormData, WorkerStatus } from "@/types/worker";
 import { UserRole } from "@/types/user";
 import { WorkerService } from "@/services/worker.service";
@@ -6,14 +6,21 @@ import { DocumentService } from "@/services/document.service";
 import { EntityStatus } from "@/types/document";
 import { useAuthStore } from "@/hooks/useAuthStore";
 
-export const useWorkers = (companyId: string | undefined) => {
-  const [workers, setWorkers] = useState<Worker[]>([]);
+export const useWorkers = (
+  companyId: string | undefined,
+  initialWorkers?: Worker[]
+) => {
+  const [workers, setWorkers] = useState<Worker[]>(initialWorkers ?? []);
   const [userRole] = useState<UserRole>(UserRole.Admin);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const selectedParentCompanyId = useAuthStore(
     (state) => state.selectedParentCompanyId
   );
+
+  useEffect(() => {
+    if (initialWorkers) setWorkers(initialWorkers);
+  }, [initialWorkers]);
 
   const workerService = useMemo(() => new WorkerService(), []);
   const documentService = useMemo(() => new DocumentService(), []);
@@ -64,6 +71,7 @@ export const useWorkers = (companyId: string | undefined) => {
         lastName: data.lastName,
         cardId: data.cardId,
         position: data.position,
+        email: data.email,
         status: WorkerStatus.Rejected,
         ssn: data.ssn,
       }));
@@ -98,6 +106,7 @@ export const useWorkers = (companyId: string | undefined) => {
       lastName: data.lastName,
       cardId: data.cardId,
       position: data.position,
+      email: data.email,
       status: WorkerStatus.Rejected,
       ssn: data.ssn,
     };

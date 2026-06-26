@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/Dialog";
 
 import { Worker, WorkerFormData } from "@/types/worker";
-import { User, IdCard } from "lucide-react";
+import { User, IdCard, Mail } from "lucide-react";
 import { validatePersonId } from "@/app/utils/tax-id-validation";
 
 interface WorkerFormProps {
@@ -20,6 +20,7 @@ interface WorkerFormProps {
   worker?: Worker;
   mode: "create" | "edit";
   companyId?: string;
+  showEmail?: boolean;
 }
 
 export const WorkerForm = ({
@@ -29,12 +30,14 @@ export const WorkerForm = ({
   worker,
   mode,
   companyId,
+  showEmail = false,
 }: WorkerFormProps) => {
   const [formData, setFormData] = useState<WorkerFormData>({
     firstName: "",
     lastName: "",
     cardId: "",
     position: "",
+    email: "",
     companyId: "",
     ssn: "",
   });
@@ -48,6 +51,7 @@ export const WorkerForm = ({
         lastName: worker.lastName,
         cardId: worker.cardId,
         position: worker.position || "",
+        email: worker.email || "",
         companyId: worker.companyId,
         ssn: worker.ssn || "",
       });
@@ -57,6 +61,7 @@ export const WorkerForm = ({
         lastName: "",
         cardId: "",
         position: "",
+        email: "",
         companyId: "",
         ssn: "",
       });
@@ -85,6 +90,10 @@ export const WorkerForm = ({
       newErrors.dni = "Formato de DNI/NIE no válido";
     }
 
+    if (showEmail && formData.email?.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Formato de email no válido";
+    }
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -96,6 +105,7 @@ export const WorkerForm = ({
       lastName: "",
       cardId: "",
       position: "",
+      email: "",
       companyId: "",
       ssn: "",
     });
@@ -204,6 +214,28 @@ export const WorkerForm = ({
               placeholder="Operario de mantenimiento"
             />
           </div>
+
+          {showEmail && (
+            <div className="space-y-2">
+              <Label htmlFor="email" className="flex items-center gap-2">
+                <Mail className="h-4 w-4" />
+                Email
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData((prev) => ({ ...prev, email: e.target.value }))
+                }
+                placeholder="trabajador@empresa.com"
+                className={errors.email ? "border-destructive" : ""}
+              />
+              {errors.email && (
+                <p className="text-sm text-destructive">{errors.email}</p>
+              )}
+            </div>
+          )}
 
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={onClose}>

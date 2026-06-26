@@ -403,6 +403,7 @@
       "configuration": "Configuración",
       "pendingValidation": "Pendientes de validar",
       "obras": "Obras y Proyectos",
+      "internalWorkers": "Trabajadores internos",
       "blog": "Blog",
       "leads": "Leads",
       "licenses": "Licencias",
@@ -816,6 +817,27 @@
       "activityStatus": "Estado de actividad",
       "selectActivity": "Seleccionar actividad"
     }
+  },
+  "internalWorkers": {
+    "title": "Trabajadores internos",
+    "subtitle": "Gestiona los trabajadores propios de tu empresa y su documentación.",
+    "noMainCompany": "No se ha encontrado tu empresa principal. Contacta con soporte.",
+    "addMultiple": "Añadir varios",
+    "addMultipleDesc": "Añade varios trabajadores a la vez. Rellena una fila por trabajador.",
+    "addRow": "Añadir fila",
+    "saveAll": "Guardar todos",
+    "duplicateCardId": "DNI/NIE duplicado en la lista",
+    "bulkCreated": "Trabajadores creados",
+    "bulkCreatedDesc": "Se han creado {count} trabajadores correctamente.",
+    "bulkError": "No se pudieron crear los trabajadores. Inténtalo de nuevo.",
+    "importExcel": "Importar Excel/CSV",
+    "importDesc": "Sube un fichero Excel (.xlsx) o CSV con las columnas: Nombre, Apellidos, DNI/NIE, SSN, Puesto, Email.",
+    "importParseError": "No se pudo leer el fichero. Revisa el formato y las columnas.",
+    "selectFile": "Seleccionar fichero",
+    "validRows": "{count} válidos",
+    "invalidRows": "{count} con errores",
+    "rowOk": "Correcto",
+    "importValid": "Importar {count} válidos"
   },
   "documents": {
     "title": "Documentos",
