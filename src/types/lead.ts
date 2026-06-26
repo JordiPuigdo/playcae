@@ -88,6 +88,7 @@ export interface CreateLeadRequest {
   taxId: string;
   contactPerson: string;
   address: string;
+  password?: string;
   origin: LeadOrigin;
   sourceInquiryId?: string;
 }
