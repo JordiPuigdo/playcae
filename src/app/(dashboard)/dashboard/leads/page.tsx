@@ -83,7 +83,7 @@ const LEAD_STATUS_CHIPS: { value: LeadStatus; label: string }[] = [
   { value: LeadStatus.Lost, label: "Perdido" },
 ];
 
-type InquirySortField = "type" | "name" | "email" | "creationDate";
+type InquirySortField = "type" | "name" | "email" | "phone" | "creationDate";
 type LeadSortField =
   | "companyName"
   | "contactPerson"
@@ -314,6 +314,8 @@ export default function LeadsPage() {
           return (a.name || "").localeCompare(b.name || "");
         case "email":
           return (a.email || "").localeCompare(b.email || "");
+        case "phone":
+          return (a.phone || "").localeCompare(b.phone || "");
         case "creationDate":
           return dayjs(a.creationDate).valueOf() - dayjs(b.creationDate).valueOf();
       }
@@ -677,6 +679,9 @@ export default function LeadsPage() {
                   <SortableHeader field="email" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("common.email")}
                   </SortableHeader>
+                  <SortableHeader field="phone" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
+                    {t("common.phone")}
+                  </SortableHeader>
                   <TableHead>{t("dashboard.leads.table.inquiries.detail")}</TableHead>
                   <SortableHeader field="creationDate" sortField={inquirySort.sortField} sortDirection={inquirySort.sortDirection} onSort={inquirySort.handleSort}>
                     {t("common.date")}
@@ -687,7 +692,7 @@ export default function LeadsPage() {
               <TableBody>
                 {inquirySort.sortedData.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="px-4 py-8 text-center text-muted-foreground">
+                    <TableCell colSpan={7} className="px-4 py-8 text-center text-muted-foreground">
                       {t("dashboard.leads.emptyInquiries")}
                     </TableCell>
                   </TableRow>
@@ -713,6 +718,15 @@ export default function LeadsPage() {
                         <a href={`mailto:${item.email}`} className="text-brand-primary hover:underline">
                           {item.email}
                         </a>
+                      </TableCell>
+                      <TableCell className="whitespace-nowrap">
+                        {item.phone ? (
+                          <a href={`tel:${item.phone}`} className="text-brand-primary hover:underline">
+                            {item.phone}
+                          </a>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
                       </TableCell>
                       <TableCell className="max-w-xs truncate">
                         {item.type === WebInquiryType.Contact ? (

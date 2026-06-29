@@ -274,6 +274,7 @@
       "formName": "Nombre",
       "formEmail": "Correo electrónico",
       "formPhone": "Teléfono",
+      "formPhoneOptional": "Teléfono (opcional)",
       "formCompany": "Empresa",
       "formMessage": "Mensaje",
       "formSubmit": "Enviar mensaje",
@@ -1200,6 +1201,10 @@
           "label": "Correo corporativo",
           "question": "¿A qué correo corporativo enviamos el presupuesto?",
           "placeholder": "tu@empresa.com"
+        },
+        "phone": {
+          "label": "Teléfono (opcional)",
+          "placeholder": "+34 600 00 00 00"
         }
       },
       "result": {

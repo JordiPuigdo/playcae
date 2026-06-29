@@ -27,6 +27,7 @@ export default function ContactForm() {
 
     const name = formData.get("name") as string;
     const email = formData.get("email") as string;
+    const phone = (formData.get("phone") as string)?.trim();
     const message = formData.get("message") as string;
     const consent = formData.get("consent");
 
@@ -38,7 +39,7 @@ export default function ContactForm() {
     setIsSubmitting(true);
 
     try {
-      await contactService.send({ name, email, message });
+      await contactService.send({ name, email, phone: phone || undefined, message });
       router.push("/contacto/gracias");
     } catch (err) {
       const message = (err as { message?: string })?.message;
@@ -95,6 +96,23 @@ export default function ContactForm() {
           inputMode="email"
           className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-500/30"
           aria-required="true"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="phone"
+          className="mb-1 block text-sm font-medium text-gray-700"
+        >
+          {t("landing.contact.formPhoneOptional")}
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autoComplete="tel"
+          inputMode="tel"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-cyan-500 focus:ring focus:ring-cyan-500/30"
         />
       </div>
 

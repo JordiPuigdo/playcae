@@ -274,6 +274,7 @@
       "formName": "Nom",
       "formEmail": "Correu electrònic",
       "formPhone": "Telèfon",
+      "formPhoneOptional": "Telèfon (opcional)",
       "formCompany": "Empresa",
       "formMessage": "Missatge",
       "formSubmit": "Enviar missatge",
@@ -1200,6 +1201,10 @@
           "label": "Correu corporatiu",
           "question": "A quin correu corporatiu enviem el pressupost?",
           "placeholder": "tu@empresa.com"
+        },
+        "phone": {
+          "label": "Telèfon (opcional)",
+          "placeholder": "+34 600 00 00 00"
         }
       },
       "result": {

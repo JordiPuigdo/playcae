@@ -10,6 +10,7 @@ export interface WebInquiry extends BaseEntity {
   type: WebInquiryType;
   name?: string;
   email: string;
+  phone?: string;
   message?: string;
   pricingDataJson?: string;
   isConverted?: boolean;

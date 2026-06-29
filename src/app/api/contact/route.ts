@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 interface ContactFormData {
   name: string;
   email: string;
+  phone?: string;
   message: string;
 }
 
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
   try {
     const body: ContactFormData = await request.json();
     const { name, email, message } = body;
+    const phone = typeof body.phone === "string" ? body.phone.trim() : "";
 
     if (!name || !email || !message) {
       return NextResponse.json(
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
     const response = await fetch(`${apiUrl}/api/web-inquiries/contact`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
+      body: JSON.stringify({ name, email, phone: phone || null, message }),
     });
 
     if (!response.ok) {

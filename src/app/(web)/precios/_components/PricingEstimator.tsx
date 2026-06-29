@@ -61,6 +61,7 @@ interface EstimatorContent {
     suppliersCount: { label: string; question: string };
     aiValidation: { label: string; question: string };
     email: { label: string; question: string; placeholder: string };
+    phone: { label: string; placeholder: string };
   };
   result: {
     volumeLow: string;
@@ -85,6 +86,7 @@ interface EstimatorState {
   suppliersCount: number;
   aiValidation: boolean | null;
   email: string;
+  phone: string;
 }
 
 const BASE_STATE: EstimatorState = {
@@ -98,6 +100,7 @@ const BASE_STATE: EstimatorState = {
   suppliersCount: 20,
   aiValidation: null,
   email: "",
+  phone: "",
 };
 
 const FREE_EMAIL_DOMAINS = new Set([
@@ -288,6 +291,10 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
         label: content.steps.email.label,
         value: state.email || content.emptyValue,
       },
+      {
+        label: content.steps.phone.label,
+        value: state.phone.trim() || content.emptyValue,
+      },
     ],
     [state, content]
   );
@@ -387,6 +394,7 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email: state.email,
+          phone: state.phone.trim() || undefined,
           siteMode: state.siteMode,
           siteCount: state.siteMode === "multiple" ? sanitizeNumber(state.siteCount) : 1,
           contractors: sanitizeNumber(state.contractors),
@@ -675,21 +683,39 @@ export default function PricingEstimator({ content }: PricingEstimatorProps) {
 
       case "email":
         return (
-          <label className="block">
-            <h3 className="text-xl font-semibold text-playBlueDark mb-3">
-              {content.steps.email.question}
-            </h3>
-            <input
-              type="email"
-              autoComplete="work email"
-              placeholder={content.steps.email.placeholder}
-              value={state.email}
-              onChange={(e) =>
-                setState((prev) => ({ ...prev, email: e.target.value }))
-              }
-              className="w-full rounded-xl border border-playBlueLight/30 px-4 py-3 text-playBlueDark focus:border-playBlueDark focus:outline-none"
-            />
-          </label>
+          <div className="space-y-4">
+            <label className="block">
+              <h3 className="text-xl font-semibold text-playBlueDark mb-3">
+                {content.steps.email.question}
+              </h3>
+              <input
+                type="email"
+                autoComplete="work email"
+                placeholder={content.steps.email.placeholder}
+                value={state.email}
+                onChange={(e) =>
+                  setState((prev) => ({ ...prev, email: e.target.value }))
+                }
+                className="w-full rounded-xl border border-playBlueLight/30 px-4 py-3 text-playBlueDark focus:border-playBlueDark focus:outline-none"
+              />
+            </label>
+            <label className="block">
+              <span className="mb-2 block text-sm font-medium text-playBlueLight">
+                {content.steps.phone.label}
+              </span>
+              <input
+                type="tel"
+                autoComplete="tel"
+                inputMode="tel"
+                placeholder={content.steps.phone.placeholder}
+                value={state.phone}
+                onChange={(e) =>
+                  setState((prev) => ({ ...prev, phone: e.target.value }))
+                }
+                className="w-full rounded-xl border border-playBlueLight/30 px-4 py-3 text-playBlueDark focus:border-playBlueDark focus:outline-none"
+              />
+            </label>
+          </div>
         );
 
       default:

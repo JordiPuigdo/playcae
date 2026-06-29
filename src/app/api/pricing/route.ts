@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 interface PricingLeadData {
   email: string;
+  phone?: string;
   siteMode: "single" | "multiple";
   siteCount: number;
   contractors: number;
@@ -31,6 +32,7 @@ export async function POST(request: NextRequest) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         email: body.email,
+        phone: typeof body.phone === "string" && body.phone.trim() ? body.phone.trim() : null,
         siteMode: body.siteMode,
         siteCount: body.siteCount,
         contractors: body.contractors,

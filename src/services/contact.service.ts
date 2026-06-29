@@ -4,6 +4,7 @@ import { HttpClient } from "./http-client";
 export interface ContactFormPayload {
   name: string;
   email: string;
+  phone?: string;
   message: string;
 }
 
