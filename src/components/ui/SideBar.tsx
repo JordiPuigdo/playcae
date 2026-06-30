@@ -38,6 +38,7 @@ export default function Sidebar() {
     { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
     { href: "/dashboard/companies", label: t("dashboard.sidebar.companies"), icon: Building2 },
     { href: "/dashboard/internal-workers", label: t("dashboard.sidebar.internalWorkers"), icon: Users2 },
+    { href: "/dashboard/roles-permissions", label: t("dashboard.sidebar.rolesPermissions"), icon: KeyRound },
     { href: "/dashboard/projects", label: t("dashboard.sidebar.obras"), icon: HardHat },
     { href: "/dashboard/subcontractors", label: t("dashboard.sidebar.subcontractors"), icon: Network },
     {

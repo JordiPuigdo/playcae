@@ -405,6 +405,7 @@
       "pendingValidation": "Pendents de validar",
       "obras": "Obres i Projectes",
       "internalWorkers": "Treballadors interns",
+      "rolesPermissions": "Rols i permisos",
       "blog": "Blog",
       "leads": "Leads",
       "licenses": "Llicències",
@@ -1870,6 +1871,55 @@
     "target": {
       "company": "Empresa",
       "worker": "Treballador"
+    }
+  },
+  "rolesPermissions": {
+    "title": "Rols i permisos",
+    "subtitle": "Defineix què pot fer cada treballador a l'app de fitxatge.",
+    "loading": "Carregant...",
+    "noRoles": "Encara no hi ha rols.",
+    "roles": "Rols",
+    "rolesSubtitle": "Crea rols i tria quins permisos inclou cadascun.",
+    "newRole": "Nou rol",
+    "table": {
+      "name": "Nom",
+      "description": "Descripció",
+      "permissions": "Permisos",
+      "type": "Tipus",
+      "actions": "Accions",
+      "system": "Del sistema",
+      "custom": "Personalitzat"
+    },
+    "form": {
+      "createTitle": "Nou rol",
+      "editTitle": "Edita el rol",
+      "subtitle": "Marca els permisos que tindrà aquest rol.",
+      "name": "Nom del rol",
+      "namePlaceholder": "Ex. Encarregat d'obra",
+      "description": "Descripció",
+      "descriptionPlaceholder": "Per a què serveix aquest rol (opcional)",
+      "permissions": "Permisos",
+      "cancel": "Cancel·la",
+      "save": "Desa"
+    },
+    "toast": {
+      "created": "Rol creat.",
+      "updated": "Rol actualitzat.",
+      "deleted": "Rol eliminat.",
+      "error": "No s'ha pogut completar l'acció.",
+      "confirmDelete": "Segur que vols eliminar aquest rol?"
+    },
+    "assign": {
+      "title": "Assignar rols a treballadors",
+      "subtitle": "Tria quins rols té cada treballador intern.",
+      "worker": "Treballador",
+      "cardId": "DNI/NIE",
+      "actions": "Accions",
+      "manage": "Gestiona rols",
+      "noWorkers": "No hi ha treballadors interns.",
+      "dialogSubtitle": "Activa o desactiva els rols d'aquest treballador.",
+      "loading": "Carregant rols...",
+      "error": "No s'ha pogut actualitzar el rol."
     }
   }
 }

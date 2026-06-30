@@ -405,6 +405,7 @@
       "pendingValidation": "Pendientes de validar",
       "obras": "Obras y Proyectos",
       "internalWorkers": "Trabajadores internos",
+      "rolesPermissions": "Roles y permisos",
       "blog": "Blog",
       "leads": "Leads",
       "licenses": "Licencias",
@@ -1870,6 +1871,55 @@
     "target": {
       "company": "Empresa",
       "worker": "Trabajador"
+    }
+  },
+  "rolesPermissions": {
+    "title": "Roles y permisos",
+    "subtitle": "Define qué puede hacer cada trabajador en la app de fichaje.",
+    "loading": "Cargando...",
+    "noRoles": "Todavía no hay roles.",
+    "roles": "Roles",
+    "rolesSubtitle": "Crea roles y elige qué permisos incluye cada uno.",
+    "newRole": "Nuevo rol",
+    "table": {
+      "name": "Nombre",
+      "description": "Descripción",
+      "permissions": "Permisos",
+      "type": "Tipo",
+      "actions": "Acciones",
+      "system": "Del sistema",
+      "custom": "Personalizado"
+    },
+    "form": {
+      "createTitle": "Nuevo rol",
+      "editTitle": "Editar rol",
+      "subtitle": "Marca los permisos que tendrá este rol.",
+      "name": "Nombre del rol",
+      "namePlaceholder": "Ej. Encargado de obra",
+      "description": "Descripción",
+      "descriptionPlaceholder": "Para qué sirve este rol (opcional)",
+      "permissions": "Permisos",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+    "toast": {
+      "created": "Rol creado.",
+      "updated": "Rol actualizado.",
+      "deleted": "Rol eliminado.",
+      "error": "No se ha podido completar la acción.",
+      "confirmDelete": "¿Seguro que quieres eliminar este rol?"
+    },
+    "assign": {
+      "title": "Asignar roles a trabajadores",
+      "subtitle": "Elige qué roles tiene cada trabajador interno.",
+      "worker": "Trabajador",
+      "cardId": "DNI/NIE",
+      "actions": "Acciones",
+      "manage": "Gestionar roles",
+      "noWorkers": "No hay trabajadores internos.",
+      "dialogSubtitle": "Activa o desactiva los roles de este trabajador.",
+      "loading": "Cargando roles...",
+      "error": "No se ha podido actualizar el rol."
     }
   }
 }
