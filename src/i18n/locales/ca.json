@@ -673,6 +673,21 @@
     "deleteError": "No s'ha pogut eliminar l'empresa. Torna-ho a provar.",
     "creatingCompany": "Creant empresa...",
     "errorCreating": "Error en crear empresa",
+    "import": {
+      "importExcel": "Importar Excel",
+      "title": "Importar empreses",
+      "description": "Puja un fitxer Excel (.xlsx) o CSV. Columna obligatòria: Email. Opcionals: Nom/Empresa, CIF, Contacte, Telèfon.",
+      "selectFile": "Seleccionar fitxer",
+      "validRows": "{count} vàlids",
+      "invalidRows": "{count} amb errors",
+      "rowOk": "Correcte",
+      "importValid": "Importar {count} vàlids",
+      "duplicateEmail": "Email duplicat a la llista",
+      "parseError": "No s'ha pogut llegir el fitxer. Revisa el format i les columnes.",
+      "error": "No s'han pogut importar les empreses. Torna-ho a provar.",
+      "done": "Importació completada",
+      "summary": "Creades: {created} · Vinculades: {linked} · Omeses: {skipped} · Errors: {errors}"
+    },
     "filters": {
       "all": "Totes",
       "active": "Actives",

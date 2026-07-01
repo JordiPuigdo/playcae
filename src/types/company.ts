@@ -61,6 +61,47 @@ export interface CreateSubcontractorData extends CompanyFormData {
   userCompanyId: string; // ID de la empresa del usuario actual
 }
 
+// ─── Importación masiva ─────────────────────────────────────────────
+// Refleja los DTO del backend (POST /api/companies/bulk). Solo email es
+// obligatorio; el resto de campos son opcionales.
+export interface CompanyImportRow {
+  email: string;
+  name?: string;
+  taxId?: string;
+  contactPerson?: string;
+  phone?: string;
+}
+
+export interface ImportCompaniesRequest {
+  adminUserId: string;
+  companies: CompanyImportRow[];
+}
+
+export enum ImportRowStatus {
+  Created = 0,
+  Linked = 1,
+  Skipped = 2,
+  Error = 3,
+}
+
+export interface ImportCompanyRowResult {
+  rowIndex: number;
+  email: string;
+  status: ImportRowStatus;
+  message?: string;
+  companyId?: string;
+}
+
+export interface ImportCompaniesResult {
+  totalRows: number;
+  createdCount: number;
+  linkedCount: number;
+  skippedCount: number;
+  errorCount: number;
+  rows: ImportCompanyRowResult[];
+  createdCompanies: Company[];
+}
+
 // Tipo simplificado para la respuesta de parent-companies
 export interface ParentCompanyInfo {
   userId: string;

@@ -4,6 +4,8 @@ import {
   CompanySimple,
   CompanyStatus,
   CreateSubcontractorData,
+  ImportCompaniesRequest,
+  ImportCompaniesResult,
   ParentCompanyInfo,
 } from "@/types/company";
 import { HttpClient } from "./http-client";
@@ -28,6 +30,9 @@ export interface ICompanyService {
     parentCompanyId: string,
     data: CreateSubcontractorData
   ): Promise<ApiResponse<Company>>;
+  importBulk(
+    request: ImportCompaniesRequest
+  ): Promise<ApiResponse<ImportCompaniesResult>>;
 }
 
 export class CompanyService implements ICompanyService {
@@ -112,6 +117,20 @@ export class CompanyService implements ICompanyService {
     return this.httpClient.post<Company>(
       `${this.baseUrl}/${parentCompanyId}/subcontractors`,
       data
+    );
+  }
+
+  /**
+   * Importación masiva de empresas desde Excel (parseado en cliente).
+   * Solo el email es obligatorio por fila; el backend crea/vincula cada
+   * empresa y envía los emails de bienvenida de forma asíncrona.
+   */
+  async importBulk(
+    request: ImportCompaniesRequest
+  ): Promise<ApiResponse<ImportCompaniesResult>> {
+    return this.httpClient.post<ImportCompaniesResult>(
+      `${this.baseUrl}/bulk`,
+      request
     );
   }
 

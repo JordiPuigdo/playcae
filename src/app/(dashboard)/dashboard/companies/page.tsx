@@ -1,5 +1,6 @@
 "use client";
 
+import { CompaniesImport } from "@/components/CompaniesImport";
 import { CompanyFilters } from "@/components/CompanyFilters";
 import { CompanyForm } from "@/components/CompanyForm";
 import { CompanyTable } from "@/components/CompanyTable";
@@ -14,7 +15,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import { WorkerStatus } from "@/types/worker";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Building2, Plus } from "lucide-react";
+import { Building2, FileSpreadsheet, Plus } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
@@ -26,6 +27,7 @@ const CompaniesContent = () => {
     updateCompany,
     deactivateCompany,
     activateCompany,
+    importCompanies,
   } = useCompanies();
   const { t } = useTranslation();
   const { licenseSummary } = useAuthStore();
@@ -55,6 +57,7 @@ const CompaniesContent = () => {
     : "Todos";
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -227,7 +230,17 @@ const CompaniesContent = () => {
                 <Building2 className="h-7 w-7 text-brand-primary" />
                 {t("companies.title")}
               </h1>
-              <div className="relative group inline-block">
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => !contractorsAtLimit && setIsImportOpen(true)}
+                  disabled={contractorsAtLimit}
+                  className="flex items-center gap-2 border-playBlueLight text-brand-primary hover:bg-playGrey disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <FileSpreadsheet className="h-4 w-4" />
+                  {t("companies.import.importExcel")}
+                </Button>
+                <div className="relative group inline-block">
                 <Button
                   onClick={() => !contractorsAtLimit && setIsFormOpen(true)}
                   disabled={contractorsAtLimit}
@@ -246,6 +259,7 @@ const CompaniesContent = () => {
                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
                   </div>
                 )}
+                </div>
               </div>
             </div>
           </div>
@@ -293,6 +307,12 @@ const CompaniesContent = () => {
             />
           </DialogContent>
         </Dialog>
+
+        <CompaniesImport
+          isOpen={isImportOpen}
+          onClose={() => setIsImportOpen(false)}
+          onImport={importCompanies}
+        />
       </div>
     </div>
   );

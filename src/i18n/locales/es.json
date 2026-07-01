@@ -673,6 +673,21 @@
     "deleteError": "No se pudo eliminar la empresa. Inténtalo de nuevo.",
     "creatingCompany": "Creando empresa...",
     "errorCreating": "Error al crear empresa",
+    "import": {
+      "importExcel": "Importar Excel",
+      "title": "Importar empresas",
+      "description": "Sube un fichero Excel (.xlsx) o CSV. Columna obligatoria: Email. Opcionales: Nombre/Empresa, CIF, Contacto, Teléfono.",
+      "selectFile": "Seleccionar fichero",
+      "validRows": "{count} válidos",
+      "invalidRows": "{count} con errores",
+      "rowOk": "Correcto",
+      "importValid": "Importar {count} válidos",
+      "duplicateEmail": "Email duplicado en la lista",
+      "parseError": "No se pudo leer el fichero. Revisa el formato y las columnas.",
+      "error": "No se pudieron importar las empresas. Inténtalo de nuevo.",
+      "done": "Importación completada",
+      "summary": "Creadas: {created} · Vinculadas: {linked} · Omitidas: {skipped} · Errores: {errors}"
+    },
     "filters": {
       "all": "Todas",
       "active": "Activas",

@@ -3,9 +3,11 @@ import useSWR, { mutate as globalMutate } from "swr";
 import {
   Company,
   CompanyFormData,
+  CompanyImportRow,
   CompanySimple,
   CompanyStatus,
   CreateSubcontractorData,
+  ImportCompaniesResult,
 } from "@/types/company";
 import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
@@ -224,6 +226,26 @@ export const useCompanies = () => {
   };
 
   /**
+   * Importación masiva de empresas desde Excel (parseado en cliente).
+   * Envía las filas al backend y refresca el listado. Devuelve el resumen
+   * por fila (creadas / vinculadas / omitidas / con errores).
+   */
+  const importCompanies = async (
+    rows: CompanyImportRow[]
+  ): Promise<ImportCompaniesResult> => {
+    try {
+      const response = await companyService.importBulk({
+        adminUserId: user!.userId!,
+        companies: rows,
+      });
+      await mutate();
+      return response.data;
+    } catch (err) {
+      throw handleError(err);
+    }
+  };
+
+  /**
    * Activa o desactiva el servicio de prevención interna
    */
   const toggleInternalPrevention = async (id: string, hasInternalPrevention: boolean): Promise<void> => {
@@ -257,6 +279,8 @@ export const useCompanies = () => {
     resendWelcomeEmail,
     // Prevención interna
     toggleInternalPrevention,
+    // Importación masiva
+    importCompanies,
   };
 };
 
