@@ -24,6 +24,9 @@ export const usePermissions = () => {
       if (section === "/dashboard/internal-workers" || section.startsWith("/dashboard/internal-workers/")) {
         return licenseSummary?.enableInternalWorkers === true;
       }
+      if (section === "/dashboard/roles-permissions" || section.startsWith("/dashboard/roles-permissions/")) {
+        return licenseSummary?.enableInternalWorkers === true;
+      }
       return true;
     }
 
