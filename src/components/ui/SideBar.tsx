@@ -22,6 +22,7 @@ import {
   HardHat,
   Lock,
   Users2,
+  Users,
   FileText,
   BadgeCheck,
   FileType,
@@ -131,6 +132,18 @@ export default function Sidebar() {
       <nav className="flex flex-col space-y-2 flex-grow">
         {isSuperAdmin ? (
           <>
+            <Link
+              href="/dashboard/users"
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all
+              ${
+                isActive("/dashboard/users")
+                  ? "bg-playOrange text-white shadow-lg"
+                  : "hover:bg-playBlueLight hover:text-white text-playGrey"
+              }`}
+            >
+              <Users className="h-5 w-5" />
+              {t("dashboard.sidebar.users")}
+            </Link>
             <Link
               href="/dashboard/settings/licenses"
               className={`flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all

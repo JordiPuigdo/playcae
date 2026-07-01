@@ -39,3 +39,20 @@ export enum UserRole {
   PRLManager,
   Marketing,
 }
+
+export interface UpdateUserRequest {
+  email: string;
+  role: UserRole;
+}
+
+export const USER_ROLE_LABELS: Record<UserRole, string> = {
+  [UserRole.SuperAdmin]: "Super administrador",
+  [UserRole.Admin]: "Administrador",
+  [UserRole.Company]: "Empresa",
+  [UserRole.Supplier]: "Proveedor",
+  [UserRole.PRLManager]: "Técnico PRL",
+  [UserRole.Marketing]: "Marketing",
+};
+
+export const getUserRoleLabel = (role: UserRole): string =>
+  USER_ROLE_LABELS[role] ?? "Desconocido";

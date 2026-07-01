@@ -411,7 +411,8 @@
       "licenses": "Llicències",
       "quotes": "Pressupostos",
       "profiles": "Perfils",
-      "documentTypes": "Tipus de document"
+      "documentTypes": "Tipus de document",
+      "users": "Usuaris"
     },
     "leads": {
       "title": "Leads",

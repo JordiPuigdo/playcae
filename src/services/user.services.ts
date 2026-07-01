@@ -1,6 +1,7 @@
 import { ApiResponse } from "@/interfaces/api-response";
 import { Site } from "@/types/site";
 import { UserManagementItem } from "@/types/userSitePermission";
+import { UpdateUserRequest } from "@/types/user";
 import { HttpClient } from "./http-client";
 import { CreateUserRequest, CreateUserResponse } from "@/hooks/useUsers";
 
@@ -18,6 +19,10 @@ export interface IUserService {
     request: CreatePrlUserRequest
   ): Promise<ApiResponse<UserManagementItem>>;
   getSitesByUserId(userId: string): Promise<ApiResponse<Site[]>>;
+  update(id: string, request: UpdateUserRequest): Promise<ApiResponse<void>>;
+  setActive(id: string, active: boolean): Promise<ApiResponse<void>>;
+  remove(id: string): Promise<ApiResponse<void>>;
+  sendPasswordReset(id: string): Promise<ApiResponse<void>>;
 }
 
 export class UserService implements IUserService {
@@ -56,5 +61,29 @@ export class UserService implements IUserService {
 
   async getSitesByUserId(userId: string): Promise<ApiResponse<Site[]>> {
     return this.httpClient.get<Site[]>(`${this.baseUrl}/${userId}/sites`);
+  }
+
+  async update(
+    id: string,
+    request: UpdateUserRequest
+  ): Promise<ApiResponse<void>> {
+    return this.httpClient.put<void>(`${this.baseUrl}/${id}/profile`, request);
+  }
+
+  async setActive(id: string, active: boolean): Promise<ApiResponse<void>> {
+    return this.httpClient.patch<void>(`${this.baseUrl}/${id}/active`, {
+      active,
+    });
+  }
+
+  async remove(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  async sendPasswordReset(id: string): Promise<ApiResponse<void>> {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/${id}/send-password-reset`,
+      {}
+    );
   }
 }

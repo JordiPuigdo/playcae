@@ -1,5 +1,7 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { UserService } from "@/services/user.services";
-import { User, UserRole } from "@/types/user";
+import { UpdateUserRequest, User } from "@/types/user";
+import { UserManagementItem } from "@/types/userSitePermission";
 
 export interface CreateUserRequest {
   companyName: string;
@@ -17,13 +19,76 @@ export interface CreateUserResponse {
 }
 
 export const useUsers = () => {
-  const userService = new UserService();
+  const userService = useMemo(() => new UserService(), []);
+  const [users, setUsers] = useState<UserManagementItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const createUser = async (data: CreateUserRequest) => {
-    return await userService.create(data);
-  };
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await userService.getAll();
+      setUsers(res.data ?? []);
+    } catch (err) {
+      const message =
+        (err as { message?: string })?.message ??
+        "No se pudieron cargar los usuarios.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  }, [userService]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const createUser = useCallback(
+    async (data: CreateUserRequest) => userService.create(data),
+    [userService]
+  );
+
+  const updateUser = useCallback(
+    async (id: string, request: UpdateUserRequest) => {
+      await userService.update(id, request);
+      await load();
+    },
+    [userService, load]
+  );
+
+  const toggleActive = useCallback(
+    async (id: string, active: boolean) => {
+      await userService.setActive(id, active);
+      await load();
+    },
+    [userService, load]
+  );
+
+  const removeUser = useCallback(
+    async (id: string) => {
+      await userService.remove(id);
+      await load();
+    },
+    [userService, load]
+  );
+
+  const resendPasswordReset = useCallback(
+    async (id: string) => {
+      await userService.sendPasswordReset(id);
+    },
+    [userService]
+  );
 
   return {
+    users,
+    loading,
+    error,
+    reload: load,
     createUser,
+    updateUser,
+    toggleActive,
+    removeUser,
+    resendPasswordReset,
   };
 };
