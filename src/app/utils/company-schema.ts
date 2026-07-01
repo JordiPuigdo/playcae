@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { validateCompanyTaxId } from "@/app/utils/tax-id-validation";
 
 export const companyImportRowSchema = z.object({
   email: z
@@ -8,12 +7,7 @@ export const companyImportRowSchema = z.object({
     .min(1, "El email es obligatorio")
     .email("Formato de email no válido"),
   name: z.string().trim().optional().default(""),
-  taxId: z
-    .string()
-    .trim()
-    .optional()
-    .default("")
-    .refine((value) => value === "" || validateCompanyTaxId(value), "CIF no válido"),
+  taxId: z.string().trim().optional().default(""),
   contactPerson: z.string().trim().optional().default(""),
   phone: z.string().trim().optional().default(""),
 });

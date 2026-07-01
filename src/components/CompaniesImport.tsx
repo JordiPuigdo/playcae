@@ -63,12 +63,8 @@ export const CompaniesImport = ({
     () =>
       createRowValidator<CompanyRow>({
         schema: companyImportRowSchema,
-        dedupe: {
-          key: (row) => row.email.toLowerCase(),
-          message: t("companies.import.duplicateEmail"),
-        },
       }),
-    [t]
+    []
   );
 
   const handleImport = async (validRows: CompanyRow[]) => {

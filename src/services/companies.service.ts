@@ -8,11 +8,13 @@ import {
   ImportCompaniesResult,
   ParentCompanyInfo,
 } from "@/types/company";
+import { UserCompanyOption } from "@/types/user";
 import { HttpClient } from "./http-client";
 
 export interface ICompanyService {
   getById(id: string): Promise<ApiResponse<Company>>;
   getAll(): Promise<ApiResponse<Company[]>>;
+  getMyCompanies(): Promise<ApiResponse<UserCompanyOption[]>>;
   create(company: Omit<Company, "id">): Promise<ApiResponse<Company>>;
   update(id: string, company: Partial<Company>): Promise<ApiResponse<Company>>;
   delete(id: string): Promise<ApiResponse<void>>;
@@ -21,7 +23,6 @@ export interface ICompanyService {
   deactivate(companyId: string, userId: string): Promise<ApiResponse<void>>;
   toggleInternalPrevention(id: string, hasInternalPrevention: boolean): Promise<ApiResponse<void>>;
   getByUserId(userId: string): Promise<ApiResponse<Company[]>>;
-  // Subcontratas
   getSubcontractors(companyId: string): Promise<ApiResponse<CompanySimple[]>>;
   getAllSubcontractorsRecursive(
     companyId: string
@@ -47,6 +48,12 @@ export class CompanyService implements ICompanyService {
 
   async getAll(): Promise<ApiResponse<Company[]>> {
     return this.httpClient.get<Company[]>(this.baseUrl);
+  }
+
+  async getMyCompanies(): Promise<ApiResponse<UserCompanyOption[]>> {
+    return this.httpClient.get<UserCompanyOption[]>(
+      `${this.baseUrl}/my-companies`
+    );
   }
 
   async create(company: Omit<Company, "id">): Promise<ApiResponse<Company>> {
@@ -83,11 +90,6 @@ export class CompanyService implements ICompanyService {
     return this.httpClient.get<Company[]>(`${this.baseUrl}/user/${userId}`);
   }
 
-  // ============ SUBCONTRATAS ============
-
-  /**
-   * Obtiene las subcontratas directas de una empresa
-   */
   async getSubcontractors(
     companyId: string
   ): Promise<ApiResponse<CompanySimple[]>> {
@@ -96,9 +98,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Obtiene todas las subcontratas de forma recursiva (multinivel)
-   */
   async getAllSubcontractorsRecursive(
     companyId: string
   ): Promise<ApiResponse<CompanySimple[]>> {
@@ -107,9 +106,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Crea una subcontrata para una empresa
-   */
   async createSubcontractor(
     parentCompanyId: string,
     data: CreateSubcontractorData
@@ -120,11 +116,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Importación masiva de empresas desde Excel (parseado en cliente).
-   * Solo el email es obligatorio por fila; el backend crea/vincula cada
-   * empresa y envía los emails de bienvenida de forma asíncrona.
-   */
   async importBulk(
     request: ImportCompaniesRequest
   ): Promise<ApiResponse<ImportCompaniesResult>> {
@@ -134,9 +125,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Obtiene las empresas padre de una empresa (para proveedores que trabajan con múltiples clientes)
-   */
   async getParentCompanies(
     companyId: string
   ): Promise<ApiResponse<ParentCompanyInfo[]>> {
@@ -145,9 +133,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Reenvía el correo de bienvenida a la empresa
-   */
   async resendWelcomeEmail(companyId: string): Promise<ApiResponse<void>> {
     return this.httpClient.post<void>(
       `${this.baseUrl}/${companyId}/resend-welcome-email`,
@@ -155,10 +140,6 @@ export class CompanyService implements ICompanyService {
     );
   }
 
-  /**
-   * Activa o desactiva el servicio de prevención interna.
-   * Reconcilia documentos automáticamente en el backend.
-   */
   async toggleInternalPrevention(id: string, hasInternalPrevention: boolean): Promise<ApiResponse<void>> {
     return this.httpClient.put(
       `${this.baseUrl}/${id}/internal-prevention/${hasInternalPrevention}`,

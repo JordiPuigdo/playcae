@@ -62,7 +62,23 @@
     "register": "Registrarse",
     "requestDemo": "Solicitar demo",
     "logout": "Cerrar sesión",
-    "myAccount": "Mi cuenta"
+    "myAccount": "Mi cuenta",
+    "switchCompany": "Cambiar de empresa",
+    "pending": "Pendiente"
+  },
+  "companySelector": {
+    "title": "¿Con qué empresa quieres entrar?",
+    "description": "Tu cuenta gestiona varias empresas. Elige con cuál quieres trabajar ahora. Podrás cambiar de empresa en cualquier momento.",
+    "loading": "Cargando tus empresas...",
+    "pendingBadge": "Pendiente de configurar",
+    "continue": "Continuar"
+  },
+  "parentCompanySelector": {
+    "title": "Selecciona una Empresa",
+    "description": "Tu cuenta está asociada a varias empresas. Selecciona con cuál deseas trabajar en esta sesión.",
+    "loading": "Cargando empresas disponibles...",
+    "empty": "No se encontraron empresas asociadas a tu cuenta.",
+    "continue": "Continuar"
   },
   "nav": {
     "documentValidation": "Validación documental IA",

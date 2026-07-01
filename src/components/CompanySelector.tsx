@@ -1,37 +1,36 @@
 "use client";
 
-import { ParentCompany } from "@/types/user";
+import { UserCompanyOption } from "@/types/user";
 import { useTranslation } from "@/hooks/useTranslation";
 import {
   CompanyChoiceOption,
   CompanyChoiceSelector,
 } from "@/components/CompanyChoiceSelector";
 
-interface ParentCompanySelectorProps {
-  companies: ParentCompany[];
+interface CompanySelectorProps {
+  companies: UserCompanyOption[];
   isLoading?: boolean;
   onSelect: (companyId: string) => void;
 }
 
-export const ParentCompanySelector = ({
+export const CompanySelector = ({
   companies,
   isLoading = false,
   onSelect,
-}: ParentCompanySelectorProps) => {
+}: CompanySelectorProps) => {
   const { t } = useTranslation();
   const options: CompanyChoiceOption[] = companies.map((company) => ({
     id: company.id,
     name: company.name,
-    detail: company.taxId,
+    badge: company.isNew ? t("companySelector.pendingBadge") : null,
   }));
 
   return (
     <CompanyChoiceSelector
-      title={t("parentCompanySelector.title")}
-      description={t("parentCompanySelector.description")}
-      loadingText={t("parentCompanySelector.loading")}
-      emptyText={t("parentCompanySelector.empty")}
-      continueText={t("parentCompanySelector.continue")}
+      title={t("companySelector.title")}
+      description={t("companySelector.description")}
+      loadingText={t("companySelector.loading")}
+      continueText={t("companySelector.continue")}
       companies={options}
       isLoading={isLoading}
       onSelect={onSelect}

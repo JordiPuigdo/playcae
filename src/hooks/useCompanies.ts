@@ -13,12 +13,14 @@ import { CompanyService } from "@/services/companies.service";
 import { HttpClient } from "@/services/http-client";
 import { ApiError, ApiResponse } from "@/interfaces/api-response";
 import { useAuthStore } from "./useAuthStore";
+import { useActiveCompanyId } from "./useActiveCompanyId";
 
 const COMPANIES_KEY = "/api/companies";
 
 export const useCompanies = () => {
   const companyService = useMemo(() => new CompanyService(new HttpClient()), []);
   const user = useAuthStore((s) => s.user);
+  const activeCompanyId = useActiveCompanyId();
   const {
     data: companies = [],
     mutate,
@@ -48,7 +50,8 @@ export const useCompanies = () => {
       const response = await companyService.getById(id);
       return response.data;
     } catch (err) {
-      handleError(err);
+      const error = handleError(err);
+      console.error("getCompanyById failed", { id, status: error.status, message: error.message });
       return null;
     }
   };
@@ -197,7 +200,7 @@ export const useCompanies = () => {
     try {
       const subcontractorData: CreateSubcontractorData = {
         ...data,
-        userCompanyId: user!.companyId || companies[0]?.id || "",
+        userCompanyId: activeCompanyId || companies[0]?.id || "",
       };
 
       const response = await companyService.createSubcontractor(

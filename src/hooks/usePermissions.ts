@@ -1,8 +1,10 @@
 import { UserRole } from "@/types/user";
 import { useAuthStore } from "./useAuthStore";
+import { useActiveCompanyId } from "./useActiveCompanyId";
 
 export const usePermissions = () => {
   const { user, licenseSummary } = useAuthStore();
+  const activeCompanyId = useActiveCompanyId();
 
   const hasAccess = (section: string): boolean => {
     if (!user) return false;
@@ -30,11 +32,10 @@ export const usePermissions = () => {
       return true;
     }
 
-    // Permisos para rol Company (subcontratistas)
     if (user.role === UserRole.Company) {
       const companyPermissions = [
         "/dashboard",
-        `/dashboard/companies/${user.companyId}`, // Su propia empresa
+        `/dashboard/companies/${activeCompanyId}`,
         "/dashboard/subcontractors",
       ];
       return companyPermissions.some(

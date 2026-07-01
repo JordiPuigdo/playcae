@@ -8,6 +8,9 @@ type PersistedAuthState = {
   };
 };
 
+const DEFAULT_TIMEOUT_MS = 20000;
+const UPLOAD_TIMEOUT_MS = 120000;
+
 export class HttpClient {
   constructor(
     private readonly baseUrl: string = "",
@@ -16,7 +19,7 @@ export class HttpClient {
 
   async get<T>(url: string): Promise<ApiResponse<T>> {
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
+      this.fetchWithTimeout(`${this.baseUrl}${url}`, {
         headers: this.buildHeaders(),
         credentials: "include",
       });
@@ -26,7 +29,7 @@ export class HttpClient {
 
   async post<T>(url: string, body: unknown): Promise<ApiResponse<T>> {
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
+      this.fetchWithTimeout(`${this.baseUrl}${url}`, {
         method: "POST",
         headers: this.buildHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify(body),
@@ -38,12 +41,16 @@ export class HttpClient {
 
   async upload<T>(url: string, formData: FormData): Promise<ApiResponse<T>> {
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
-        method: "POST",
-        headers: this.buildHeaders(),
-        body: formData,
-        credentials: "include",
-      });
+      this.fetchWithTimeout(
+        `${this.baseUrl}${url}`,
+        {
+          method: "POST",
+          headers: this.buildHeaders(),
+          body: formData,
+          credentials: "include",
+        },
+        UPLOAD_TIMEOUT_MS
+      );
     const response = await doRequest();
     return this.handleResponse<T>(response, doRequest);
   }
@@ -51,21 +58,25 @@ export class HttpClient {
   async put<T = void>(url: string, body: unknown): Promise<ApiResponse<T>> {
     const isFormData = body instanceof FormData;
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
-        method: "PUT",
-        headers: isFormData
-          ? this.buildHeaders()
-          : this.buildHeaders({ "Content-Type": "application/json" }),
-        body: isFormData ? body : JSON.stringify(body),
-        credentials: "include",
-      });
+      this.fetchWithTimeout(
+        `${this.baseUrl}${url}`,
+        {
+          method: "PUT",
+          headers: isFormData
+            ? this.buildHeaders()
+            : this.buildHeaders({ "Content-Type": "application/json" }),
+          body: isFormData ? body : JSON.stringify(body),
+          credentials: "include",
+        },
+        isFormData ? UPLOAD_TIMEOUT_MS : DEFAULT_TIMEOUT_MS
+      );
     const response = await doRequest();
     return this.handleResponse<T>(response, doRequest);
   }
 
   async patch<T = void>(url: string, body: unknown): Promise<ApiResponse<T>> {
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
+      this.fetchWithTimeout(`${this.baseUrl}${url}`, {
         method: "PATCH",
         headers: this.buildHeaders({ "Content-Type": "application/json" }),
         body: JSON.stringify(body),
@@ -77,13 +88,35 @@ export class HttpClient {
 
   async delete<T = void>(url: string): Promise<ApiResponse<T>> {
     const doRequest = () =>
-      fetch(`${this.baseUrl}${url}`, {
+      this.fetchWithTimeout(`${this.baseUrl}${url}`, {
         method: "DELETE",
         headers: this.buildHeaders(),
         credentials: "include",
       });
     const response = await doRequest();
     return this.handleResponse<T>(response, doRequest);
+  }
+
+  private async fetchWithTimeout(
+    input: string,
+    init: RequestInit,
+    timeoutMs: number = DEFAULT_TIMEOUT_MS
+  ): Promise<Response> {
+    if (typeof AbortController === "undefined") {
+      return fetch(input, init);
+    }
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(input, { ...init, signal: controller.signal });
+    } catch (error) {
+      if (controller.signal.aborted) {
+        throw { status: 408, message: "La solicitud ha tardado demasiado" };
+      }
+      throw error;
+    } finally {
+      clearTimeout(timeoutId);
+    }
   }
 
   private buildHeaders(extraHeaders?: Record<string, string>): HeadersInit {

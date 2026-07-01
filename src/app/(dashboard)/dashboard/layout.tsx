@@ -3,14 +3,16 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/Loader";
-import SupportChat from "@/components/SupportChat";
 import Header from "@/components/ui/Header";
 import Sidebar from "@/components/ui/SideBar";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useUserConfiguration } from "@/hooks/useUserConfiguration";
+import { useCompanyService } from "@/hooks/useCompanyService";
+import { useSelectParentCompany } from "@/hooks/useSelectParentCompany";
 import { Toaster } from "@/components/ui/Toaster";
 import { UserRole } from "@/types/user";
 import { UserService } from "@/services/user.services";
+import { ParentCompanySelector } from "@/components/ParentCompanySelector";
 
 const hasAuthStoreHydrated = () =>
   typeof window !== "undefined" &&
@@ -24,13 +26,18 @@ export default function DashboardLayout({
   const {
     user,
     logoUrl,
-    setLogoUrl,
     availableSites,
     setAvailableSites,
     selectedSiteId,
     setSelectedSite,
+    selectedParentCompanyId,
+    availableParentCompanies,
+    pendingParentCompanySelection,
+    setAvailableCompanies,
   } = useAuthStore();
-  const { getLogoUrl } = useUserConfiguration();
+  const { applyLogoForOwner } = useUserConfiguration();
+  const companyService = useCompanyService();
+  const selectParentCompany = useSelectParentCompany();
   const router = useRouter();
   const [hasHydrated, setHasHydrated] = useState(hasAuthStoreHydrated);
 
@@ -72,30 +79,42 @@ export default function DashboardLayout({
     </>
   );
 
-  // Cargar logo si el usuario está autenticado pero el logo no está en el store
   useEffect(() => {
     const loadLogoIfNeeded = async () => {
       if (user && !logoUrl) {
         const isAdmin = user.role === UserRole.Admin || user.role === UserRole.SuperAdmin;
-        // Para admin usamos su userId, para company usamos el parentCompanyId o companyId
-        const logoOwnerId = isAdmin ? user.userId : (user.parentCompanyId || user.companyId);
-        
+        const logoOwnerId = isAdmin
+          ? user.userId
+          : selectedParentCompanyId || user.companyId;
+
         if (logoOwnerId) {
-          try {
-            const url = await getLogoUrl(logoOwnerId);
-            if (url) {
-              setLogoUrl(url);
-            }
-          } catch (error) {
-            // Si falla, simplemente no mostramos logo personalizado
-            console.error("Error loading logo:", error);
-          }
+          await applyLogoForOwner(logoOwnerId);
         }
       }
     };
 
     loadLogoIfNeeded();
-  }, [user, logoUrl]);
+  }, [user, logoUrl, selectedParentCompanyId, applyLogoForOwner]);
+
+  useEffect(() => {
+    const refreshMyCompanies = async () => {
+      if (!user || user.role !== UserRole.Company) return;
+      try {
+        const response = await companyService.getMyCompanies();
+        if (response?.data) {
+          setAvailableCompanies(response.data);
+        }
+      } catch (error) {
+        console.error("Error refreshing user companies:", error);
+      }
+    };
+
+    refreshMyCompanies();
+  }, [user, companyService, setAvailableCompanies]);
+
+  const handleParentCompanySelect = async (parentCompanyId: string) => {
+    await selectParentCompany(parentCompanyId);
+  };
 
   useEffect(() => {
     const loadPrlSitesIfNeeded = async () => {
@@ -141,10 +160,20 @@ export default function DashboardLayout({
         <div className="flex flex-col flex-1 ml-64 h-full overflow-hidden">
           <Header />
           <main className="flex-1 p-6 overflow-y-auto">{children}</main>
-          {/*user && <SupportChat />*/}
           <Toaster />
         </div>
       </div>
+
+      {pendingParentCompanySelection &&
+        user?.role === UserRole.Company &&
+        availableParentCompanies.length > 1 && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-playGrey/80 backdrop-blur-sm p-4">
+            <ParentCompanySelector
+              companies={availableParentCompanies}
+              onSelect={handleParentCompanySelect}
+            />
+          </div>
+        )}
     </>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
@@ -21,7 +21,7 @@ import {
   Users,
   CheckCircle,
 } from "lucide-react";
-import { CompanyFormData, CompanyStatus } from "@/types/company";
+import { Company, CompanyFormData, CompanyStatus } from "@/types/company";
 import { Profile } from "@/types/profile";
 import { WorkerFormData } from "@/types/worker";
 import { useToast } from "@/hooks/use-Toast";
@@ -40,14 +40,21 @@ interface OnboardingData {
   selectedProfileId: string | null;
 }
 
+const companyFieldCount = (c: Company) =>
+  [c.name, c.taxId, c.contactPerson, c.email, c.phone].filter(Boolean).length;
+
 export default function CompanyOnboarding() {
   const [token, setToken] = useState<string | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCompany, setIsLoadingCompany] = useState(true);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const { getCompanyById, updateCompany, updateCompanyStatus } = useCompanies();
-  const { createBulkWorkers, workers } = useWorkers(token!);
+  const [fetchedCompany, setFetchedCompany] = useState<Company | null>(null);
+  const hasFetchedRef = useRef(false);
+  const hasHydratedRef = useRef(false);
+  const { companies, getCompanyById, updateCompany, updateCompanyStatus } =
+    useCompanies();
+  const { createBulkWorkers } = useWorkers(token!);
   const router = useRouter();
   const { logout, licenseSummary } = useAuthStore();
 
@@ -70,33 +77,49 @@ export default function CompanyOnboarding() {
     }
   }, []);
 
-  const fetchCompany = async (token: string) => {
-    const company = await getCompanyById(token);
+  useEffect(() => {
+    if (!token || hasFetchedRef.current) return;
+    hasFetchedRef.current = true;
 
-    if (!company) {
+    (async () => {
+      const company = await getCompanyById(token);
+      setFetchedCompany(company);
       setIsLoadingCompany(false);
-      return;
-    }
-    setOnboardingData({
-      company: {
-        name: company.name,
-        taxId: company.taxId,
-        contactPerson: company.contactPerson,
-        email: company.email,
-        phone: company.phone,
-        hasInternalPreventionService: company.hasInternalPreventionService ?? false,
-      },
-      workers: workers,
-      selectedProfileId: null,
-    });
-    setIsLoadingCompany(false);
-  };
+      if (!company) {
+        toast({
+          title: "No pudimos cargar los datos de tu empresa",
+          description:
+            "Revisa tu conexión o completa los campos manualmente para continuar.",
+          variant: "destructive",
+        });
+      }
+    })();
+  }, [token]);
 
   useEffect(() => {
-    if (token) {
-      fetchCompany(token);
-    }
-  }, [token]);
+    if (hasHydratedRef.current || !token) return;
+
+    const fromList = companies.find((c) => c.id === token) ?? null;
+    const source = [fetchedCompany, fromList]
+      .filter((c): c is Company => c != null)
+      .sort((a, b) => companyFieldCount(b) - companyFieldCount(a))[0];
+
+    if (!source || companyFieldCount(source) === 0) return;
+
+    hasHydratedRef.current = true;
+    setOnboardingData((prev) => ({
+      ...prev,
+      company: {
+        name: source.name ?? "",
+        taxId: source.taxId ?? "",
+        contactPerson: source.contactPerson ?? "",
+        email: source.email ?? "",
+        phone: source.phone ?? "",
+        hasInternalPreventionService:
+          source.hasInternalPreventionService ?? false,
+      },
+    }));
+  }, [fetchedCompany, companies, token]);
 
   const [onboardingData, setOnboardingData] = useState<OnboardingData>({
     company: {

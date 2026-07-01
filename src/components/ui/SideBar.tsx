@@ -1,7 +1,7 @@
 "use client";
 
 import { usePermissions } from "@/hooks/usePermissions";
-import { useAuthStore } from "@/hooks/useAuthStore";
+import { useActiveCompanyId } from "@/hooks/useActiveCompanyId";
 import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
 import Link from "next/link";
@@ -31,10 +31,9 @@ import {
 export default function Sidebar() {
   const pathname = usePathname();
   const { hasAccess, role } = usePermissions();
-  const { user } = useAuthStore();
+  const activeCompanyId = useActiveCompanyId();
   const { t } = useTranslation();
 
-  // Links para Admin
   const adminLinks = [
     { href: "/dashboard", label: t("dashboard.sidebar.home"), icon: LayoutDashboard },
     { href: "/dashboard/companies", label: t("dashboard.sidebar.companies"), icon: Building2 },
@@ -69,10 +68,9 @@ export default function Sidebar() {
     },
   ];
 
-  // Links para Company
   const companyLinks = [
     {
-      href: `/dashboard/companies/${user?.companyId}`,
+      href: `/dashboard/companies/${activeCompanyId}`,
       label: t("dashboard.sidebar.company"),
       icon: Building,
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/hooks/useAuthStore";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -17,15 +17,15 @@ import { Label } from "@/components/ui/Label";
 import { Alert, AlertDescription } from "@/components/ui/Alert";
 
 import { Loader2 } from "lucide-react";
-import { ParentCompany, UserRole } from "@/types/user";
+import { UserRole } from "@/types/user";
 import { PasswordInput } from "@/components/PasswordInput";
 import { useAuthSession } from "@/hooks/useAuthSession";
 import { ParentCompanySelector } from "@/components/ParentCompanySelector";
-import { CompanyService } from "@/services/companies.service";
-import { HttpClient } from "@/services/http-client";
+import { CompanySelector } from "@/components/CompanySelector";
+import { useResolveCompanyContext } from "@/hooks/useResolveCompanyContext";
+import { useSelectParentCompany } from "@/hooks/useSelectParentCompany";
 import { UserService } from "@/services/user.services";
 import dayjs from "dayjs";
-import { useUserConfiguration } from "@/hooks/useUserConfiguration";
 import { Site } from "@/types/site";
 
 export default function LoginPage() {
@@ -36,22 +36,27 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCompanies, setIsLoadingCompanies] = useState(false);
-  const [parentCompanies, setParentCompanies] = useState<ParentCompany[]>([]);
   const [prlSites, setPrlSites] = useState<Site[]>([]);
 
   const {
     login,
     user,
     errorAuth,
+    pendingCompanySelection,
+    availableCompanies,
+    selectedCompanyId,
+    setSelectedCompany,
     pendingParentCompanySelection,
+    availableParentCompanies,
+    selectedParentCompanyId,
     pendingSiteSelection,
-    setSelectedParentCompany,
     setSelectedSite,
     setAvailableSites,
-    setLogoUrl,
   } = useAuthStore();
 
-  const { getLogoUrl } = useUserConfiguration();
+  const { resolveCompanyContext } = useResolveCompanyContext();
+  const selectParentCompany = useSelectParentCompany();
+  const resolvingRef = useRef<string | null>(null);
 
   useAuthSession();
 
@@ -75,52 +80,36 @@ export default function LoginPage() {
     }
   }, [errorAuth]);
 
-  // Cargar empresas padre cuando sea necesario
   useEffect(() => {
-    const loadParentCompanies = async () => {
-      if (
-        user &&
-        pendingParentCompanySelection &&
-        user.role === UserRole.Company
-      ) {
+    if (!user || user.role !== UserRole.Company) return;
+    if (pendingCompanySelection) return;
+    if (!selectedCompanyId) return;
+    if (selectedParentCompanyId) return;
+    if (pendingParentCompanySelection) return;
+    if (resolvingRef.current === selectedCompanyId) return;
 
-        // Ocultar el overlay de "Iniciando sesión" para mostrar el selector
-        setIsLoading(false);
-        setIsLoadingCompanies(true);
-        try {
-          const companyService = new CompanyService(new HttpClient());
-          const response = await companyService.getParentCompanies(
-            user.companyId,
-          );
-          if (response?.data) {
-            
-            // Mapear a ParentCompany (backend devuelve userId)
-            const companies: ParentCompany[] = response.data.map((c) => ({
-              id: c.userId,
-              name: c.name,
-            }));
-            setParentCompanies(companies);
+    resolvingRef.current = selectedCompanyId;
+    setIsLoading(false);
+    setIsLoadingCompanies(true);
+    resolveCompanyContext(selectedCompanyId)
+      .catch((err) => {
+        console.error("Error al resolver el contexto de la empresa:", err);
+        setError("Error al cargar las empresas disponibles");
+      })
+      .finally(() => setIsLoadingCompanies(false));
+  }, [
+    user,
+    pendingCompanySelection,
+    selectedCompanyId,
+    selectedParentCompanyId,
+    pendingParentCompanySelection,
+    resolveCompanyContext,
+  ]);
 
-            // Si no hay empresas padre, usar la propia empresa del usuario
-            if (companies.length === 0) {
-              setSelectedParentCompany(user.companyId);
-            }
-            // Si solo hay una empresa, seleccionarla automáticamente
-            else if (companies.length === 1) {
-              setSelectedParentCompany(companies[0].id);
-            }
-          }
-        } catch (err) {
-          console.error("Error loading parent companies:", err);
-          setError("Error al cargar las empresas disponibles");
-        } finally {
-          setIsLoadingCompanies(false);
-        }
-      }
-    };
-
-    loadParentCompanies();
-  }, [user, pendingParentCompanySelection, setSelectedParentCompany]);
+  const handleCompanySelect = (companyId: string) => {
+    setIsLoading(true);
+    setSelectedCompany(companyId);
+  };
 
   useEffect(() => {
     const loadPrlSites = async () => {
@@ -163,36 +152,29 @@ export default function LoginPage() {
     loadPrlSites();
   }, [user, pendingSiteSelection, setSelectedSite, setAvailableSites]);
 
-  // Manejar selección de empresa padre
   const handleParentCompanySelect = async (companyId: string) => {
-    try {
-      const url = await getLogoUrl(companyId);
-      console.log("Logo URL seleccionada:", url);
-      if (url) {
-        setLogoUrl(url);
-      }
-      setIsLoading(true);
-      setSelectedParentCompany(companyId);
-    } catch (err) {
-      console.error("Error al obtener logo:", err);
-      setSelectedParentCompany(companyId);
-    }
+    setIsLoading(true);
+    await selectParentCompany(companyId);
   };
 
   const handleSiteSelect = (siteId: string) => {
     setSelectedSite(siteId);
   };
 
-      // company que es UserId!
-  
-
- 
   useEffect(() => {
     if (!user) return;
     if (dayjs().isAfter(dayjs(user.refreshTokenExpiryTime))) return;
-    // No redirigir si está pendiente de seleccionar empresa
+    if (pendingCompanySelection) return;
     if (pendingParentCompanySelection) return;
     if (pendingSiteSelection) return;
+
+    if (
+      user?.role === UserRole.Company &&
+      !selectedParentCompanyId &&
+      !pendingParentCompanySelection
+    ) {
+      return;
+    }
 
     if (user?.role === UserRole.SuperAdmin) {
       router.push("/dashboard/settings/licenses");
@@ -203,18 +185,29 @@ export default function LoginPage() {
     } else if (user?.role === UserRole.PRLManager) {
       router.push("/dashboard");
     } else if (user?.role === UserRole.Company) {
-      if (user.isNew) {
-        router.push(`/onboarding?token=${user.companyId}`);
+      const companyId = selectedCompanyId ?? user.companyId;
+      const activeCompany = availableCompanies.find((c) => c.id === companyId);
+      const isNew = activeCompany ? activeCompany.isNew : user.isNew;
+      if (isNew) {
+        router.push(`/onboarding?token=${companyId}`);
       } else {
-        router.push(`/dashboard/companies/${user.companyId}`);
+        router.push(`/dashboard/companies/${companyId}`);
       }
     }
-  }, [user, pendingParentCompanySelection, pendingSiteSelection, router]);
+  }, [
+    user,
+    pendingCompanySelection,
+    pendingParentCompanySelection,
+    pendingSiteSelection,
+    selectedCompanyId,
+    selectedParentCompanyId,
+    availableCompanies,
+    router,
+  ]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-playGrey p-4">
-      {/* Loading Overlay */}
-      {isLoading && (
+      {(isLoading || isLoadingCompanies) && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-playGrey/80 backdrop-blur-sm">
           <div className="flex flex-col items-center space-y-4">
             <Loader2 className="h-8 w-8 animate-spin text-brand-primary" />
@@ -225,10 +218,15 @@ export default function LoginPage() {
         </div>
       )}
 
-      {/* Selector de empresa padre */}
-      {pendingParentCompanySelection && user && parentCompanies.length > 1 ? (
+      {pendingCompanySelection && user && availableCompanies.length > 1 ? (
+        <CompanySelector
+          companies={availableCompanies}
+          isLoading={isLoadingCompanies}
+          onSelect={handleCompanySelect}
+        />
+      ) : pendingParentCompanySelection && user && availableParentCompanies.length > 1 ? (
         <ParentCompanySelector
-          companies={parentCompanies}
+          companies={availableParentCompanies}
           isLoading={isLoadingCompanies}
           onSelect={handleParentCompanySelect}
         />
@@ -317,7 +315,6 @@ export default function LoginPage() {
                 </Button>
               </div>
 
-              {/* Botón principal: azul oficial */}
               <Button
                 type="submit"
                 disabled={isLoading}
@@ -326,7 +323,6 @@ export default function LoginPage() {
                 {isLoading ? t("common.loading") : t("auth.login.submit")}
               </Button>
 
-              {/* Botón secundario: estilo gris neutro */}
               <Button
                 type="button"
                 variant="ghost"

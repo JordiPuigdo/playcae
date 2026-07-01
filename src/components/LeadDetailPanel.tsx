@@ -17,6 +17,7 @@ import {
   LeadEvent,
   LeadEventType,
   LeadListItem,
+  LeadOrigin,
   LeadStatus,
   UpdateLeadStatusRequest,
 } from "@/types/lead";
@@ -55,6 +56,15 @@ const EVENT_LABELS: Record<LeadEventType, string> = {
   [LeadEventType.QuoteSent]: "Presupuesto enviado",
   [LeadEventType.EmailSent]: "Email enviado",
   [LeadEventType.CallMade]: "Llamada registrada",
+};
+
+const ORIGIN_LABELS: Record<LeadOrigin, string> = {
+  [LeadOrigin.Web]: "Web",
+  [LeadOrigin.Landing]: "Landing",
+  [LeadOrigin.Phone]: "Llamada telefónica",
+  [LeadOrigin.SocialMedia]: "Redes sociales",
+  [LeadOrigin.Event]: "Feria / Evento",
+  [LeadOrigin.Referral]: "Referido",
 };
 
 const ALL_STATUSES: { value: LeadStatus; label: string }[] = [
@@ -210,7 +220,7 @@ export function LeadDetailPanel({ lead, onClose, onStatusUpdated, onEmailVerifie
               <div className="flex items-center gap-2 flex-wrap mt-1">
                 <LeadStatusBadge status={lead.status} />
                 <Badge variant="secondary" className="text-xs">
-                  {lead.origin === 0 ? "Web" : "Landing"}
+                  {ORIGIN_LABELS[lead.origin]}
                 </Badge>
               </div>
               <div className="flex flex-col gap-1 mt-2 text-sm text-muted-foreground">

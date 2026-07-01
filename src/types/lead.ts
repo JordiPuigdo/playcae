@@ -10,6 +10,15 @@ export enum LeadOrigin {
   Referral = 5,
 }
 
+export const LEAD_ORIGIN_LABEL_KEYS = {
+  [LeadOrigin.Web]: "dashboard.leads.origins.web",
+  [LeadOrigin.Landing]: "dashboard.leads.origins.landing",
+  [LeadOrigin.Phone]: "dashboard.leads.origins.phone",
+  [LeadOrigin.SocialMedia]: "dashboard.leads.origins.socialMedia",
+  [LeadOrigin.Event]: "dashboard.leads.origins.event",
+  [LeadOrigin.Referral]: "dashboard.leads.origins.referral",
+} as const satisfies Record<LeadOrigin, string>;
+
 export enum LeadStatus {
   New = 0,
   Contacted = 1,

@@ -5,14 +5,21 @@ export interface UserLoginResponse extends User {
   refreshTokenExpiryTime: string;
   refreshToken: string;
   companyId: string;
-  parentCompanyId: string | null; // ID de empresa padre (si solo hay una)
+  parentCompanyId: string | null;
   isNew: boolean;
   token?: string;
   userId: string;
   role: UserRole;
   userName: string;
-  adminLogoUrl?: string | null; // Logo personalizado del admin
+  adminLogoUrl?: string | null;
   licenseSummary?: LicenseSummary | null;
+  companies?: UserCompanyOption[];
+}
+
+export interface UserCompanyOption {
+  id: string;
+  name: string;
+  isNew: boolean;
 }
 
 export interface ParentCompany {

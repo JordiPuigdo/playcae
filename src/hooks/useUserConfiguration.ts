@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { UserConfiguration } from "@/types/userConfiguration";
 import { UserConfigurationService } from "@/services/user-configuration.service";
 import { useToast } from "./use-Toast";
@@ -133,10 +133,24 @@ export const useUserConfiguration = () => {
     }
   };
 
-  const getLogoUrl = async (userId: string): Promise<string> => {
+  const getLogoUrl = useCallback(async (userId: string): Promise<string> => {
     const data = await userConfigurationService.getLogoUrl(userId);
     return data.data.url || "";
-  }
+  }, []);
+
+  const applyLogoForOwner = useCallback(
+    async (ownerId: string): Promise<void> => {
+      try {
+        const url = await getLogoUrl(ownerId);
+        if (url) {
+          setLogoUrl(url);
+        }
+      } catch (err) {
+        console.error("Error al obtener logo:", err);
+      }
+    },
+    [getLogoUrl, setLogoUrl]
+  );
 
   return {
     configuration,
@@ -147,5 +161,6 @@ export const useUserConfiguration = () => {
     updateLogo,
     deleteLogo,
     getLogoUrl,
+    applyLogoForOwner,
   };
 };

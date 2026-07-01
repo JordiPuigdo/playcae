@@ -82,7 +82,8 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
   const {
     data: inquiries = emptyInquiryResult,
     error: inquiriesError,
-    isValidating: inquiriesLoading,
+    isLoading: inquiriesLoading,
+    isValidating: inquiriesValidating,
     mutate: mutateInquiries,
   } = useSWR<WebInquiryPagedResult, ApiError>(
     ["dashboard-web-inquiries", inquiryQuery],
@@ -93,13 +94,16 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
     {
       revalidateOnFocus: false,
       keepPreviousData: true,
+      errorRetryCount: 2,
+      dedupingInterval: 500,
     }
   );
 
   const {
     data: leads = emptyLeadResult,
     error: leadsError,
-    isValidating: leadsLoading,
+    isLoading: leadsLoading,
+    isValidating: leadsValidating,
     mutate: mutateLeads,
   } = useSWR<LeadPagedResult, ApiError>(
     ["dashboard-leads", leadQuery],
@@ -110,6 +114,8 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
     {
       revalidateOnFocus: false,
       keepPreviousData: true,
+      errorRetryCount: 2,
+      dedupingInterval: 500,
     }
   );
 
@@ -120,6 +126,8 @@ export function useDashboardLeads(params: UseDashboardLeadsParams) {
     leadError: leadsError,
     isLoading:
       params.activeTab === "inquiries" ? inquiriesLoading : leadsLoading,
+    isValidating:
+      params.activeTab === "inquiries" ? inquiriesValidating : leadsValidating,
     refresh: async () => {
       await Promise.all([mutateInquiries(), mutateLeads()]);
     },

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
   ParentCompany,
+  UserCompanyOption,
   UserLoginResponse,
   UserRole,
   UserSiteOption,
@@ -9,7 +10,7 @@ import {
 import { LicenseSummary } from "@/types/license";
 import { LoginService } from "@/services/login.service";
 
-const AUTH_VERSION = 9;
+const AUTH_VERSION = 10;
 
 interface AuthState {
   user: UserLoginResponse | null;
@@ -17,8 +18,11 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   errorAuth: string | null;
-  expiresAt: number | null; // timestamp en ms — ahora refleja expiración del refresh token (~1 año)
+  expiresAt: number | null;
   logoUrl: string | null;
+  selectedCompanyId: string | null;
+  availableCompanies: UserCompanyOption[];
+  pendingCompanySelection: boolean;
   selectedParentCompanyId: string | null;
   pendingParentCompanySelection: boolean;
   availableParentCompanies: ParentCompany[];
@@ -30,6 +34,9 @@ interface AuthState {
   logout: () => void;
   refreshSession: () => Promise<boolean>;
   clearError: () => void;
+  setSelectedCompany: (companyId: string) => void;
+  setAvailableCompanies: (companies: UserCompanyOption[]) => void;
+  setPendingCompanySelection: (pending: boolean) => void;
   setSelectedParentCompany: (companyId: string) => void;
   setAvailableParentCompanies: (companies: ParentCompany[]) => void;
   setPendingParentCompanySelection: (pending: boolean) => void;
@@ -45,6 +52,9 @@ const initialState: Omit<
   | "logout"
   | "refreshSession"
   | "clearError"
+  | "setSelectedCompany"
+  | "setAvailableCompanies"
+  | "setPendingCompanySelection"
   | "setSelectedParentCompany"
   | "setAvailableParentCompanies"
   | "setPendingParentCompanySelection"
@@ -60,6 +70,9 @@ const initialState: Omit<
   errorAuth: null,
   expiresAt: null,
   logoUrl: null,
+  selectedCompanyId: null,
+  availableCompanies: [],
+  pendingCompanySelection: false,
   selectedParentCompanyId: null,
   pendingParentCompanySelection: false,
   availableParentCompanies: [],
@@ -107,6 +120,9 @@ export const useAuthStore = create<AuthState>()(
                 expiresAt,
                 logoUrl,
                 licenseSummary,
+                selectedCompanyId: null,
+                availableCompanies: [],
+                pendingCompanySelection: false,
                 selectedParentCompanyId: null,
                 pendingParentCompanySelection: false,
                 selectedSiteId: null,
@@ -122,42 +138,58 @@ export const useAuthStore = create<AuthState>()(
                 expiresAt,
                 logoUrl,
                 licenseSummary,
+                selectedCompanyId: null,
+                availableCompanies: [],
+                pendingCompanySelection: false,
                 pendingParentCompanySelection: false,
                 selectedParentCompanyId: userData.parentCompanyId || null,
                 pendingSiteSelection: true,
                 selectedSiteId: null,
                 availableSites: [],
               });
-            } else if (userData.parentCompanyId) {
-              set({
-                user: userData,
-                token: userData.token || null,
-                isAuthenticated: true,
-                isLoading: false,
-                expiresAt,
-                logoUrl,
-                licenseSummary,
-                selectedParentCompanyId: userData.parentCompanyId,
-                pendingParentCompanySelection: false,
-                selectedSiteId: null,
-                pendingSiteSelection: false,
-                availableSites: [],
-              });
             } else {
-              set({
-                user: userData,
-                token: userData.token || null,
-                isAuthenticated: true,
-                isLoading: false,
-                expiresAt,
-                logoUrl,
-                licenseSummary,
-                pendingParentCompanySelection: true,
-                selectedParentCompanyId: null,
-                selectedSiteId: null,
-                pendingSiteSelection: false,
-                availableSites: [],
-              });
+              const companies = userData.companies ?? [];
+              const needsIdentitySelection =
+                userData.role === UserRole.Company && companies.length > 1;
+
+              if (needsIdentitySelection) {
+                set({
+                  user: userData,
+                  token: userData.token || null,
+                  isAuthenticated: true,
+                  isLoading: false,
+                  expiresAt,
+                  logoUrl: null,
+                  licenseSummary,
+                  availableCompanies: companies,
+                  selectedCompanyId: null,
+                  pendingCompanySelection: true,
+                  selectedParentCompanyId: null,
+                  pendingParentCompanySelection: false,
+                  selectedSiteId: null,
+                  pendingSiteSelection: false,
+                  availableSites: [],
+                });
+              } else {
+                const selectedCompanyId = companies[0]?.id ?? userData.companyId;
+                set({
+                  user: userData,
+                  token: userData.token || null,
+                  isAuthenticated: true,
+                  isLoading: false,
+                  expiresAt,
+                  logoUrl,
+                  licenseSummary,
+                  availableCompanies: companies,
+                  selectedCompanyId,
+                  pendingCompanySelection: false,
+                  selectedParentCompanyId: userData.parentCompanyId || null,
+                  pendingParentCompanySelection: false,
+                  selectedSiteId: null,
+                  pendingSiteSelection: false,
+                  availableSites: [],
+                });
+              }
             }
           } else {
             set({
@@ -200,6 +232,21 @@ export const useAuthStore = create<AuthState>()(
       },
       clearError: () => {
         set({ errorAuth: null });
+      },
+      setSelectedCompany: (companyId: string) => {
+        set({
+          selectedCompanyId: companyId,
+          pendingCompanySelection: false,
+          selectedParentCompanyId: null,
+          pendingParentCompanySelection: false,
+          logoUrl: null,
+        });
+      },
+      setAvailableCompanies: (companies: UserCompanyOption[]) => {
+        set({ availableCompanies: companies });
+      },
+      setPendingCompanySelection: (pending: boolean) => {
+        set({ pendingCompanySelection: pending });
       },
       setSelectedParentCompany: (companyId: string) => {
         set({
@@ -244,6 +291,8 @@ export const useAuthStore = create<AuthState>()(
         isAuthenticated: state.isAuthenticated,
         expiresAt: state.expiresAt,
         logoUrl: state.logoUrl,
+        selectedCompanyId: state.selectedCompanyId,
+        availableCompanies: state.availableCompanies,
         selectedParentCompanyId: state.selectedParentCompanyId,
         selectedSiteId: state.selectedSiteId,
         licenseSummary: state.licenseSummary,

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Bell } from "lucide-react";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useActiveCompanyId } from "@/hooks/useActiveCompanyId";
+import { useResolveCompanyContext } from "@/hooks/useResolveCompanyContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useNotificationStore } from "@/hooks/useNotificationStore";
 import { useNotificationStream } from "@/hooks/useNotificationStream";
@@ -21,13 +23,23 @@ import { UserRole } from "@/types/user";
 
 export default function Header() {
   const router = useRouter();
-  const { logout, logoUrl, user, availableSites, selectedSiteId, setSelectedSite, isAuthenticated } =
-    useAuthStore();
+  const {
+    logout,
+    logoUrl,
+    user,
+    availableSites,
+    selectedSiteId,
+    setSelectedSite,
+    availableCompanies,
+    setSelectedCompany,
+    isAuthenticated,
+  } = useAuthStore();
+  const activeCompanyId = useActiveCompanyId();
+  const { resolveCompanyContext } = useResolveCompanyContext();
   const { t } = useTranslation();
   const { unreadCount } = useNotificationStore();
   const [panelOpen, setPanelOpen] = useState(false);
 
-  // Connect SSE stream while the user is authenticated
   useNotificationStream(isAuthenticated);
 
   const handleLogout = () => {
@@ -35,18 +47,71 @@ export default function Header() {
     router.push("/login");
   };
 
+  const handleCompanyChange = (companyId: string) => {
+    if (!companyId || companyId === activeCompanyId) return;
+    setSelectedCompany(companyId);
+    const target = availableCompanies.find((c) => c.id === companyId);
+    router.push(
+      target?.isNew
+        ? `/onboarding?token=${companyId}`
+        : `/dashboard/companies/${companyId}`
+    );
+    resolveCompanyContext(companyId).catch(() => {});
+  };
+
+  const activeCompanyName = availableCompanies.find(
+    (c) => c.id === activeCompanyId
+  )?.name;
+  const showCompanySwitcher =
+    user?.role === UserRole.Company && availableCompanies.length > 1;
+
   const displayLogoUrl = logoUrl || "/assets/playcae.png";
 
   return (
     <header className="h-16 sticky top-0 z-50 bg-white shadow flex items-center justify-between px-6">
-      <Image
-        src={displayLogoUrl}
-        alt="Logo Play CAE"
-        width={90}
-        height={35}
-        className="ml-2"
-      />
+      <div className="flex items-center gap-4 min-w-0">
+        <Image
+          src={displayLogoUrl}
+          alt="Logo Play CAE"
+          width={90}
+          height={35}
+          className="ml-2"
+        />
+        {showCompanySwitcher && activeCompanyName && (
+          <span
+            className="text-brand-primary font-semibold truncate max-w-[240px]"
+            title={activeCompanyName}
+          >
+            {activeCompanyName}
+          </span>
+        )}
+      </div>
       <div className="flex items-center gap-4">
+        {showCompanySwitcher && (
+          <Select
+            value={activeCompanyId || ""}
+            onValueChange={handleCompanyChange}
+          >
+            <SelectTrigger className="w-[240px]">
+              <SelectValue placeholder={t("header.switchCompany")} />
+            </SelectTrigger>
+            <SelectContent>
+              {availableCompanies.map((company) => (
+                <SelectItem key={company.id} value={company.id}>
+                  <span className="flex items-center gap-2">
+                    {company.name}
+                    {company.isNew && (
+                      <span className="text-[10px] font-semibold text-playOrange bg-playOrange/10 px-1.5 py-0.5 rounded-full">
+                        {t("header.pending")}
+                      </span>
+                    )}
+                  </span>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
         {user?.role === UserRole.PRLManager && availableSites.length > 1 && (
           <Select
             value={selectedSiteId || ""}
@@ -65,7 +130,6 @@ export default function Header() {
           </Select>
         )}
 
-        {/* Notification bell */}
         <div className="relative">
           <button
             onClick={() => setPanelOpen((o) => !o)}

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import dayjs from "dayjs";
 import { useRouter } from "next/navigation";
-import { ArrowRight, FileText, Filter, Megaphone, Pencil, Plus, Rocket, Search, ShieldCheck, ShieldOff, Trash2, X } from "lucide-react";
+import { ArrowRight, FileText, Filter, Loader2, Megaphone, Pencil, Plus, Rocket, Search, ShieldCheck, ShieldOff, Trash2, X } from "lucide-react";
 
 import { useAuthStore } from "@/hooks/useAuthStore";
 import {
@@ -14,10 +14,11 @@ import {
 } from "@/hooks/useDashboardLeads";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useSortableTable } from "@/hooks/useSortableTable";
+import { useBodyPointerEventsGuard } from "@/hooks/useBodyPointerEventsGuard";
 import { toast } from "@/hooks/use-Toast";
 
 import { UserRole } from "@/types/user";
-import { Lead, LeadOrigin, LeadListItem, LeadStatus } from "@/types/lead";
+import { Lead, LeadOrigin, LeadListItem, LeadStatus, LEAD_ORIGIN_LABEL_KEYS } from "@/types/lead";
 import { WebInquiry, WebInquiryType } from "@/types/web-inquiry";
 
 import { LeadService } from "@/services/lead.service";
@@ -100,6 +101,8 @@ export default function LeadsPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
+  useBodyPointerEventsGuard();
+
   const [activeTab, setActiveTab] = useState<DashboardLeadTabId>("inquiries");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -121,7 +124,7 @@ export default function LeadsPage() {
   const [isDeletingLead, setIsDeletingLead] = useState(false);
   const [deleteUserToo, setDeleteUserToo] = useState(false);
 
-  const { inquiries, leads, inquiryError, leadError, isLoading, mutateLeads, mutateInquiries } =
+  const { inquiries, leads, inquiryError, leadError, isLoading, isValidating, mutateLeads, mutateInquiries } =
     useDashboardLeads({
       activeTab,
       page,
@@ -194,8 +197,8 @@ export default function LeadsPage() {
       try {
         await action;
         handleEmailVerified(lead.id!, !lead.emailVerified);
-      } catch {
-        /* noop */
+      } catch (error) {
+        console.error("Error toggling email verification:", error);
       }
     },
     [handleEmailVerified]
@@ -366,7 +369,6 @@ export default function LeadsPage() {
 
   return (
     <div>
-      {/* Header */}
       <div className="border-b bg-playGrey">
         {isLoading && <Loader text={t("dashboard.leads.loading")} />}
         <div className="container mx-auto px-4 py-6">
@@ -377,6 +379,9 @@ export default function LeadsPage() {
                 <h1 className="text-2xl font-bold text-brand-primary flex items-center gap-3">
                   <Megaphone className="h-7 w-7 text-brand-primary" />
                   {t("dashboard.leads.title")}
+                  {isValidating && !isLoading && (
+                    <Loader2 className="h-4 w-4 animate-spin text-brand-primary/60" aria-hidden />
+                  )}
                 </h1>
                 <p className="text-sm text-muted-foreground mt-1">
                   {t("dashboard.leads.subtitle")}
@@ -396,7 +401,6 @@ export default function LeadsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-6">
-        {/* Tabs */}
         <Tabs
           value={activeTab}
           onValueChange={(value) => setActiveTab(value as DashboardLeadTabId)}
@@ -427,7 +431,6 @@ export default function LeadsPage() {
           </TabsList>
         </Tabs>
 
-        {/* Filters */}
         <Card className="border border-playBlueLight/30 bg-white">
           <CardContent className="p-4">
             <div className="flex gap-3 items-center">
@@ -442,7 +445,7 @@ export default function LeadsPage() {
                 />
               </div>
 
-              <Sheet>
+              <Sheet modal={false}>
                 <SheetTrigger asChild>
                   <Button variant="outline" className="gap-2 border-playBlueLight shrink-0">
                     <Filter className="h-4 w-4 text-brand-primary" />
@@ -454,7 +457,7 @@ export default function LeadsPage() {
                     )}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-80 overflow-y-auto">
+                <SheetContent side="right" showOverlay={false} className="w-80 overflow-y-auto shadow-2xl">
                   <SheetHeader className="mb-6">
                     <SheetTitle className="text-brand-primary flex items-center gap-2">
                       <Filter className="h-4 w-4" />
@@ -538,12 +541,11 @@ export default function LeadsPage() {
                               <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value="all">
                                 {t("dashboard.leads.filters.allOrigins")}
                               </SelectItem>
-                              <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Web)}>
-                                {t("dashboard.leads.origins.web")}
-                              </SelectItem>
-                              <SelectItem className="hover:bg-playGrey hover:text-brand-primary" value={String(LeadOrigin.Landing)}>
-                                {t("dashboard.leads.origins.landing")}
-                              </SelectItem>
+                              {Object.entries(LEAD_ORIGIN_LABEL_KEYS).map(([value, key]) => (
+                                <SelectItem key={value} className="hover:bg-playGrey hover:text-brand-primary" value={value}>
+                                  {t(key)}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         </div>
@@ -622,7 +624,7 @@ export default function LeadsPage() {
                     onClick={() => setLeadOrigin("all")}
                     className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium bg-brand-primary/10 text-brand-primary border border-brand-primary/20 hover:bg-red-50 hover:text-red-600 hover:border-red-200 transition-colors"
                   >
-                    {leadOrigin === LeadOrigin.Web ? t("dashboard.leads.origins.web") : t("dashboard.leads.origins.landing")}
+                    {t(LEAD_ORIGIN_LABEL_KEYS[leadOrigin])}
                     <X className="h-3 w-3" />
                   </button>
                 )}
@@ -664,7 +666,6 @@ export default function LeadsPage() {
           </div>
         )}
 
-        {/* Inquiries table */}
         {!currentError && activeTab === "inquiries" && (
           <TableCard title={tableTitle}>
             <Table>
@@ -772,7 +773,6 @@ export default function LeadsPage() {
           </TableCard>
         )}
 
-        {/* Leads CRM table */}
         {!currentError && activeTab === "registrations" && (
           <TableCard title={tableTitle}>
             <Table>
@@ -834,9 +834,7 @@ export default function LeadsPage() {
                       <TableCell className="text-muted-foreground">{lead.phone}</TableCell>
                       <TableCell>
                         <Badge variant="secondary" className="text-xs">
-                          {lead.origin === LeadOrigin.Web
-                            ? t("dashboard.leads.origins.web")
-                            : t("dashboard.leads.origins.landing")}
+                          {t(LEAD_ORIGIN_LABEL_KEYS[lead.origin])}
                         </Badge>
                       </TableCell>
                       <TableCell onClick={(e) => e.stopPropagation()}>
@@ -921,7 +919,6 @@ export default function LeadsPage() {
           </TableCard>
         )}
 
-        {/* Pagination */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <p className="text-sm text-muted-foreground">
             {currentTotal === 0

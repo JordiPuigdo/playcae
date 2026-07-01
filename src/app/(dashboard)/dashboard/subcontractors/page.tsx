@@ -2,6 +2,7 @@
 
 import { useCompanies } from "@/hooks/useCompanies";
 import { useAuthStore } from "@/hooks/useAuthStore";
+import { useActiveCompanyId } from "@/hooks/useActiveCompanyId";
 import { useTranslation } from "@/hooks/useTranslation";
 import { UserRole } from "@/types/user";
 import { CompanySimple } from "@/types/company";
@@ -29,6 +30,7 @@ export default function SubcontractorsPage() {
     getCompanyById,
   } = useCompanies();
   const { user } = useAuthStore();
+  const activeCompanyId = useActiveCompanyId();
   const { t } = useTranslation();
   const isAdmin = user?.role === UserRole.Admin;
 
@@ -43,20 +45,19 @@ export default function SubcontractorsPage() {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const hasLoadedRef = useRef(false);
+  const loadedKeyRef = useRef<string | null>(null);
 
-  // Cargar subcontratas según el rol
   useEffect(() => {
     const loadSubcontractors = async () => {
-      if (hasLoadedRef.current) return;
       if (!user) return;
 
-      // Admin: esperar a que carguen las companies
-      // Company: usar directamente su companyId
       if (isAdmin && (companiesLoading || !companies?.length)) return;
-      if (!isAdmin && !user.companyId) return;
+      if (!isAdmin && !activeCompanyId) return;
 
-      hasLoadedRef.current = true;
+      const loadKey = isAdmin ? "admin" : (activeCompanyId ?? "");
+      if (loadedKeyRef.current === loadKey) return;
+      loadedKeyRef.current = loadKey;
+
       setIsLoading(true);
 
       const allSubs: (CompanySimple & {
@@ -65,7 +66,6 @@ export default function SubcontractorsPage() {
       })[] = [];
 
       if (isAdmin) {
-        // Admin: las subcontratas ya vienen embebidas en el array de companies del SWR
         const mainCompanies = companies.filter((c) => !c.isSubcontractor && c.id);
 
         const results = mainCompanies.map((company) => {
@@ -79,15 +79,14 @@ export default function SubcontractorsPage() {
 
         allSubs.push(...results.flat());
       } else {
-        // Company: cargar solo subcontratas de su empresa
         try {
-          const parentCompany = await getCompanyById(user.companyId);
-          const subs = await getSubcontractors(user.companyId);
+          const parentCompany = await getCompanyById(activeCompanyId!);
+          const subs = await getSubcontractors(activeCompanyId!);
           subs.forEach((sub) => {
             allSubs.push({
               ...sub,
               parentCompanyName: parentCompany?.name || t("subcontractors.myCompany"),
-              parentCompanyId: user.companyId,
+              parentCompanyId: activeCompanyId,
             });
           });
         } catch (error) {
@@ -101,9 +100,8 @@ export default function SubcontractorsPage() {
     };
 
     loadSubcontractors();
-  }, [companies, companiesLoading, user, isAdmin, t]);
+  }, [companies, companiesLoading, user, isAdmin, activeCompanyId, t]);
 
-  // Filtrar por búsqueda
   useEffect(() => {
     if (!searchTerm.trim()) {
       setFilteredSubcontractors(allSubcontractors);
@@ -130,7 +128,6 @@ export default function SubcontractorsPage() {
 
   return (
     <div>
-      {/* Header — mismo patrón que Empresas */}
       <div className="border-b bg-playGrey">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center gap-4 mb-4">
@@ -149,7 +146,6 @@ export default function SubcontractorsPage() {
       </div>
 
       <div className="container mx-auto px-4 py-8 space-y-6">
-        {/* Buscador */}
         <Card>
           <CardContent className="pt-6">
             <div className="relative">
@@ -164,7 +160,6 @@ export default function SubcontractorsPage() {
           </CardContent>
         </Card>
 
-      {/* Lista de subcontratas */}
       {filteredSubcontractors.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
@@ -218,7 +213,6 @@ export default function SubcontractorsPage() {
               </CardHeader>
 
               <CardContent className="space-y-4">
-                {/* Empresa padre */}
                 <div className="flex items-center gap-2 text-sm text-playBlueLight">
                   <Building2 className="h-4 w-4" />
                   <span>{t("subcontractors.parentCompany")}:</span>
@@ -230,7 +224,6 @@ export default function SubcontractorsPage() {
                   </Link>
                 </div>
 
-                {/* Stats */}
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Users className="h-4 w-4" />
@@ -242,7 +235,6 @@ export default function SubcontractorsPage() {
                   </div>
                 </div>
 
-                {/* Acciones */}
                 <div className="pt-2 border-t">
                   <Button
                     asChild
@@ -261,7 +253,6 @@ export default function SubcontractorsPage() {
         </div>
       )}
 
-      {/* Resumen por empresa */}
       {allSubcontractors.length > 0 && !searchTerm && (
         <Card className="mt-8">
           <CardHeader>
@@ -273,7 +264,6 @@ export default function SubcontractorsPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {(() => {
-                // Agrupar por empresa padre
                 const grouped = allSubcontractors.reduce((acc, sub) => {
                   const key = sub.parentCompanyId || "unknown";
                   if (!acc[key]) {

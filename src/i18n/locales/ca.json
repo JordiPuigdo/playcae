@@ -62,7 +62,23 @@
     "register": "Registrar-se",
     "requestDemo": "Sol·licitar demo",
     "logout": "Tancar sessió",
-    "myAccount": "El meu compte"
+    "myAccount": "El meu compte",
+    "switchCompany": "Canviar d'empresa",
+    "pending": "Pendent"
+  },
+  "companySelector": {
+    "title": "Amb quina empresa vols entrar?",
+    "description": "El teu compte gestiona diverses empreses. Tria amb quina vols treballar ara. Podràs canviar d'empresa en qualsevol moment.",
+    "loading": "Carregant les teves empreses...",
+    "pendingBadge": "Pendent de configurar",
+    "continue": "Continua"
+  },
+  "parentCompanySelector": {
+    "title": "Selecciona una empresa",
+    "description": "El teu compte està associat a diverses empreses. Selecciona amb quina vols treballar en aquesta sessió.",
+    "loading": "Carregant empreses disponibles...",
+    "empty": "No s'han trobat empreses associades al teu compte.",
+    "continue": "Continua"
   },
   "nav": {
     "documentValidation": "Validació documental IA",
