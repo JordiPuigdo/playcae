@@ -25,6 +25,7 @@ type SortField = "email" | "role" | "active" | "creationDate";
 
 interface UsersTableProps {
   users: UserManagementItem[];
+  totalCount?: number;
   onEdit: (user: UserManagementItem) => void;
   onToggleActive: (user: UserManagementItem) => void;
   onResendPassword: (user: UserManagementItem) => void;
@@ -33,6 +34,7 @@ interface UsersTableProps {
 
 export const UsersTable = ({
   users,
+  totalCount,
   onEdit,
   onToggleActive,
   onResendPassword,
@@ -66,11 +68,18 @@ export const UsersTable = ({
     }
   };
 
+  const total = totalCount ?? users.length;
+  const isFiltered = total !== users.length;
+
   if (users.length === 0) {
     return (
       <Card className="bg-white">
         <CardContent className="p-8 text-center">
-          <p className="text-muted-foreground">No hay usuarios registrados.</p>
+          <p className="text-muted-foreground">
+            {total > 0
+              ? "No hay usuarios que coincidan con los filtros."
+              : "No hay usuarios registrados."}
+          </p>
         </CardContent>
       </Card>
     );
@@ -78,7 +87,13 @@ export const UsersTable = ({
 
   return (
     <>
-      <TableCard title={`Usuarios (${users.length})`}>
+      <TableCard
+        title={
+          isFiltered
+            ? `Usuarios (${users.length} de ${total})`
+            : `Usuarios (${users.length})`
+        }
+      >
         <Table>
           <TableHeader>
             <TableRow>
