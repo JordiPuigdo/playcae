@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
-import { useToast } from "@/hooks/use-Toast";
 import { useTranslation } from "@/hooks/useTranslation";
 import { companyImportRowSchema } from "@/app/utils/company-schema";
 import { createRowValidator } from "@/app/utils/excel-import";
-import { ExcelImportDialog } from "@/components/common/ExcelImportDialog";
+import {
+  ExcelImportDialog,
+  ImportSummary,
+} from "@/components/common/ExcelImportDialog";
 import {
   CompanyImportRow,
   ImportCompaniesResult,
@@ -57,7 +59,6 @@ export const CompaniesImport = ({
   onImport,
 }: CompaniesImportProps) => {
   const { t } = useTranslation();
-  const { toast } = useToast();
 
   const validateRows = useMemo(
     () =>
@@ -67,7 +68,9 @@ export const CompaniesImport = ({
     []
   );
 
-  const handleImport = async (validRows: CompanyRow[]) => {
+  const handleImport = async (
+    validRows: CompanyRow[]
+  ): Promise<ImportSummary> => {
     const result = await onImport(
       validRows.map((row) => ({
         email: row.email,
@@ -77,15 +80,34 @@ export const CompaniesImport = ({
         phone: row.phone,
       }))
     );
-    toast({
-      title: t("companies.import.done"),
-      description: t("companies.import.summary", {
-        created: result.createdCount,
-        linked: result.linkedCount,
-        skipped: result.skippedCount,
-        errors: result.errorCount,
-      }),
-    });
+    return {
+      items: [
+        {
+          label: t("companies.import.createdLabel"),
+          value: result.createdCount,
+          tone: "success",
+        },
+        {
+          label: t("companies.import.linkedLabel"),
+          value: result.linkedCount,
+          tone: "success",
+        },
+        {
+          label: t("companies.import.skippedLabel"),
+          value: result.skippedCount,
+          tone: "muted",
+        },
+        ...(result.errorCount > 0
+          ? [
+              {
+                label: t("companies.import.errorsLabel"),
+                value: result.errorCount,
+                tone: "warning" as const,
+              },
+            ]
+          : []),
+      ],
+    };
   };
 
   return (
@@ -121,6 +143,9 @@ export const CompaniesImport = ({
         validRows: (count) => t("companies.import.validRows", { count }),
         invalidRows: (count) => t("companies.import.invalidRows", { count }),
         importValid: (count) => t("companies.import.importValid", { count }),
+        importing: (count) => t("companies.import.importing", { count }),
+        doneTitle: t("companies.import.done"),
+        doneButton: t("common.done"),
         parseErrorTitle: t("errors.generic"),
         parseError: t("companies.import.parseError"),
         errorTitle: t("errors.generic"),

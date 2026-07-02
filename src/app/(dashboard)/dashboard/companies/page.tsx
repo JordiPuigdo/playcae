@@ -1,6 +1,7 @@
 "use client";
 
 import { CompaniesImport } from "@/components/CompaniesImport";
+import { CompaniesBulkForm } from "@/components/CompaniesBulkForm";
 import { CompanyFilters } from "@/components/CompanyFilters";
 import { CompanyForm } from "@/components/CompanyForm";
 import { CompanyTable } from "@/components/CompanyTable";
@@ -15,7 +16,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { Company, CompanyFormData, CompanySimple } from "@/types/company";
 import { WorkerStatus } from "@/types/worker";
 import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
-import { Building2, FileSpreadsheet, Plus } from "lucide-react";
+import { Building2, FileSpreadsheet, Layers, Plus } from "lucide-react";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
@@ -57,6 +58,7 @@ const CompaniesContent = () => {
     : "Todos";
 
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isBulkOpen, setIsBulkOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<Company | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -233,6 +235,15 @@ const CompaniesContent = () => {
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
+                  onClick={() => !contractorsAtLimit && setIsBulkOpen(true)}
+                  disabled={contractorsAtLimit}
+                  className="flex items-center gap-2 border-playBlueLight text-brand-primary hover:bg-playGrey disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Layers className="h-4 w-4" />
+                  {t("companies.bulk.addMultiple")}
+                </Button>
+                <Button
+                  variant="outline"
                   onClick={() => !contractorsAtLimit && setIsImportOpen(true)}
                   disabled={contractorsAtLimit}
                   className="flex items-center gap-2 border-playBlueLight text-brand-primary hover:bg-playGrey disabled:opacity-50 disabled:cursor-not-allowed"
@@ -307,6 +318,12 @@ const CompaniesContent = () => {
             />
           </DialogContent>
         </Dialog>
+
+        <CompaniesBulkForm
+          isOpen={isBulkOpen}
+          onClose={() => setIsBulkOpen(false)}
+          onSubmit={importCompanies}
+        />
 
         <CompaniesImport
           isOpen={isImportOpen}

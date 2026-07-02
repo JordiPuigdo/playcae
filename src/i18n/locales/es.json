@@ -16,6 +16,7 @@
     "previous": "Anterior",
     "confirm": "Confirmar",
     "close": "Cerrar",
+    "done": "Hecho",
     "activate": "Activar",
     "deactivate": "Desactivar",
     "yes": "Sí",
@@ -698,11 +699,26 @@
       "invalidRows": "{count} con errores",
       "rowOk": "Correcto",
       "importValid": "Importar {count} válidos",
+      "importing": "Importando {count} empresas...",
       "duplicateEmail": "Email duplicado en la lista",
       "parseError": "No se pudo leer el fichero. Revisa el formato y las columnas.",
       "error": "No se pudieron importar las empresas. Inténtalo de nuevo.",
       "done": "Importación completada",
-      "summary": "Creadas: {created} · Vinculadas: {linked} · Omitidas: {skipped} · Errores: {errors}"
+      "summary": "Creadas: {created} · Vinculadas: {linked} · Omitidas: {skipped} · Errores: {errors}",
+      "createdLabel": "Empresas creadas",
+      "linkedLabel": "Vinculadas a tu cuenta",
+      "skippedLabel": "Omitidas (ya existían)",
+      "errorsLabel": "Con errores"
+    },
+    "bulk": {
+      "addMultiple": "Añadir varias",
+      "addMultipleDesc": "Añade varias empresas a la vez. Rellena una fila por empresa. El email es obligatorio.",
+      "addRow": "Añadir fila",
+      "saveAll": "Guardar todas",
+      "duplicateEmail": "Email duplicado en la lista",
+      "created": "Empresas añadidas",
+      "createdDesc": "Creadas: {created} · Vinculadas: {linked} · Omitidas: {skipped}",
+      "error": "No se pudieron añadir las empresas. Inténtalo de nuevo."
     },
     "filters": {
       "all": "Todas",
@@ -871,7 +887,9 @@
     "validRows": "{count} válidos",
     "invalidRows": "{count} con errores",
     "rowOk": "Correcto",
-    "importValid": "Importar {count} válidos"
+    "importValid": "Importar {count} válidos",
+    "importing": "Importando {count} trabajadores...",
+    "importedLabel": "Trabajadores importados"
   },
   "documents": {
     "title": "Documentos",

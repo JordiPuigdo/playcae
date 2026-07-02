@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import Loader from "@/components/Loader";
 import { WorkerFilters } from "@/components/WorkersFilter";
 import { WorkersTable } from "@/components/WorkersTable";
+import { WorkerForm } from "@/components/WorkerForm";
 import { InternalWorkersBulkForm } from "@/components/InternalWorkersBulkForm";
 import { InternalWorkersImport } from "@/components/InternalWorkersImport";
 import { useWorkers } from "@/hooks/useWorkers";
@@ -19,7 +20,7 @@ import {
   DocumentFormData,
   UploadDocument,
 } from "@/types/document";
-import { Users, Layers, FileSpreadsheet } from "lucide-react";
+import { Users, Layers, FileSpreadsheet, Plus } from "lucide-react";
 
 export const InternalWorkersClient = () => {
   const { t } = useTranslation();
@@ -73,6 +74,7 @@ export const InternalWorkersClient = () => {
   const { uploadDocument, showErrorUpload } = useDocuments(mainCompanyId ?? "");
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isBulkOpen, setIsBulkOpen] = useState(false);
   const [isImportOpen, setIsImportOpen] = useState(false);
   const [filters, setFilters] = useState<{
@@ -105,6 +107,7 @@ export const InternalWorkersClient = () => {
     try {
       await createWorker(data);
       await refreshWorkers();
+      setIsCreateOpen(false);
       toast({
         title: t("notifications.workerCreated"),
         description: t("notifications.workerCreatedDesc"),
@@ -206,6 +209,22 @@ export const InternalWorkersClient = () => {
             <FileSpreadsheet className="h-4 w-4" />
             {t("internalWorkers.importExcel")}
           </Button>
+          <div className="relative group inline-block">
+            <Button
+              onClick={() => !workersAtLimit && setIsCreateOpen(true)}
+              disabled={workersAtLimit}
+              className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Plus className="h-4 w-4" />
+              {t("workers.addWorker")}
+            </Button>
+            {workersAtLimit && (
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-gray-900 text-white text-xs rounded max-w-[260px] text-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+                {t("license.quota.internalWorkersExceeded")}
+                <div className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-gray-900" />
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -218,6 +237,7 @@ export const InternalWorkersClient = () => {
         userRole={user?.role!}
         workersAtLimit={workersAtLimit}
         manageMode
+        showAddButton={false}
         onCreateWorker={handleCreateWorker}
         onUpdateWorker={(workerId, workerData) =>
           updateWorker(workerId, workerData)
@@ -231,6 +251,14 @@ export const InternalWorkersClient = () => {
         }
         onActivateWorker={(workerId) => activateWorker(workerId)}
         onRefresh={refreshWorkers}
+      />
+
+      <WorkerForm
+        isOpen={isCreateOpen}
+        onClose={() => setIsCreateOpen(false)}
+        onSubmit={handleCreateWorker}
+        mode="create"
+        showEmail
       />
 
       <InternalWorkersBulkForm

@@ -16,6 +16,7 @@
     "previous": "Anterior",
     "confirm": "Confirmar",
     "close": "Tancar",
+    "done": "Fet",
     "activate": "Activar",
     "deactivate": "Desactivar",
     "yes": "Sí",
@@ -698,11 +699,26 @@
       "invalidRows": "{count} amb errors",
       "rowOk": "Correcte",
       "importValid": "Importar {count} vàlids",
+      "importing": "Important {count} empreses...",
       "duplicateEmail": "Email duplicat a la llista",
       "parseError": "No s'ha pogut llegir el fitxer. Revisa el format i les columnes.",
       "error": "No s'han pogut importar les empreses. Torna-ho a provar.",
       "done": "Importació completada",
-      "summary": "Creades: {created} · Vinculades: {linked} · Omeses: {skipped} · Errors: {errors}"
+      "summary": "Creades: {created} · Vinculades: {linked} · Omeses: {skipped} · Errors: {errors}",
+      "createdLabel": "Empreses creades",
+      "linkedLabel": "Vinculades al teu compte",
+      "skippedLabel": "Omeses (ja existien)",
+      "errorsLabel": "Amb errors"
+    },
+    "bulk": {
+      "addMultiple": "Afegir diverses",
+      "addMultipleDesc": "Afegeix diverses empreses alhora. Omple una fila per empresa. El correu és obligatori.",
+      "addRow": "Afegir fila",
+      "saveAll": "Desar totes",
+      "duplicateEmail": "Correu duplicat a la llista",
+      "created": "Empreses afegides",
+      "createdDesc": "Creades: {created} · Vinculades: {linked} · Omeses: {skipped}",
+      "error": "No s'han pogut afegir les empreses. Torna-ho a provar."
     },
     "filters": {
       "all": "Totes",
@@ -871,7 +887,9 @@
     "validRows": "{count} vàlids",
     "invalidRows": "{count} amb errors",
     "rowOk": "Correcte",
-    "importValid": "Importar {count} vàlids"
+    "importValid": "Importar {count} vàlids",
+    "importing": "Important {count} treballadors...",
+    "importedLabel": "Treballadors importats"
   },
   "documents": {
     "title": "Documents",

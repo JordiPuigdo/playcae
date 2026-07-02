@@ -51,6 +51,7 @@ interface WorkersTableProps {
   userRole: UserRole;
   workersAtLimit?: boolean;
   manageMode?: boolean;
+  showAddButton?: boolean;
   onCreateWorker: (data: WorkerFormData) => void;
   onUpdateWorker: (workerId: string, data: WorkerFormData) => void;
   onDeleteWorker: (workerId: string) => void;
@@ -77,6 +78,7 @@ export const WorkersTable = ({
   userRole,
   workersAtLimit = false,
   manageMode = false,
+  showAddButton = true,
   onCreateWorker,
   onUpdateWorker,
   onDeleteWorker,
@@ -213,7 +215,7 @@ export const WorkersTable = ({
               {t("workers.count", { count: workers.length })}
             </CardTitle>
 
-            {canEdit && (
+            {showAddButton && canEdit && (
               <div className="relative group inline-block">
                 <Button
                   onClick={() => !workersAtLimit && setIsFormOpen(true)}

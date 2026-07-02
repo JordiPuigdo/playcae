@@ -20,11 +20,21 @@ import {
 import { Badge } from "@/components/ui/Badge";
 import { useToast } from "@/hooks/use-Toast";
 import { mapRecord } from "@/app/utils/excel-import";
-import { FileSpreadsheet, Upload } from "lucide-react";
+import { CheckCircle2, FileSpreadsheet, Loader2, Upload } from "lucide-react";
 
 interface ImportColumn<TRow> {
   header: string;
   cell: (row: TRow) => ReactNode;
+}
+
+export interface ImportSummaryItem {
+  label: string;
+  value: number;
+  tone?: "success" | "muted" | "warning";
+}
+
+export interface ImportSummary {
+  items: ImportSummaryItem[];
 }
 
 export interface ExcelImportLabels {
@@ -35,6 +45,9 @@ export interface ExcelImportLabels {
   validRows: (count: number) => string;
   invalidRows: (count: number) => string;
   importValid: (count: number) => string;
+  importing: (count: number) => string;
+  doneTitle: string;
+  doneButton: string;
   parseErrorTitle: string;
   parseError: string;
   errorTitle: string;
@@ -50,9 +63,15 @@ interface ExcelImportDialogProps<TRow extends { error?: string }> {
   emptyRow: TRow;
   validateRows: (rows: TRow[]) => TRow[];
   columns: ImportColumn<TRow>[];
-  onImport: (validRows: TRow[]) => Promise<void>;
+  onImport: (validRows: TRow[]) => Promise<ImportSummary | void>;
   labels: ExcelImportLabels;
 }
+
+const TONE_CLASS: Record<NonNullable<ImportSummaryItem["tone"]>, string> = {
+  success: "text-playGreen",
+  muted: "text-brand-primary/60",
+  warning: "text-brand-secondary",
+};
 
 export const ExcelImportDialog = <TRow extends { error?: string }>({
   isOpen,
@@ -72,6 +91,7 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
   const [fileName, setFileName] = useState<string>("");
   const [isParsing, setIsParsing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [summary, setSummary] = useState<ImportSummary | null>(null);
 
   const handleFile = async (file: File) => {
     setIsParsing(true);
@@ -102,6 +122,7 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
   const handleClose = () => {
     setRows([]);
     setFileName("");
+    setSummary(null);
     onClose();
   };
 
@@ -112,8 +133,8 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
     if (!validRows.length) return;
     setIsSaving(true);
     try {
-      await onImport(validRows);
-      handleClose();
+      const result = await onImport(validRows);
+      setSummary(result ?? { items: [] });
     } catch {
       toast({
         title: labels.errorTitle,
@@ -126,7 +147,12 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleClose}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open && !isSaving) handleClose();
+      }}
+    >
       <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
@@ -145,7 +171,51 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
           }}
         />
 
-        <div className="flex items-center gap-3">
+        {isSaving ? (
+          <div className="flex flex-col items-center justify-center gap-4 py-16 text-center">
+            <Loader2 className="h-10 w-10 animate-spin text-playOrange" />
+            <p className="text-sm font-medium text-brand-primary">
+              {labels.importing(validRows.length)}
+            </p>
+          </div>
+        ) : summary ? (
+          <div className="flex flex-col items-center gap-5 py-10 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-playGreen/15">
+              <CheckCircle2 className="h-9 w-9 text-playGreen" />
+            </div>
+            <h3 className="text-lg font-semibold text-playGreen">
+              {labels.doneTitle}
+            </h3>
+            {summary.items.length > 0 && (
+              <div className="flex w-full max-w-xs flex-col gap-2">
+                {summary.items.map((item) => (
+                  <div
+                    key={item.label}
+                    className="flex items-center justify-between gap-6 border-b border-playGrey pb-2 text-sm last:border-0"
+                  >
+                    <span className="text-brand-primary/70">{item.label}</span>
+                    <span
+                      className={`font-semibold ${
+                        TONE_CLASS[item.tone ?? "success"]
+                      }`}
+                    >
+                      {item.value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+            <Button
+              type="button"
+              onClick={handleClose}
+              className="mt-2 gap-2 bg-playGreen hover:bg-playGreen/90 text-white"
+            >
+              {labels.doneButton}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center gap-3">
           <Button
             type="button"
             variant="outline"
@@ -227,20 +297,22 @@ export const ExcelImportDialog = <TRow extends { error?: string }>({
           </>
         )}
 
-        <div className="flex justify-end gap-2 pt-2">
-          <Button type="button" variant="outline" onClick={handleClose}>
-            {labels.cancel}
-          </Button>
-          <Button
-            type="button"
-            onClick={handleImport}
-            disabled={isSaving || !validRows.length}
-            className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white disabled:opacity-50"
-          >
-            <Upload className="h-4 w-4" />
-            {labels.importValid(validRows.length)}
-          </Button>
-        </div>
+            <div className="flex justify-end gap-2 pt-2">
+              <Button type="button" variant="outline" onClick={handleClose}>
+                {labels.cancel}
+              </Button>
+              <Button
+                type="button"
+                onClick={handleImport}
+                disabled={!validRows.length}
+                className="gap-2 bg-playOrange hover:bg-playOrange/90 text-white disabled:opacity-50"
+              >
+                <Upload className="h-4 w-4" />
+                {labels.importValid(validRows.length)}
+              </Button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );

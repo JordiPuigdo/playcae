@@ -1,11 +1,13 @@
 "use client";
 
 import { useMemo } from "react";
-import { useToast } from "@/hooks/use-Toast";
 import { useTranslation } from "@/hooks/useTranslation";
 import { internalWorkerRowSchema } from "@/app/utils/worker-schema";
 import { createRowValidator } from "@/app/utils/excel-import";
-import { ExcelImportDialog } from "@/components/common/ExcelImportDialog";
+import {
+  ExcelImportDialog,
+  ImportSummary,
+} from "@/components/common/ExcelImportDialog";
 import { WorkerFormData } from "@/types/worker";
 
 interface InternalWorkersImportProps {
@@ -53,7 +55,6 @@ export const InternalWorkersImport = ({
   onSubmit,
 }: InternalWorkersImportProps) => {
   const { t } = useTranslation();
-  const { toast } = useToast();
 
   const validateRows = useMemo(
     () =>
@@ -68,7 +69,9 @@ export const InternalWorkersImport = ({
     [t]
   );
 
-  const handleImport = async (validRows: WorkerImportRow[]) => {
+  const handleImport = async (
+    validRows: WorkerImportRow[]
+  ): Promise<ImportSummary> => {
     await onSubmit(
       validRows.map((row) => ({
         firstName: row.firstName,
@@ -80,12 +83,15 @@ export const InternalWorkersImport = ({
         companyId: "",
       }))
     );
-    toast({
-      title: t("internalWorkers.bulkCreated"),
-      description: t("internalWorkers.bulkCreatedDesc", {
-        count: validRows.length,
-      }),
-    });
+    return {
+      items: [
+        {
+          label: t("internalWorkers.importedLabel"),
+          value: validRows.length,
+          tone: "success",
+        },
+      ],
+    };
   };
 
   return (
@@ -121,6 +127,9 @@ export const InternalWorkersImport = ({
         validRows: (count) => t("internalWorkers.validRows", { count }),
         invalidRows: (count) => t("internalWorkers.invalidRows", { count }),
         importValid: (count) => t("internalWorkers.importValid", { count }),
+        importing: (count) => t("internalWorkers.importing", { count }),
+        doneTitle: t("internalWorkers.bulkCreated"),
+        doneButton: t("common.done"),
         parseErrorTitle: t("errors.generic"),
         parseError: t("internalWorkers.importParseError"),
         errorTitle: t("errors.generic"),
