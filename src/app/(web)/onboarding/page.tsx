@@ -288,33 +288,48 @@ export default function CompanyOnboarding() {
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    let onboardingFailed = false;
+
     try {
       if (onboardingData.selectedProfileId) {
         const service = new ProfileService();
         await service.selfAssignToCompany(token!, onboardingData.selectedProfileId);
       }
       await createBulkWorkers(onboardingData.workers);
-      await updateCompanyStatus(token!, CompanyStatus.Rejected);
-
-      toast({
-        title: "Empresa creada correctamente",
-        description:
-          "Tu empresa y trabajadores se han registrado correctamente.",
-      });
     } catch (error) {
+      onboardingFailed = true;
+      console.error("onboarding data step failed", error);
+    }
+
+    try {
+      await updateCompanyStatus(token!, CompanyStatus.Rejected);
+    } catch (error) {
+      onboardingFailed = true;
+      console.error("company status update failed", error);
+    }
+
+    setIsLoading(false);
+
+    if (onboardingFailed) {
       toast({
-        title: "Error",
-        description: "Failed to complete onboarding. Please try again.",
+        title: "No pudimos completar el registro",
+        description:
+          "Revisa los datos e inténtalo de nuevo. Si el problema continúa, contacta con soporte.",
         variant: "destructive",
       });
-      throw error;
-    } finally {
-      setIsLoading(false);
-      setTimeout(() => {
-        logout();
-        router.push("/login");
-      }, 1500);
+      return;
     }
+
+    toast({
+      title: "Empresa registrada correctamente",
+      description:
+        "Tu empresa y trabajadores se han registrado correctamente.",
+    });
+
+    setTimeout(() => {
+      logout();
+      router.push("/login");
+    }, 1500);
   };
 
   const renderStepIndicator = () => (
