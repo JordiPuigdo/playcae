@@ -124,6 +124,7 @@ function EditLicenseModal({
   const [alertThreshold, setAlertThreshold] = useState(String(tenant.alertThreshold));
   const [enableProjects, setEnableProjects] = useState(tenant.enableProjects);
   const [enableAI, setEnableAI] = useState(tenant.enableAI);
+  const [enableAccessControl, setEnableAccessControl] = useState(tenant.enableAccessControl);
   const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = async () => {
@@ -139,6 +140,7 @@ function EditLicenseModal({
         alertThreshold: Number(alertThreshold) || 5,
         enableProjects,
         enableAI,
+        enableAccessControl,
       };
       await LicenseService.updateTenantLicense(tenant.adminUserId, dto);
       toast({ title: t("license.edit.success"), variant: "default" });
@@ -258,6 +260,16 @@ function EditLicenseModal({
               onCheckedChange={setEnableAI}
             />
           </div>
+          <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+            <div>
+              <Label className="text-sm font-medium">{t("license.edit.enableAccessControl")}</Label>
+              <p className="text-xs text-muted-foreground">{t("license.edit.enableAccessControlDesc")}</p>
+            </div>
+            <Switch
+              checked={enableAccessControl}
+              onCheckedChange={setEnableAccessControl}
+            />
+          </div>
         </div>
 
         <DialogFooter>
@@ -308,6 +320,7 @@ function CreateLicenseModal({
   const [alertThreshold, setAlertThreshold] = useState("5");
   const [enableProjects, setEnableProjects] = useState(false);
   const [enableAI, setEnableAI] = useState(true);
+  const [enableAccessControl, setEnableAccessControl] = useState(false);
 
   const fromField = (val: string): number | null =>
     val.trim() === "" ? null : Number(val);
@@ -355,6 +368,7 @@ function CreateLicenseModal({
           alertThreshold: Number(alertThreshold) || 5,
           enableProjects,
           enableAI,
+          enableAccessControl,
         };
         await LicenseService.updateTenantLicense(res.data.adminUserId, dto);
         toast({ title: t("license.create.success") });
@@ -525,6 +539,16 @@ function CreateLicenseModal({
                 onCheckedChange={setEnableAI}
               />
             </div>
+            <div className="col-span-2 flex items-center justify-between rounded-lg border border-playBlueLight/20 p-3">
+              <div>
+                <Label className="text-sm font-medium">{t("license.edit.enableAccessControl")}</Label>
+                <p className="text-xs text-muted-foreground">{t("license.edit.enableAccessControlDesc")}</p>
+              </div>
+              <Switch
+                checked={enableAccessControl}
+                onCheckedChange={setEnableAccessControl}
+              />
+            </div>
           </div>
         )}
 
@@ -628,13 +652,14 @@ function TenantTable({
               <TableHead className="text-center">{t("license.table.threshold")}</TableHead>
               <TableHead className="text-center">{t("license.table.projects")}</TableHead>
               <TableHead className="text-center">{t("license.table.ai")}</TableHead>
+              <TableHead className="text-center">{t("license.table.accessControl")}</TableHead>
               <TableHead className="text-right">{t("license.table.actions")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filtered.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={10} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={11} className="text-center text-muted-foreground py-8">
                   {t("license.noTenants")}
                 </TableCell>
               </TableRow>
@@ -677,6 +702,11 @@ function TenantTable({
                   <TableCell className="text-center">
                     <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tenant.enableAI ? "bg-playGreen/10 text-playGreen" : "bg-playGrey text-muted-foreground"}`}>
                       {tenant.enableAI ? t("license.table.aiOn") : t("license.table.aiOff")}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${tenant.enableAccessControl ? "bg-playGreen/10 text-playGreen" : "bg-playGrey text-muted-foreground"}`}>
+                      {tenant.enableAccessControl ? t("license.table.accessControlOn") : t("license.table.accessControlOff")}
                     </span>
                   </TableCell>
                   <TableCell className="text-right">

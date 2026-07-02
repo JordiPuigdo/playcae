@@ -11,6 +11,7 @@ export interface LicenseSummary {
   maxSites: number | null;
   enableProjects?: boolean;
   enableAI?: boolean;
+  enableAccessControl?: boolean;
 }
 
 export interface TenantLicenseAdmin {
@@ -30,6 +31,7 @@ export interface TenantLicenseAdmin {
   currentSites: number;
   enableProjects: boolean;
   enableAI: boolean;
+  enableAccessControl: boolean;
 }
 
 export interface UpdateTenantLicenseDto {
@@ -42,6 +44,7 @@ export interface UpdateTenantLicenseDto {
   alertThreshold: number;
   enableProjects: boolean;
   enableAI: boolean;
+  enableAccessControl: boolean;
 }
 
 export interface InitTenantLicenseRequest {

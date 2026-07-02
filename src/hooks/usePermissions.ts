@@ -29,6 +29,12 @@ export const usePermissions = () => {
       if (section === "/dashboard/roles-permissions" || section.startsWith("/dashboard/roles-permissions/")) {
         return licenseSummary?.enableInternalWorkers === true;
       }
+      if (
+        section === "/access-control" || section.startsWith("/access-control/") ||
+        section === "/dashboard/access-history" || section.startsWith("/dashboard/access-history/")
+      ) {
+        return licenseSummary?.enableAccessControl === true;
+      }
       return true;
     }
 
@@ -47,9 +53,10 @@ export const usePermissions = () => {
       const prlPermissions = [
         "/dashboard",
         "/dashboard/documents",
-        "/dashboard/access-history",
-        "/access-control",
       ];
+      if (licenseSummary?.enableAccessControl === true) {
+        prlPermissions.push("/dashboard/access-history", "/access-control");
+      }
       return prlPermissions.some(
         (p) => section === p || section.startsWith(p + "/")
       );

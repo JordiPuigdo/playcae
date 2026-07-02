@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/Dialog";
@@ -31,13 +31,41 @@ import { toast } from "@/hooks/use-Toast";
 
 const accessService = new AccessService();
 
+const hasAuthStoreHydrated = () =>
+  typeof window !== "undefined" &&
+  useAuthStore.persist?.hasHydrated?.() === true;
+
 type ModalState = "idle" | "validated" | "offline-confirm" | "checkin" | "checkout" | "queued" | "error";
 
 const AccessControlContent = () => {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const accessCompanyId = searchParams.get("companyId") || "";
-  const { user, logoUrl, selectedSiteId, availableSites } = useAuthStore();
+  const { user, logoUrl, selectedSiteId, availableSites, licenseSummary } = useAuthStore();
   const { t } = useTranslation();
+
+  const [hasHydrated, setHasHydrated] = useState(hasAuthStoreHydrated);
+
+  useEffect(() => {
+    const unsubscribe = useAuthStore.persist?.onFinishHydration?.(() => {
+      setHasHydrated(true);
+    });
+
+    if (hasAuthStoreHydrated()) {
+      setHasHydrated(true);
+    }
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydrated) return;
+    if (licenseSummary?.enableAccessControl !== true) {
+      router.replace("/dashboard");
+    }
+  }, [hasHydrated, licenseSummary, router]);
   const adminUserId =
     user?.role === UserRole.PRLManager
       ? user?.parentCompanyId || user?.userId || ""
