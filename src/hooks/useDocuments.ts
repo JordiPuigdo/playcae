@@ -48,10 +48,12 @@ export const useDocuments = (companyId: string) => {
     }
   };
 
-  const companyObservations = useMemo(
-    () => observations.filter((obs) => obs.companyId === companyId),
-    [observations, companyId]
-  );
+  const companyObservations = useMemo(() => {
+    const normalizedCompanyId = companyId?.toLowerCase();
+    return observations.filter(
+      (obs) => obs.companyId?.toLowerCase() === normalizedCompanyId
+    );
+  }, [observations, companyId]);
 
   const validateDocument = async (
     documentId: string,

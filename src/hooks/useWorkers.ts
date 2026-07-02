@@ -26,7 +26,10 @@ export const useWorkers = (
   const documentService = useMemo(() => new DocumentService(), []);
   const companyWorkers = useMemo(() => {
     if (!companyId) return workers;
-    return workers.filter((worker) => worker.companyId === companyId);
+    const normalizedCompanyId = companyId.toLowerCase();
+    return workers.filter(
+      (worker) => worker.companyId?.toLowerCase() === normalizedCompanyId
+    );
   }, [workers, companyId]);
 
   const filteredWorkers = (
